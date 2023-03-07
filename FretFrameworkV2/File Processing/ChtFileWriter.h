@@ -1,0 +1,37 @@
+#pragma once
+#include "TxtFileWriter.h"
+#include "CommonChartWriter.h"
+
+class ChtFileWriter: private TxtFileWriter, public CommonChartWriter
+{
+public:
+	using TxtFileWriter::TxtFileWriter;
+
+public:
+	virtual void writeHeaderTrack(uint32_t tickRate) override;
+	virtual void writeSyncTrack() override;
+	virtual void writeEventTrack() override;
+	virtual void writeInstrumentTrack(size_t index) override;
+	virtual void writeVocalTrack(size_t index) override;
+	virtual void writeDifficultyTrack(size_t index) override;
+	virtual void writeAnimationTrack() override;
+	virtual void finishTrack() override;
+	virtual void startEvent(uint32_t position, ChartEvent ev) override;
+	virtual void finishEvent() override;
+	virtual void writeSingleNote(const std::pair<size_t, uint32_t>& note) override;
+	virtual void writeMultiNote(const std::vector<std::pair<size_t, uint32_t>>& notes) override;
+	virtual void writeSingleNoteMods(const std::vector<char>& mods) override;
+	virtual void writeMultiNoteMods(const std::vector<std::pair<char, size_t>>& mods) override;
+	virtual void writeText(std::string_view str) override;
+	virtual void writeSpecialPhrase(const SpecialPhrase& phrase) override;
+	virtual void writeLyric(std::pair<size_t, std::string_view> lyric) override;
+	virtual void writePitchAndDuration(const std::pair<char, uint32_t>& note) override;
+
+	virtual void writeMicrosPerQuarter(uint32_t micros) override;
+	virtual void writeTimeSig(TimeSig timeSig) override;
+	virtual void writeAnchor(uint32_t anchor) override;
+
+private:
+	void writeTrack(std::string_view name);
+	std::string m_tabs = "";
+};
