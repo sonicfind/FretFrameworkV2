@@ -70,12 +70,19 @@ public:
 		return m_list.empty();
 	}
 
-	T* try_construct_back(Key key)
+	T* try_emplace_back(Key key)
 	{
 		if (!m_list.empty() && m_list.back().key >= key)
 			return nullptr;
 
 		return &m_list.emplace_back(key, BASE).object;
+	}
+
+	[[nodiscard]] T& emplace_back(Key key)
+	{
+		if (T* obj = try_emplace_back(key))
+			return *obj;
+		throw std::runtime_error("Can not add node at position to the back");
 	}
 
 	[[nodiscard]] T& get_or_emplace_back(Key key)
@@ -151,22 +158,33 @@ public:
 		return *m_list.back();
 	}
 
-	[[nodiscard]] bool validateBack(Key keytoValidate) const
+	[[nodiscard]] T* try_back(Key keytoValidate)
 	{
-		return m_list.back().key == keytoValidate;
+		Node& node = m_list.back();
+		if (node.key == keytoValidate)
+			return &node.object;
+		return nullptr;
+	}
+
+	[[nodiscard]] T* try_back(Key keytoValidate) const
+	{
+		const Node& node = m_list.back();
+		if (node.key == keytoValidate)
+			return &node.object;
+		return nullptr;
 	}
 
 	[[nodiscard]] T& back(Key keytoValidate)
 	{
-		if (validateBack(keytoValidate))
-			return *m_list.back();
+		if (T* obj = try_back(keytoValidate))
+			return *obj;
 		throw std::runtime_error("Object at key does not exist");
 	}
 
 	[[nodiscard]] const T& back(Key keytoValidate) const
 	{
-		if (validateBack(keytoValidate))
-			return *m_list.back();
+		if (T* obj = try_back(keytoValidate))
+			return *obj;
 		throw std::runtime_error("Object at key does not exist");
 	}
 
@@ -188,6 +206,22 @@ public:
 	auto erase(typename std::vector<Node>::iterator _Where)
 	{
 		return m_list.erase(_Where);
+	}
+
+	auto emplace(typename std::vector<Node>::iterator _Where, uint32_t position)
+	{
+		return m_list.emplace(_Where, position, BASE);
+	}
+
+	T& getNodeFromBack(uint32_t position)
+	{
+		auto iter = end();
+		while (iter != begin() && (iter - 1)->key >= position)
+			--iter;
+
+		if (iter == end() || iter->key > position)
+			iter = emplace(iter, position);
+		return **iter;
 	}
 };
 

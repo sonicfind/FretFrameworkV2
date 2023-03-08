@@ -82,7 +82,7 @@ private:
 
 	void parseText(std::string_view text)
 	{
-		m_track.addEvent_midi(m_reader.getPosition(), text);
+		m_track.getEvents_midi(m_reader.getPosition()).push_back(UnicodeString::strToU32(text));
 	}
 
 	template <bool ON>
@@ -90,13 +90,10 @@ private:
 	{
 		uint32_t position = m_reader.getPosition();
 		if constexpr (ON)
-		{
-			m_track.construct_phrase_midi(position);
 			combo.second = position;
-		}
 		else if (combo.second != UINT32_MAX)
 		{
-			m_track.addSpecialPhrase_midi(combo.second, { combo.first, position - combo.second });
+			m_track.getSpecialPhrase_midi(combo.second).push_back({ combo.first, position - combo.second });
 			combo.second = UINT32_MAX;
 		}
 	}
@@ -106,13 +103,10 @@ private:
 	{
 		uint32_t position = m_reader.getPosition();
 		if constexpr (ON)
-		{
-			m_track.construct_phrase_midi(diff, position);
 			combo.second = position;
-		}
 		else if (combo.second != UINT32_MAX)
 		{
-			m_track.addSpecialPhrase_midi(diff, combo.second, { combo.first, position - combo.second });
+			m_track.getSpecialPhrase_midi(diff, combo.second).push_back({ combo.first, position - combo.second });
 			combo.second = UINT32_MAX;
 		}
 	}

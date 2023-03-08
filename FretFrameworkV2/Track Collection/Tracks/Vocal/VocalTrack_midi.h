@@ -37,7 +37,7 @@ public:
 		}
 
 		if (m_lyric.first != UINT32_MAX)
-			m_track.add_lyric_midi<INDEX>(m_lyric.first, m_lyric.second);
+			m_track.getVocal_midi<INDEX>(m_lyric.first).setLyric(m_lyric.second);
 
 		m_track.shrink_midi<INDEX>();
 	}
@@ -78,17 +78,12 @@ private:
 	{
 		uint32_t position = m_reader.getPosition();
 		if (text[0] == '[')
-			m_track.addEvent_midi(position, text);
+			m_track.getEvents_midi(position).push_back(UnicodeString::strToU32(text));
 		else
 		{
-			if (m_vocalPos != UINT32_MAX)
-				m_track.add_lyric_midi<INDEX>(m_vocalPos, text);
-			else
-			{
-				if (m_lyric.first != UINT32_MAX)
-					m_track.add_lyric_midi<INDEX>(m_lyric.first, m_lyric.second);
-				m_lyric = { position, text };
-			}
+			if (m_lyric.first != UINT32_MAX)
+				m_track.getVocal_midi<INDEX>(m_lyric.first).setLyric(m_lyric.second);
+			m_lyric = { position, text };
 		}
 	}
 
@@ -97,29 +92,10 @@ private:
 	{
 		uint32_t position = m_reader.getPosition();
 		if constexpr (ON)
-		{
-			m_track.construct_phrase_midi(position);
 			combo.second = position;
-		}
 		else if (combo.second != UINT32_MAX)
 		{
-			m_track.addSpecialPhrase_midi(combo.second, { combo.first, position - combo.second });
-			combo.second = UINT32_MAX;
-		}
-	}
-
-	template <bool ON>
-	void addSpecialPhrase(int diff, ValCombo& combo)
-	{
-		uint32_t position = m_reader.getPosition();
-		if constexpr (ON)
-		{
-			m_track.construct_phrase_midi(diff, position);
-			combo.second = position;
-		}
-		else if (combo.second != UINT32_MAX)
-		{
-			m_track.addSpecialPhrase_midi(diff, combo.second, { combo.first, position - combo.second });
+			m_track.getSpecialPhrase_midi(combo.second).push_back({ combo.first, position - combo.second });
 			combo.second = UINT32_MAX;
 		}
 	}
@@ -128,38 +104,29 @@ private:
 	void parseVocal(MidiNote note)
 	{
 		uint32_t position = m_reader.getPosition();
+		if (m_vocalPos != UINT32_MAX && m_lyric.first == m_vocalPos)
+		{
+			Vocal& vocal = m_track.getVocal_midi<INDEX>(m_vocalPos);
+			uint32_t sustain = position - m_vocalPos;
+			if constexpr (ON)
+			{
+				if (sustain > 240)
+					sustain -= 120;
+				else
+					sustain /= 2;
+			}
+			vocal.setLyric(m_lyric.second);
+			vocal.set(m_pitch, sustain);
+			m_lyric.first = UINT32_MAX;
+		}
+		
 		if constexpr (ON)
 		{
-			// This is a security put in place to handle poor GH rips
-			if (m_vocalPos != UINT32_MAX)
-			{
-				if (Vocal* vocal = m_track.testBackNote_midiOnly<INDEX>(m_vocalPos))
-				{
-					uint32_t sustain = position - m_vocalPos;
-					if (sustain > 240)
-						sustain -= 120;
-					else
-						sustain /= 2;
-
-					vocal->set(m_pitch, sustain);
-				}
-			}
-			else
-			{
-				if (m_lyric.first == position)
-					m_track.add_lyric_midi<INDEX>(position, m_lyric.second);
-				m_lyric.first = UINT32_MAX;
-			}
-
 			m_vocalPos = position;
 			m_pitch = note.value;
 		}
-		else if (m_vocalPos != UINT32_MAX)
-		{
-			if (Vocal* vocal = m_track.testBackNote_midiOnly<INDEX>(m_vocalPos))
-				vocal->set(m_pitch, position - m_vocalPos);
+		else
 			m_vocalPos = UINT32_MAX;
-		}
 	}
 
 	template <bool ON>
@@ -175,7 +142,7 @@ private:
 			m_perc = position;
 		else if (m_perc != UINT32_MAX)
 		{
-			m_track.add_percusssion_midi(m_perc).setPlayable(noteValue == 97);
+			m_track.getPercusssion_midi(m_perc).setPlayable(noteValue == 97);
 			m_perc = UINT32_MAX;
 		}
 	}

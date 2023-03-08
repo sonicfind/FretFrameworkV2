@@ -70,7 +70,7 @@ void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note)
 			m_tracker.difficulties[3].notes[0] = position;
 
 			m_track.construct_note_midi(diff, position);
-			m_track.modifyBackNote_midiOnly(diff, position, '+');
+			m_track.backNote_midiOnly(diff).modify('+');
 		}
 		else
 		{
@@ -132,7 +132,7 @@ void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note
 			m_tracker.difficulties[3].notes[0] = position;
 
 			m_track.construct_note_midi(diff, position);
-			m_track.modifyBackNote_midiOnly(diff, position, '+');
+			m_track.backNote_midiOnly(diff).modify('+');
 		}
 		else
 		{
@@ -204,7 +204,7 @@ void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note)
 			m_tracker.difficulties[3].notes[0] = position;
 
 			m_track.construct_note_midi(diff, position);
-			m_track.modifyBackNote_midiOnly(diff, position, '+');
+			m_track.backNote_midiOnly(diff).modify('+');
 		}
 		else
 		{

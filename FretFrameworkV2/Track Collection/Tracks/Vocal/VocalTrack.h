@@ -134,7 +134,7 @@ public:
 
 		SimpleFlatMap<VocalWriteNode> nodes(vocalSize + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
-			nodes.try_construct_back(phrases.key)->m_phrases = &phrases.object;
+			nodes.try_emplace_back(phrases.key)->m_phrases = &phrases.object;
 
 		for (size_t i = 0; i < numTracks; ++i)
 			for (const auto& vocal : m_vocals[i])
@@ -262,7 +262,6 @@ public:
 private:
 	template<int index>
 	void save_midi(const std::string& name, std::fstream& outFile) const;
-	void save_bch_lyricTrack(std::fstream& outFile) const;
 
 	uint32_t getLongestSustain(uint32_t position) const
 	{
@@ -274,59 +273,39 @@ private:
 		return sustain;
 	}
 
-	void addEvent_midi(uint32_t position, std::string_view str)
-	{
-		m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
-	}
-
-	VocalPercussion& add_percusssion_midi(uint32_t position)
-	{
-		return m_percussion.get_or_emplace_back(position);
-	}
-
 	template <size_t INDEX>
-	void add_lyric_midi(uint32_t position, std::string_view lyric)
+	Vocal& getVocal_midi(uint32_t position)
 	{
 		if (m_vocals[INDEX].capacity() == 0)
 			m_vocals[INDEX].reserve(500);
 
-		m_vocals[INDEX].try_construct_back(position);
-		m_vocals[INDEX].back().setLyric(lyric);
+		return m_vocals[INDEX].emplace_back(position);
 	}
 
-	template <size_t INDEX>
-	void setPitching_midi(uint32_t position, unsigned char pitch, uint32_t duration = 1)
+	VocalPercussion& getPercusssion_midi(uint32_t position)
 	{
-		if (duration < 20)
-			duration = 1;
+		return m_percussion.get_or_emplace_back(position);
+	}
 
-		auto iter = m_vocals[INDEX].end() - 1;
-		while (iter->key > position)
-			--iter;
+	std::vector<std::u32string>& getEvents_midi(uint32_t position)
+	{
+		return m_events.get_or_emplace_back(position);
+	}
 
-		(*iter)->set(pitch, duration);
+	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	{
+		return m_specialPhrases.getNodeFromBack(position);
 	}
 
 	void construct_phrase_midi(uint32_t position)
 	{
-		m_specialPhrases.try_construct_back(position);
-	}
-
-	void addSpecialPhrase_midi(uint32_t position, SpecialPhrase phrase)
-	{
-		auto iter = m_specialPhrases.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->push_back(phrase);
+		m_specialPhrases.try_emplace_back(position);
 	}
 
 	template <size_t INDEX>
 	Vocal* testBackNote_midiOnly(uint32_t position)
 	{
-		if (m_vocals[INDEX].validateBack(position))
-			return &m_vocals[INDEX].back();
-		return nullptr;
+		return m_vocals[INDEX].try_back(position);
 	}
 
 	template <size_t INDEX>

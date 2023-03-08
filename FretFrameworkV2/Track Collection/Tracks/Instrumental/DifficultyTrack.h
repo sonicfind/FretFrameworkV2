@@ -206,7 +206,7 @@ private:
 	{
 		SimpleFlatMap<DiffWriteNode> nodes(m_notes.size() + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
-			nodes.try_construct_back(phrases.key)->m_phrases = &phrases.object;
+			nodes.try_emplace_back(phrases.key)->m_phrases = &phrases.object;
 
 		for (const auto& note : m_notes)
 			nodes[note.key].m_note = &note.object;
@@ -263,36 +263,18 @@ private:
 
 	T* construct_note_midi(uint32_t position)
 	{
-		if (m_notes.capacity() == 0)
-			m_notes.reserve(5000);
-
-		return m_notes.try_construct_back(position);
+		m_notes.reserve(5000);
+		return m_notes.try_emplace_back(position);
 	}
 
-	void construct_phrase_midi(uint32_t position)
+	void addNote_midi(uint32_t position, size_t note, uint32_t sustain)
 	{
-		m_specialPhrases.try_construct_back(position);
+		m_notes.getNodeFromBack(position).set(note, sustain);
 	}
 
-	void addNote_midi(uint32_t position, size_t note, uint32_t sustain = 0)
+	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
 	{
-		if (sustain < 20)
-			sustain = 0;
-
-		auto iter = m_notes.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->set(note, sustain);
-	}
-
-	void addSpecialPhrase_midi(uint32_t position, SpecialPhrase phrase)
-	{
-		auto iter = m_specialPhrases.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->push_back(phrase);
+		return m_specialPhrases.getNodeFromBack(position);
 	}
 
 	T& backNote_midiOnly()
@@ -302,14 +284,7 @@ private:
 
 	T* testBackNote_midiOnly(uint32_t position)
 	{
-		if (m_notes.validateBack(position))
-			return &m_notes.back();
-		return nullptr;
-	}
-
-	void modifyBackNote_midiOnly(uint32_t position, char modifier, size_t lane)
-	{
-		m_notes.back().modify(modifier, lane);
+		return m_notes.try_back(position);
 	}
 
 private:

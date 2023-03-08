@@ -68,7 +68,7 @@ void InstrumentTrackMidiParser<GuitarNote<5>>::parseText(std::string_view text)
 			m_laneValues[12 * diff] = 0;
 	}
 	else
-		m_track.addEvent_midi(m_reader.getPosition(), text);
+		m_track.getEvents_midi(m_reader.getPosition()).push_back(UnicodeString::strToU32(text));
 }
 
 template <>

@@ -15,53 +15,27 @@ public:
 private:
 	[[nodiscard]] DrumType_Enum load_V1(TxtFileReader& reader);
 
-	DrumNote_Legacy* construct_note_midi(uint32_t position)
-	{
-		if (m_notes.capacity() == 0)
-			m_notes.reserve(5000);
-
-		return m_notes.try_construct_back(position);
-	}
-
-	void construct_phrase_midi(uint32_t position)
-	{
-		m_specialPhrases.try_construct_back(position);
-	}
-
-	void addNote_midi(uint32_t position, size_t note, uint32_t sustain = 0)
-	{
-		if (sustain < 20)
-			sustain = 0;
-
-		auto iter = m_notes.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->set(note, sustain);
-	}
-
 	void addNote(uint32_t position, size_t note, uint32_t sustain = 0)
 	{
 		m_notes[position].set(note, sustain);
 	}
 
-	void addSpecialPhrase_midi(uint32_t position, SpecialPhrase phrase)
+	DrumNote_Legacy* construct_note_midi(uint32_t position)
 	{
-		auto iter = m_specialPhrases.end() - 1;
-		while (iter->key > position)
-			--iter;
+		if (m_notes.capacity() == 0)
+			m_notes.reserve(5000);
 
-		(*iter)->push_back(phrase);
+		return m_notes.try_emplace_back(position);
+	}
+
+	void addNote_midi(uint32_t position, size_t note, uint32_t sustain = 0)
+	{
+		m_notes.getNodeFromBack(position).set(note, sustain);
 	}
 
 	DrumNote_Legacy& backNote_midiOnly()
 	{
 		return m_notes.back();
-	}
-
-	void modifyBackNote_midiOnly(uint32_t position, char modifier, size_t lane)
-	{
-		m_notes.back().modify(modifier, lane);
 	}
 
 	void shrink()
@@ -107,28 +81,24 @@ private:
 		return m_difficulties[diff].backNote_midiOnly();
 	}
 
-	void construct_phrase_midi(uint32_t position)
+	std::vector<std::u32string>& getEvents_midi(uint32_t position)
 	{
-		m_trackSpecialPhrases.try_construct_back(position);
+		return m_events.get_or_emplace_back(position);
 	}
 
-	void addEvent_midi(uint32_t position, std::string_view str)
+	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
 	{
-		m_trackEvents.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		return m_specialPhrases.getNodeFromBack(position);
 	}
 
-	void addSpecialPhrase_midi(uint32_t position, SpecialPhrase phrase)
+	void addNote(size_t diffIndex, uint32_t position, int note, uint32_t sustain = 0)
 	{
-		auto iter = m_trackSpecialPhrases.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->push_back(phrase);
+		m_difficulties[diffIndex].addNote(position, note, sustain);
 	}
 
-	void modifyBackNote_midiOnly(size_t diff, uint32_t position, char modifier, size_t lane = 0)
+	void addSharedPhrase(uint32_t position, SpecialPhrase phrase)
 	{
-		m_difficulties[diff].modifyBackNote_midiOnly(position, modifier, lane);
+		m_specialPhrases[position].push_back(phrase);
 	}
 
 	void shrink_midi()
@@ -137,20 +107,10 @@ private:
 			diff.shrink();
 	}
 
-	void addSharedPhrase(uint32_t position, SpecialPhrase phrase)
-	{
-		m_trackSpecialPhrases[position].push_back(phrase);
-	}
-
-	void addNote(size_t diffIndex, uint32_t position, size_t note, uint32_t sustain = 0)
-	{
-		m_difficulties[diffIndex].addNote(position, note, sustain);
-	}
-
 private:
 	DifficultyTrack<DrumNote_Legacy> m_difficulties[5];
-	SimpleFlatMap<std::vector<SpecialPhrase>> m_trackSpecialPhrases;
-	SimpleFlatMap<std::vector<std::u32string>> m_trackEvents;
+	SimpleFlatMap<std::vector<SpecialPhrase>> m_specialPhrases;
+	SimpleFlatMap<std::vector<std::u32string>> m_events;
 
 	DrumType_Enum m_drumType = DrumType_Enum::LEGACY;
 };

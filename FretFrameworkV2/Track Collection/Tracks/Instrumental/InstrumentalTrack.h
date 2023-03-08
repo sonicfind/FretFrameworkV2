@@ -192,7 +192,7 @@ private:
 	{
 		SimpleFlatMap<WriteNode> nodes(m_specialPhrases.size() + m_events.size());
 		for (const auto& note : m_specialPhrases)
-			nodes.try_construct_back(note.key)->m_phrases = &note.object;
+			nodes.try_emplace_back(note.key)->m_phrases = &note.object;
 
 		for (const auto& events : m_events)
 			nodes[events.key].m_events = &events.object;
@@ -214,43 +214,9 @@ private:
 		return m_difficulties[diff].construct_note_midi(position);
 	}
 
-	void addNote_midi(size_t diff, uint32_t position, int note, uint32_t sustain = 1)
-	{
-		m_difficulties[diff].addNote_midi(position, note, sustain);
-	}
-
 	T& backNote_midiOnly(size_t diff)
 	{
 		return m_difficulties[diff].backNote_midiOnly();
-	}
-
-	void construct_phrase_midi(uint32_t position)
-	{
-		m_specialPhrases.try_construct_back(position);
-	}
-
-	void construct_phrase_midi(size_t diff, uint32_t position)
-	{
-		m_difficulties[diff].construct_phrase_midi(position);
-	}
-
-	void addEvent_midi(uint32_t position, std::string_view str)
-	{
-		m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
-	}
-
-	void addSpecialPhrase_midi(uint32_t position, SpecialPhrase phrase)
-	{
-		auto iter = m_specialPhrases.end() - 1;
-		while (iter->key > position)
-			--iter;
-
-		(*iter)->push_back(phrase);
-	}
-
-	void addSpecialPhrase_midi(size_t diff, uint32_t position, SpecialPhrase phrase)
-	{
-		m_difficulties[diff].addSpecialPhrase_midi(position, phrase);
 	}
 
 	T* testBackNote_midiOnly(size_t diff, uint32_t position)
@@ -258,9 +224,24 @@ private:
 		return m_difficulties[diff].testBackNote_midiOnly(position);
 	}
 
-	void modifyBackNote_midiOnly(size_t diff, uint32_t position, char modifier, size_t lane = 0)
+	void addNote_midi(size_t diff, uint32_t position, int note, uint32_t sustain)
 	{
-		m_difficulties[diff].modifyBackNote_midiOnly(position, modifier, lane);
+		m_difficulties[diff].addNote_midi(position, note, sustain);
+	}
+
+	std::vector<std::u32string>& getEvents_midi(uint32_t position)
+	{
+		return m_events.get_or_emplace_back(position);
+	}
+
+	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	{
+		return m_specialPhrases.getNodeFromBack(position);
+	}
+
+	std::vector<SpecialPhrase>& getSpecialPhrase_midi(size_t diff, uint32_t position)
+	{
+		return m_difficulties[diff].getSpecialPhrase_midi(position);
 	}
 
 	void convertSoloesToStarPower_midi()
