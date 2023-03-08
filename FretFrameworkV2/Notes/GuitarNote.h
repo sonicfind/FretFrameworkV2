@@ -21,7 +21,7 @@ class GuitarNote : public Note_withSpecial<NoteColor, numColors, NoteColor>
 	static constexpr NoteColor REPLACEMENTS[numColors]{};
 
 public:
-	bool set(const size_t lane, const uint32_t sustain)
+	bool set(const size_t lane, uint32_t sustain)
 	{
 		if (!Note_withSpecial<NoteColor, numColors, NoteColor>::set(lane, sustain))
 			return false;
@@ -33,10 +33,13 @@ public:
 		return true;
 	}
 
-	bool set_V1(const size_t lane, const uint32_t sustain)
+	bool set_V1(const size_t lane, uint32_t sustain)
 	{
 		if (lane > numColors + 2) [[unlikely]]
 			return false;
+
+		if (sustain < 20)
+			sustain = 1;
 
 		auto testExtension = [&]() -> bool
 		{
@@ -104,6 +107,14 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
+	{
+		if (m_special.isActive())
+			return { { 0, m_special.getSustain() } };
+		else
+			return Note<NoteColor, numColors>::getActiveColors();
 	}
 
 	std::vector<std::pair<char, size_t>> getActiveModifiers() const

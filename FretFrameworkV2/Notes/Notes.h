@@ -13,10 +13,13 @@ protected:
 public:
 	bool modify(char modifier, size_t lane) { return false; }
 
-	bool set(const size_t lane, const uint32_t sustain)
+	bool set(const size_t lane, uint32_t sustain)
 	{
 		if (lane == 0 || lane > numColors)
 			return false;
+
+		if (sustain < 20)
+			sustain = 1;
 
 		m_colors[lane - 1].set(sustain);
 		return true;

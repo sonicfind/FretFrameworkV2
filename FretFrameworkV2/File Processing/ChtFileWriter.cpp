@@ -66,7 +66,7 @@ void ChtFileWriter::finishEvent()
 void ChtFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
 {
 	write(note.first);
-	if (note.second > 20)
+	if (note.second >= 20)
 		m_file << '~' << note.second;
 }
 

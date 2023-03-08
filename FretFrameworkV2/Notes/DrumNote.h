@@ -61,8 +61,11 @@ class DrumNote : public Note_withSpecial<DrumPad, numPads, NoteColor>
 	bool m_isFlammed = false;
 
 public:
-	bool set_V1(const size_t lane, const uint32_t sustain)
+	bool set_V1(const size_t lane, uint32_t sustain)
 	{
+		if (sustain < 20)
+			sustain = 1;
+
 		if (lane == 0)
 			this->m_special.set(sustain);
 		else if (lane <= numPads)

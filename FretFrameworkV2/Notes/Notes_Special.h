@@ -8,10 +8,13 @@ protected:
 	SpecialType m_special;
 
 public:
-	bool set(const size_t lane, const uint32_t sustain)
+	bool set(const size_t lane, uint32_t sustain)
 	{
 		if (lane == 0)
 		{
+			if (sustain < 20)
+				sustain = 1;
+
 			m_special.set(sustain);
 			return true;
 		}

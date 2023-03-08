@@ -72,7 +72,7 @@ void BCHFileWriter::finishEvent()
 void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
 {
 	assert(note.first < 128);
-	if (note.second > 0)
+	if (note.second >= 20)
 	{
 		append(unsigned char(note.first + 128));
 		appendWebType(note.second);
