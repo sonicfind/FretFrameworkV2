@@ -69,14 +69,6 @@ public:
 	bool extract(bool& value);
 
 	template <typename T>
-	friend TxtFileReader& operator>>(TxtFileReader& file, T& value)
-	{
-		if (!file.extract(value))
-			throw std::runtime_error("can not parse this data");
-		return file;
-	}
-
-	template <typename T>
 	[[nodiscard]] T extract()
 	{
 		T value;
