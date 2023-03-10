@@ -5,7 +5,7 @@ void SyncValues::setMicrosPerQuarter(uint32_t micros)
 	m_microsPerQuarter = micros;
 }
 
-void SyncValues::setMicrosPerQuarter(float bpm)
+void SyncValues::setBPM(float bpm)
 {
 	m_microsPerQuarter = uint32_t(BPM_FACTOR / bpm);
 }

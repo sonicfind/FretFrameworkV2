@@ -12,7 +12,7 @@ class SyncValues
 
 public:
 	void setMicrosPerQuarter(uint32_t micros);
-	void setMicrosPerQuarter(float bpm);
+	void setBPM(float bpm);
 	void setTimeSig(TimeSig timeSig);
 	void setAnchor(uint32_t anchor);
 
