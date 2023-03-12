@@ -39,34 +39,30 @@ MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileRe
 
 bool MidiFileReader::startNextTrack()
 {
-	if (m_track.count == m_header.numTracks)
+	if (m_trackCount == m_header.numTracks)
 		return false;
 
 	m_currentPosition = m_nextTrack;
-	m_track.count++;
+	m_trackCount++;
 
 	if (!checkTag("MTrk"))
-		throw std::runtime_error("Midi Track Tag 'MTrk' not found for Track " + std::to_string(m_track.count));
+		throw std::runtime_error("Midi Track Tag 'MTrk' not found for Track " + std::to_string(m_trackCount));
 
 	const uint32_t trackLength = extract<uint32_t>();
 	m_nextTrack = m_currentPosition + trackLength;
 
 	if (m_nextTrack > getEndOfFile())
-		throw std::runtime_error("Midi Track " + std::to_string(m_track.count) + "'s length extends past End of File");
+		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + "'s length extends past End of File");
 
 	m_event.tickPosition = 0;
 	m_event.type = MidiEventType::Reset_Or_Meta;
 
 	const char* const ev = m_currentPosition;
-	if (parseEvent() && m_event.type == MidiEventType::Text_TrackName)
-		m_track.name = extractTextOrSysEx();
-	else
+	if (!parseEvent() || m_event.type != MidiEventType::Text_TrackName)
 	{
 		m_currentPosition = ev;
 		m_event.tickPosition = 0;
 		m_event.type = MidiEventType::Reset_Or_Meta;
-
-		m_track.name = {};
 	}
 	return true;
 }
@@ -125,7 +121,7 @@ bool MidiFileReader::parseEvent()
 	}
 
 	if (m_currentPosition + m_event.length >= m_nextTrack)
-		throw std::runtime_error("Midi Track " + std::to_string(m_track.count) + " ends inproperly");
+		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends inproperly");
 
 	return true;
 }

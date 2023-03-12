@@ -9,7 +9,7 @@ void Collection::load_mid(const std::filesystem::path& path)
 
 	while (reader.startNextTrack())
 	{
-		const std::string_view name = reader.getTrackName();
+		const std::string_view name = reader.extractTextOrSysEx();
 		if (reader.getTrackNumber() == 1)
 		{
 			m_midiSequenceName = UnicodeString::strToU32(name);

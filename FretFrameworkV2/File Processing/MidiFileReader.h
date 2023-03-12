@@ -70,8 +70,7 @@ public:
 	[[nodiscard]] bool parseEvent();
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }
-	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_track.count; }
-	[[nodiscard]] std::string_view getTrackName() const noexcept { return m_track.name; }
+	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
 	[[nodiscard]] uint32_t getPosition() const noexcept { return m_event.tickPosition; }
 	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
 
@@ -96,11 +95,7 @@ private:
 		uint16_t tickRate;
 	} m_header;
 
-	struct
-	{
-		uint16_t count = 0;
-		std::string_view name;
-	} m_track;
+	uint16_t m_trackCount = 0;
 
 	struct
 	{
