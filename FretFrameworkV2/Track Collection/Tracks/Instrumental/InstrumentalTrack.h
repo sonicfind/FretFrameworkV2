@@ -192,7 +192,7 @@ private:
 	{
 		SimpleFlatMap<WriteNode> nodes(m_specialPhrases.size() + m_events.size());
 		for (const auto& note : m_specialPhrases)
-			nodes.try_emplace_back(note.key)->m_phrases = &note.object;
+			nodes.emplace_back(note.key).m_phrases = &note.object;
 
 		for (const auto& events : m_events)
 			nodes[events.key].m_events = &events.object;

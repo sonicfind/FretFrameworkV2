@@ -78,7 +78,7 @@ DifficultyTrack<DrumNote<4, true>>& DifficultyTrack<DrumNote<4, true>>::operator
 	m_specialPhrases = std::move(diff.m_specialPhrases);
 	m_notes.reserve(diff.m_notes.size());
 	for (const auto& node : diff.m_notes)
-		m_notes.get_or_emplace_back(node.key) = node->transformNote<4, true>();
+		m_notes.emplace_back(node.key) = node->transformNote<4, true>();
 	return *this;
 }
 
@@ -90,6 +90,6 @@ DifficultyTrack<DrumNote<5, false>>& DifficultyTrack<DrumNote<5, false>>::operat
 	m_specialPhrases = std::move(diff.m_specialPhrases);
 	m_notes.reserve(diff.m_notes.size());
 	for (const auto& node : diff.m_notes)
-		m_notes.get_or_emplace_back(node.key) = node->transformNote<5, false>();
+		m_notes.emplace_back(node.key) = node->transformNote<5, false>();
 	return *this;
 }

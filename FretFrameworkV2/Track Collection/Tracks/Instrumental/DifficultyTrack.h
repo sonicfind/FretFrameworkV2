@@ -206,7 +206,7 @@ private:
 	{
 		SimpleFlatMap<DiffWriteNode> nodes(m_notes.size() + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
-			nodes.try_emplace_back(phrases.key)->m_phrases = &phrases.object;
+			nodes.emplace_back(phrases.key).m_phrases = &phrases.object;
 
 		for (const auto& note : m_notes)
 			nodes[note.key].m_note = &note.object;

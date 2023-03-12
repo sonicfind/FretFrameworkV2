@@ -134,7 +134,7 @@ public:
 
 		SimpleFlatMap<VocalWriteNode> nodes(vocalSize + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
-			nodes.try_emplace_back(phrases.key)->m_phrases = &phrases.object;
+			nodes.emplace_back(phrases.key).m_phrases = &phrases.object;
 
 		for (size_t i = 0; i < numTracks; ++i)
 			for (const auto& vocal : m_vocals[i])

@@ -228,7 +228,7 @@ void Collection::save_events(CommonChartWriter* writer) const
 
 	SimpleFlatMap<EventPointer> nodes;
 	for (const auto& section : m_sectionMarkers)
-		nodes.try_emplace_back(section.key)->m_section = &section.object;
+		nodes.emplace_back(section.key).m_section = &section.object;
 
 	for (const auto& events : m_globalEvents)
 		nodes[events.key].m_events = &events.object;
