@@ -22,4 +22,5 @@ private:
 
 protected:
 	const char* m_currentPosition = nullptr;
+	const char* m_next = nullptr;
 };

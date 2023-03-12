@@ -103,7 +103,6 @@ private:
 
 		MidiEventType type = MidiEventType::Reset_Or_Meta;
 		unsigned char channel = 0;
-		uint32_t length;
 	} m_event;
 
 	unsigned char m_starPowerNote = 116;

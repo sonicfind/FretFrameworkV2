@@ -66,7 +66,6 @@ public:
 	[[nodiscard]] virtual uint32_t extractAnchor() override;
 
 private:
-	const char* m_next = nullptr;
 	std::vector<const char*> m_nextTracks;
 
 	using BinaryFileReader::checkTag;

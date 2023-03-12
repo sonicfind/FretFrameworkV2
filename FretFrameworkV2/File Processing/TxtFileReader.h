@@ -115,7 +115,6 @@ public:
 	NoteTracks_V1 extractTrack_V1();
 
 private:
-	const char* m_next = nullptr;
 	std::vector<const std::vector<EventCombo>*> m_eventSets;
 
 	void skipWhiteSpace();

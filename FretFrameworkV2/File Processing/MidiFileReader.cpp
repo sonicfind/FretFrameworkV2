@@ -57,10 +57,10 @@ bool MidiFileReader::startNextTrack()
 	m_event.tickPosition = 0;
 	m_event.type = MidiEventType::Reset_Or_Meta;
 
-	const char* const ev = m_currentPosition;
+	const char* const ev = m_next = m_currentPosition;
 	if (!parseEvent() || m_event.type != MidiEventType::Text_TrackName)
 	{
-		m_currentPosition = ev;
+		m_next = ev;
 		m_event.tickPosition = 0;
 		m_event.type = MidiEventType::Reset_Or_Meta;
 	}
@@ -69,8 +69,7 @@ bool MidiFileReader::startNextTrack()
 
 bool MidiFileReader::parseEvent()
 {
-	if (m_event.type != MidiEventType::Reset_Or_Meta)
-		m_currentPosition += m_event.length;
+	m_currentPosition = m_next;
 
 	m_event.tickPosition += readVLQ();
 	unsigned char tmp = *m_currentPosition;
@@ -87,11 +86,11 @@ bool MidiFileReader::parseEvent()
 		{
 			m_event.channel = tmp & 15;
 			type = static_cast<MidiEventType>(tmp & 240);
-			m_event.length = 1 + (type == MidiEventType::Note_Off ||
-				                  type == MidiEventType::Note_On ||
-				                  type == MidiEventType::Control_Change ||
-				                  type == MidiEventType::Key_Pressure ||
-				                  type == MidiEventType::Pitch_Wheel);
+			m_next = m_currentPosition + 1 + (type == MidiEventType::Note_On ||
+				                              type == MidiEventType::Note_Off ||
+				                              type == MidiEventType::Control_Change ||
+				                              type == MidiEventType::Key_Pressure ||
+				                              type == MidiEventType::Pitch_Wheel);
 		}
 		else
 		{
@@ -104,23 +103,24 @@ bool MidiFileReader::parseEvent()
 				__fallthrough;
 			case MidiEventType::SysEx:
 			case MidiEventType::SysEx_End:
-				m_event.length = readVLQ();
+			{
+				uint32_t length = readVLQ();
+				m_next = m_currentPosition + length;
 				break;
+			}
 			case MidiEventType::Song_Position:
-				m_event.length = 2;
+				m_next = m_currentPosition + 2;
 				break;
 			case MidiEventType::Song_Select:
-				m_event.length = 1;
+				m_next = m_currentPosition + 1;
 				break;
-			default:
-				m_event.length = 0;
 			}
 		}
 
 		m_event.type = type;
 	}
 
-	if (m_currentPosition + m_event.length >= m_nextTrack)
+	if (m_next >= m_nextTrack)
 		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends inproperly");
 
 	return true;
@@ -128,21 +128,17 @@ bool MidiFileReader::parseEvent()
 
 std::string_view MidiFileReader::extractTextOrSysEx() const noexcept
 {
-	return std::string_view(m_currentPosition, m_event.length);
+	return std::string_view(m_currentPosition, m_next);
 }
 
 MidiNote MidiFileReader::extractMidiNote() const noexcept
 {
-	MidiNote note;
-	memcpy(&note, m_currentPosition, sizeof(MidiNote));
-	return note;
+	return { (unsigned char)m_currentPosition[0], (unsigned char)m_currentPosition[1] };
 }
 
 ControlChange MidiFileReader::extractControlChange() const noexcept
 {
-	ControlChange control;
-	memcpy(&control, m_currentPosition, sizeof(ControlChange));
-	return control;
+	return { (unsigned char)m_currentPosition[0], (unsigned char)m_currentPosition[1] };
 }
 
 uint32_t MidiFileReader::extractMicrosPerQuarter() const noexcept
@@ -154,7 +150,8 @@ uint32_t MidiFileReader::extractMicrosPerQuarter() const noexcept
 
 TimeSig MidiFileReader::extractTimeSig() const noexcept
 {
-	TimeSig timeSig;
-	memcpy(&timeSig, m_currentPosition, sizeof(TimeSig));
-	return timeSig;
+	return { (unsigned char)m_currentPosition[0],
+		     (unsigned char)m_currentPosition[1],
+		     (unsigned char)m_currentPosition[2],
+		     (unsigned char)m_currentPosition[3] };;
 }
