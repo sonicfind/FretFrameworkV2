@@ -12,24 +12,19 @@ int main()
 		filename = filename.substr(1, filename.length() - 2);
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	collection.load(filename);
-	auto t2 = std::chrono::high_resolution_clock::now();
-	long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-	std::cout << "Load took " << count / 1000.0 << " milliseconds\n";
-	std::cout << "yay\n" << std::endl;
+	if (collection.load(filename))
+	{
+		auto t2 = std::chrono::high_resolution_clock::now();
+		long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+		std::cout << "Load took " << count / 1000.0 << " milliseconds\n";
 
-	t1 = std::chrono::high_resolution_clock::now();
-	collection.load(filename);
-	t2 = std::chrono::high_resolution_clock::now();
-	count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-	std::cout << "Load took " << count / 1000.0 << " milliseconds\n";
-	std::cout << "yay 2" << std::endl;
-
-	if (filename.ends_with(".chart") || filename.ends_with(".mid"))
-		collection.save(filename);
+		if (filename.ends_with(".chart") || filename.ends_with(".mid"))
+			collection.save(filename);
+	}
+	else
+		std::cout << "Load failed\n";
 
 	std::cout << "Press Enter to Exit" << std::endl;
 	std::getline(std::cin, filename);
-
 	return 0;
 }
