@@ -18,9 +18,14 @@ public:
 	template <typename U>
 	InstrumentalTrack& operator=(InstrumentalTrack<U>&& track)
 	{
-		for (size_t i = 0; i < 5; ++i)
-			if (!m_difficulties[i].isOccupied())
-				m_difficulties[i] = std::move(track.m_difficulties[i]);
+		if constexpr (std::is_same<T, U>::value)
+		{
+			m_events = std::move(track.m_events);
+			m_specialPhrases = std::move(track.m_specialPhrases);
+			for (size_t i = 0; i < 5; ++i)
+				if (!m_difficulties[i].isOccupied())
+					m_difficulties[i] = std::move(track.m_difficulties[i]);
+		}
 		return *this;
 	}
 
