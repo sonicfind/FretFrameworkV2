@@ -114,8 +114,8 @@ bool TxtFileReader::validateInstrumentTrack()
 
 bool TxtFileReader::validateVocalTrack()
 {
-	for (size_t index = 0; index < std::size(g_INSTRUMENTTRACKS); ++index)
-		if (validateTrack(g_VOCALTRACKS[0]))
+	for (size_t index = 0; index < std::size(g_VOCALTRACKS); ++index)
+		if (validateTrack(g_VOCALTRACKS[index]))
 		{
 			m_eventSets.push_back(g_validTypes + 4);
 			m_vocalTrackID = index;
