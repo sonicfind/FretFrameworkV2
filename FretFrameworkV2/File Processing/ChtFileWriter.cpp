@@ -53,7 +53,7 @@ void ChtFileWriter::finishTrack()
 
 void ChtFileWriter::startEvent(uint32_t position, ChartEvent ev)
 {
-	static constexpr std::string_view EVENTS[] = { "B", "TS", "A", "E", "SE", "N", "C", "M", "S", "L", "V", "P" };
+	static constexpr std::string_view EVENTS[] = { "B", "TS", "A", "E", "SE", "N", "C", "M", "S", "L", "V", "VP" };
 	assert(ChartEvent::BPM <= ev && ev <= ChartEvent::VOCAL_PERCUSSION);
 	m_file << m_tabs << position << " = " << EVENTS[static_cast<size_t>(ev)];
 }

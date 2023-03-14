@@ -13,7 +13,7 @@ static constexpr EventCombo g_MODIFIER{ "M",  ChartEvent::MODIFIER };
 static constexpr EventCombo g_SPECIAL{ "S",  ChartEvent::SPECIAL };
 static constexpr EventCombo g_LYRIC{ "L",  ChartEvent::LYRIC };
 static constexpr EventCombo g_VOCAL{ "V",  ChartEvent::VOCAL };
-static constexpr EventCombo g_PERC{ "P",  ChartEvent::VOCAL_PERCUSSION };
+static constexpr EventCombo g_PERC{ "VP",  ChartEvent::VOCAL_PERCUSSION };
 static const std::vector<EventCombo> g_ALLEVENTS = { g_TEMPO, g_TIMESIG, g_ANCHOR, g_TEXT, g_SECTION, g_NOTE, g_MULTI, g_MODIFIER, g_SPECIAL, g_LYRIC, g_VOCAL, g_PERC };
 
 const std::vector<EventCombo> g_validTypes[5] =
