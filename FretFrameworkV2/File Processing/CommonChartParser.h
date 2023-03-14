@@ -18,11 +18,9 @@ public:
 	[[nodiscard]] virtual bool validateVocalTrack() = 0;
 	[[nodiscard]] virtual bool validateDifficultyTrack() = 0;
 	[[nodiscard]] virtual bool validateAnimationTrack() = 0;
-	virtual void processUnknownTrack() = 0;
-	virtual void skipTrack() = 0;
-	virtual void endTrack() = 0;
+	virtual void skipUnknownTrack() = 0;
 
-	[[nodiscard]] virtual bool isStillCurrentTrack() const = 0;
+	[[nodiscard]] virtual bool isStillCurrentTrack() = 0;
 	[[nodiscard]] virtual uint32_t parsePosition() = 0;
 	[[nodiscard]] virtual ChartEvent parseEvent() = 0;
 	virtual void nextEvent() = 0;

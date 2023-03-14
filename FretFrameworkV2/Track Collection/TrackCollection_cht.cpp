@@ -17,10 +17,7 @@ void Collection::load_cht(const std::filesystem::path& path)
 			if ((version > 1  && !load_events(&reader) && !load_instrumentTrack(&reader) && !load_vocalTrack(&reader)) ||
 				(version <= 1 && !load_events_V1(reader) && !load_instrumentTrack_V1(reader, drumsLegacy)))
 			{
-				"Unknown or invalid track";
-				reader.processUnknownTrack();
-				reader.skipTrack();
-				reader.endTrack();
+				reader.skipUnknownTrack();
 			}
 		}
 	}
@@ -53,7 +50,6 @@ int Collection::load_songInfo_cht(TxtFileReader& reader)
 			version = reader.extract<uint32_t>();
 		reader.nextEvent();
 	}
-	reader.endTrack();
 	return version;
 }
 
@@ -93,7 +89,6 @@ bool Collection::load_events_V1(TxtFileReader& reader)
 		}
 		reader.nextEvent();
 	}
-	reader.endTrack();
 	return true;
 }
 
@@ -103,7 +98,6 @@ bool Collection::load_instrumentTrack_V1(TxtFileReader& reader, InstrumentalTrac
 	if (track == TxtFileReader::Invalid)
 		return false;
 
-	reader.nextEvent();
 	switch (track)
 	{
 	case TxtFileReader::Single:
@@ -136,6 +130,5 @@ bool Collection::load_instrumentTrack_V1(TxtFileReader& reader, InstrumentalTrac
 		m_noteTracks.bass_6.load_V1(reader.getDifficulty(), reader);
 		break;
 	}
-	reader.endTrack();
 	return true;
 }

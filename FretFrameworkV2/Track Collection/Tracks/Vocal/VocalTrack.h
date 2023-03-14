@@ -24,6 +24,8 @@ public:
 		for (auto& track : m_vocals)
 			track.reserve(1000);
 		m_percussion.reserve(200);
+
+		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
 		{
 			const uint32_t position = parser->parsePosition();

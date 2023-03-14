@@ -8,6 +8,7 @@ DrumType_Enum DifficultyTrack<DrumNote_Legacy>::load_V1(TxtFileReader& reader)
 	DrumType_Enum drumType = DrumType_Enum::LEGACY;
 
 	m_notes.reserve(5000);
+	reader.nextEvent();
 	while (reader.isStillCurrentTrack())
 	{
 		const uint32_t position = reader.parsePosition();

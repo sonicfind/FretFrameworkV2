@@ -91,24 +91,20 @@ bool BCHFileReader::validateTrack(const char(&str)[5])
 	return true;
 }
 
-void BCHFileReader::processUnknownTrack()
+void BCHFileReader::skipUnknownTrack()
 {
 	parseTrackHeader();
-}
-
-void BCHFileReader::skipTrack()
-{
 	m_currentPosition = m_next = m_nextTracks.back();
-}
-
-void BCHFileReader::endTrack()
-{
 	m_nextTracks.pop_back();
 }
 
-bool BCHFileReader::isStillCurrentTrack() const
+bool BCHFileReader::isStillCurrentTrack()
 {
-	return m_currentPosition != m_nextTracks.back();
+	if (m_currentPosition != m_nextTracks.back())
+		return true;
+
+	m_nextTracks.pop_back();
+	return false;
 }
 
 uint32_t BCHFileReader::parsePosition()

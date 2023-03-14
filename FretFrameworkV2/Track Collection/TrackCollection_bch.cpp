@@ -9,8 +9,9 @@ void Collection::load_bch(const std::filesystem::path& path)
 		throw std::runtime_error("Header track not found at the start of the file");
 
 	m_tickrate = reader.extract<uint32_t>();
-	reader.skipTrack();
-	reader.endTrack();
+	do
+		reader.nextEvent();
+	while (reader.isStillCurrentTrack());
 
 	while (reader.isStartOfTrack())
 	{
@@ -19,9 +20,7 @@ void Collection::load_bch(const std::filesystem::path& path)
 			!load_tempoMap(&reader) &&
 			!load_events(&reader))
 		{
-			reader.processUnknownTrack();
-			reader.skipTrack();
-			reader.endTrack();
+			reader.skipUnknownTrack();
 		}
 	}
 }

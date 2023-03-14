@@ -31,38 +31,26 @@ public:
 
 	virtual void load(CommonChartParser* parser) override
 	{
+		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
 		{
 			if (!parser->isStartOfTrack())
-			{
 				parse_event(parser);
-				parser->nextEvent();
-			}
 			else
 			{
 				if (parser->validateDifficultyTrack())
 				{
 					const size_t diff = parser->getDifficulty();
 					if (diff < 5)
-					{
-						parser->nextEvent();
 						m_difficulties[diff].load(parser);
-					}
 					else // BCH only
-						parser->skipTrack();
+						parser->skipUnknownTrack();
 
 				}
 				else if (parser->validateAnimationTrack())
-				{
-					parser->nextEvent();
 					load_anim(parser);
-				}
 				else
-				{
-					parser->processUnknownTrack();
-					parser->skipTrack();
-				}
-				parser->endTrack();
+					parser->skipUnknownTrack();
 			}
 		}
 	}
@@ -176,10 +164,12 @@ private:
 			break;
 		}
 		}
+		parser->nextEvent();
 	}
 
 	void load_anim(CommonChartParser* parser)
 	{
+		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
 		{
 			uint32_t position = parser->parsePosition();

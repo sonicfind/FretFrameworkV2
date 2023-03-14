@@ -176,13 +176,9 @@ bool TxtFileReader::doesStringMatch_noCase(std::string_view str) const
 	return true;
 }
 
-void TxtFileReader::processUnknownTrack()
+void TxtFileReader::skipUnknownTrack()
 {
 	gotoNextLine();
-}
-
-void TxtFileReader::skipTrack()
-{
 	uint32_t scopeLevel = 1;
 	size_t length = strcspn(m_currentPosition, "[}");
 	while (m_currentPosition + length != getEndOfFile())
@@ -200,6 +196,7 @@ void TxtFileReader::skipTrack()
 				if (scopeLevel == 1)
 				{
 					setNextPointer();
+					gotoNextLine();
 					return;
 				}
 				else
@@ -215,16 +212,17 @@ void TxtFileReader::skipTrack()
 	m_next = m_currentPosition = getEndOfFile();
 }
 
-void TxtFileReader::endTrack()
-{
-	gotoNextLine();
-	m_eventSets.pop_back();
-}
-
-bool TxtFileReader::isStillCurrentTrack() const
+bool TxtFileReader::isStillCurrentTrack()
 {
 	unsigned char ch = *m_currentPosition;
-	return ch && ch != '}';
+	if (ch == '}')
+	{
+		gotoNextLine();
+		m_eventSets.pop_back();
+		return false;
+	}
+
+	return ch != 0;
 }
 
 uint32_t TxtFileReader::parsePosition()

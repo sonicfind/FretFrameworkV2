@@ -93,7 +93,6 @@ bool Collection::load_tempoMap(CommonChartParser* parser)
 		}
 		parser->nextEvent();
 	}
-	parser->endTrack();
 	return true;
 }
 
@@ -123,7 +122,6 @@ bool Collection::load_events(CommonChartParser* parser)
 		}
 		parser->nextEvent();
 	}
-	parser->endTrack();
 	return true;
 }
 
@@ -132,9 +130,7 @@ bool Collection::load_instrumentTrack(CommonChartParser* parser)
 	if (!parser->validateInstrumentTrack())
 		return false;
 
-	parser->nextEvent();
 	m_noteTracks.instrumentArray[parser->getInstrumentTrackID()]->load(parser);
-	parser->endTrack();
 	return true;
 }
 
@@ -143,9 +139,7 @@ bool Collection::load_vocalTrack(CommonChartParser* parser)
 	if (!parser->validateVocalTrack())
 		return false;
 
-	parser->nextEvent();
 	m_noteTracks.vocalArray[parser->getVocalTrackID()]->load(parser);
-	parser->endTrack();
 	return true;
 }
 

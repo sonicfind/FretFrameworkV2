@@ -50,6 +50,7 @@ private:
 		uint32_t solo = 0;
 
 		m_notes.reserve(5000);
+		reader.nextEvent();
 		while (reader.isStillCurrentTrack())
 		{
 			const uint32_t position = reader.parsePosition();
@@ -100,6 +101,7 @@ private:
 			throw std::runtime_error("Difficulty defined multiple times in file");
 
 		m_notes.reserve(5000);
+		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
 		{
 			const uint32_t position = parser->parsePosition();

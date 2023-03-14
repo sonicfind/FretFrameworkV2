@@ -43,11 +43,9 @@ public:
 	[[nodiscard]] virtual bool validateVocalTrack() override;
 	[[nodiscard]] virtual bool validateDifficultyTrack() override;
 	[[nodiscard]] virtual bool validateAnimationTrack() override;
-	virtual void processUnknownTrack() override;
-	virtual void skipTrack() override;
-	virtual void endTrack() override;
+	virtual void skipUnknownTrack() override;
 
-	[[nodiscard]] virtual bool isStillCurrentTrack() const override;
+	[[nodiscard]] virtual bool isStillCurrentTrack() override;
 	[[nodiscard]] virtual uint32_t parsePosition() override;
 	[[nodiscard]] virtual ChartEvent parseEvent() override;
 	 virtual void nextEvent() override;
