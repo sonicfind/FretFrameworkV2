@@ -70,19 +70,18 @@ public:
 		return m_list.empty();
 	}
 
-	T* try_emplace_back(Key key)
+	// Assumes correct placement
+	[[nodiscard]] T& emplace_back(Key key, const T& obj = BASE)
+	{
+		return m_list.emplace_back(key, BASE).object;
+	}
+
+	T* try_emplace_back(Key key, const T& obj = BASE)
 	{
 		if (!m_list.empty() && m_list.back().key >= key)
 			return nullptr;
 
-		return &m_list.emplace_back(key, BASE).object;
-	}
-
-	[[nodiscard]] T& emplace_back(Key key)
-	{
-		if (T* obj = try_emplace_back(key))
-			return *obj;
-		throw std::runtime_error("Can not add node at position to the back");
+		return &emplace_back(key, obj);
 	}
 
 	[[nodiscard]] T& get_or_emplace_back(Key key)
@@ -92,11 +91,32 @@ public:
 		return *m_list.back();
 	}
 
+	T& get_or_emplaceNodeFromBack(uint32_t position)
+	{
+		if (isEmpty())
+			return emplace_back(position);
+
+		auto iter = iterFromBack(position);
+		if (iter == end() || iter->key > position)
+			iter = emplace(iter, position);
+		return **iter;
+	}
+
+	auto emplace(typename std::vector<Node>::iterator _Where, uint32_t position, const T& obj = BASE)
+	{
+		return m_list.emplace(_Where, position, obj);
+	}
+
+	auto erase(typename std::vector<Node>::iterator _Where)
+	{
+		return m_list.erase(_Where);
+	}
+
 	[[nodiscard]] T& operator[](Key key)
 	{
 		auto iter = getIterator(key);
 		if (iter == end() || key < iter->key)
-			return m_list.emplace(iter, key, BASE)->object;
+			iter = m_list.emplace(iter, key, BASE);
 		return iter->object;
 	}
 
@@ -116,7 +136,7 @@ public:
 		throw std::runtime_error("Object at key does not exist");
 	}
 
-	[[nodiscard]] T* at_pointer(Key key) noexcept
+	[[nodiscard]] T* try_at(Key key) noexcept
 	{
 		auto iter = getIterator(key);
 		if (iter != end() && key == iter->key)
@@ -124,7 +144,7 @@ public:
 		return nullptr;
 	}
 
-	[[nodiscard]] const T* at_pointer(Key key) const noexcept
+	[[nodiscard]] const T* try_at(Key key) const noexcept
 	{
 		auto iter = getIterator(key);
 		if (iter != end() && key == iter->key)
@@ -132,20 +152,10 @@ public:
 		return nullptr;
 	}
 
-	[[nodiscard]] Node& at_node(Key key)
+	// Assumes key exists
+	T& getNodeFromBack(uint32_t position)
 	{
-		auto iter = getIterator(key);
-		if (iter != end() && key == iter->key)
-			return *iter;
-		throw std::runtime_error("Node does not exist");
-	}
-
-	[[nodiscard]] const Node& at_node(Key key) const
-	{
-		auto iter = getIterator(key);
-		if (iter != end() && key == iter->key)
-			return *iter;
-		throw std::runtime_error("Node does not exist");
+		return **iterFromBack(position);
 	}
 
 	[[nodiscard]] T& back()
@@ -203,25 +213,17 @@ public:
 	[[nodiscard]] auto end() noexcept { return m_list.end(); }
 	[[nodiscard]] auto end() const noexcept { return m_list.end(); }
 
-	auto erase(typename std::vector<Node>::iterator _Where)
-	{
-		return m_list.erase(_Where);
-	}
-
-	auto emplace(typename std::vector<Node>::iterator _Where, uint32_t position)
-	{
-		return m_list.emplace(_Where, position, BASE);
-	}
-
-	T& getNodeFromBack(uint32_t position)
+private:
+	auto iterFromBack(uint32_t position)
 	{
 		auto iter = end();
-		while (iter != begin() && (iter - 1)->key >= position)
+		while (iter != begin())
+		{
 			--iter;
-
-		if (iter == end() || iter->key > position)
-			iter = emplace(iter, position);
-		return **iter;
+			if (iter->key <= position)
+				break;
+		}
+		return iter;
 	}
 };
 

@@ -263,18 +263,19 @@ private:
 
 	T* construct_note_midi(uint32_t position)
 	{
-		m_notes.reserve(5000);
+		if (m_notes.capacity() == 0)
+			m_notes.reserve(5000);
 		return m_notes.try_emplace_back(position);
 	}
 
-	void addNote_midi(uint32_t position, size_t note, uint32_t sustain)
+	T& getNote_midi(uint32_t position)
 	{
-		m_notes.getNodeFromBack(position).set(note, sustain);
+		return m_notes.getNodeFromBack(position);
 	}
 
-	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
-		return m_specialPhrases.getNodeFromBack(position);
+		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
 	T& backNote_midiOnly()

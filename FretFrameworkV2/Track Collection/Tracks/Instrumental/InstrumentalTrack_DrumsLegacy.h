@@ -28,9 +28,9 @@ private:
 		return m_notes.try_emplace_back(position);
 	}
 
-	void addNote_midi(uint32_t position, size_t note, uint32_t sustain = 0)
+	DrumNote_Legacy& getNote_midi(uint32_t position)
 	{
-		m_notes.getNodeFromBack(position).set(note, sustain);
+		return m_notes.getNodeFromBack(position);
 	}
 
 	DrumNote_Legacy& backNote_midiOnly()
@@ -71,9 +71,9 @@ private:
 		return m_difficulties[diff].construct_note_midi(position);
 	}
 
-	void addNote_midi(size_t diff, uint32_t position, size_t note, uint32_t sustain = 0)
+	DrumNote_Legacy& getNote_midi(size_t diff, uint32_t position)
 	{
-		m_difficulties[diff].addNote_midi(position, note, sustain);
+		return m_difficulties[diff].getNote_midi(position);
 	}
 
 	DrumNote_Legacy& backNote_midiOnly(size_t diff)
@@ -81,14 +81,14 @@ private:
 		return m_difficulties[diff].backNote_midiOnly();
 	}
 
-	std::vector<std::u32string>& getEvents_midi(uint32_t position)
+	std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
 	{
 		return m_events.get_or_emplace_back(position);
 	}
 
-	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
-		return m_specialPhrases.getNodeFromBack(position);
+		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
 	void addNote(size_t diffIndex, uint32_t position, int note, uint32_t sustain = 0)

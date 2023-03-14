@@ -224,24 +224,24 @@ private:
 		return m_difficulties[diff].testBackNote_midiOnly(position);
 	}
 
-	void addNote_midi(size_t diff, uint32_t position, int note, uint32_t sustain)
+	T& getNote_midi(size_t diff, uint32_t position)
 	{
-		m_difficulties[diff].addNote_midi(position, note, sustain);
+		return m_difficulties[diff].getNote_midi(position);
 	}
 
-	std::vector<std::u32string>& getEvents_midi(uint32_t position)
+	std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
 	{
 		return m_events.get_or_emplace_back(position);
 	}
 
-	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
-		return m_specialPhrases.getNodeFromBack(position);
+		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
-	std::vector<SpecialPhrase>& getSpecialPhrase_midi(size_t diff, uint32_t position)
+	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(size_t diff, uint32_t position)
 	{
-		return m_difficulties[diff].getSpecialPhrase_midi(position);
+		return m_difficulties[diff].get_or_emplace_SpecialPhrase_midi(position);
 	}
 
 	void convertSoloesToStarPower_midi()

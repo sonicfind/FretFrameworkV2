@@ -287,19 +287,14 @@ private:
 		return m_percussion.get_or_emplace_back(position);
 	}
 
-	std::vector<std::u32string>& getEvents_midi(uint32_t position)
+	std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
 	{
 		return m_events.get_or_emplace_back(position);
 	}
 
-	std::vector<SpecialPhrase>& getSpecialPhrase_midi(uint32_t position)
+	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
-		return m_specialPhrases.getNodeFromBack(position);
-	}
-
-	void construct_phrase_midi(uint32_t position)
-	{
-		m_specialPhrases.try_emplace_back(position);
+		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
 	template <size_t INDEX>

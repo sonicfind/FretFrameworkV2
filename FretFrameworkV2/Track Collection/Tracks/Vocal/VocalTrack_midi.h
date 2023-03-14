@@ -21,15 +21,9 @@ public:
 		{
 			MidiEventType eventType = m_reader.getEventType();
 			if (eventType == MidiEventType::Note_On)
-			{
-				MidiNote note = m_reader.extractMidiNote();
-				if (note.velocity > 0)
-					parseNote<true, INDEX>(note);
-				else
-					parseNote<false, INDEX>(note);
-			}
+				parseNote<INDEX, true>(m_reader.extractMidiNote());
 			else if (eventType == MidiEventType::Note_Off)
-				parseNote<false, INDEX>(m_reader.extractMidiNote());
+				parseNote<INDEX, false>(m_reader.extractMidiNote());
 			else if (eventType == MidiEventType::SysEx || eventType == MidiEventType::SysEx_End)
 				parseSysEx(m_reader.extractTextOrSysEx());
 			else if (m_reader.getEventType() <= MidiEventType::Text_EnumLimit)
@@ -43,29 +37,30 @@ public:
 	}
 
 private:
-	template <bool ON, size_t INDEX>
+	template <size_t INDEX, bool NoteOn>
 	void parseNote(MidiNote note)
 	{
+		const bool isON = NoteOn && note.velocity > 0;
 		const uint32_t position = m_reader.getPosition();
 		if (s_PITCHRANGE.first <= note.value && note.value < s_PITCHRANGE.second)
-			parseVocal<ON, INDEX>(note);
+			parseVocal<INDEX>(note, isON);
 		else if constexpr (INDEX == 0)
 		{
 			if (note.value == 96 || note.value == 97)
-				addPercussion<ON>(note.value);
+				addPercussion(note.value, isON);
 			else if (note.value == 105 || note.value == 106)
-				addSpecialPhrase<ON>(m_lyricLine);
+				addSpecialPhrase(m_lyricLine, isON);
 			else if (note.value == m_reader.getStarPowerValue())
-				addSpecialPhrase<ON>(m_starPower);
+				addSpecialPhrase(m_starPower, isON);
 			else if (note.value == 0)
-				addSpecialPhrase<ON>(m_rangeShift);
+				addSpecialPhrase(m_rangeShift, isON);
 			else if (note.value == 1)
-				addSpecialPhrase<ON>(m_lyricShift);
+				addSpecialPhrase(m_lyricShift, isON);
 		}
 		else if constexpr (INDEX == 1)
 		{
 			if (note.value == 105 || note.value == 106)
-				addSpecialPhrase<ON>(m_harmonyLine);
+				addSpecialPhrase(m_harmonyLine, isON);
 		}
 	}
 
@@ -78,7 +73,7 @@ private:
 	{
 		uint32_t position = m_reader.getPosition();
 		if (text[0] == '[')
-			m_track.getEvents_midi(position).push_back(UnicodeString::strToU32(text));
+			m_track.get_or_emplace_Events_midi(position).push_back(UnicodeString::strToU32(text));
 		else
 		{
 			if (m_lyric.first != UINT32_MAX)
@@ -87,40 +82,40 @@ private:
 		}
 	}
 
-	template <bool ON>
-	void addSpecialPhrase(ValCombo& combo)
+	void addSpecialPhrase(ValCombo& combo, const bool isON)
 	{
 		uint32_t position = m_reader.getPosition();
-		if constexpr (ON)
+		if (isON)
 			combo.second = position;
 		else if (combo.second != UINT32_MAX)
 		{
-			m_track.getSpecialPhrase_midi(combo.second).push_back({ combo.first, position - combo.second });
+			m_track.get_or_emplace_SpecialPhrase_midi(combo.second).push_back({ combo.first, position - combo.second });
 			combo.second = UINT32_MAX;
 		}
 	}
 
-	template <bool ON, size_t INDEX>
-	void parseVocal(MidiNote note)
+	template <size_t INDEX>
+	void parseVocal(MidiNote note, const bool isON)
 	{
 		uint32_t position = m_reader.getPosition();
 		if (m_vocalPos != UINT32_MAX && m_lyric.first == m_vocalPos)
 		{
-			Vocal& vocal = m_track.getVocal_midi<INDEX>(m_vocalPos);
 			uint32_t sustain = position - m_vocalPos;
-			if constexpr (ON)
+			if (isON)
 			{
 				if (sustain > 240)
 					sustain -= 120;
 				else
 					sustain /= 2;
 			}
+
+			Vocal& vocal = m_track.getVocal_midi<INDEX>(m_vocalPos);
 			vocal.setLyric(m_lyric.second);
 			vocal.set(m_pitch, sustain);
 			m_lyric.first = UINT32_MAX;
 		}
 		
-		if constexpr (ON)
+		if (isON)
 		{
 			m_vocalPos = position;
 			m_pitch = note.value;
@@ -129,16 +124,10 @@ private:
 			m_vocalPos = UINT32_MAX;
 	}
 
-	template <bool ON>
-	void toggleExtraValues(MidiNote note)
-	{
-	}
-
-	template <bool ON>
-	void addPercussion(int noteValue)
+	void addPercussion(int noteValue, const bool isON)
 	{
 		uint32_t position = m_reader.getPosition();
-		if constexpr (ON)
+		if (isON)
 			m_perc = position;
 		else if (m_perc != UINT32_MAX)
 		{
