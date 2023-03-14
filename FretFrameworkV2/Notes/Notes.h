@@ -7,7 +7,6 @@ template <class NoteType, size_t numColors>
 class Note
 {
 protected:
-	class InvalidColorException : public std::runtime_error { public: InvalidColorException() : std::runtime_error("Invalid color value") {} };
 	NoteType m_colors[numColors];
 
 public:
