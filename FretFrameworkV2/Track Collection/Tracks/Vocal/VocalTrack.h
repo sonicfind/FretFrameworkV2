@@ -131,8 +131,7 @@ public:
 	{
 		size_t vocalSize = 0;
 		for (size_t i = 0; i < numTracks; ++i)
-			if (m_vocals[i].size() > vocalSize)
-				vocalSize = m_vocals[i].size();
+			vocalSize += m_vocals[i].size();
 
 		SimpleFlatMap<VocalWriteNode> nodes(vocalSize + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
