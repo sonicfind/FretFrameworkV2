@@ -73,6 +73,7 @@ public:
 	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
 	[[nodiscard]] uint32_t getPosition() const noexcept { return m_event.tickPosition; }
 	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
+	[[nodiscard]] unsigned char getMidiChannel() const noexcept { return m_event.channel; }
 
 	void setStarPowerValue(unsigned char note) noexcept { m_starPowerNote = note; }
 	[[nodiscard]] unsigned char getStarPowerValue() const noexcept { return m_starPowerNote; }
