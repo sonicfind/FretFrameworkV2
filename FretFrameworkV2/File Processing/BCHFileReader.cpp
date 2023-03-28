@@ -93,7 +93,8 @@ bool BCHFileReader::validateTrack(const char(&str)[5])
 
 void BCHFileReader::skipUnknownTrack()
 {
-	parseTrackHeader();
+	if (isStartOfTrack())
+		parseTrackHeader();
 	m_currentPosition = m_next = m_nextTracks.back();
 	m_nextTracks.pop_back();
 }
