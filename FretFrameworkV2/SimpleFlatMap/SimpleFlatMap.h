@@ -23,12 +23,6 @@ class SimpleFlatMap
 	};
 
 	std::vector<Node> m_list;
-
-	[[nodiscard]] auto getIterator(Key key) noexcept
-	{
-		return std::lower_bound(begin(), end(), key);
-	};
-
 public:
 	SimpleFlatMap() = default;
 	SimpleFlatMap(const SimpleFlatMap&) = default;
@@ -114,7 +108,7 @@ public:
 
 	[[nodiscard]] T& operator[](Key key)
 	{
-		auto iter = getIterator(key);
+		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter == end() || key < iter->key)
 			iter = m_list.emplace(iter, key, BASE);
 		return iter->object;
@@ -122,7 +116,7 @@ public:
 
 	[[nodiscard]] T& at(Key key)
 	{
-		auto iter = getIterator(key);
+		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
 			return iter->object;
 		throw std::runtime_error("Object at key does not exist");
@@ -130,7 +124,7 @@ public:
 
 	[[nodiscard]] const T& at(Key key) const
 	{
-		auto iter = getIterator(key);
+		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
 			return iter->object;
 		throw std::runtime_error("Object at key does not exist");
@@ -138,7 +132,7 @@ public:
 
 	[[nodiscard]] T* try_at(Key key) noexcept
 	{
-		auto iter = getIterator(key);
+		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
 			return &iter->object;
 		return nullptr;
@@ -146,7 +140,7 @@ public:
 
 	[[nodiscard]] const T* try_at(Key key) const noexcept
 	{
-		auto iter = getIterator(key);
+		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
 			return &iter->object;
 		return nullptr;
