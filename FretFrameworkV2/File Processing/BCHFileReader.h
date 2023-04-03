@@ -39,8 +39,7 @@ public:
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
 	[[nodiscard]] virtual bool validateSyncTrack() override;
 	[[nodiscard]] virtual bool validateEventTrack() override;
-	[[nodiscard]] virtual bool validateInstrumentTrack() override;
-	[[nodiscard]] virtual bool validateVocalTrack() override;
+	[[nodiscard]] virtual bool validateNoteTrack() override;
 	[[nodiscard]] virtual bool validateDifficultyTrack() override;
 	[[nodiscard]] virtual bool validateAnimationTrack() override;
 	virtual void skipUnknownTrack() override;

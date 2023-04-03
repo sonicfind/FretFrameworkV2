@@ -1,9 +1,9 @@
-#include "TrackCollection.h"
+#include "Song.h"
 #include "Tracks/Instrumental/GuitarTrack_midi.h"
 #include "Tracks/Instrumental/DrumTrack_midi.h"
 #include "Tracks/Vocal/VocalTrack_midi.h"
 
-void Collection::load_mid(const std::filesystem::path& path)
+void Song::load_mid(const std::filesystem::path& path)
 {
 	MidiFileReader reader(path);
 
@@ -82,12 +82,12 @@ void Collection::load_mid(const std::filesystem::path& path)
 	}
 }
 
-void Collection::save_mid(const std::filesystem::path& path)
+void Song::save_mid(const std::filesystem::path& path)
 {
 
 }
 
-bool Collection::addSection_midi(uint32_t position, std::string_view str)
+bool Song::addSection_midi(uint32_t position, std::string_view str)
 {
 	static constexpr std::string_view PREFIXES[] = { "[section ", "[prc_" };
 	for (std::string_view prefix : PREFIXES)

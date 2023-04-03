@@ -7,8 +7,7 @@ public:
 	virtual void writeHeaderTrack(uint32_t tickRate) = 0;
 	virtual void writeSyncTrack() = 0;
 	virtual void writeEventTrack() = 0;
-	virtual void writeInstrumentTrack(size_t index) = 0;
-	virtual void writeVocalTrack(size_t vocalCount) = 0;
+	virtual void writeNoteTrack(size_t index) = 0;
 	virtual void writeDifficultyTrack(size_t index) = 0;
 	virtual void writeAnimationTrack() = 0;
 	virtual void finishTrack() = 0;

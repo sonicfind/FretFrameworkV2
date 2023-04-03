@@ -11,6 +11,7 @@ static constexpr EventCombo g_NOTE{ "N",  ChartEvent::NOTE };
 static constexpr EventCombo g_MULTI{ "C",  ChartEvent::MULTI_NOTE };
 static constexpr EventCombo g_MODIFIER{ "M",  ChartEvent::MODIFIER };
 static constexpr EventCombo g_SPECIAL{ "S",  ChartEvent::SPECIAL };
+
 static constexpr EventCombo g_LYRIC{ "L",  ChartEvent::LYRIC };
 static constexpr EventCombo g_VOCAL{ "V",  ChartEvent::VOCAL };
 static constexpr EventCombo g_PERC{ "VP",  ChartEvent::VOCAL_PERCUSSION };
@@ -100,25 +101,16 @@ bool TxtFileReader::validateEventTrack()
 	return true;
 }
 
-bool TxtFileReader::validateInstrumentTrack()
+bool TxtFileReader::validateNoteTrack()
 {
-	for (size_t index = 0; index < std::size(g_INSTRUMENTTRACKS); ++index)
-		if (validateTrack(g_INSTRUMENTTRACKS[index]))
+	for (size_t index = 0; index < std::size(g_NOTETRACKS); ++index)
+		if (validateTrack(g_NOTETRACKS[index]))
 		{
-			m_eventSets.push_back(g_validTypes + 2);
-			m_instrumentTrackID = index;
-			return true;
-		}
-	return false;
-}
-
-bool TxtFileReader::validateVocalTrack()
-{
-	for (size_t index = 0; index < std::size(g_VOCALTRACKS); ++index)
-		if (validateTrack(g_VOCALTRACKS[index]))
-		{
-			m_eventSets.push_back(g_validTypes + 4);
-			m_vocalTrackID = index;
+			if (index < 9)
+				m_eventSets.push_back(g_validTypes + 2);
+			else
+				m_eventSets.push_back(g_validTypes + 4);
+			m_noteTrackID = index;
 			return true;
 		}
 	return false;
@@ -253,7 +245,10 @@ ChartEvent TxtFileReader::parseEvent()
 
 	for (const auto& combo : g_ALLEVENTS)
 		if (type == combo.first)
+		{
+			skipWhiteSpace();
 			return combo.second;
+		}
 	return ChartEvent::UNKNOWN;
 }
 

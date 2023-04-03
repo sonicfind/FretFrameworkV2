@@ -1,8 +1,8 @@
-#include "Track Collection/TrackCollection.h"
+#include "Track Collection/Song.h"
 #include <iostream>
 int main()
 {
-	Collection collection;
+	Song collection;
 
 	std::string filename;
 	std::cout << "Drag and drop a file:";

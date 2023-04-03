@@ -49,21 +49,12 @@ bool BCHFileReader::validateEventTrack()
 	return validateTrack("BTev");
 }
 
-bool BCHFileReader::validateInstrumentTrack()
+bool BCHFileReader::validateNoteTrack()
 {
-	if (!validateTrack("BTin"))
+	if (!validateTrack("BTin") && !validateTrack("BTvc"))
 		return false;
 
-	m_instrumentTrackID = extract<unsigned char>();
-	return true;
-}
-
-bool BCHFileReader::validateVocalTrack()
-{
-	if (!validateTrack("BTvc"))
-		return false;
-
-	m_vocalTrackID = extract<unsigned char>();
+	m_noteTrackID = extract<unsigned char>();
 	return true;
 }
 

@@ -5,7 +5,7 @@
 #include "../Notes/Keys.h"
 #include "SyncValues.h"
 
-class Collection
+class Song
 {
 	struct
 	{
@@ -21,7 +21,7 @@ class Collection
 		VocalTrack<1>                               vocals;
 		VocalTrack<3>                               harmonies;
 
-		Track* const instrumentArray[9] =
+		Track* const array[11] =
 		{
 			&lead_5,
 			&lead_6,
@@ -32,11 +32,6 @@ class Collection
 			&keys,
 			&drums4_pro,
 			&drums5,
-			
-		};
-
-		Track* const vocalArray[2] =
-		{
 			&vocals,
 			&harmonies
 		};
@@ -66,12 +61,11 @@ private:
 
 	bool load_tempoMap(CommonChartParser* parser);
 	bool load_events(CommonChartParser* parser);
-	bool load_instrumentTrack(CommonChartParser* parser);
-	bool load_vocalTrack(CommonChartParser* parser);
+	bool load_noteTrack(CommonChartParser* parser);
 
 	int  load_songInfo_cht(TxtFileReader& reader);
 	bool load_events_V1(TxtFileReader& reader);
-	bool load_instrumentTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy);
+	bool load_noteTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy);
 
 	bool addSection_midi(uint32_t position, std::string_view str);
 
@@ -83,6 +77,5 @@ private:
 	void save_header(CommonChartWriter* writer) const;
 	void save_tempoMap(CommonChartWriter* writer) const;
 	void save_events(CommonChartWriter* writer) const;
-	void save_instrumentTracks(CommonChartWriter* writer) const;
-	void save_vocalTracks(CommonChartWriter* writer) const;
+	void save_noteTracks(CommonChartWriter* writer) const;
 };

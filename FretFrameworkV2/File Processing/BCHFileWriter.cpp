@@ -20,16 +20,13 @@ void BCHFileWriter::writeEventTrack()
 	writeLengthOfSection<0>();
 }
 
-void BCHFileWriter::writeInstrumentTrack(size_t index)
+void BCHFileWriter::writeNoteTrack(size_t index)
 {
-	writeTrackHeader("BTin");
-	write(index, 1);
-	writeLengthOfSection<0>();
-}
+	if (index < 9)
+		writeTrackHeader("BTin");
+	else
+		writeTrackHeader("BTvc");
 
-void BCHFileWriter::writeVocalTrack(size_t index)
-{
-	writeTrackHeader("BTvc");
 	write(index, 1);
 	writeLengthOfSection<0>();
 }

@@ -1,10 +1,10 @@
-#include "TrackCollection.h"
+#include "Song.h"
 
-const std::filesystem::path Collection::s_EXTS_CHT[2] = { ".cht", ".chart" };
-const std::filesystem::path Collection::s_EXTS_MID[2] = { ".mid", ".midi" };
-const std::filesystem::path Collection::s_EXT_BCH = ".bch";
+const std::filesystem::path Song::s_EXTS_CHT[2] = { ".cht", ".chart" };
+const std::filesystem::path Song::s_EXTS_MID[2] = { ".mid", ".midi" };
+const std::filesystem::path Song::s_EXT_BCH = ".bch";
 
-bool Collection::load(const std::filesystem::path& path) noexcept
+bool Song::load(const std::filesystem::path& path) noexcept
 {
 	clear();
 
@@ -28,14 +28,14 @@ bool Collection::load(const std::filesystem::path& path) noexcept
 	return true;
 }
 
-void Collection::resetTempoMap()
+void Song::resetTempoMap()
 {
 	m_tempoMap.clear();
 	m_tempoMap.get_or_emplace_back(0).setMicrosPerQuarter(MICRO0S_AT_120BPM);
 	m_tempoMap.back().setTimeSig({ 4, 2, 24, 8 });
 }
 
-bool Collection::save(std::filesystem::path path) noexcept
+bool Song::save(std::filesystem::path path) noexcept
 {
 	enum EXT
 	{
@@ -58,19 +58,16 @@ bool Collection::save(std::filesystem::path path) noexcept
 	return true;
 }
 
-void Collection::clear()
+void Song::clear()
 {
 	resetTempoMap();
 	m_sectionMarkers.clear();
 	m_globalEvents.clear();
-	for (Track* track : m_noteTracks.instrumentArray)
-		track->clear();
-
-	for (Track* track : m_noteTracks.vocalArray)
+	for (Track* track : m_noteTracks.array)
 		track->clear();
 }
 
-bool Collection::load_tempoMap(CommonChartParser* parser)
+bool Song::load_tempoMap(CommonChartParser* parser)
 {
 	if (!parser->validateSyncTrack())
 		return false;
@@ -96,7 +93,7 @@ bool Collection::load_tempoMap(CommonChartParser* parser)
 	return true;
 }
 
-bool Collection::load_events(CommonChartParser* parser)
+bool Song::load_events(CommonChartParser* parser)
 {
 	if (!parser->validateEventTrack())
 		return false;
@@ -125,40 +122,34 @@ bool Collection::load_events(CommonChartParser* parser)
 	return true;
 }
 
-bool Collection::load_instrumentTrack(CommonChartParser* parser)
+bool Song::load_noteTrack(CommonChartParser* parser)
 {
-	if (!parser->validateInstrumentTrack())
+	if (!parser->validateNoteTrack())
 		return false;
 
-	m_noteTracks.instrumentArray[parser->getInstrumentTrackID()]->load(parser);
+	const size_t index = parser->geNoteTrackID();
+	if (index < std::size(m_noteTracks.array))
+		m_noteTracks.array[parser->geNoteTrackID()]->load(parser);
+	else //BCH only
+		parser->skipUnknownTrack();
 	return true;
 }
 
-bool Collection::load_vocalTrack(CommonChartParser* parser)
-{
-	if (!parser->validateVocalTrack())
-		return false;
-
-	m_noteTracks.vocalArray[parser->getVocalTrackID()]->load(parser);
-	return true;
-}
-
-void Collection::save(CommonChartWriter* writer) const
+void Song::save(CommonChartWriter* writer) const
 {
 	save_header(writer);
 	save_tempoMap(writer);
 	save_events(writer);
-	save_instrumentTracks(writer);
-	save_vocalTracks(writer);
+	save_noteTracks(writer);
 }
 
-void Collection::save_header(CommonChartWriter* writer) const
+void Song::save_header(CommonChartWriter* writer) const
 {
 	writer->writeHeaderTrack(m_tickrate);
 	writer->finishTrack();
 }
 
-void Collection::save_tempoMap(CommonChartWriter* writer) const
+void Song::save_tempoMap(CommonChartWriter* writer) const
 {
 	writer->writeSyncTrack();
 	for (const auto& sync : m_tempoMap)
@@ -187,7 +178,7 @@ void Collection::save_tempoMap(CommonChartWriter* writer) const
 	writer->finishTrack();
 }
 
-void Collection::save_events(CommonChartWriter* writer) const
+void Song::save_events(CommonChartWriter* writer) const
 {
 	struct EventPointer
 	{
@@ -236,27 +227,14 @@ void Collection::save_events(CommonChartWriter* writer) const
 	writer->finishTrack();
 }
 
-void Collection::save_instrumentTracks(CommonChartWriter* writer) const
+void Song::save_noteTracks(CommonChartWriter* writer) const
 {
-	for (size_t i = 0; i < std::size(m_noteTracks.instrumentArray); ++i)
+	for (size_t i = 0; i < std::size(m_noteTracks.array); ++i)
 	{
-		if (m_noteTracks.instrumentArray[i]->isOccupied())
+		if (m_noteTracks.array[i]->isOccupied())
 		{
-			writer->writeInstrumentTrack(i);
-			m_noteTracks.instrumentArray[i]->save(writer);
-			writer->finishTrack();
-		}
-	}
-}
-
-void Collection::save_vocalTracks(CommonChartWriter* writer) const
-{
-	for (size_t i = 0; i < std::size(m_noteTracks.vocalArray); ++i)
-	{
-		if (m_noteTracks.vocalArray[i]->isOccupied())
-		{
-			writer->writeVocalTrack(i);
-			m_noteTracks.vocalArray[i]->save(writer);
+			writer->writeNoteTrack(i);
+			m_noteTracks.array[i]->save(writer);
 			writer->finishTrack();
 		}
 	}

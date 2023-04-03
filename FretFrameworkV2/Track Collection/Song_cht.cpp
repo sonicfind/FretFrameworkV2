@@ -1,7 +1,7 @@
-#include "TrackCollection.h"
+#include "Song.h"
 #include "File Processing/ChtFileWriter.h"
 
-void Collection::load_cht(const std::filesystem::path& path)
+void Song::load_cht(const std::filesystem::path& path)
 {
 	TxtFileReader reader(path);
 	InstrumentalTrack<DrumNote_Legacy> drumsLegacy;
@@ -14,8 +14,8 @@ void Collection::load_cht(const std::filesystem::path& path)
 	{
 		if (!load_tempoMap(&reader))
 		{
-			if ((version > 1  && !load_events(&reader) && !load_instrumentTrack(&reader) && !load_vocalTrack(&reader)) ||
-				(version <= 1 && !load_events_V1(reader) && !load_instrumentTrack_V1(reader, drumsLegacy)))
+			if ((version > 1  && !load_events(&reader) && !load_noteTrack(&reader)) ||
+				(version <= 1 && !load_events_V1(reader) && !load_noteTrack_V1(reader, drumsLegacy)))
 			{
 				reader.skipUnknownTrack();
 			}
@@ -31,13 +31,13 @@ void Collection::load_cht(const std::filesystem::path& path)
 	}
 }
 
-void Collection::save_cht(const std::filesystem::path& path)
+void Song::save_cht(const std::filesystem::path& path)
 {
 	ChtFileWriter writer(path);
 	save(&writer);
 }
 
-int Collection::load_songInfo_cht(TxtFileReader& reader)
+int Song::load_songInfo_cht(TxtFileReader& reader)
 {
 	int version = 0;
 	reader.nextEvent();
@@ -53,7 +53,7 @@ int Collection::load_songInfo_cht(TxtFileReader& reader)
 	return version;
 }
 
-bool Collection::load_events_V1(TxtFileReader& reader)
+bool Song::load_events_V1(TxtFileReader& reader)
 {
 	if (!reader.validateEventTrack())
 		return false;
@@ -69,18 +69,18 @@ bool Collection::load_events_V1(TxtFileReader& reader)
 			if (str.starts_with("section "))
 				m_sectionMarkers.get_or_emplace_back(position) = str.substr(8);
 			else if (str.starts_with("lyric "))
-				m_noteTracks.vocals.addLyric(0, position, str.substr(6));
+				m_noteTracks.vocals.get_or_emplaceVocal(0, position).setLyric(str.substr(6));
 			else if (str.starts_with("phrase_start"))
 			{
 				if (phrase < UINT32_MAX)
-					m_noteTracks.vocals.addPhrase(phrase, { SpecialPhraseType::LyricLine, position - phrase });
+					m_noteTracks.vocals.get_or_emplacePhrases(phrase).push_back({ SpecialPhraseType::LyricLine, position - phrase });
 				phrase = position;
 			}
 			else if (str.starts_with("phrase_end"))
 			{
 				if (phrase < UINT32_MAX)
 				{
-					m_noteTracks.vocals.addPhrase(phrase, { SpecialPhraseType::LyricLine, position - phrase });
+					m_noteTracks.vocals.get_or_emplacePhrases(phrase).push_back({ SpecialPhraseType::LyricLine, position - phrase });
 					phrase = UINT32_MAX;
 				}
 			}
@@ -92,7 +92,7 @@ bool Collection::load_events_V1(TxtFileReader& reader)
 	return true;
 }
 
-bool Collection::load_instrumentTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy)
+bool Song::load_noteTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy)
 {
 	auto track = reader.extractTrack_V1();
 	if (track == TxtFileReader::Invalid)

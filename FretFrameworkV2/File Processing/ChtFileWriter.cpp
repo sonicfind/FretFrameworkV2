@@ -19,14 +19,9 @@ void ChtFileWriter::writeEventTrack()
 	writeTrack("[Events]");
 }
 
-void ChtFileWriter::writeInstrumentTrack(size_t index)
+void ChtFileWriter::writeNoteTrack(size_t index)
 {
-	writeTrack(g_INSTRUMENTTRACKS[index]);
-}
-
-void ChtFileWriter::writeVocalTrack(size_t index)
-{
-	writeTrack(g_VOCALTRACKS[index]);
+	writeTrack(g_NOTETRACKS[index]);
 }
 
 void ChtFileWriter::writeDifficultyTrack(size_t index)
