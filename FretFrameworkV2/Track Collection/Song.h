@@ -3,7 +3,7 @@
 #include "Tracks/Vocal/VocalTrack.h"
 #include "../Notes/GuitarNote.h"
 #include "../Notes/Keys.h"
-#include "SyncValues.h"
+#include "MicrosPerQuarter.h"
 
 class Song
 {
@@ -38,7 +38,8 @@ class Song
 	} m_noteTracks;
 
 	uint32_t m_tickrate = 192;
-	SimpleFlatMap<SyncValues> m_tempoMap;
+	SimpleFlatMap<MicrosPerQuarter> m_tempoMarkers;
+	SimpleFlatMap<TimeSig> m_timeSigs;
 	SimpleFlatMap<UnicodeString> m_sectionMarkers;
 	SimpleFlatMap<std::vector<std::u32string>> m_globalEvents;
 

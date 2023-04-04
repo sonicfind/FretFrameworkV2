@@ -35,7 +35,6 @@ public:
 
 	virtual void writeMicrosPerQuarter(uint32_t micros) override;
 	virtual void writeTimeSig(TimeSig timeSig) override;
-	virtual void writeAnchor(uint32_t anchor) override;
 
 private:
 	void writeTrack(std::string_view name);

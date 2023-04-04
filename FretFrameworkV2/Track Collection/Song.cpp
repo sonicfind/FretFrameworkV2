@@ -30,9 +30,11 @@ bool Song::load(const std::filesystem::path& path) noexcept
 
 void Song::resetTempoMap()
 {
-	m_tempoMap.clear();
-	m_tempoMap.get_or_emplace_back(0).setMicrosPerQuarter(MICRO0S_AT_120BPM);
-	m_tempoMap.back().setTimeSig({ 4, 2, 24, 8 });
+	m_tempoMarkers.clear();
+	m_tempoMarkers.emplace_back(0);
+
+	m_timeSigs.clear();
+	m_timeSigs.emplace_back(0) = { 4, 2, 24, 8 };
 }
 
 bool Song::save(std::filesystem::path path) noexcept
@@ -79,13 +81,10 @@ bool Song::load_tempoMap(CommonChartParser* parser)
 		switch (parser->parseEvent())
 		{
 		case ChartEvent::BPM:
-			m_tempoMap.get_or_emplace_back(position).setMicrosPerQuarter(parser->extractMicrosPerQuarter());
+			m_tempoMarkers.get_or_emplace_back(position) = parser->extractMicrosPerQuarter();
 			break;
 		case ChartEvent::TIME_SIG:
-			m_tempoMap.get_or_emplace_back(position).setTimeSig(parser->extractTimeSig());
-			break;
-		case ChartEvent::ANCHOR:
-			m_tempoMap.get_or_emplace_back(position).setAnchor(parser->extractAnchor());
+			m_timeSigs.get_or_emplace_back(position).combine(parser->extractTimeSig());
 			break;
 		}
 		parser->nextEvent();
@@ -152,26 +151,21 @@ void Song::save_header(CommonChartWriter* writer) const
 void Song::save_tempoMap(CommonChartWriter* writer) const
 {
 	writer->writeSyncTrack();
-	for (const auto& sync : m_tempoMap)
+	auto tempo = m_tempoMarkers.begin();
+	auto timeSig = m_timeSigs.begin();
+	while (tempo != m_tempoMarkers.end() || timeSig != m_timeSigs.end())
 	{
-		if (sync->getBPM() > 0)
+		while (tempo != m_tempoMarkers.end() && (timeSig == m_timeSigs.end() || tempo->key <= timeSig->key))
 		{
-			writer->startEvent(sync.key, ChartEvent::BPM);
-			writer->writeMicrosPerQuarter(sync->getMicros());
+			writer->startEvent(tempo->key, ChartEvent::BPM);
+			writer->writeMicrosPerQuarter(**tempo);
 			writer->finishEvent();
 		}
 
-		if (sync->getTimeSig().isWritable())
+		while (timeSig != m_timeSigs.end() && (tempo == m_tempoMarkers.end() || timeSig->key < tempo->key))
 		{
-			writer->startEvent(sync.key, ChartEvent::TIME_SIG);
-			writer->writeTimeSig(sync->getTimeSig());
-			writer->finishEvent();
-		}
-
-		if (sync->getAnchor() > 0)
-		{
-			writer->startEvent(sync.key, ChartEvent::ANCHOR);
-			writer->writeAnchor(sync->getAnchor());
+			writer->startEvent(timeSig->key, ChartEvent::TIME_SIG);
+			writer->writeTimeSig(**timeSig);
 			writer->finishEvent();
 		}
 	}

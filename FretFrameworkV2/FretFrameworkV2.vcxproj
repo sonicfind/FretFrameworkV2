@@ -156,7 +156,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
-    <ClCompile Include="Track Collection\SyncValues.cpp" />
     <ClCompile Include="Track Collection\Song.cpp" />
     <ClCompile Include="Track Collection\Song_bch.cpp" />
     <ClCompile Include="Track Collection\Song_cht.cpp" />
@@ -197,7 +196,7 @@
     <ClInclude Include="Notes\VocalNote.h" />
     <ClInclude Include="Notes\VocalPercussion.h" />
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
-    <ClInclude Include="Track Collection\SyncValues.h" />
+    <ClInclude Include="Track Collection\MicrosPerQuarter.h" />
     <ClInclude Include="Track Collection\Song.h" />
     <ClInclude Include="Track Collection\Tracks\Instrumental\DifficultyTrack.h" />
     <ClInclude Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.h" />

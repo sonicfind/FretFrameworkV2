@@ -19,10 +19,10 @@ void Song::load_mid(const std::filesystem::path& path)
 				switch (reader.getEventType())
 				{
 				case MidiEventType::Tempo:
-					m_tempoMap.get_or_emplace_back(reader.getPosition()).setMicrosPerQuarter(reader.extractMicrosPerQuarter());
+					m_tempoMarkers.get_or_emplace_back(reader.getPosition()) = reader.extractMicrosPerQuarter();
 					break;
 				case MidiEventType::Time_Sig:
-					m_tempoMap.get_or_emplace_back(reader.getPosition()).setTimeSig(reader.extractTimeSig());
+					m_timeSigs.get_or_emplace_back(reader.getPosition()) = reader.extractTimeSig();
 					break;
 				}
 			}

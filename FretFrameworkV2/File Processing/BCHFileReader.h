@@ -66,7 +66,6 @@ public:
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;
-	[[nodiscard]] virtual uint32_t extractAnchor() override;
 
 private:
 	std::vector<const char*> m_nextTracks;

@@ -445,17 +445,12 @@ uint32_t TxtFileReader::extractMicrosPerQuarter()
 TimeSig TxtFileReader::extractTimeSig()
 {
 	uint32_t numerator = extract<uint32_t>();
-	uint32_t denom = 255, metro = 255, n32nds = 255;
+	uint32_t denom = 255, metro = 0, n32nds = 0;
 	if (extract(denom))
 		if (extract(metro))
 			extract(n32nds);
 
 	return { (unsigned char)numerator, (unsigned char)denom, (unsigned char)metro, (unsigned char)n32nds };
-}
-
-uint32_t TxtFileReader::extractAnchor()
-{
-	return extract<uint32_t>();
 }
 
 std::pair<size_t, uint32_t> TxtFileReader::extractColorAndSustain_V1()

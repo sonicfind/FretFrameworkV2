@@ -162,11 +162,6 @@ void BCHFileWriter::writeTimeSig(TimeSig timeSig)
 	append(timeSig);
 }
 
-void BCHFileWriter::writeAnchor(uint32_t anchor)
-{
-	append(anchor);
-}
-
 void BCHFileWriter::writeWebType(uint32_t value)
 {
 	if (value < 254)

@@ -36,5 +36,4 @@ public:
 
 	virtual void writeMicrosPerQuarter(uint32_t micros) = 0;
 	virtual void writeTimeSig(TimeSig timeSig) = 0;
-	virtual void writeAnchor(uint32_t anchor) = 0;
 };

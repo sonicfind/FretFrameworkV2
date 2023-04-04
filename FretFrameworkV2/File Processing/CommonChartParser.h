@@ -40,7 +40,6 @@ public:
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() = 0;
 	[[nodiscard]] virtual TimeSig extractTimeSig() = 0;
-	[[nodiscard]] virtual uint32_t extractAnchor() = 0;
 
 	[[nodiscard]] size_t geNoteTrackID() const noexcept { return m_noteTrackID; }
 	[[nodiscard]] size_t getDifficulty() const noexcept { return m_difficulty; }

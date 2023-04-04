@@ -43,6 +43,9 @@
     <Filter Include="Song\Tracks\InstrumentalTrack\DifficultyTrack">
       <UniqueIdentifier>{2d3ff5d6-5a26-49a6-b35b-360f5f50e2e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TempoMap">
+      <UniqueIdentifier>{541496ce-0c36-4fe3-a690-3d96f9abf197}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="File Processing\FileReader.cpp">
@@ -80,9 +83,6 @@
       <Filter>Song</Filter>
     </ClCompile>
     <ClCompile Include="Track Collection\Song_mid.cpp">
-      <Filter>Song</Filter>
-    </ClCompile>
-    <ClCompile Include="Track Collection\SyncValues.cpp">
       <Filter>Song</Filter>
     </ClCompile>
     <ClCompile Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.cpp">
@@ -165,9 +165,6 @@
     <ClInclude Include="Notes\DrumNote_Legacy.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\SyncValues.h">
-      <Filter>Song</Filter>
-    </ClInclude>
     <ClInclude Include="File Processing\BinaryFileWriter.h">
       <Filter>File Processing\FileWriter</Filter>
     </ClInclude>
@@ -180,7 +177,6 @@
     <ClInclude Include="File Processing\CommonChartWriter.h">
       <Filter>File Processing\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\TimeSig.h" />
     <ClInclude Include="File Processing\CommonChartTypes.h">
       <Filter>File Processing</Filter>
     </ClInclude>
@@ -234,6 +230,12 @@
     </ClInclude>
     <ClInclude Include="File Processing\NoteName.h">
       <Filter>File Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="File Processing\TimeSig.h">
+      <Filter>TempoMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Track Collection\MicrosPerQuarter.h">
+      <Filter>TempoMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

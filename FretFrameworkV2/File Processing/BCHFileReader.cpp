@@ -245,8 +245,3 @@ TimeSig BCHFileReader::extractTimeSig()
 {
 	return extract<TimeSig>();
 }
-
-uint32_t BCHFileReader::extractAnchor()
-{
-	return extract<uint32_t>();
-}

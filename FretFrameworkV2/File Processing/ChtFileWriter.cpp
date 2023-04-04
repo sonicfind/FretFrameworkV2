@@ -177,21 +177,14 @@ void ChtFileWriter::writeMicrosPerQuarter(uint32_t micros)
 void ChtFileWriter::writeTimeSig(TimeSig timeSig)
 {
 	write<uint32_t>(timeSig.numerator);
-	if (!timeSig.hasDenominator() && !timeSig.hasMetronome() && !timeSig.has32nds())
-		return;
-
-	write<uint32_t>(timeSig.denominator);
-	if (!timeSig.hasMetronome() && !timeSig.has32nds())
-		return;
-
-	write<uint32_t>(timeSig.metronome);
-	if (!timeSig.has32nds())
-		return;
-
-	write<uint32_t>(timeSig.num32nds);
-}
-
-void ChtFileWriter::writeAnchor(uint32_t anchor)
-{
-	write(anchor);
+	if (timeSig.denominator < 255 || timeSig.metronome || timeSig.num32nds)
+	{
+		write<uint32_t>(timeSig.denominator);
+		if (timeSig.metronome || timeSig.num32nds)
+		{
+			write<uint32_t>(timeSig.metronome);
+			if (timeSig.num32nds)
+				write<uint32_t>(timeSig.num32nds);
+		}
+	}
 }
