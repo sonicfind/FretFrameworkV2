@@ -48,7 +48,7 @@ public:
 	template <typename T, bool useVirtual = true>
 	bool extract(T& value)
 	{
-		if constexpr (std::is_same<T, char>::value || std::is_same<T, unsigned char>::value)
+		if constexpr (sizeof(T) == 1)
 		{
 			value = *m_currentPosition;
 			if constexpr (useVirtual)
