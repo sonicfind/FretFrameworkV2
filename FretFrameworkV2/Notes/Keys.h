@@ -7,10 +7,13 @@ class Keys : public Note<NoteColor, numColors>
 public:
 	using Note<NoteColor, numColors>::m_colors;
 
-	bool set_V1(const size_t lane, const uint32_t sustain)
+	bool set_V1(const size_t lane, uint32_t sustain)
 	{
 		if (lane >= numColors)
 			return false;
+
+		if (sustain < 20)
+			sustain = 1;
 
 		m_colors[lane].set(sustain);
 		return true;
