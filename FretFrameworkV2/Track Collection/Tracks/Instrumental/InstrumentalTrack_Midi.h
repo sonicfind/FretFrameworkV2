@@ -53,22 +53,22 @@ private:
 	template <bool NoteOn>
 	void parseNote(MidiNote note)
 	{
-		const bool isON = NoteOn && note.velocity > 0;
+		m_inOnState = NoteOn && note.velocity > 0;
 		const uint32_t position = m_reader.getPosition();
 		if (m_noteRange.first <= note.value && note.value < m_noteRange.second)
-			parseLaneColor(note, isON);
+			parseLaneColor(note);
 		else if (120 <= note.value && note.value <= 124)
-			parseBRE(note.value, isON);
+			parseBRE(note.value);
 		else if (note.value == m_reader.getStarPowerValue())
-			addSpecialPhrase(m_starPower, isON);
+			addSpecialPhrase(m_starPower);
 		else if (note.value == 103)
-			addSpecialPhrase(m_solo, isON);
+			addSpecialPhrase(m_solo);
 		else if (note.value == 126)
-			addSpecialPhrase(m_tremolo, isON);
+			addSpecialPhrase(m_tremolo);
 		else if (note.value == 127)
-			addSpecialPhrase(m_trill, isON);
+			addSpecialPhrase(m_trill);
 		else
-			toggleExtraValues(note, isON);
+			toggleExtraValues(note);
 	}
 
 	void parseSysEx(std::string_view sysex)
@@ -80,10 +80,10 @@ private:
 		m_track.get_or_emplace_Events_midi(m_reader.getPosition()).push_back(UnicodeString::strToU32(text));
 	}
 
-	void addSpecialPhrase(ValCombo& combo, const bool isON)
+	void addSpecialPhrase(ValCombo& combo)
 	{
 		uint32_t position = m_reader.getPosition();
-		if (isON)
+		if (m_inOnState)
 			combo.second = position;
 		else if (combo.second != UINT32_MAX)
 		{
@@ -92,10 +92,10 @@ private:
 		}
 	}
 
-	void addSpecialPhrase(int diff, ValCombo& combo, const bool isON)
+	void addSpecialPhrase(int diff, ValCombo& combo)
 	{
 		uint32_t position = m_reader.getPosition();
-		if (isON)
+		if (m_inOnState)
 			combo.second = position;
 		else if (combo.second != UINT32_MAX)
 		{
@@ -104,7 +104,7 @@ private:
 		}
 	}
 
-	void parseLaneColor(MidiNote note, const bool isON)
+	void parseLaneColor(MidiNote note)
 	{
 		const int noteValue = note.value - m_noteRange.first;
 		const int lane = m_laneValues[noteValue];
@@ -113,7 +113,7 @@ private:
 		if (lane < 5)
 		{
 			const uint32_t position = m_reader.getPosition();
-			if (isON)
+			if (m_inOnState)
 			{
 				m_track.construct_note_midi(diff, position);
 				m_tracker.difficulties[diff].notes[lane] = position;
@@ -130,11 +130,11 @@ private:
 		}
 	}
 
-	void parseBRE(int noteValue, const bool isON)
+	void parseBRE(int noteValue)
 	{
 		const uint32_t position = m_reader.getPosition();
 
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[4].notes[noteValue - 120] = position;
 			m_doBRE = m_tracker.difficulties[4].notes[0] == m_tracker.difficulties[4].notes[1] &&
@@ -144,7 +144,7 @@ private:
 		else if (m_doBRE)
 		{
 			uint32_t colorPosition = m_tracker.difficulties[4].notes[0];
-			m_track.addSharedPhrase(colorPosition, { SpecialPhraseType::StarPowerActivation, position - colorPosition });
+			m_track.get_or_emplacePhrases(colorPosition).push_back({ SpecialPhraseType::StarPowerActivation, position - colorPosition });
 
 			for (size_t i = 0; i < 5; ++i)
 				m_tracker.difficulties[4].notes[i] = UINT32_MAX;
@@ -156,13 +156,13 @@ private:
 			uint32_t& colorPosition = m_tracker.difficulties[4].notes[lane];
 			if (colorPosition != UINT32_MAX)
 			{
-				m_track.addNote(4, colorPosition, lane + 1, position - colorPosition);
+				m_track.get_or_emplaceNote(4, colorPosition).set(lane + 1, position - colorPosition);
 				colorPosition = UINT32_MAX;
 			}
 		} 
 	}
 
-	void toggleExtraValues(MidiNote note, const bool isON)
+	void toggleExtraValues(MidiNote note)
 	{
 	}
 
@@ -194,4 +194,5 @@ private:
 	ValCombo m_tremolo = { SpecialPhraseType::Tremolo, UINT32_MAX };
 	ValCombo m_trill = { SpecialPhraseType::Trill, UINT32_MAX };
 	bool m_doBRE = false;
+	bool m_inOnState = false;
 };

@@ -30,10 +30,10 @@ struct Tracker<GuitarNote<6>>
 };
 
 template <>
-void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note);
 
 template <>
-void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note);
 
 template <>
 void InstrumentTrackMidiParser<GuitarNote<5>>::init();

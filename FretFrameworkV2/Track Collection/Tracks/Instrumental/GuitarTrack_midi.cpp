@@ -1,7 +1,7 @@
 #include "GuitarTrack_midi.h"
 
 template <>
-void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - m_noteRange.first;
 	const int lane = m_laneValues[noteValue];
@@ -14,7 +14,7 @@ void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, con
 
 	if (lane < 6)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[diff].notes[lane] = position;
 
@@ -42,8 +42,8 @@ void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, con
 	// HopoON marker
 	else if (lane == 6)
 	{
-		m_tracker.difficulties[diff].hopoOn = isON;
-		if (isON)
+		m_tracker.difficulties[diff].hopoOn = m_inOnState;
+		if (m_inOnState)
 		{
 			if (GuitarNote<5>*note = m_track.testBackNote_midiOnly(diff, position))
 				note->setForcing(ForceStatus::HOPO_ON);
@@ -52,8 +52,8 @@ void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, con
 	// HopoOff marker
 	else if (lane == 7)
 	{
-		m_tracker.difficulties[diff].hopoOff = isON;
-		if (isON)
+		m_tracker.difficulties[diff].hopoOff = m_inOnState;
+		if (m_inOnState)
 		{
 			if (GuitarNote<5>*note = m_track.testBackNote_midiOnly(diff, position))
 				note->setForcing(ForceStatus::HOPO_OFF);
@@ -63,28 +63,28 @@ void InstrumentTrackMidiParser<GuitarNote<5>>::parseLaneColor(MidiNote note, con
 	{
 		if (diff == 3)
 		{
-			addSpecialPhrase(m_solo, isON);
+			addSpecialPhrase(m_solo);
 			return;
 		}
 
 		m_track.convertSoloesToStarPower_midi();
-		addSpecialPhrase(diff, m_tracker.difficulties[diff].starPower, isON);
+		addSpecialPhrase(diff, m_tracker.difficulties[diff].starPower);
 
 		for (size_t i = 0; i < 4; ++i)
 			m_laneValues[12 * i + 8] = 12;
 	}
 	else if (lane == 9)
-		m_tracker.difficulties[diff].sliderNotes = isON;
+		m_tracker.difficulties[diff].sliderNotes = m_inOnState;
 	else if (lane == 10)
-		addSpecialPhrase(diff, m_tracker.difficulties[diff].faceOff[0], isON);
+		addSpecialPhrase(diff, m_tracker.difficulties[diff].faceOff[0]);
 	else if (lane == 11)
-		addSpecialPhrase(diff, m_tracker.difficulties[diff].faceOff[1], isON);
+		addSpecialPhrase(diff, m_tracker.difficulties[diff].faceOff[1]);
 	else if (lane == 12)
-		addSpecialPhrase(diff, m_tracker.difficulties[diff].starPower, isON);
+		addSpecialPhrase(diff, m_tracker.difficulties[diff].starPower);
 }
 
 template <>
-void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - m_noteRange.first;
 	const int lane = m_laneValues[noteValue];
@@ -93,7 +93,7 @@ void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note, con
 
 	if (lane < 7)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[diff].notes[lane] = position;
 
@@ -121,8 +121,8 @@ void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note, con
 	// HopoON marker
 	else if (lane == 7)
 	{
-		m_tracker.difficulties[diff].hopoOn = isON;
-		if (isON)
+		m_tracker.difficulties[diff].hopoOn = m_inOnState;
+		if (m_inOnState)
 		{
 			if (GuitarNote<6>*note = m_track.testBackNote_midiOnly(diff, position))
 				note->setForcing(ForceStatus::HOPO_ON);
@@ -131,8 +131,8 @@ void InstrumentTrackMidiParser<GuitarNote<6>>::parseLaneColor(MidiNote note, con
 	// HopoOff marker
 	else if (lane == 8)
 	{
-		m_tracker.difficulties[diff].hopoOff = isON;
-		if (isON)
+		m_tracker.difficulties[diff].hopoOff = m_inOnState;
+		if (m_inOnState)
 		{
 			if (GuitarNote<6>*note = m_track.testBackNote_midiOnly(diff, position))
 				note->setForcing(ForceStatus::HOPO_OFF);

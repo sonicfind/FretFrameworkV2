@@ -20,19 +20,19 @@ template <>
 struct Tracker<DrumNote_Legacy> : Tracker<DrumNote<5, true>> {};
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note);
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note);
 
 template <>
-void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note);
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<4, true>>::toggleExtraValues(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<DrumNote<4, true>>::toggleExtraValues(MidiNote note);
 
 template <>
-void InstrumentTrackMidiParser<DrumNote_Legacy>::toggleExtraValues(MidiNote note, const bool isON);
+void InstrumentTrackMidiParser<DrumNote_Legacy>::toggleExtraValues(MidiNote note);
 
 template <>
 void InstrumentTrackMidiParser<DrumNote_Legacy>::parseText(std::string_view text);

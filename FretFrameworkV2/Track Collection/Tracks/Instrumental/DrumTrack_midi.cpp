@@ -1,7 +1,7 @@
 #include "DrumTrack_midi.h"
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - m_noteRange.first;
 	const int lane = m_laneValues[noteValue];
@@ -10,27 +10,22 @@ void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note,
 
 	if (lane < 5)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[diff].notes[lane] = position;
-			DrumNote<4, true>* drums = nullptr;
-			if (drums = m_track.construct_note_midi(diff, position))
-			{
-				if (m_tracker.difficulties[diff].flam)
-					drums->setFlam(true);
-			}
-			else
-				drums = &m_track.backNote_midiOnly(diff);
+			DrumNote<4, true>& drums = m_track.get_or_construct_note_midi(diff, position);
+			if (m_tracker.difficulties[diff].flam)
+				drums.setFlam(true);
 
 			if (2 <= lane && lane < 5)
-				drums->setCymbal(lane, !m_tracker.toms[lane - 2]);
+				drums.setCymbal(lane, !m_tracker.toms[lane - 2]);
 
 			if (m_tracker.enableDynamics)
 			{
 				if (note.velocity > 100)
-					drums->setDynamics(lane, DrumDynamics::Accent);
+					drums.setDynamics(lane, DrumDynamics::Accent);
 				else if (note.velocity < 100)
-					drums->setDynamics(lane, DrumDynamics::Ghost);
+					drums.setDynamics(lane, DrumDynamics::Ghost);
 			}
 		}
 		else
@@ -45,12 +40,10 @@ void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note,
 	}
 	else if (note.value == 95)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[3].notes[0] = position;
-
-			m_track.construct_note_midi(diff, position);
-			m_track.backNote_midiOnly(diff).modify('+');
+			m_track.get_or_construct_note_midi(3, position).modify('+');
 		}
 		else
 		{
@@ -65,7 +58,7 @@ void InstrumentTrackMidiParser<DrumNote<4, true>>::parseLaneColor(MidiNote note,
 }
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - m_noteRange.first;
 	const int lane = m_laneValues[noteValue];
@@ -74,24 +67,19 @@ void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note
 
 	if (lane < 6)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[diff].notes[lane] = position;
-			DrumNote<5, false>* drums = nullptr;
-			if (drums = m_track.construct_note_midi(diff, position))
-			{
-				if (m_tracker.difficulties[diff].flam)
-					drums->setFlam(true);
-			}
-			else
-				drums = &m_track.backNote_midiOnly(diff);
+			DrumNote<5, false>& drums = m_track.get_or_construct_note_midi(diff, position);
+			if (m_tracker.difficulties[diff].flam)
+				drums.setFlam(true);
 
 			if (m_tracker.enableDynamics)
 			{
 				if (note.velocity > 100)
-					drums->setDynamics(lane, DrumDynamics::Accent);
+					drums.setDynamics(lane, DrumDynamics::Accent);
 				else if (note.velocity < 100)
-					drums->setDynamics(lane, DrumDynamics::Ghost);
+					drums.setDynamics(lane, DrumDynamics::Ghost);
 			}
 		}
 		else
@@ -106,12 +94,10 @@ void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note
 	}
 	else if (note.value == 95)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[3].notes[0] = position;
-
-			m_track.construct_note_midi(diff, position);
-			m_track.backNote_midiOnly(diff).modify('+');
+			m_track.get_or_construct_note_midi(3, position).modify('+');
 		}
 		else
 		{
@@ -126,7 +112,7 @@ void InstrumentTrackMidiParser<DrumNote<5, false>>::parseLaneColor(MidiNote note
 }
 
 template <>
-void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - m_noteRange.first;
 	const int lane = m_laneValues[noteValue];
@@ -135,7 +121,7 @@ void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, c
 
 	if (lane < 6)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			if (lane == 5 && m_track.getDrumType() == DrumType_Enum::LEGACY)
 			{
@@ -145,24 +131,19 @@ void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, c
 			}
 
 			m_tracker.difficulties[diff].notes[lane] = position;
-			DrumNote_Legacy* drums = nullptr;
-			if (drums = m_track.construct_note_midi(diff, position))
-			{
-				if (m_tracker.difficulties[diff].flam)
-					drums->setFlam(true);
-			}
-			else
-				drums = &m_track.backNote_midiOnly(diff);
+			DrumNote_Legacy& drums = m_track.get_or_construct_note_midi(diff, position);
+			if (m_tracker.difficulties[diff].flam)
+				drums.setFlam(true);
 
 			if (2 <= lane && lane < 5)
-				drums->setCymbal(lane, !m_tracker.toms[lane - 2]);
+				drums.setCymbal(lane, !m_tracker.toms[lane - 2]);
 
 			if (m_tracker.enableDynamics)
 			{
 				if (note.velocity > 100)
-					drums->setDynamics(lane, DrumDynamics::Accent);
+					drums.setDynamics(lane, DrumDynamics::Accent);
 				else if (note.velocity < 100)
-					drums->setDynamics(lane, DrumDynamics::Ghost);
+					drums.setDynamics(lane, DrumDynamics::Ghost);
 			}
 		}
 		else
@@ -177,12 +158,10 @@ void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, c
 	}
 	else if (note.value == 95)
 	{
-		if (isON)
+		if (m_inOnState)
 		{
 			m_tracker.difficulties[3].notes[0] = position;
-
-			m_track.construct_note_midi(diff, position);
-			m_track.backNote_midiOnly(diff).modify('+');
+			m_track.get_or_construct_note_midi(3, position).modify('+');
 		}
 		else
 		{
@@ -197,18 +176,18 @@ void InstrumentTrackMidiParser<DrumNote_Legacy>::parseLaneColor(MidiNote note, c
 }
 
 template <>
-void InstrumentTrackMidiParser<DrumNote<4, true>>::toggleExtraValues(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<DrumNote<4, true>>::toggleExtraValues(MidiNote note)
 {
 	if (110 <= note.value && note.value <= 112)
-		m_tracker.toms[note.value - 110] = isON;
+		m_tracker.toms[note.value - 110] = m_inOnState;
 }
 
 template <>
-void InstrumentTrackMidiParser<DrumNote_Legacy>::toggleExtraValues(MidiNote note, const bool isON)
+void InstrumentTrackMidiParser<DrumNote_Legacy>::toggleExtraValues(MidiNote note)
 {
 	if (m_track.getDrumType() != DrumType_Enum::FIVELANE && 110 <= note.value && note.value <= 112)
 	{
-		m_tracker.toms[note.value - 110] = isON;
+		m_tracker.toms[note.value - 110] = m_inOnState;
 		m_track.setDrumType(DrumType_Enum::FOURLANE_PRO);
 	}
 }

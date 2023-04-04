@@ -20,7 +20,7 @@ private:
 		m_notes[position].set(note, sustain);
 	}
 
-	DrumNote_Legacy* construct_note_midi(uint32_t position)
+	[[nodiscard]] DrumNote_Legacy* construct_note_midi(uint32_t position)
 	{
 		if (m_notes.capacity() == 0)
 			m_notes.reserve(5000);
@@ -28,14 +28,32 @@ private:
 		return m_notes.try_emplace_back(position);
 	}
 
-	DrumNote_Legacy& getNote_midi(uint32_t position)
+	[[nodiscard]] DrumNote_Legacy& get_or_construct_note_midi(uint32_t position)
+	{
+		if (m_notes.capacity() == 0)
+			m_notes.reserve(5000);
+
+		return m_notes.get_or_emplace_back(position);
+	}
+
+	[[nodiscard]] DrumNote_Legacy& getNote_midi(uint32_t position)
 	{
 		return m_notes.getNodeFromBack(position);
 	}
 
-	DrumNote_Legacy& backNote_midiOnly()
+	[[nodiscard]] DrumNote_Legacy& backNote_midiOnly()
 	{
 		return m_notes.back();
+	}
+
+	[[nodiscard]] DrumNote_Legacy& get_or_emplaceNote(uint32_t position)
+	{
+		return m_notes[position];
+	}
+
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
+	{
+		return m_specialPhrases[position];
 	}
 
 	void shrink()
@@ -66,39 +84,44 @@ private:
 	void setDrumType(DrumType_Enum type) { m_drumType = type; }
 
 private:
-	DrumNote_Legacy* construct_note_midi(size_t diff, uint32_t position)
+	[[nodiscard]] DrumNote_Legacy* construct_note_midi(size_t diff, uint32_t position)
 	{
 		return m_difficulties[diff].construct_note_midi(position);
 	}
 
-	DrumNote_Legacy& getNote_midi(size_t diff, uint32_t position)
+	[[nodiscard]] DrumNote_Legacy& get_or_construct_note_midi(size_t diff, uint32_t position)
+	{
+		return m_difficulties[diff].get_or_construct_note_midi(position);
+	}
+
+	[[nodiscard]] DrumNote_Legacy& getNote_midi(size_t diff, uint32_t position)
 	{
 		return m_difficulties[diff].getNote_midi(position);
 	}
 
-	DrumNote_Legacy& backNote_midiOnly(size_t diff)
+	[[nodiscard]] DrumNote_Legacy& backNote_midiOnly(size_t diff)
 	{
 		return m_difficulties[diff].backNote_midiOnly();
 	}
 
-	std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
+	[[nodiscard]] std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
 	{
 		return m_events.get_or_emplace_back(position);
 	}
 
-	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
 		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
-	void addNote(size_t diffIndex, uint32_t position, int note, uint32_t sustain = 0)
+	[[nodiscard]] DrumNote_Legacy& get_or_emplaceNote(size_t diffIndex, uint32_t position)
 	{
-		m_difficulties[diffIndex].addNote(position, note, sustain);
+		return m_difficulties[diffIndex].get_or_emplaceNote(position);
 	}
 
-	void addSharedPhrase(uint32_t position, SpecialPhrase phrase)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
 	{
-		m_specialPhrases[position].push_back(phrase);
+		return m_specialPhrases[position];
 	}
 
 	void shrink_midi()

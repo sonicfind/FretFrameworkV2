@@ -40,27 +40,29 @@ private:
 	template <size_t INDEX, bool NoteOn>
 	void parseNote(MidiNote note)
 	{
-		const bool isON = NoteOn && note.velocity > 0;
+		static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 85 };
+
+		m_inOnState = NoteOn && note.velocity > 0;
 		const uint32_t position = m_reader.getPosition();
-		if (s_PITCHRANGE.first <= note.value && note.value < s_PITCHRANGE.second)
-			parseVocal<INDEX>(note, isON);
+		if (PITCHRANGE.first <= note.value && note.value < PITCHRANGE.second)
+			parseVocal<INDEX>(note);
 		else if constexpr (INDEX == 0)
 		{
 			if (note.value == 96 || note.value == 97)
-				addPercussion(note.value, isON);
+				addPercussion(note.value);
 			else if (note.value == 105 || note.value == 106)
-				addSpecialPhrase(m_lyricLine, isON);
+				addSpecialPhrase(m_lyricLine);
 			else if (note.value == m_reader.getStarPowerValue())
-				addSpecialPhrase(m_starPower, isON);
+				addSpecialPhrase(m_starPower);
 			else if (note.value == 0)
-				addSpecialPhrase(m_rangeShift, isON);
+				addSpecialPhrase(m_rangeShift);
 			else if (note.value == 1)
-				addSpecialPhrase(m_lyricShift, isON);
+				addSpecialPhrase(m_lyricShift);
 		}
 		else if constexpr (INDEX == 1)
 		{
 			if (note.value == 105 || note.value == 106)
-				addSpecialPhrase(m_harmonyLine, isON);
+				addSpecialPhrase(m_harmonyLine);
 		}
 	}
 
@@ -82,10 +84,10 @@ private:
 		}
 	}
 
-	void addSpecialPhrase(ValCombo& combo, const bool isON)
+	void addSpecialPhrase(ValCombo& combo)
 	{
 		uint32_t position = m_reader.getPosition();
-		if (isON)
+		if (m_inOnState)
 			combo.second = position;
 		else if (combo.second != UINT32_MAX)
 		{
@@ -95,13 +97,13 @@ private:
 	}
 
 	template <size_t INDEX>
-	void parseVocal(MidiNote note, const bool isON)
+	void parseVocal(MidiNote note)
 	{
 		uint32_t position = m_reader.getPosition();
 		if (m_vocalPos != UINT32_MAX && m_lyric.first == m_vocalPos)
 		{
 			uint32_t sustain = position - m_vocalPos;
-			if (isON)
+			if (m_inOnState)
 			{
 				if (sustain > 240)
 					sustain -= 120;
@@ -115,7 +117,7 @@ private:
 			m_lyric.first = UINT32_MAX;
 		}
 		
-		if (isON)
+		if (m_inOnState)
 		{
 			m_vocalPos = position;
 			m_pitch = note.value;
@@ -124,10 +126,10 @@ private:
 			m_vocalPos = UINT32_MAX;
 	}
 
-	void addPercussion(int noteValue, const bool isON)
+	void addPercussion(int noteValue)
 	{
 		uint32_t position = m_reader.getPosition();
-		if (isON)
+		if (m_inOnState)
 			m_perc = position;
 		else if (m_perc != UINT32_MAX)
 		{
@@ -137,8 +139,6 @@ private:
 	}
 
 private:
-	static constexpr std::pair<unsigned char, unsigned char> s_PITCHRANGE = { 36, 85 };
-
 	VocalTrack<numTracks>& m_track;
 	MidiFileReader& m_reader;
 
@@ -147,6 +147,7 @@ private:
 	ValCombo m_harmonyLine = { SpecialPhraseType::HarmonyLine, UINT32_MAX };
 	ValCombo m_rangeShift = { SpecialPhraseType::RangeShift, UINT32_MAX };
 	ValCombo m_lyricShift = { SpecialPhraseType::LyricShift, UINT32_MAX };
+	bool m_inOnState = false;
 
 	uint32_t m_perc = UINT32_MAX;
 

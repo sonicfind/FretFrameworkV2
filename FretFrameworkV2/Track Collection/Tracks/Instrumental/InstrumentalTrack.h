@@ -94,7 +94,7 @@ public:
 		return false;
 	}
 
-	void clear()
+	virtual void clear()
 	{
 		m_specialPhrases.clear();
 		m_events.clear();
@@ -102,47 +102,66 @@ public:
 			diff.clear();
 	}
 
-	void addNote(size_t diffIndex, uint32_t position, int note, uint32_t sustain = 0)
+	[[nodiscard]] T& get_or_emplaceNote(size_t diffIndex, uint32_t position)
 	{
-		m_difficulties[diffIndex].addNote(position, note, sustain);
+		return m_difficulties[diffIndex].get_or_emplaceNote(position);
 	}
 
-	void addPhrase(size_t diffIndex, uint32_t position, SpecialPhrase phrase)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(size_t diffIndex, uint32_t position)
 	{
-		m_difficulties[diffIndex].addPhrase(position, phrase);
+		return m_difficulties[diffIndex].get_or_emplacePhrases(position);
 	}
 
-	void addEvent(size_t diffIndex, uint32_t position, std::string_view str)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
 	{
-		m_difficulties[diffIndex].addEvent(position, str);
+		return m_specialPhrases[position];
 	}
 
-	void modifyNote(size_t diffIndex, uint32_t position, char modifier, int lane = 0)
+	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(size_t diffIndex, uint32_t position)
 	{
-		m_difficulties[diffIndex].modifyNote(position, modifier, lane);
+		return m_difficulties[diffIndex].get_or_emplaceEvents(position);
 	}
 
-	void addSharedPhrase(uint32_t position, SpecialPhrase phrase)
+	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(uint32_t position)
 	{
-		m_specialPhrases[position].push_back(phrase);
+		return m_events[position];
 	}
 
-	void addSharedEvent(uint32_t position, std::string_view str)
+	[[nodiscard]] const T& getNote(size_t diffIndex, uint32_t position) const
 	{
-		if (str[0] == '\"')
-			str = str.substr(1, str.length() - 2);
-		m_events[position].push_back(str);
+		return m_difficulties[diffIndex].getNote(position);
 	}
 
-	void adjustTicks(float multiplier)
+	[[nodiscard]] const std::vector<SpecialPhrase>& getPhrases(size_t diffIndex, uint32_t position) const
 	{
+		return m_difficulties[diffIndex].getPhrases(position);
+	}
+
+	[[nodiscard]] const std::vector<SpecialPhrase>& getPhrases(uint32_t position) const
+	{
+		return m_specialPhrases.at(position);
+	}
+
+	[[nodiscard]] const std::vector<std::u32string>& getEvents(size_t diffIndex, uint32_t position) const
+	{
+		return m_difficulties[diffIndex].getEvents(position);
+	}
+
+	[[nodiscard]] const std::vector<std::u32string>& getEvents(uint32_t position) const
+	{
+		return m_events.at(position);
+	}
+
+	virtual void adjustTicks(float multiplier)
+	{
+		Track::adjustTicks(multiplier);
 		for (auto& diff : m_difficulties)
 			if (diff.isOccupied())
 				diff.adjustTicks(multiplier);
 	}
 
-private:
-	void parse_event(CommonChartParser* parser)
+protected:
+	virtual void parse_event(CommonChartParser* parser)
 	{
 		const uint32_t position = parser->parsePosition();
 		switch (parser->parseEvent())
@@ -172,7 +191,7 @@ private:
 		parser->nextEvent();
 	}
 
-	void load_anim(CommonChartParser* parser)
+	virtual void load_anim(CommonChartParser* parser)
 	{
 		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
@@ -183,7 +202,7 @@ private:
 		}
 	}
 
-	void save_events(CommonChartWriter* writer) const
+	virtual void save_events(CommonChartWriter* writer) const
 	{
 		SimpleFlatMap<WriteNode> nodes(m_specialPhrases.size() + m_events.size());
 		for (const auto& note : m_specialPhrases)
@@ -199,7 +218,7 @@ private:
 		}
 	}
 
-	void save_anim(CommonChartWriter* parser) const
+	virtual void save_anim(CommonChartWriter* parser) const
 	{
 	}
 
@@ -209,32 +228,37 @@ private:
 		return m_difficulties[diff].construct_note_midi(position);
 	}
 
-	T& backNote_midiOnly(size_t diff)
+	[[nodiscard]] T& get_or_construct_note_midi(size_t diff, uint32_t position)
+	{
+		return m_difficulties[diff].get_or_construct_note_midi(position);
+	}
+
+	[[nodiscard]] T& backNote_midiOnly(size_t diff)
 	{
 		return m_difficulties[diff].backNote_midiOnly();
 	}
 
-	T* testBackNote_midiOnly(size_t diff, uint32_t position)
+	[[nodiscard]] T* testBackNote_midiOnly(size_t diff, uint32_t position)
 	{
 		return m_difficulties[diff].testBackNote_midiOnly(position);
 	}
 
-	T& getNote_midi(size_t diff, uint32_t position)
+	[[nodiscard]] T& getNote_midi(size_t diff, uint32_t position)
 	{
 		return m_difficulties[diff].getNote_midi(position);
 	}
 
-	std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
+	[[nodiscard]] std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
 	{
 		return m_events.get_or_emplace_back(position);
 	}
 
-	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
 	{
 		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
 	}
 
-	std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(size_t diff, uint32_t position)
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(size_t diff, uint32_t position)
 	{
 		return m_difficulties[diff].get_or_emplace_SpecialPhrase_midi(position);
 	}
@@ -247,7 +271,7 @@ private:
 			{
 				if (phraseIter->getMidiNote() == 103)
 				{
-					m_difficulties[3].addPhrase(iter->key, { SpecialPhraseType::StarPower, phraseIter->getDuration() });
+					m_difficulties[3].get_or_emplacePhrases(iter->key).push_back({ SpecialPhraseType::StarPower, phraseIter->getDuration() });
 					phraseIter = (*iter)->erase(phraseIter);
 				}
 				else
@@ -267,6 +291,6 @@ private:
 			diff.shrink();
 	}
 
-private:
+protected:
 	DifficultyTrack<T> m_difficulties[5];
 };

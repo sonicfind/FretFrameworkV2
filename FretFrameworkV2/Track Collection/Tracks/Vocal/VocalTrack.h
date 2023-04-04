@@ -2,6 +2,7 @@
 #include "../Track.h"
 #include "Notes/VocalNote.h"
 #include "Notes/VocalPercussion.h"
+#include <assert.h>
 
 template <size_t numTracks>
 class VocalTrackMidiParser;
@@ -129,11 +130,12 @@ public:
 	{
 		writer->setPitchMode(PitchWriteMode::Sharp);
 
+		SimpleFlatMap<VocalWriteNode> nodes;
 		size_t vocalSize = 0;
 		for (size_t i = 0; i < numTracks; ++i)
 			vocalSize += m_vocals[i].size();
+		nodes.reserve(vocalSize + m_specialPhrases.size() + m_events.size());
 
-		SimpleFlatMap<VocalWriteNode> nodes(vocalSize + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)
 			nodes.emplace_back(phrases.key).m_phrases = &phrases.object;
 
@@ -193,6 +195,7 @@ public:
 
 	void adjustTicks(float multiplier) override
 	{
+		Track::adjustTicks(multiplier);
 		for (auto& track : m_vocals)
 		{
 			for (auto& vocal : track)
@@ -204,50 +207,29 @@ public:
 
 		for (auto& perc : m_percussion)
 			perc.key = uint32_t(perc.key * multiplier);
-
-		for (auto& vec : m_specialPhrases)
-		{
-			vec.key = uint32_t(vec.key * multiplier);
-			for (SpecialPhrase& phrase : *vec)
-				phrase *= multiplier;
-		}
-
-		for (auto& ev : m_events)
-			ev.key = uint32_t(ev.key * multiplier);
 	}
 
 	[[nodiscard]] int save_midi(std::fstream& outFile) const;
-
-	void addLyric(int lane, uint32_t position, const std::u32string& lyric)
+	[[nodiscard]] Vocal& get_or_emplaceVocal(size_t track, uint32_t position)
 	{
-		m_vocals[lane][position].setLyric(lyric);
+		assert(track < numTracks);
+		return m_vocals[track][position];
 	}
 
-	void addLyric(int lane, uint32_t position, std::string_view lyric)
+	[[nodiscard]] VocalPercussion& get_or_emplacePercussion(uint32_t position)
 	{
-		m_vocals[lane][position].setLyric(lyric);
+		return m_percussion[position];
 	}
 
-	void addPercussion(uint32_t position, bool playable)
+	[[nodiscard]] const Vocal& getVocal(size_t track, uint32_t position) const
 	{
-		VocalPercussion& perc = m_percussion[position];
-		if (!playable)
-			perc.setPlayable(true);
+		assert(track < numTracks);
+		return m_vocals[track].at(position);
 	}
 
-	void addPhrase(uint32_t position, SpecialPhrase phrase)
+	[[nodiscard]] const VocalPercussion& getPercussion(uint32_t position) const
 	{
-		m_specialPhrases[position].push_back(phrase);
-	}
-
-	void addEvent(uint32_t position, std::string_view ev)
-	{
-		m_events[position].push_back(UnicodeString::strToU32(ev));
-	}
-
-	void setPitch(int lane, uint32_t position, char pitch, uint32_t duration = 0)
-	{
-		m_vocals[lane][position].set(pitch, duration);
+		return m_percussion.at(position);
 	}
 
 	void shrink()
