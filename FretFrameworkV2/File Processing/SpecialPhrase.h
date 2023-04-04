@@ -4,17 +4,20 @@
 
 enum class SpecialPhraseType
 {
+	FaceOff_Player1 = 0,
+	FaceOff_Player2 = 1,
 	StarPower = 2,
-	StarPowerActivation = 64,
 	Solo = 3,
-	Tremolo = 65,
-	Trill = 66,
 	LyricLine = 4,
 	RangeShift = 5,
 	HarmonyLine = 6,
+	Arpeggio = 7,
+
+	StarPowerActivation = 64,
+	Tremolo = 65,
+	Trill = 66,
 	LyricShift = 67,
-	FaceOff_Player1 = 0,
-	FaceOff_Player2 = 1
+	Chord_Numbering = 68,
 };
 
 class SpecialPhrase
