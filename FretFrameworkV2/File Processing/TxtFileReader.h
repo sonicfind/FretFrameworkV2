@@ -92,14 +92,21 @@ public:
 	[[nodiscard]] virtual uint32_t parsePosition() override;
 	[[nodiscard]] virtual ChartEvent parseEvent() override;
 	virtual void nextEvent() override;
+
 	[[nodiscard]] virtual std::pair<size_t, uint32_t> extractSingleNote() override;
 	[[nodiscard]] virtual std::vector<std::pair<size_t, uint32_t>> extractMultiNote() override;
 	[[nodiscard]] virtual std::vector<char> extractSingleNoteMods() override;
 	[[nodiscard]] virtual std::vector<std::pair<char, size_t>> extractMultiNoteMods() override;
 	[[nodiscard]] virtual std::string_view extractText() override;
 	[[nodiscard]] virtual SpecialPhrase extractSpecialPhrase() override;
+
+	[[nodiscard]] virtual NoteName extractNoteName() override;
+	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() override;
+
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() override;
-	[[nodiscard]] virtual std::pair<char, uint32_t> extractPitchAndDuration() override;
+	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint32_t> extractPitchAndDuration() override;
+
+	[[nodiscard]] virtual size_t extractLeftHand() override;
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;

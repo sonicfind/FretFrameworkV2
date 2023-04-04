@@ -1,5 +1,6 @@
 #include "TxtFileReader.h"
 #include "ChtConstants.h"
+#include "NoteName.h"
 #include <assert.h>
 
 static constexpr EventCombo g_TEMPO{ "B",  ChartEvent::BPM };
@@ -15,16 +16,29 @@ static constexpr EventCombo g_SPECIAL{ "S",  ChartEvent::SPECIAL };
 static constexpr EventCombo g_LYRIC{ "L",  ChartEvent::LYRIC };
 static constexpr EventCombo g_VOCAL{ "V",  ChartEvent::VOCAL };
 static constexpr EventCombo g_PERC{ "VP",  ChartEvent::VOCAL_PERCUSSION };
-static const std::vector<EventCombo> g_ALLEVENTS = { g_TEMPO, g_TIMESIG, g_ANCHOR, g_TEXT, g_SECTION, g_NOTE, g_MULTI, g_MODIFIER, g_SPECIAL, g_LYRIC, g_VOCAL, g_PERC };
 
-const std::vector<EventCombo> g_validTypes[5] =
+static constexpr EventCombo g_NOTE_PRO{ "NP",  ChartEvent::NOTE_PRO };
+static constexpr EventCombo g_MULTI_PRO{ "CP",  ChartEvent::MUTLI_NOTE_PRO };
+static constexpr EventCombo g_ROOT{ "R",  ChartEvent::ROOT };
+static constexpr EventCombo g_LEFT_HAND{ "LH",  ChartEvent::LEFT_HAND };
+
+static constexpr EventCombo g_PITCH{ "P",  ChartEvent::PITCH };
+static constexpr EventCombo g_RANGE_SHIFT{ "RS",  ChartEvent::RANGE_SHIFT };
+
+static const std::vector<EventCombo> g_ALLEVENTS = { g_TEMPO, g_TIMESIG, g_ANCHOR, g_TEXT, g_SECTION, g_NOTE, g_MULTI, g_MODIFIER,  g_SPECIAL,
+                                                     g_LYRIC, g_VOCAL,  g_PERC, g_NOTE_PRO, g_MULTI_PRO, g_ROOT, g_LEFT_HAND, g_PITCH, g_RANGE_SHIFT };
+
+const std::vector<EventCombo> g_validTypes[] =
 {
-	{ g_TEMPO,   g_TIMESIG, g_ANCHOR }, // TempoMap
-	{ g_TEXT,    g_SECTION },           // Events
-	{ g_SPECIAL, g_TEXT },              // Instruments
-	{ g_NOTE,    g_MULTI,   g_MODIFIER, g_SPECIAL, g_TEXT }, // Difficulties
-	{ g_LYRIC,   g_VOCAL,   g_PERC,     g_SPECIAL, g_TEXT }, // Vocals
-
+	{ g_TEMPO,       g_TIMESIG,   g_ANCHOR }, // TempoMap
+	{ g_TEXT,        g_SECTION },             // Events
+	{ g_SPECIAL,     g_TEXT },                // Instruments
+	{ g_NOTE,        g_MULTI,     g_MODIFIER, g_SPECIAL,   g_TEXT }, // Difficulties
+	{ g_LYRIC,       g_VOCAL,     g_PERC,     g_SPECIAL,   g_TEXT }, // Vocals
+	{ g_ROOT,        g_LEFT_HAND, g_MODIFIER, g_SPECIAL,   g_TEXT }, // Pro Guitar Instrument
+	{ g_RANGE_SHIFT, g_SPECIAL,   g_TEXT },                          // Pro Keys Instrument
+	{ g_NOTE_PRO,    g_MULTI_PRO, g_MODIFIER, g_SPECIAL,   g_TEXT }, // Pro Guitar Difficulty
+	{ g_PITCH,       g_SPECIAL,   g_TEXT },                          // Pro Keys Difficulty
 };
 
 void TxtFileReader::skipWhiteSpace()
@@ -108,8 +122,10 @@ bool TxtFileReader::validateNoteTrack()
 		{
 			if (index < 9)
 				m_eventSets.push_back(g_validTypes + 2);
-			else
+			else if (index < 11)
 				m_eventSets.push_back(g_validTypes + 4);
+			else
+				m_eventSets.push_back(g_validTypes + 5 + (index > 11));
 			m_noteTrackID = index;
 			return true;
 		}
@@ -123,7 +139,10 @@ bool TxtFileReader::validateDifficultyTrack()
 		--index;
 		if (validateTrack(g_DIFFICULTIES[index]))
 		{
-			m_eventSets.push_back(g_validTypes + 3);
+			if (m_noteTrackID < 9)
+				m_eventSets.push_back(g_validTypes + 3);
+			else
+				m_eventSets.push_back(g_validTypes + 7 + (m_noteTrackID > 9));
 			m_difficulty = index;
 			return true;
 		}
@@ -339,6 +358,44 @@ SpecialPhrase TxtFileReader::extractSpecialPhrase()
 	return { (SpecialPhraseType)type, duration };
 }
 
+NoteName TxtFileReader::extractNoteName()
+{
+	static constexpr NoteName NOTES[] = { NoteName::A, NoteName::B, NoteName::C, NoteName::D, NoteName::E, NoteName::F, NoteName::G, };
+	unsigned char index = (*m_currentPosition & (char)~32) - 'A';
+	if (index >= std::size(NOTES))
+		throw std::runtime_error("String is not a valid pitchname");
+
+	NoteName note = NOTES[index];
+	++m_currentPosition;
+	switch (*m_currentPosition)
+	{
+	case '#':
+		if (note != NoteName::B)
+			note = (NoteName)((int)note + 1);
+		else
+			note = NoteName::C;
+		m_currentPosition++;
+		break;
+	case 'b':
+		if (note != NoteName::C)
+			note = (NoteName)((int)note - 1);
+		else
+			note = NoteName::B;
+		m_currentPosition++;
+		break;
+	}
+	return note;
+}
+
+Pitch<-1, 9> TxtFileReader::extractPitch()
+{
+	NoteName note = extractNoteName();
+	int32_t octave = -1;
+	if (!extract(octave))
+		skipWhiteSpace();
+	return { note, octave };
+}
+
 std::pair<size_t, std::string_view> TxtFileReader::extractLyric()
 {
 	size_t lane = extract<uint32_t>();
@@ -366,11 +423,17 @@ std::pair<size_t, std::string_view> TxtFileReader::extractLyric()
 	return { lane, str };
 }
 
-std::pair<char, uint32_t> TxtFileReader::extractPitchAndDuration()
+std::pair<Pitch<-1, 9>, uint32_t> TxtFileReader::extractPitchAndDuration()
 {
-	char pitch = extract<uint32_t>();
-	uint32_t duration = extract<uint32_t>();
+	Pitch<-1, 9> pitch = extractPitch();
+	uint32_t duration = 0;
+	extract(duration);
 	return { pitch, duration };
+}
+
+size_t TxtFileReader::extractLeftHand()
+{
+	return extract<uint32_t>();
 }
 
 uint32_t TxtFileReader::extractMicrosPerQuarter()

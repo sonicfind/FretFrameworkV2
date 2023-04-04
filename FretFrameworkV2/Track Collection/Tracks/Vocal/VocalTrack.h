@@ -99,13 +99,11 @@ public:
 					continue;
 
 				const Vocal* const vocal = m_vocals[i];
-
-				std::pair<char, uint32_t> values = vocal->getPitchAndDuration();
-				if (values.first || values.second)
+				if (vocal->isPlayable())
 				{
 					writer->startEvent(position, ChartEvent::VOCAL);
 					writer->writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
-					writer->writePitchAndDuration(values);
+					writer->writePitchAndDuration(vocal->getPitchAndDuration());
 				}
 				else
 				{
@@ -129,6 +127,8 @@ public:
 
 	virtual void save(CommonChartWriter* writer) const override
 	{
+		writer->setPitchMode(PitchWriteMode::Sharp);
+
 		size_t vocalSize = 0;
 		for (size_t i = 0; i < numTracks; ++i)
 			vocalSize += m_vocals[i].size();

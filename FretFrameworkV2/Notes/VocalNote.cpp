@@ -1,7 +1,7 @@
 #include "VocalNote.h"
 #include "../Unicode/UnicodeString.h"
 
-bool Vocal::set(char pitch, uint32_t duration)
+bool Vocal::set(VocalPitch pitch, uint32_t duration) noexcept
 {
 	if (!setPitch(pitch))
 		return false;
@@ -10,16 +10,12 @@ bool Vocal::set(char pitch, uint32_t duration)
 	return true;
 }
 
-bool Vocal::setPitch(char pitch)
+bool Vocal::setPitch(VocalPitch pitch) noexcept
 {
-	if (pitch < 0)
-		return false;
-
-	m_pitch = pitch;
-	return true;
+	return m_pitch.set(pitch);
 }
 
-void Vocal::setDuration(uint32_t duration)
+void Vocal::setDuration(uint32_t duration) noexcept
 {
 	m_duration = duration;
 }
@@ -32,4 +28,9 @@ void Vocal::setLyric(std::string_view lyric)
 void Vocal::setLyric(const std::u32string& lyric)
 {
 	m_lyric = lyric;
+}
+
+void Vocal::resetPitch() noexcept
+{
+	m_pitch.disable();
 }

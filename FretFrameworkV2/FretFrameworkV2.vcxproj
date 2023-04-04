@@ -179,6 +179,8 @@
     <ClInclude Include="File Processing\CommonChartWriter.h" />
     <ClInclude Include="File Processing\FileReader.h" />
     <ClInclude Include="File Processing\MidiFileReader.h" />
+    <ClInclude Include="File Processing\NoteName.h" />
+    <ClInclude Include="File Processing\Pitch.h" />
     <ClInclude Include="File Processing\SpecialPhrase.h" />
     <ClInclude Include="File Processing\TimeSig.h" />
     <ClInclude Include="File Processing\TxtFileReader.h" />

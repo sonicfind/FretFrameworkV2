@@ -202,6 +202,17 @@ SpecialPhrase BCHFileReader::extractSpecialPhrase()
 	return { (SpecialPhraseType)type, duration };
 }
 
+Pitch<-1, 9> BCHFileReader::extractPitch()
+{
+	return { extract<char>() };
+}
+
+NoteName BCHFileReader::extractNoteName()
+{
+	Pitch pitch = extractPitch();
+	return pitch.getNote();
+}
+
 std::pair<size_t, std::string_view> BCHFileReader::extractLyric()
 {
 	const size_t lane = extract<unsigned char>();
@@ -212,11 +223,17 @@ std::pair<size_t, std::string_view> BCHFileReader::extractLyric()
 	return { lane, extractText(length) };
 }
 
-std::pair<char, uint32_t> BCHFileReader::extractPitchAndDuration()
+std::pair<Pitch<-1, 9>, uint32_t> BCHFileReader::extractPitchAndDuration()
 {
-	char pitch = extract<char>();
-	uint32_t duration = extractWebType();
+	Pitch<-1, 9> pitch = extractPitch();
+	uint32_t duration = 0;
+	extractWebType(duration);
 	return { pitch, duration };
+}
+
+size_t BCHFileReader::extractLeftHand()
+{
+	return extract<unsigned char>();
 }
 
 uint32_t BCHFileReader::extractMicrosPerQuarter()

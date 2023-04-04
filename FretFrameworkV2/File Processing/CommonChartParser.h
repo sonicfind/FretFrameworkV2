@@ -29,8 +29,14 @@ public:
 	[[nodiscard]] virtual std::vector<std::pair<char, size_t>> extractMultiNoteMods() = 0;
 	[[nodiscard]] virtual std::string_view extractText() = 0;
 	[[nodiscard]] virtual SpecialPhrase extractSpecialPhrase() = 0;
+
+	[[nodiscard]] virtual NoteName extractNoteName() = 0;
+	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() = 0;
+
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() = 0;
-	[[nodiscard]] virtual std::pair<char, uint32_t> extractPitchAndDuration() = 0;
+	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint32_t> extractPitchAndDuration() = 0;
+
+	[[nodiscard]] virtual size_t extractLeftHand() = 0;
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() = 0;
 	[[nodiscard]] virtual TimeSig extractTimeSig() = 0;

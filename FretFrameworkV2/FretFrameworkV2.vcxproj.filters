@@ -229,6 +229,12 @@
     <ClInclude Include="File Processing\BCHFileWriter.h">
       <Filter>File Processing\FileWriter</Filter>
     </ClInclude>
+    <ClInclude Include="File Processing\Pitch.h">
+      <Filter>File Processing</Filter>
+    </ClInclude>
+    <ClInclude Include="File Processing\NoteName.h">
+      <Filter>File Processing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Unicode\UnicodeString.natvis">

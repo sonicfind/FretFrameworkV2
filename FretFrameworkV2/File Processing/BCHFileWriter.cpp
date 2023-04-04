@@ -24,9 +24,10 @@ void BCHFileWriter::writeNoteTrack(size_t index)
 {
 	if (index < 9)
 		writeTrackHeader("BTin");
-	else
+	else if (index < 11)
 		writeTrackHeader("BTvc");
-
+	else // Possible Pro Instrument Tag
+		writeTrackHeader("BTin");
 	write(index, 1);
 	writeLengthOfSection<0>();
 }
@@ -121,6 +122,11 @@ void BCHFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 	appendWebType(phrase.getDuration());
 }
 
+void BCHFileWriter::writePitch(Pitch<-1, 9> pitch)
+{
+	append(pitch.getBinaryValue());
+}
+
 void BCHFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 {
 	append((unsigned char)lyric.first);
@@ -128,10 +134,22 @@ void BCHFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 	append(lyric.second.data(), lyric.second.size());
 }
 
-void BCHFileWriter::writePitchAndDuration(const std::pair<char, uint32_t>& note)
+void BCHFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint32_t>& note)
 {
-	append(note.first);
-	appendWebType(note.second);
+	writePitch(note.first);
+	if (note.second > 0)
+		appendWebType(note.second);
+}
+
+void BCHFileWriter::writeNoteName(NoteName note, PitchType type)
+{
+	assert(NoteName::C <= note && note <= NoteName::B);
+	append(static_cast<unsigned char>(note));
+}
+
+void BCHFileWriter::writeLeftHand(size_t position)
+{
+	append(position);
 }
 
 void BCHFileWriter::writeMicrosPerQuarter(uint32_t micros)
