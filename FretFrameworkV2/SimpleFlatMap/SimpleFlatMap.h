@@ -65,7 +65,7 @@ public:
 	}
 
 	// Assumes correct placement
-	[[nodiscard]] T& emplace_back(Key key, const T& obj = BASE)
+	T& emplace_back(Key key, const T& obj = BASE)
 	{
 		return m_list.emplace_back(key, BASE).object;
 	}
