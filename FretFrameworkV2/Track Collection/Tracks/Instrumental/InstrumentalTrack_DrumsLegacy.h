@@ -1,147 +1,147 @@
 #pragma once
-#include "InstrumentalTrack.h"
+#include "DrumTrack_midi.h"
 #include "Notes/DrumNote_Legacy.h"
 
-template <>
-class DifficultyTrack<DrumNote_Legacy>
+class Legacy_DrumTrack : public InstrumentalTrack<DrumNote_Legacy>
 {
-	friend class InstrumentalTrack<DrumNote_Legacy>;
-	friend class DifficultyTrack<DrumNote<4, true>>;
-	friend class DifficultyTrack<DrumNote<5, false>>;
+private:
+	using InstrumentalTrack<DrumNote_Legacy>::load;
 
 public:
-	[[nodiscard]] bool isOccupied() const;
+	Legacy_DrumTrack() = default;
+	Legacy_DrumTrack(Legacy_DrumTrack&&) = default;
+	Legacy_DrumTrack& operator=(Legacy_DrumTrack&&) = default;
 
-private:
-	[[nodiscard]] DrumType_Enum load_V1(TxtFileReader& reader);
+	Legacy_DrumTrack(const InstrumentalTrack&) = delete;
+	Legacy_DrumTrack& operator=(const InstrumentalTrack&) = delete;
 
-	void addNote(uint32_t position, size_t note, uint32_t sustain = 0)
+	Legacy_DrumTrack(MidiFileReader& reader)
 	{
-		m_notes[position].set(note, sustain);
+		InstrumentalTrack<DrumNote_Legacy>::load(reader);
+		for (size_t i = 0; i < 4; ++i)
+		{
+			m_type = evaluateDrumType(i);
+			if (m_type != DrumType_Enum::LEGACY)
+				break;
+		}
 	}
 
-	[[nodiscard]] DrumNote_Legacy* construct_note_midi(uint32_t position)
+	void load_V1(size_t diff, TxtFileReader& reader)
 	{
-		if (m_notes.capacity() == 0)
-			m_notes.reserve(5000);
-
-		return m_notes.try_emplace_back(position);
+		InstrumentalTrack<DrumNote_Legacy>::load_V1(diff, reader);
+		m_type = evaluateDrumType(diff);
 	}
 
-	[[nodiscard]] DrumNote_Legacy& get_or_construct_note_midi(uint32_t position)
-	{
-		if (m_notes.capacity() == 0)
-			m_notes.reserve(5000);
+	[[nodiscard]] DrumType_Enum getDrumType() const noexcept { return m_type; }
 
-		return m_notes.get_or_emplace_back(position);
-	}
-
-	[[nodiscard]] DrumNote_Legacy& getNote_midi(uint32_t position)
+	template <size_t numPads, bool PRO_DRUMS>
+	void transfer(InstrumentalTrack_Extended<DrumNote<numPads, PRO_DRUMS>>& track)
 	{
-		return m_notes.getNodeFromBack(position);
-	}
-
-	[[nodiscard]] DrumNote_Legacy& backNote_midiOnly()
-	{
-		return m_notes.back();
-	}
-
-	[[nodiscard]] DrumNote_Legacy& get_or_emplaceNote(uint32_t position)
-	{
-		return m_notes[position];
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
-	{
-		return m_specialPhrases[position];
-	}
-
-	void shrink()
-	{
-		if ((m_notes.size() < 500 || 10000 <= m_notes.size()) && m_notes.size() < m_notes.capacity())
-			m_notes.shrink_to_fit();
+		track.m_specialPhrases = std::move(m_specialPhrases);
+		track.m_events = std::move(m_events);
+		for (size_t i = 0; i < 5; ++i)
+		{
+			if (!track.m_difficulties[i].isOccupied() && m_difficulties[i].isOccupied())
+			{
+				track.m_difficulties[i].m_specialPhrases = std::move(m_difficulties[i].m_specialPhrases);
+				track.m_difficulties[i].m_events = std::move(m_difficulties[i].m_events);
+				track.m_difficulties[i].m_notes.reserve(m_difficulties[i].m_notes.size());
+				for (const auto& note : m_difficulties[i].m_notes)
+					track.m_difficulties[i].m_notes.emplace_back(note.key, note->transformNote<numPads, PRO_DRUMS>());
+				m_difficulties[i].m_notes.clear();
+			}
+		}
 	}
 
 private:
-	SimpleFlatMap<DrumNote_Legacy> m_notes;
-	SimpleFlatMap<std::vector<SpecialPhrase>> m_specialPhrases;
-	SimpleFlatMap<std::vector<std::u32string>> m_events;
-};
-
-template<>
-class InstrumentalTrack<DrumNote_Legacy>
-{
-	friend class InstrumentalTrack<DrumNote<4, true>>;
-	friend class InstrumentalTrack<DrumNote<5, false>>;
-	friend class InstrumentTrackMidiParser<DrumNote_Legacy>;
-
-public:
-	void load_V1(size_t diff, TxtFileReader& reader);
-	[[nodiscard]] bool isOccupied() const;
-	[[nodiscard]] DrumType_Enum getDrumType() const noexcept;
-
-private:
-	void setDrumType(DrumType_Enum type) { m_drumType = type; }
-
-private:
-	[[nodiscard]] DrumNote_Legacy* construct_note_midi(size_t diff, uint32_t position)
+	DrumType_Enum evaluateDrumType(size_t index)
 	{
-		return m_difficulties[diff].construct_note_midi(position);
+		for (const auto& note : m_difficulties[index].m_notes)
+		{
+			DrumType_Enum type = note->evaluateDrumType();
+			if (type != DrumType_Enum::LEGACY)
+				return type;
+		}
+		return DrumType_Enum::LEGACY;
 	}
 
-	[[nodiscard]] DrumNote_Legacy& get_or_construct_note_midi(size_t diff, uint32_t position)
-	{
-		return m_difficulties[diff].get_or_construct_note_midi(position);
-	}
-
-	[[nodiscard]] DrumNote_Legacy& getNote_midi(size_t diff, uint32_t position)
-	{
-		return m_difficulties[diff].getNote_midi(position);
-	}
-
-	[[nodiscard]] DrumNote_Legacy& backNote_midiOnly(size_t diff)
-	{
-		return m_difficulties[diff].backNote_midiOnly();
-	}
-
-	[[nodiscard]] std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
-	{
-		return m_events.get_or_emplace_back(position);
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
-	{
-		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
-	}
-
-	[[nodiscard]] DrumNote_Legacy& get_or_emplaceNote(size_t diffIndex, uint32_t position)
-	{
-		return m_difficulties[diffIndex].get_or_emplaceNote(position);
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
-	{
-		return m_specialPhrases[position];
-	}
-
-	void shrink_midi()
-	{
-		for (auto& diff : m_difficulties)
-			diff.shrink();
-	}
-
-private:
-	DifficultyTrack<DrumNote_Legacy> m_difficulties[5];
-	SimpleFlatMap<std::vector<SpecialPhrase>> m_specialPhrases;
-	SimpleFlatMap<std::vector<std::u32string>> m_events;
-
-	DrumType_Enum m_drumType = DrumType_Enum::LEGACY;
+	DrumType_Enum m_type = DrumType_Enum::LEGACY;
 };
 
 template <>
-template <>
-DifficultyTrack<DrumNote<4, true>>& DifficultyTrack<DrumNote<4, true>>::operator=(DifficultyTrack<DrumNote_Legacy>&& diff);
+struct Midi_Tracker_Diff<DrumNote_Legacy> : public Midi_Tracker_Diff<DrumNote<5, true>> {};
 
 template <>
+struct Midi_Tracker_Extensions<DrumNote_Legacy> : public Midi_Tracker_Extensions<DrumNote<5, true>> {};
+
 template <>
-DifficultyTrack<DrumNote<5, false>>& DifficultyTrack<DrumNote<5, false>>::operator=(DifficultyTrack<DrumNote_Legacy>&& diff);
+constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<DrumNote_Legacy>::s_noteRange{ 60, 102 };
+
+template <>
+template <bool NoteOn>
+void InstrumentalTrack<DrumNote_Legacy>::parseLaneColor(Midi_Tracker<DrumNote_Legacy>& tracker, MidiNote note, uint32_t position)
+{
+	const int noteValue = note.value - s_noteRange.first;
+	const int lane = tracker.laneValues[noteValue];
+	const int diff = s_diffValues[noteValue];
+
+	if (lane < 6)
+	{
+		if constexpr (NoteOn)
+		{
+			DrumNote_Legacy& drums = m_difficulties[diff].get_or_construct_note_midi(position);
+			if (tracker.difficulties[diff].flam)
+				drums.setFlam(true);
+
+			if (2 <= lane && lane < 5)
+				drums.setCymbal(lane, !tracker.ext.toms[lane - 2]);
+
+			if (tracker.ext.enableDynamics)
+			{
+				if (note.velocity > 100)
+					drums.setDynamics(lane, DrumDynamics::Accent);
+				else if (note.velocity < 100)
+					drums.setDynamics(lane, DrumDynamics::Ghost);
+			}
+
+			tracker.difficulties[diff].notes[lane] = position;
+		}
+		else
+		{
+			uint32_t colorPosition = tracker.difficulties[diff].notes[lane];
+			if (colorPosition != UINT32_MAX)
+			{
+				m_difficulties[diff].m_notes.getNodeFromBack(colorPosition).set(lane, position - colorPosition);
+				tracker.difficulties[diff].notes[lane] = UINT32_MAX;
+			}
+		}
+	}
+	else if (note.value == 95)
+	{
+		if constexpr (NoteOn)
+		{
+			tracker.difficulties[3].notes[0] = position;
+			m_difficulties[3].get_or_construct_note_midi(position).modify('+');
+		}
+		else
+		{
+			uint32_t colorPosition = tracker.difficulties[3].notes[0];
+			if (colorPosition != UINT32_MAX)
+			{
+				m_difficulties[3].m_notes.getNodeFromBack(colorPosition).set(0, position - colorPosition);
+				tracker.difficulties[3].notes[0] = UINT32_MAX;
+			}
+		}
+	}
+}
+
+template <>
+template <bool NoteOn>
+void InstrumentalTrack<DrumNote_Legacy>::toggleExtraValues(Midi_Tracker<DrumNote_Legacy>& tracker, MidiNote note, uint32_t position)
+{
+	if (110 <= note.value && note.value <= 112)
+		tracker.ext.toms[note.value - 110] = NoteOn;
+}
+
+template <>
+void InstrumentalTrack<DrumNote_Legacy>::parseText(Midi_Tracker<DrumNote_Legacy>& tracker, std::string_view str, uint32_t position);

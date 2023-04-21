@@ -186,9 +186,6 @@
     <ClInclude Include="Track Collection\Tracks\Vocal\VocalTrack.h">
       <Filter>Song\Tracks\VocalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Vocal\VocalTrack_midi.h">
-      <Filter>Song\Tracks\VocalTrack</Filter>
-    </ClInclude>
     <ClInclude Include="Track Collection\Tracks\Instrumental\DifficultyTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack\DifficultyTrack</Filter>
     </ClInclude>
@@ -236,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="Track Collection\MicrosPerQuarter.h">
       <Filter>TempoMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Track Collection\Tracks\Instrumental\Midi_Tracker.h">
+      <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

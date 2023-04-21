@@ -77,7 +77,7 @@ bool MidiFileReader::startNextTrack()
 	return true;
 }
 
-bool MidiFileReader::parseEvent()
+std::optional<std::pair<MidiEventType, uint32_t>> MidiFileReader::parseEvent()
 {
 	m_currentPosition = m_next;
 
@@ -106,7 +106,7 @@ bool MidiFileReader::parseEvent()
 			case MidiEventType::Reset_Or_Meta:
 				type = static_cast<MidiEventType>(*m_currentPosition++);
 				if (type == MidiEventType::End_Of_Track)
-					return false;
+					return {};
 				__fallthrough;
 			case MidiEventType::SysEx:
 			case MidiEventType::SysEx_End:
@@ -128,9 +128,9 @@ bool MidiFileReader::parseEvent()
 	}
 
 	if (m_next >= m_nextTrack)
-		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends inproperly");
+		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends improperly");
 
-	return true;
+	return { { m_event.type, m_event.tickPosition } };
 }
 
 std::string_view MidiFileReader::extractTextOrSysEx() const noexcept
@@ -160,5 +160,5 @@ TimeSig MidiFileReader::extractTimeSig() const noexcept
 	return { (unsigned char)m_currentPosition[0],
 		     (unsigned char)m_currentPosition[1],
 		     (unsigned char)m_currentPosition[2],
-		     (unsigned char)m_currentPosition[3] };;
+		     (unsigned char)m_currentPosition[3] };
 }

@@ -7,6 +7,62 @@
 
 class Track
 {
+public:
+	SimpleFlatMap<std::vector<SpecialPhrase>> m_specialPhrases;
+	SimpleFlatMap<std::vector<std::u32string>> m_events;
+
+public:
+	virtual ~Track() {}
+	[[nodiscard]] virtual bool hasNotes() const { return false; };
+	[[nodiscard]] virtual bool isOccupied() const
+	{
+		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();
+	}
+
+	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
+	{
+		return m_specialPhrases[position];
+	}
+
+	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(uint32_t position)
+	{
+		return m_events[position];
+	}
+
+	[[nodiscard]] const std::vector<SpecialPhrase>& getPhrases(uint32_t position) const
+	{
+		return m_specialPhrases.at(position);
+	}
+
+	[[nodiscard]] const std::vector<std::u32string>& getEvents(uint32_t position) const
+	{
+		return m_events.at(position);
+	}
+
+	virtual void shrink() = 0;
+
+	virtual void clear()
+	{
+		m_specialPhrases.clear();
+		m_events.clear();
+	}
+
+	virtual void adjustTicks(float multiplier)
+	{
+		for (auto& vec : m_specialPhrases)
+		{
+			vec.key = uint32_t(vec.key * multiplier);
+			for (auto& special : *vec)
+				special *= multiplier;
+		}
+
+		for (auto& ev : m_events)
+			ev.key = uint32_t(ev.key * multiplier);
+	}
+};
+
+class BCH_CHT_Extensions
+{
 protected:
 	struct WriteNode
 	{
@@ -39,72 +95,7 @@ protected:
 			}
 		}
 	};
-
 public:
-	virtual ~Track() {}
-
 	virtual void load(CommonChartParser* parser) = 0;
 	virtual void save(CommonChartWriter* writer) const = 0;
-
-	[[nodiscard]] virtual bool hasNotes() const = 0;
-
-	// Returns whether this track contains notes, special phrases, or other events
-	[[nodiscard]] virtual bool isOccupied() const
-	{
-		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();
-	}
-
-	virtual void clear()
-	{
-		m_specialPhrases.clear();
-		m_events.clear();
-	}
-
-	virtual void adjustTicks(float multiplier)
-	{
-		for (auto& vec : m_specialPhrases)
-		{
-			vec.key = uint32_t(vec.key * multiplier);
-			for (auto& special : *vec)
-				special *= multiplier;
-		}
-
-		for (auto& ev : m_events)
-			ev.key = uint32_t(ev.key * multiplier);
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
-	{
-		return m_specialPhrases[position];
-	}
-
-	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(uint32_t position)
-	{
-		return m_events[position];
-	}
-
-	[[nodiscard]] const std::vector<SpecialPhrase>& getPhrases(uint32_t position) const
-	{
-		return m_specialPhrases.at(position);
-	}
-
-	[[nodiscard]] const std::vector<std::u32string>& getEvents(uint32_t position) const
-	{
-		return m_events.at(position);
-	}
-
-protected:
-	[[nodiscard]] std::vector<std::u32string>& get_or_emplace_Events_midi(uint32_t position)
-	{
-		return m_events.get_or_emplace_back(position);
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplace_SpecialPhrase_midi(uint32_t position)
-	{
-		return m_specialPhrases.get_or_emplaceNodeFromBack(position);
-	}
-
-protected:
-	SimpleFlatMap<std::vector<SpecialPhrase>> m_specialPhrases;
-	SimpleFlatMap<std::vector<std::u32string>> m_events;
 };

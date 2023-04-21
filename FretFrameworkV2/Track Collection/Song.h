@@ -4,24 +4,40 @@
 #include "../Notes/GuitarNote.h"
 #include "../Notes/Keys.h"
 #include "MicrosPerQuarter.h"
+#include "File Processing/MidiFileReader.h"
 
 class Song
 {
 	struct
 	{
-		InstrumentalTrack<GuitarNote<5>>            lead_5;
-		InstrumentalTrack<GuitarNote<6>>            lead_6;
-		InstrumentalTrack<GuitarNote<5>>            bass_5;
-		InstrumentalTrack<GuitarNote<6>>            bass_6;
-		InstrumentalTrack<GuitarNote<5>>            rhythm;
-		InstrumentalTrack<GuitarNote<5>>            coop;
-		InstrumentalTrack<Keys<5>>                  keys;
-		InstrumentalTrack<DrumNote<4, true>>        drums4_pro;
-		InstrumentalTrack<DrumNote<5, false>>       drums5;
+		InstrumentalTrack_Extended<GuitarNote<5>>            lead_5;
+		InstrumentalTrack_Extended<GuitarNote<6>>            lead_6;
+		InstrumentalTrack_Extended<GuitarNote<5>>            bass_5;
+		InstrumentalTrack_Extended<GuitarNote<6>>            bass_6;
+		InstrumentalTrack_Extended<GuitarNote<5>>            rhythm;
+		InstrumentalTrack_Extended<GuitarNote<5>>            coop;
+		InstrumentalTrack_Extended<Keys<5>>                  keys;
+		InstrumentalTrack_Extended<DrumNote<4, true>>        drums4_pro;
+		InstrumentalTrack_Extended<DrumNote<5, false>>       drums5;
 		VocalTrack<1>                               vocals;
 		VocalTrack<3>                               harmonies;
 
-		Track* const array[11] =
+		BCH_CHT_Extensions* const extendsArray[11] =
+		{
+			&lead_5,
+			&lead_6,
+			&bass_5,
+			&bass_6,
+			&rhythm,
+			&coop,
+			&keys,
+			&drums4_pro,
+			&drums5,
+			&vocals,
+			&harmonies
+		};
+
+		Track* const trackArray[11] =
 		{
 			&lead_5,
 			&lead_6,
@@ -66,9 +82,10 @@ private:
 
 	int  load_songInfo_cht(TxtFileReader& reader);
 	bool load_events_V1(TxtFileReader& reader);
-	bool load_noteTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy);
+	bool load_noteTrack_V1(TxtFileReader& reader, Legacy_DrumTrack& drumsLegacy);
 
-	bool addSection_midi(uint32_t position, std::string_view str);
+	void load_tempoMap_midi(MidiFileReader& reader);
+	void load_events_midi(MidiFileReader& reader);
 
 	void save_cht(const std::filesystem::path& path);
 	void save_bch(const std::filesystem::path& path);

@@ -4,7 +4,7 @@
 void Song::load_cht(const std::filesystem::path& path)
 {
 	TxtFileReader reader(path);
-	InstrumentalTrack<DrumNote_Legacy> drumsLegacy;
+	Legacy_DrumTrack drumsLegacy;
 
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("[Song] track expected at the start of the file");
@@ -25,9 +25,9 @@ void Song::load_cht(const std::filesystem::path& path)
 	if (drumsLegacy.isOccupied())
 	{
 		if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
-			m_noteTracks.drums4_pro = std::move(drumsLegacy);
+			drumsLegacy.transfer(m_noteTracks.drums4_pro);
 		else
-			m_noteTracks.drums5 = std::move(drumsLegacy);
+			drumsLegacy.transfer(m_noteTracks.drums5);
 	}
 }
 
@@ -92,7 +92,7 @@ bool Song::load_events_V1(TxtFileReader& reader)
 	return true;
 }
 
-bool Song::load_noteTrack_V1(TxtFileReader& reader, InstrumentalTrack<DrumNote_Legacy>& drumsLegacy)
+bool Song::load_noteTrack_V1(TxtFileReader& reader, Legacy_DrumTrack& drumsLegacy)
 {
 	auto track = reader.extractTrack_V1();
 	if (track == TxtFileReader::Invalid)

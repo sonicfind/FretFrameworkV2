@@ -17,26 +17,30 @@ public:
 		static_assert(numPads <= 5);
 
 		DrumNote<numPads, PRO_DRUMS> note;
-		memcpy(&note, this, sizeof(numPads * sizeof(DrumPad)));
+
 		if (m_special.isActive())
 			note.set(0, m_special.getSustain());
+
+		for (size_t i = 0; i < numPads; ++i)
+			if (m_colors[i].isActive())
+			{
+				note.set(i + 1, m_colors[i].getSustain());
+				note.setDynamics(i + 1, m_colors[i].getDynamics());
+				if constexpr (PRO_DRUMS)
+					note.setCymbal(i + 1, m_colors[i].isCymbal());
+			}
 
 		note.setDoubleBass(isDoubleBass());
 		note.setFlam(isFlammed());
 		return note;
 	}
 
-	static bool testCymbal_V1(size_t lane)
+	DrumType_Enum evaluateDrumType() const noexcept
 	{
-		return lane >= 66 && lane <= 68;
-	}
-
-	static DrumType_Enum testDrumType_V1(size_t lane)
-	{
-		if (testCymbal_V1(lane))
-			return DrumType_Enum::FOURLANE_PRO;
-		else if (lane == 5)
+		if (m_colors[4].isActive())
 			return DrumType_Enum::FIVELANE;
+		else if (isCymbal(2) || isCymbal(3) || isCymbal(4))
+			return DrumType_Enum::FOURLANE_PRO;
 		else
 			return DrumType_Enum::LEGACY;
 	}

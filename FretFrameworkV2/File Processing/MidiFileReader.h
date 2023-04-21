@@ -1,6 +1,7 @@
 #pragma once
 #include "BinaryFileReader.h"
 #include "TimeSig.h"
+#include <optional>
 
 enum class MidiEventType : unsigned char
 {
@@ -67,7 +68,7 @@ public:
 	MidiFileReader(MidiFileReader&&) = default;
 
 	[[nodiscard]] bool startNextTrack();
-	[[nodiscard]] bool parseEvent();
+	[[nodiscard]] std::optional<std::pair<MidiEventType, uint32_t>> parseEvent();
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }
 	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
