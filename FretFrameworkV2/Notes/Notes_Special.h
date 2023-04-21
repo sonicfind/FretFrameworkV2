@@ -49,4 +49,9 @@ public:
 	{
 		return lane <= numColors;
 	}
+
+	static constexpr size_t GetLaneCount()
+	{
+		return numColors + 1;
+	}
 };

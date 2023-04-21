@@ -62,7 +62,7 @@ public:
 			col *= multiplier;
 	}
 
-	static uint32_t getLaneSize()
+	static constexpr size_t GetLaneCount()
 	{
 		return numColors;
 	}
