@@ -67,7 +67,7 @@ public:
 	// Assumes correct placement
 	T& emplace_back(Key key, const T& obj = BASE)
 	{
-		return m_list.emplace_back(key, BASE).object;
+		return m_list.emplace_back(key, obj).object;
 	}
 
 	T* try_emplace_back(Key key, const T& obj = BASE)
