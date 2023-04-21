@@ -2,7 +2,7 @@
 #include <iostream>
 int main()
 {
-	Song collection;
+	Song song;
 
 	std::string filename;
 	std::cout << "Drag and drop a file:";
@@ -12,14 +12,14 @@ int main()
 		filename = filename.substr(1, filename.length() - 2);
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	if (collection.load(filename))
+	if (song.load(filename))
 	{
 		auto t2 = std::chrono::high_resolution_clock::now();
 		long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 		std::cout << "Load took " << count / 1000.0 << " milliseconds\n";
 
 		if (filename.ends_with(".chart") || filename.ends_with(".mid"))
-			collection.save(filename);
+			song.save(filename);
 	}
 	else
 		std::cout << "Load failed\n";
