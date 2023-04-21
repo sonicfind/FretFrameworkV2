@@ -15,22 +15,9 @@ public:
 	Legacy_DrumTrack(const InstrumentalTrack&) = delete;
 	Legacy_DrumTrack& operator=(const InstrumentalTrack&) = delete;
 
-	Legacy_DrumTrack(MidiFileReader& reader)
-	{
-		InstrumentalTrack<DrumNote_Legacy>::load(reader);
-		for (size_t i = 0; i < 4; ++i)
-		{
-			m_type = evaluateDrumType(i);
-			if (m_type != DrumType_Enum::LEGACY)
-				break;
-		}
-	}
+	Legacy_DrumTrack(MidiFileReader& reader);
 
-	void load_V1(size_t diff, TxtFileReader& reader)
-	{
-		InstrumentalTrack<DrumNote_Legacy>::load_V1(diff, reader);
-		m_type = evaluateDrumType(diff);
-	}
+	void load_V1(size_t diff, TxtFileReader& reader);
 
 	[[nodiscard]] DrumType_Enum getDrumType() const noexcept { return m_type; }
 
@@ -54,17 +41,7 @@ public:
 	}
 
 private:
-	DrumType_Enum evaluateDrumType(size_t index)
-	{
-		for (const auto& note : m_difficulties[index].m_notes)
-		{
-			DrumType_Enum type = note->evaluateDrumType();
-			if (type != DrumType_Enum::LEGACY)
-				return type;
-		}
-		return DrumType_Enum::LEGACY;
-	}
-
+	[[nodiscard]] DrumType_Enum evaluateDrumType(size_t index);
 	DrumType_Enum m_type = DrumType_Enum::LEGACY;
 };
 
