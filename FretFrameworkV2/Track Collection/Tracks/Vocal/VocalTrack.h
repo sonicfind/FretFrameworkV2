@@ -37,20 +37,20 @@ public:
 		Midi_Tracker<Vocal> tracker(reader.getStarPowerValue());
 		while (auto midiEvent = reader.parseEvent())
 		{
-			if (midiEvent->first == MidiEventType::Note_On)
+			if (midiEvent->type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					parseNote<INDEX, true>(tracker, note.value, midiEvent->second);
+					parseNote<INDEX, true>(tracker, note.value, midiEvent->position);
 				else
-					parseNote<INDEX, false>(tracker, note.value, midiEvent->second);
+					parseNote<INDEX, false>(tracker, note.value, midiEvent->position);
 			}
-			else if(midiEvent->first == MidiEventType::Note_Off)
-				parseNote<INDEX, false>(tracker, reader.extractMidiNote().value, midiEvent->second);
-			else if (midiEvent->first == MidiEventType::SysEx || midiEvent->first == MidiEventType::SysEx_End)
+			else if(midiEvent->type == MidiEventType::Note_Off)
+				parseNote<INDEX, false>(tracker, reader.extractMidiNote().value, midiEvent->position);
+			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
 				parseSysEx(reader.extractTextOrSysEx());
-			else if (midiEvent->first <= MidiEventType::Text_EnumLimit)
-				parseText_midi<INDEX>(tracker.lyric, reader.extractTextOrSysEx(), midiEvent->second);
+			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
+				parseText_midi<INDEX>(tracker.lyric, reader.extractTextOrSysEx(), midiEvent->position);
 		}
 
 		if (tracker.lyric.first != UINT32_MAX)

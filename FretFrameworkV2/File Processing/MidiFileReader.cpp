@@ -64,24 +64,24 @@ bool MidiFileReader::startNextTrack()
 	if (m_nextTrack > getEndOfFile())
 		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + "'s length extends past End of File");
 
-	m_event.tickPosition = 0;
+	m_event.position = 0;
 	m_event.type = MidiEventType::Reset_Or_Meta;
 
 	const char* const ev = m_next = m_currentPosition;
 	if (!parseEvent() || m_event.type != MidiEventType::Text_TrackName)
 	{
 		m_next = ev;
-		m_event.tickPosition = 0;
+		m_event.position = 0;
 		m_event.type = MidiEventType::Reset_Or_Meta;
 	}
 	return true;
 }
 
-std::optional<std::pair<MidiEventType, uint32_t>> MidiFileReader::parseEvent()
+std::optional<MidiEvent> MidiFileReader::parseEvent()
 {
 	m_currentPosition = m_next;
 
-	m_event.tickPosition += readVLQ();
+	m_event.position += readVLQ();
 	unsigned char tmp = *m_currentPosition;
 	MidiEventType type = static_cast<MidiEventType>(tmp);
 	if (type < MidiEventType::Note_Off)
@@ -130,7 +130,7 @@ std::optional<std::pair<MidiEventType, uint32_t>> MidiFileReader::parseEvent()
 	if (m_next >= m_nextTrack)
 		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends improperly");
 
-	return { { m_event.type, m_event.tickPosition } };
+	return m_event;
 }
 
 std::string_view MidiFileReader::extractTextOrSysEx() const noexcept

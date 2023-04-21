@@ -60,6 +60,13 @@ struct ControlChange
 	unsigned char value = 0;
 };
 
+struct MidiEvent
+{
+	uint32_t position = 0;
+	MidiEventType type = MidiEventType::Reset_Or_Meta;
+	unsigned char channel = 0;
+};
+
 class MidiFileReader : private BinaryFileReader<true>
 {
 public:
@@ -68,11 +75,11 @@ public:
 	MidiFileReader(MidiFileReader&&) = default;
 
 	[[nodiscard]] bool startNextTrack();
-	[[nodiscard]] std::optional<std::pair<MidiEventType, uint32_t>> parseEvent();
+	[[nodiscard]] std::optional<MidiEvent> parseEvent();
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }
 	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
-	[[nodiscard]] uint32_t getPosition() const noexcept { return m_event.tickPosition; }
+	[[nodiscard]] uint32_t getPosition() const noexcept { return m_event.position; }
 	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
 	[[nodiscard]] unsigned char getMidiChannel() const noexcept { return m_event.channel; }
 
@@ -100,13 +107,7 @@ private:
 
 	uint16_t m_trackCount = 0;
 
-	struct
-	{
-		uint32_t tickPosition = 0;
-
-		MidiEventType type = MidiEventType::Reset_Or_Meta;
-		unsigned char channel = 0;
-	} m_event;
+	MidiEvent m_event;
 
 	unsigned char m_starPowerNote = 116;
 	const char* m_nextTrack;
