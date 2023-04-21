@@ -164,18 +164,16 @@ public:
 
 	[[nodiscard]] T* try_back(Key keytoValidate)
 	{
-		Node& node = m_list.back();
-		if (node.key == keytoValidate)
-			return &node.object;
-		return nullptr;
+		if (m_list.empty() || m_list.back().key != keytoValidate)
+			return nullptr;
+		return &m_list.back().object;
 	}
 
 	[[nodiscard]] T* try_back(Key keytoValidate) const
 	{
-		const Node& node = m_list.back();
-		if (node.key == keytoValidate)
-			return &node.object;
-		return nullptr;
+		if (m_list.empty() || m_list.back().key != keytoValidate)
+			return nullptr;
+		return &m_list.back().object;
 	}
 
 	[[nodiscard]] T& back(Key keytoValidate)
