@@ -188,11 +188,11 @@ public:
 	void setDynamics(size_t lane, DrumDynamics dyn) { this->m_colors[lane].setDynamics(dyn); }
 
 	template <typename = std::enable_if<PRO_DRUMS>>
-	[[nodiscard]] bool isCymbal(size_t lane) const noexcept { return this->m_colors[lane].isCymbal(); }
+	[[nodiscard]] bool isCymbal(size_t lane) const noexcept { return lane > 1 && this->m_colors[lane].isCymbal(); }
 
 	template <typename = std::enable_if<PRO_DRUMS>>
-	void toggleCymbal(size_t lane) { this->m_colors[lane].toggleCymbal(); }
+	void toggleCymbal(size_t lane) { if (lane > 1) this->m_colors[lane].toggleCymbal(); }
 
 	template <typename = std::enable_if<PRO_DRUMS>>
-	void setCymbal(size_t lane, bool enable) { this->m_colors[lane].setCymbal(enable); }
+	void setCymbal(size_t lane, bool enable) { if (lane > 1) this->m_colors[lane].setCymbal(enable); }
 };
