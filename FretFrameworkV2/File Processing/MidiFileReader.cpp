@@ -22,6 +22,16 @@ uint32_t MidiFileReader::readVLQ()
 	return value;
 }
 
+void MidiFileReader::setNextPointer(MidiEventType type) noexcept
+{
+	m_next = m_currentPosition + 1 +
+		(type == MidiEventType::Note_On ||
+		 type == MidiEventType::Note_Off ||
+		 type == MidiEventType::Control_Change ||
+		 type == MidiEventType::Key_Pressure ||
+		 type == MidiEventType::Pitch_Wheel);
+}
+
 MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileReader(path)
 {
 	if (!checkTag("MThd"))
@@ -78,6 +88,7 @@ bool MidiFileReader::parseEvent()
 	{
 		if (m_event.type < MidiEventType::Note_Off || m_event.type >= MidiEventType::SysEx)
 			throw std::runtime_error("Invalid running event");
+		setNextPointer(m_event.type);
 	}
 	else
 	{
@@ -86,11 +97,7 @@ bool MidiFileReader::parseEvent()
 		{
 			m_event.channel = tmp & 15;
 			type = static_cast<MidiEventType>(tmp & 240);
-			m_next = m_currentPosition + 1 + (type == MidiEventType::Note_On ||
-				                              type == MidiEventType::Note_Off ||
-				                              type == MidiEventType::Control_Change ||
-				                              type == MidiEventType::Key_Pressure ||
-				                              type == MidiEventType::Pitch_Wheel);
+			setNextPointer(type);
 		}
 		else
 		{
