@@ -77,24 +77,9 @@ public:
 			diff.shrink();
 	}
 
-	[[nodiscard]] T& get_or_emplaceNote(size_t diffIndex, uint32_t position)
+	DifficultyTrack<T>& operator[](size_t i)
 	{
-		return m_difficulties[diffIndex].get_or_emplaceNote(position);
-	}
-
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(size_t diffIndex, uint32_t position)
-	{
-		return m_difficulties[diffIndex].get_or_emplacePhrases(position);
-	}
-
-	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(size_t diffIndex, uint32_t position)
-	{
-		return m_difficulties[diffIndex].get_or_emplaceEvents(position);
-	}
-
-	[[nodiscard]] const T& getNote(size_t diffIndex, uint32_t position) const
-	{
-		return m_difficulties[diffIndex].getNote(position);
+		return m_difficulties[i];
 	}
 
 	virtual void adjustTicks(float multiplier)

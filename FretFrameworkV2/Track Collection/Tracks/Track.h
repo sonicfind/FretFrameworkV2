@@ -19,26 +19,6 @@ public:
 		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();
 	}
 
-	[[nodiscard]] std::vector<SpecialPhrase>& get_or_emplacePhrases(uint32_t position)
-	{
-		return m_specialPhrases[position];
-	}
-
-	[[nodiscard]] std::vector<std::u32string>& get_or_emplaceEvents(uint32_t position)
-	{
-		return m_events[position];
-	}
-
-	[[nodiscard]] const std::vector<SpecialPhrase>& getPhrases(uint32_t position) const
-	{
-		return m_specialPhrases.at(position);
-	}
-
-	[[nodiscard]] const std::vector<std::u32string>& getEvents(uint32_t position) const
-	{
-		return m_events.at(position);
-	}
-
 	virtual void shrink() = 0;
 
 	virtual void clear()

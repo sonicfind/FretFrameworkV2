@@ -86,19 +86,19 @@ public:
 	[[nodiscard]] virtual bool hasNotes() const override { return m_notes.size(); }
 	[[nodiscard]] virtual bool isOccupied() const override { return !m_notes.isEmpty() || Track::isOccupied(); }
 
-	[[nodiscard]] T& get_or_emplaceNote(uint32_t position)
-	{
-		return m_notes[position];
-	}
-
-	[[nodiscard]] T& getNote(uint32_t position)
+	[[nodiscard]] T& at(uint32_t position)
 	{
 		return m_notes.at(position);
 	}
 
-	[[nodiscard]] uint32_t getNumActive(uint32_t position)
+	[[nodiscard]] const T& at(uint32_t position) const
 	{
-		return m_notes.at(position).getNumActive();
+		return m_notes.at(position);
+	}
+
+	T& operator[](size_t position)
+	{
+		return m_notes[position];
 	}
 
 public:

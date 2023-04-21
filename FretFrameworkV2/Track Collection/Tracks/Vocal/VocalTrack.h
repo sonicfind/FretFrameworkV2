@@ -117,6 +117,17 @@ public:
 		return m_percussion[position];
 	}
 
+	[[nodiscard]] Vocal& getVocal(size_t track, uint32_t position)
+	{
+		assert(track < numTracks);
+		return m_vocals[track].at(position);
+	}
+
+	[[nodiscard]] VocalPercussion& getPercussion(uint32_t position)
+	{
+		return m_percussion.at(position);
+	}
+
 	[[nodiscard]] const Vocal& getVocal(size_t track, uint32_t position) const
 	{
 		assert(track < numTracks);

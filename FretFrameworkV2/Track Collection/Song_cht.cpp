@@ -73,14 +73,14 @@ bool Song::load_events_V1(TxtFileReader& reader)
 			else if (str.starts_with("phrase_start"))
 			{
 				if (phrase < UINT32_MAX)
-					m_noteTracks.vocals.get_or_emplacePhrases(phrase).push_back({ SpecialPhraseType::LyricLine, position - phrase });
+					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, position - phrase });
 				phrase = position;
 			}
 			else if (str.starts_with("phrase_end"))
 			{
 				if (phrase < UINT32_MAX)
 				{
-					m_noteTracks.vocals.get_or_emplacePhrases(phrase).push_back({ SpecialPhraseType::LyricLine, position - phrase });
+					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, position - phrase });
 					phrase = UINT32_MAX;
 				}
 			}

@@ -118,7 +118,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker<GuitarNote<5>
 			{
 				if (phraseIter->getMidiNote() == 103)
 				{
-					m_difficulties[3].get_or_emplacePhrases(iter->key).push_back({ SpecialPhraseType::StarPower, phraseIter->getDuration() });
+					m_difficulties[3].m_specialPhrases[iter->key].push_back({ SpecialPhraseType::StarPower, phraseIter->getDuration() });
 					phraseIter = (*iter)->erase(phraseIter);
 				}
 				else
