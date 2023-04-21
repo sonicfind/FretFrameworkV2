@@ -30,27 +30,27 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>Types</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>Types</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>Types</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>Types</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -145,73 +145,73 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="File Processing\BCHFileReader.cpp" />
-    <ClCompile Include="File Processing\BCHFileWriter.cpp" />
-    <ClCompile Include="File Processing\FileReader.cpp" />
-    <ClCompile Include="File Processing\MidiFileReader.cpp" />
-    <ClCompile Include="File Processing\SpecialPhrase.cpp" />
-    <ClCompile Include="File Processing\TxtFileReader.cpp" />
-    <ClCompile Include="File Processing\ChtFileWriter.cpp" />
-    <ClCompile Include="File Processing\VariableLengthQuantity.cpp" />
+    <ClCompile Include="Serialization\BCHFileReader.cpp" />
+    <ClCompile Include="Serialization\BCHFileWriter.cpp" />
+    <ClCompile Include="Serialization\FileReader.cpp" />
+    <ClCompile Include="Serialization\MidiFileReader.cpp" />
+    <ClCompile Include="Serialization\TxtFileReader.cpp" />
+    <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Notes\VocalNote.cpp" />
-    <ClCompile Include="Notes\VocalPercussion.cpp" />
-    <ClCompile Include="Track Collection\Song.cpp" />
-    <ClCompile Include="Track Collection\Song_bch.cpp" />
-    <ClCompile Include="Track Collection\Song_cht.cpp" />
-    <ClCompile Include="Track Collection\Song_mid.cpp" />
-    <ClCompile Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.cpp" />
-    <ClCompile Include="Track Collection\Tracks\Instrumental\GuitarTrack_midi.cpp" />
-    <ClCompile Include="Track Collection\Tracks\Instrumental\InstrumentalTrack_DrumsLegacy.cpp" />
-    <ClCompile Include="Unicode\UnicodeString.cpp" />
-    <ClCompile Include="Unicode\utf_utils.cpp" />
-    <ClCompile Include="WebType\WebType.cpp" />
+    <ClCompile Include="Song\Notes\VocalNote.cpp" />
+    <ClCompile Include="Song\Notes\VocalPercussion.cpp" />
+    <ClCompile Include="Song\Song.cpp" />
+    <ClCompile Include="Song\Song_bch.cpp" />
+    <ClCompile Include="Song\Song_chart_V1.cpp" />
+    <ClCompile Include="Song\Song_cht.cpp" />
+    <ClCompile Include="Song\Song_mid.cpp" />
+    <ClCompile Include="Song\Tracks\Instrumental\DrumTrack_midi.cpp" />
+    <ClCompile Include="Song\Tracks\Instrumental\GuitarTrack_midi.cpp" />
+    <ClCompile Include="Song\Tracks\Instrumental\Legacy_DrumTrack.cpp" />
+    <ClCompile Include="Song\Tracks\SpecialPhrase.cpp" />
+    <ClCompile Include="Types\UnicodeString.cpp" />
+    <ClCompile Include="Types\utf_utils.cpp" />
+    <ClCompile Include="Types\VariableLengthQuantity.cpp" />
+    <ClCompile Include="Types\WebType.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="File Processing\BCHFileReader.h" />
-    <ClInclude Include="File Processing\BCHFileWriter.h" />
-    <ClInclude Include="File Processing\BinaryFileReader.h" />
-    <ClInclude Include="File Processing\BinaryFileWriter.h" />
-    <ClInclude Include="File Processing\ChtConstants.h" />
-    <ClInclude Include="File Processing\CommonChartTypes.h" />
-    <ClInclude Include="File Processing\CommonChartParser.h" />
-    <ClInclude Include="File Processing\CommonChartWriter.h" />
-    <ClInclude Include="File Processing\FileReader.h" />
-    <ClInclude Include="File Processing\MidiFileReader.h" />
-    <ClInclude Include="File Processing\NoteName.h" />
-    <ClInclude Include="File Processing\Pitch.h" />
-    <ClInclude Include="File Processing\SpecialPhrase.h" />
-    <ClInclude Include="File Processing\TimeSig.h" />
-    <ClInclude Include="File Processing\TxtFileReader.h" />
-    <ClInclude Include="File Processing\ChtFileWriter.h" />
-    <ClInclude Include="File Processing\TxtFileWriter.h" />
-    <ClInclude Include="File Processing\VariableLengthQuantity.h" />
-    <ClInclude Include="Notes\DrumNote.h" />
-    <ClInclude Include="Notes\DrumNote_Legacy.h" />
-    <ClInclude Include="Notes\GuitarNote.h" />
-    <ClInclude Include="Notes\Keys.h" />
-    <ClInclude Include="Notes\NoteColor.h" />
-    <ClInclude Include="Notes\Notes.h" />
-    <ClInclude Include="Notes\Notes_Special.h" />
-    <ClInclude Include="Notes\VocalNote.h" />
-    <ClInclude Include="Notes\VocalPercussion.h" />
+    <ClInclude Include="Serialization\BCHFileReader.h" />
+    <ClInclude Include="Serialization\BCHFileWriter.h" />
+    <ClInclude Include="Serialization\BinaryFileReader.h" />
+    <ClInclude Include="Serialization\BinaryFileWriter.h" />
+    <ClInclude Include="Serialization\ChtConstants.h" />
+    <ClInclude Include="Serialization\CommonChartTypes.h" />
+    <ClInclude Include="Serialization\CommonChartParser.h" />
+    <ClInclude Include="Serialization\CommonChartWriter.h" />
+    <ClInclude Include="Serialization\FileReader.h" />
+    <ClInclude Include="Serialization\MidiFileReader.h" />
+    <ClInclude Include="Serialization\TxtFileReader.h" />
+    <ClInclude Include="Serialization\ChtFileWriter.h" />
+    <ClInclude Include="Serialization\TxtFileWriter.h" />
+    <ClInclude Include="Song\Notes\DrumNote.h" />
+    <ClInclude Include="Song\Notes\DrumNote_Legacy.h" />
+    <ClInclude Include="Song\Notes\GuitarNote.h" />
+    <ClInclude Include="Song\Notes\Keys.h" />
+    <ClInclude Include="Song\Notes\NoteColor.h" />
+    <ClInclude Include="Song\Notes\NoteName.h" />
+    <ClInclude Include="Song\Notes\Notes.h" />
+    <ClInclude Include="Song\Notes\Notes_Special.h" />
+    <ClInclude Include="Song\Notes\Pitch.h" />
+    <ClInclude Include="Song\Notes\VocalNote.h" />
+    <ClInclude Include="Song\Notes\VocalPercussion.h" />
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
-    <ClInclude Include="Track Collection\MicrosPerQuarter.h" />
-    <ClInclude Include="Track Collection\Song.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\DifficultyTrack.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\GuitarTrack_midi.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\InstrumentalTrack.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\InstrumentalTrack_DrumsLegacy.h" />
-    <ClInclude Include="Track Collection\Tracks\Instrumental\Midi_Tracker.h" />
-    <ClInclude Include="Track Collection\Tracks\Track.h" />
-    <ClInclude Include="Track Collection\Tracks\Vocal\VocalTrack.h" />
-    <ClInclude Include="Unicode\UnicodeString.h" />
-    <ClInclude Include="Unicode\utf_utils.h" />
-    <ClInclude Include="WebType\WebType.h" />
+    <ClInclude Include="Song\MicrosPerQuarter.h" />
+    <ClInclude Include="Song\Song.h" />
+    <ClInclude Include="Song\TimeSig.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\DrumTrack_midi.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\GuitarTrack_midi.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\InstrumentalTrack.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\Legacy_DrumTrack.h" />
+    <ClInclude Include="Song\Tracks\SpecialPhrase.h" />
+    <ClInclude Include="Song\Tracks\Track.h" />
+    <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
+    <ClInclude Include="Types\UnicodeString.h" />
+    <ClInclude Include="Types\utf_utils.h" />
+    <ClInclude Include="Types\VariableLengthQuantity.h" />
+    <ClInclude Include="Types\WebType.h" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="Unicode\UnicodeString.natvis" />
+    <Natvis Include="Types\UnicodeString.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

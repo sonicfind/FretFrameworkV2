@@ -13,13 +13,13 @@
     <Filter Include="SimpleFlatMap">
       <UniqueIdentifier>{649accdc-956b-4d72-87d5-d56ce0e35f94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File Processing">
+    <Filter Include="Serialization">
       <UniqueIdentifier>{a0941514-84c4-43ef-94be-e1759a287d64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File Processing\FileWriter">
+    <Filter Include="Serialization\FileWriter">
       <UniqueIdentifier>{6f4fb3b2-e926-4122-9849-c8c8e82ba840}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File Processing\FileReader">
+    <Filter Include="Serialization\FileReader">
       <UniqueIdentifier>{f173f4f3-2422-4436-9999-ddc3a82b0cb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Notes">
@@ -48,198 +48,195 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="File Processing\FileReader.cpp">
-      <Filter>File Processing\FileReader</Filter>
+    <ClCompile Include="Serialization\FileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\MidiFileReader.cpp">
-      <Filter>File Processing\FileReader</Filter>
+    <ClCompile Include="Serialization\MidiFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\TxtFileReader.cpp">
-      <Filter>File Processing\FileReader</Filter>
+    <ClCompile Include="Serialization\TxtFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\BCHFileReader.cpp">
-      <Filter>File Processing\FileReader</Filter>
+    <ClCompile Include="Serialization\BCHFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\VariableLengthQuantity.cpp">
+    <ClCompile Include="Types\VariableLengthQuantity.cpp">
       <Filter>VariableLengthQuantity</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Unicode\UnicodeString.cpp">
+    <ClCompile Include="Types\UnicodeString.cpp">
       <Filter>Unicode</Filter>
     </ClCompile>
-    <ClCompile Include="Unicode\utf_utils.cpp">
+    <ClCompile Include="Types\utf_utils.cpp">
       <Filter>Unicode</Filter>
     </ClCompile>
-    <ClCompile Include="WebType\WebType.cpp">
+    <ClCompile Include="Types\WebType.cpp">
       <Filter>WebType</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Song.cpp">
+    <ClCompile Include="Song\Song.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Song_cht.cpp">
+    <ClCompile Include="Song\Song_cht.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Song_bch.cpp">
+    <ClCompile Include="Song\Song_bch.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Song_mid.cpp">
+    <ClCompile Include="Song\Song_mid.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.cpp">
+    <ClCompile Include="Song\Tracks\Instrumental\DrumTrack_midi.cpp">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Tracks\Instrumental\GuitarTrack_midi.cpp">
+    <ClCompile Include="Song\Tracks\Instrumental\GuitarTrack_midi.cpp">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClCompile>
-    <ClCompile Include="Track Collection\Tracks\Instrumental\InstrumentalTrack_DrumsLegacy.cpp">
+    <ClCompile Include="Song\Tracks\Instrumental\Legacy_DrumTrack.cpp">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClCompile>
-    <ClCompile Include="Notes\VocalNote.cpp">
+    <ClCompile Include="Song\Notes\VocalNote.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
-    <ClCompile Include="Notes\VocalPercussion.cpp">
+    <ClCompile Include="Song\Notes\VocalPercussion.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\SpecialPhrase.cpp">
-      <Filter>File Processing</Filter>
+    <ClCompile Include="Song\Tracks\SpecialPhrase.cpp">
+      <Filter>Serialization</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\ChtFileWriter.cpp">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClCompile Include="Serialization\ChtFileWriter.cpp">
+      <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
-    <ClCompile Include="File Processing\BCHFileWriter.cpp">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClCompile Include="Serialization\BCHFileWriter.cpp">
+      <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Song_chart_V1.cpp">
+      <Filter>Song</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="File Processing\FileReader.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\FileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\BinaryFileReader.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\BinaryFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\MidiFileReader.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\MidiFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\TxtFileReader.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\TxtFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\BCHFileReader.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\BCHFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\VariableLengthQuantity.h">
+    <ClInclude Include="Types\VariableLengthQuantity.h">
       <Filter>VariableLengthQuantity</Filter>
     </ClInclude>
-    <ClInclude Include="Unicode\UnicodeString.h">
+    <ClInclude Include="Types\UnicodeString.h">
       <Filter>Unicode</Filter>
     </ClInclude>
-    <ClInclude Include="Unicode\utf_utils.h">
+    <ClInclude Include="Types\utf_utils.h">
       <Filter>Unicode</Filter>
     </ClInclude>
-    <ClInclude Include="WebType\WebType.h">
+    <ClInclude Include="Types\WebType.h">
       <Filter>WebType</Filter>
     </ClInclude>
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h">
       <Filter>SimpleFlatMap</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\Notes.h">
+    <ClInclude Include="Song\Notes\Notes.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\Notes_Special.h">
+    <ClInclude Include="Song\Notes\Notes_Special.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\GuitarNote.h">
+    <ClInclude Include="Song\Notes\GuitarNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\DrumNote.h">
+    <ClInclude Include="Song\Notes\DrumNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Song.h">
+    <ClInclude Include="Song\Song.h">
       <Filter>Song</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\Keys.h">
+    <ClInclude Include="Song\Notes\Keys.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\NoteColor.h">
+    <ClInclude Include="Song\Notes\NoteColor.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\DrumNote_Legacy.h">
+    <ClInclude Include="Song\Notes\DrumNote_Legacy.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\BinaryFileWriter.h">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClInclude Include="Serialization\BinaryFileWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\ChtFileWriter.h">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClInclude Include="Serialization\ChtFileWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\CommonChartParser.h">
-      <Filter>File Processing\FileReader</Filter>
+    <ClInclude Include="Serialization\CommonChartParser.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\CommonChartWriter.h">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClInclude Include="Serialization\CommonChartWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\CommonChartTypes.h">
-      <Filter>File Processing</Filter>
+    <ClInclude Include="Serialization\CommonChartTypes.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Track.h">
+    <ClInclude Include="Song\Tracks\Track.h">
       <Filter>Song\Tracks</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Vocal\VocalTrack.h">
+    <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h">
       <Filter>Song\Tracks\VocalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\DifficultyTrack.h">
+    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack\DifficultyTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\DrumTrack_midi.h">
+    <ClInclude Include="Song\Tracks\Instrumental\DrumTrack_midi.h">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\GuitarTrack_midi.h">
+    <ClInclude Include="Song\Tracks\Instrumental\GuitarTrack_midi.h">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\InstrumentalTrack_Midi.h">
-      <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
-    </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\InstrumentalTrack.h">
+    <ClInclude Include="Song\Tracks\Instrumental\InstrumentalTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\InstrumentalTrack_DrumsLegacy.h">
+    <ClInclude Include="Song\Tracks\Instrumental\Legacy_DrumTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\VocalNote.h">
+    <ClInclude Include="Song\Notes\VocalNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\VocalPercussion.h">
+    <ClInclude Include="Song\Notes\VocalPercussion.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\SpecialPhrase.h">
-      <Filter>File Processing</Filter>
+    <ClInclude Include="Song\Tracks\SpecialPhrase.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\TxtFileWriter.h">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClInclude Include="Serialization\TxtFileWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\ChtConstants.h">
-      <Filter>File Processing</Filter>
+    <ClInclude Include="Serialization\ChtConstants.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\BCHFileWriter.h">
-      <Filter>File Processing\FileWriter</Filter>
+    <ClInclude Include="Serialization\BCHFileWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\Pitch.h">
-      <Filter>File Processing</Filter>
+    <ClInclude Include="Song\Notes\Pitch.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\NoteName.h">
-      <Filter>File Processing</Filter>
+    <ClInclude Include="Song\Notes\NoteName.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="File Processing\TimeSig.h">
+    <ClInclude Include="Song\TimeSig.h">
       <Filter>TempoMap</Filter>
     </ClInclude>
-    <ClInclude Include="Track Collection\MicrosPerQuarter.h">
+    <ClInclude Include="Song\MicrosPerQuarter.h">
       <Filter>TempoMap</Filter>
-    </ClInclude>
-    <ClInclude Include="Track Collection\Tracks\Instrumental\Midi_Tracker.h">
-      <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="Unicode\UnicodeString.natvis">
+    <Natvis Include="Types\UnicodeString.natvis">
       <Filter>Unicode</Filter>
     </Natvis>
   </ItemGroup>
