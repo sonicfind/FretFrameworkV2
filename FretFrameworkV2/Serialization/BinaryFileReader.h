@@ -50,7 +50,7 @@ public:
 	{
 		if constexpr (sizeof(T) == 1)
 		{
-			value = *m_currentPosition;
+			value = *reinterpret_cast<const T*>(m_currentPosition);
 			if constexpr (useVirtual)
 				return move(1);
 			else
