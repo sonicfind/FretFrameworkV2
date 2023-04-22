@@ -40,9 +40,6 @@
     <Filter Include="Song\Tracks\InstrumentalTrack\Midi">
       <UniqueIdentifier>{92d3d4e3-5004-49f8-b2fa-d7f2c7f1ac76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Song\Tracks\InstrumentalTrack\DifficultyTrack">
-      <UniqueIdentifier>{2d3ff5d6-5a26-49a6-b35b-360f5f50e2e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TempoMap">
       <UniqueIdentifier>{541496ce-0c36-4fe3-a690-3d96f9abf197}</UniqueIdentifier>
     </Filter>
@@ -189,9 +186,6 @@
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h">
       <Filter>Song\Tracks\VocalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
-      <Filter>Song\Tracks\InstrumentalTrack\DifficultyTrack</Filter>
-    </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\DrumTrack_midi.h">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
     </ClInclude>
@@ -233,6 +227,9 @@
     </ClInclude>
     <ClInclude Include="Song\MicrosPerQuarter.h">
       <Filter>TempoMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
+      <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
