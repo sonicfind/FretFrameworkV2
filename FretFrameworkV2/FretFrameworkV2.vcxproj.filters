@@ -43,6 +43,9 @@
     <Filter Include="TempoMap">
       <UniqueIdentifier>{541496ce-0c36-4fe3-a690-3d96f9abf197}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Serialization\MD5">
+      <UniqueIdentifier>{6ed6681a-8855-4705-8423-229709146146}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -108,6 +111,9 @@
     </ClCompile>
     <ClCompile Include="Song\Song_chart_V1.cpp">
       <Filter>Song</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization\MD5.cpp">
+      <Filter>Serialization\MD5</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\MD5.h">
+      <Filter>Serialization\MD5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <filesystem>
+#include "MD5.h"
 
 class FileReader
 {
@@ -10,6 +11,7 @@ public:
 	FileReader(FileReader&&) = default;
 
 	virtual bool move(size_t amount);
+	MD5 calculateMD5() const noexcept;
 
 protected:
 	[[nodiscard]] const char* getStartOfFile() const noexcept;

@@ -40,3 +40,8 @@ bool FileReader::move(size_t amount)
 	m_currentPosition += amount;
 	return true;
 }
+
+MD5 FileReader::calculateMD5() const noexcept
+{
+	return MD5(m_fileData.get(), m_fileSize);
+}
