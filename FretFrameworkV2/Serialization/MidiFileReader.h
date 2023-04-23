@@ -95,7 +95,6 @@ public:
 
 private:
 	[[nodiscard]] uint32_t readVLQ();
-	void setNextPointer(MidiEventType type) noexcept;
 
 private:
 	struct
