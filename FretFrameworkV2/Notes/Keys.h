@@ -28,7 +28,7 @@ public:
 		return sustain;
 	}
 
-	static bool testIndex_V1(const size_t lane)
+	static bool TestIndex_V1(const size_t lane)
 	{
 		return lane < numColors;
 	}

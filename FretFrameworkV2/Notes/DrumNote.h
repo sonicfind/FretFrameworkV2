@@ -154,11 +154,6 @@ public:
 		return modifiers;
 	}
 
-	static bool testIndex_V1(const size_t lane)
-	{
-		return lane <= numPads;
-	}
-
 	void toggleDoubleBass()
 	{
 		m_isDoubleBass = !m_isDoubleBass;
@@ -195,4 +190,10 @@ public:
 
 	template <typename = std::enable_if<PRO_DRUMS>>
 	void setCymbal(size_t lane, bool enable) { if (lane > 1) this->m_colors[lane - 1].setCymbal(enable); }
+
+public:
+	static bool TestIndex_V1(const size_t lane)
+	{
+		return lane <= numPads;
+	}
 };

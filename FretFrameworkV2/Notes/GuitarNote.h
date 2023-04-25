@@ -191,10 +191,18 @@ public:
 	[[nodiscard]] bool isTapped() const noexcept { return m_isTap; }
 	[[nodiscard]] ForceStatus getForcing() const noexcept { return m_forcing; }
 
-	static bool testIndex_V1(const size_t lane)
+	static bool TestIndex_V1(const size_t lane)
 	{
-		static constexpr bool validLanes[256] = { true, true, true, true, true, false, false, true, numColors == 6 };
+		struct ValidArray
+		{
+			bool lanes[256] = { true, true, true, true, true, false, false, true };
+			constexpr ValidArray()
+			{
+				for (size_t i = 6; i <= numColors && i < 254; ++i)
+					lanes[i + 2] = true;
+			}
+		} arr;
 		assert(lane < 256);
-		return validLanes[lane];
+		return arr.lanes[lane];
 	}
 };
