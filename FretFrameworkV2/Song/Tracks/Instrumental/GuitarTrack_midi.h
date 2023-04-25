@@ -112,6 +112,11 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 			return;
 		}
 
+		// lane 8 now corresponds to lane 12 (or per-difficulty star power)
+
+		for (size_t i = 0; i < 4; ++i)
+			tracker.laneValues[12 * i + 8] = 12;
+
 		for (auto iter = m_specialPhrases.begin(); iter < m_specialPhrases.end();)
 		{
 			for (auto phraseIter = (*iter)->begin(); phraseIter < (*iter)->end();)
@@ -132,9 +137,6 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		}
 
 		addSpecialPhrase<NoteOn>(tracker.difficulties[diff].starPower, diff, position);
-
-		for (size_t i = 0; i < 4; ++i)
-			tracker.laneValues[12 * i + 8] = 12;
 	}
 	else if (lane == 9)
 		tracker.difficulties[diff].sliderNotes = NoteOn;
