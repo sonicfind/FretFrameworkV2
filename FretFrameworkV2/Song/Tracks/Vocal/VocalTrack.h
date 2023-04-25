@@ -26,7 +26,7 @@ class VocalTrack : public Track, public BCH_CHT_Extensions
 	};
 
 public:
-	template <size_t INDEX>
+	template <size_t INDEX = 0>
 	void load(MidiFileReader& reader)
 	{
 		static_assert(INDEX < numTracks);

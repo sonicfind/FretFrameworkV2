@@ -45,7 +45,7 @@ void Song::load_mid(const std::filesystem::path& path)
 					drumsLegacy.transfer(m_noteTracks.drums5);
 			}
 			else if (name == "PART VOCALS")
-				m_noteTracks.vocals.load<0>(reader);
+				m_noteTracks.vocals.load(reader);
 			else if (name == "HARM1")
 				m_noteTracks.harmonies.load<0>(reader);
 			else if (name == "HARM2")
