@@ -1,6 +1,6 @@
 #include "TxtFileReader.h"
 #include "ChtConstants.h"
-#include "Song/Notes/NoteName.h"
+#include "Notes/NoteName.h"
 #include <assert.h>
 
 static constexpr EventCombo g_TEMPO{ "B",  ChartEvent::BPM };

@@ -1,6 +1,6 @@
 #pragma once
 #include "InstrumentalTrack.h"
-#include "Song/Notes/DrumNote_Legacy.h"
+#include "Notes/DrumNote_Legacy.h"
 
 class Legacy_DrumTrack : public InstrumentalTrack<DrumNote_Legacy>
 {

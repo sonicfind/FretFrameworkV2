@@ -1,6 +1,6 @@
 #pragma once
 #include "InstrumentalTrack.h"
-#include "Song/Notes/GuitarNote.h"
+#include "Notes/GuitarNote.h"
 
 template <>
 struct InstrumentalTrack<GuitarNote<5>>::Midi_Tracker_Diff

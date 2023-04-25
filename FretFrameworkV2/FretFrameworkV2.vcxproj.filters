@@ -46,6 +46,9 @@
     <Filter Include="Serialization\MD5">
       <UniqueIdentifier>{6ed6681a-8855-4705-8423-229709146146}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MD5">
+      <UniqueIdentifier>{a9a06000-e5f8-48fc-951d-a5359855f8f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -94,10 +97,10 @@
     <ClCompile Include="Song\Tracks\Instrumental\Legacy_DrumTrack.cpp">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Notes\VocalNote.cpp">
+    <ClCompile Include="Notes\VocalNote.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Notes\VocalPercussion.cpp">
+    <ClCompile Include="Notes\VocalPercussion.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
     <ClCompile Include="Song\Tracks\SpecialPhrase.cpp">
@@ -112,8 +115,8 @@
     <ClCompile Include="Song\Song_chart_V1.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Serialization\MD5.cpp">
-      <Filter>Serialization\MD5</Filter>
+    <ClCompile Include="Types\MD5.cpp">
+      <Filter>MD5</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,28 +150,28 @@
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h">
       <Filter>SimpleFlatMap</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\Notes.h">
+    <ClInclude Include="Notes\Notes.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\Notes_Special.h">
+    <ClInclude Include="Notes\Notes_Special.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\GuitarNote.h">
+    <ClInclude Include="Notes\GuitarNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\DrumNote.h">
+    <ClInclude Include="Notes\DrumNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
     <ClInclude Include="Song\Song.h">
       <Filter>Song</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\Keys.h">
+    <ClInclude Include="Notes\Keys.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\NoteColor.h">
+    <ClInclude Include="Notes\NoteColor.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\DrumNote_Legacy.h">
+    <ClInclude Include="Notes\DrumNote_Legacy.h">
       <Filter>Notes</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\BinaryFileWriter.h">
@@ -204,10 +207,10 @@
     <ClInclude Include="Song\Tracks\Instrumental\Legacy_DrumTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\VocalNote.h">
+    <ClInclude Include="Notes\VocalNote.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\VocalPercussion.h">
+    <ClInclude Include="Notes\VocalPercussion.h">
       <Filter>Notes</Filter>
     </ClInclude>
     <ClInclude Include="Song\Tracks\SpecialPhrase.h">
@@ -222,10 +225,10 @@
     <ClInclude Include="Serialization\BCHFileWriter.h">
       <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\Pitch.h">
+    <ClInclude Include="Notes\Pitch.h">
       <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Notes\NoteName.h">
+    <ClInclude Include="Notes\NoteName.h">
       <Filter>Serialization</Filter>
     </ClInclude>
     <ClInclude Include="Song\TimeSig.h">
@@ -237,8 +240,8 @@
     <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
-    <ClInclude Include="Serialization\MD5.h">
-      <Filter>Serialization\MD5</Filter>
+    <ClInclude Include="Types\MD5.h">
+      <Filter>MD5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

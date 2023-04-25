@@ -5,7 +5,6 @@
 #include "Notes/Keys.h"
 #include "Notes/DrumNote.h"
 #include "MicrosPerQuarter.h"
-#include "Serialization/MidiFileReader.h"
 
 class Song
 {

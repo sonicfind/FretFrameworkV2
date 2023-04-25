@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <filesystem>
-#include "MD5.h"
+#include "Types/MD5.h"
 
 class FileReader
 {
