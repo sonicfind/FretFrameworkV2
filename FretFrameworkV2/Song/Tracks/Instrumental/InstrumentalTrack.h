@@ -67,7 +67,7 @@ public:
 			throw std::runtime_error("Track defined multiple times in file");
 
 		Midi_Tracker tracker(reader.getStarPowerValue());
-		while (auto midiEvent = reader.parseEvent())
+		while (const auto midiEvent = reader.parseEvent())
 		{
 			if (midiEvent->type == MidiEventType::Note_On)
 			{

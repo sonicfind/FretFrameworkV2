@@ -58,15 +58,15 @@ void Song::load_mid(const std::filesystem::path& path)
 
 void Song::load_tempoMap_midi(MidiFileReader& reader)
 {
-	while (reader.parseEvent())
+	while (const auto midiEvent = reader.parseEvent())
 	{
-		switch (reader.getEventType())
+		switch (midiEvent->type)
 		{
 		case MidiEventType::Tempo:
-			m_tempoMarkers.get_or_emplace_back(reader.getPosition()) = reader.extractMicrosPerQuarter();
+			m_tempoMarkers.get_or_emplace_back(midiEvent->position) = reader.extractMicrosPerQuarter();
 			break;
 		case MidiEventType::Time_Sig:
-			m_timeSigs.get_or_emplace_back(reader.getPosition()) = reader.extractTimeSig();
+			m_timeSigs.get_or_emplace_back(midiEvent->position) = reader.extractTimeSig();
 			break;
 		}
 	}
@@ -87,15 +87,13 @@ void Song::load_events_midi(MidiFileReader& reader)
 		return false;
 	};
 
-	while (reader.parseEvent())
+	while (const auto midiEvent = reader.parseEvent())
 	{
-		if (reader.getEventType() <= MidiEventType::Text_EnumLimit)
+		if (midiEvent->type <= MidiEventType::Text_EnumLimit)
 		{
-			const uint32_t position = reader.getPosition();
-
 			std::string_view text = reader.extractTextOrSysEx();
-			if (!addSection(reader.getPosition(), text))
-				m_globalEvents.get_or_emplace_back(position).push_back(UnicodeString::strToU32(text));
+			if (!addSection(midiEvent->position, text))
+				m_globalEvents.get_or_emplace_back(midiEvent->position).push_back(UnicodeString::strToU32(text));
 		}
 	}
 }
