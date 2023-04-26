@@ -67,7 +67,7 @@ public:
 		return numColors;
 	}
 
-	static bool testIndex(size_t lane)
+	static bool TestIndex(size_t lane)
 	{
 		return lane != 0 && lane <= numColors;
 	}

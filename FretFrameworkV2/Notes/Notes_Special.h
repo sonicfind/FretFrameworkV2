@@ -45,7 +45,7 @@ public:
 		Note<NoteType, numColors>::operator*=(multiplier);
 	}
 
-	static bool testIndex(size_t lane)
+	static bool TestIndex(size_t lane)
 	{
 		return lane <= numColors;
 	}
