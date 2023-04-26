@@ -1,4 +1,5 @@
 #include "Song.h"
+#include <iostream>
 
 const std::filesystem::path Song::s_EXTS_CHT[2] = { ".cht", ".chart" };
 const std::filesystem::path Song::s_EXTS_MID[2] = { ".mid", ".midi" };
