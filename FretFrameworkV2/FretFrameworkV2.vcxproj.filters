@@ -49,6 +49,24 @@
     <Filter Include="MD5">
       <UniqueIdentifier>{a9a06000-e5f8-48fc-951d-a5359855f8f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song Library">
+      <UniqueIdentifier>{185b7129-e31a-411a-9c5f-6242cf49aa46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SimpleFlatSet">
+      <UniqueIdentifier>{cd5119a3-ff01-47dc-940b-f02d8fb18cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Song Library\Entry">
+      <UniqueIdentifier>{f2fe8e7a-dabe-4602-bc2a-5c36f75163c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Song Library\Entry\Track">
+      <UniqueIdentifier>{8e8855ad-4c63-45eb-9cb4-2af7bb3c040c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Song Library\Entry\Track\Instrumental">
+      <UniqueIdentifier>{5aea6b12-deea-48a1-b74d-23f563301e49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Song Library\Entry\Track\Vocal">
+      <UniqueIdentifier>{014e508f-39e9-4357-910d-b70eeafdaf77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -117,6 +135,27 @@
     </ClCompile>
     <ClCompile Include="Types\MD5.cpp">
       <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CacheEntry_mid.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CacheEntry.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CacheEntry_bch.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CacheEntry_chart_V1.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CacheEntry_cht.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\GuitarScan_midi.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +281,27 @@
     </ClInclude>
     <ClInclude Include="Types\MD5.h">
       <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\ScanTrack.h">
+      <Filter>Song Library\Entry\Track</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\CacheEntry.h">
+      <Filter>Song Library\Entry</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\DrumScan_midi.h">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\GuitarScan_midi.h">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\InstrumentalScan.h">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\Legacy_DrumScan.h">
+      <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Cache\VocalScan.h">
+      <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
