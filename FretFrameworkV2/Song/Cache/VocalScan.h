@@ -46,27 +46,27 @@ public:
 	}
 
 public:
-	virtual void scan(CommonChartParser* parser) override
+	virtual void scan(CommonChartParser& parser) override
 	{
 		if (m_subTracks > 0)
 			return;
 
 		VocalPitch pitch;
 		uint32_t endOfPhrase = 0;
-		parser->nextEvent();
-		while (parser->isStillCurrentTrack())
+		parser.nextEvent();
+		while (parser.isStillCurrentTrack())
 		{
-			const auto trackEvent = parser->parseEvent();
+			const auto trackEvent = parser.parseEvent();
 			if (trackEvent.second == ChartEvent::VOCAL)
 			{
 				if (trackEvent.first >= endOfPhrase)
 					break;
 
-				auto lyric = parser->extractLyric();
+				auto lyric = parser.extractLyric();
 				if (lyric.first == 0 || lyric.first > numTracks || ((1 << lyric.first) & m_subTracks) > 0)
 					break;
 
-				auto values = parser->extractPitchAndDuration();
+				auto values = parser.extractPitchAndDuration();
 				if (pitch.set(values.first))
 				{
 					m_subTracks |= 1 << lyric.first;
@@ -77,12 +77,12 @@ public:
 			}
 			else if (trackEvent.second == ChartEvent::SPECIAL)
 			{
-				auto phrase = parser->extractSpecialPhrase();
+				auto phrase = parser.extractSpecialPhrase();
 				if (phrase.getType() == SpecialPhraseType::LyricLine)
 					endOfPhrase = trackEvent.first + phrase.getDuration();
 				break;
 			}
-			parser->nextEvent();
+			parser.nextEvent();
 		}
 	}
 

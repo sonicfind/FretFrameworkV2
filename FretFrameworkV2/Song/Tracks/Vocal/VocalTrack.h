@@ -129,7 +129,7 @@ public:
 
 public:
 
-	virtual void load(CommonChartParser* parser) override
+	virtual void load(CommonChartParser& parser) override
 	{
 		if (isOccupied())
 		{
@@ -143,16 +143,16 @@ public:
 			track.reserve(1000);
 		m_percussion.reserve(200);
 
-		parser->nextEvent();
-		while (parser->isStillCurrentTrack())
+		parser.nextEvent();
+		while (parser.isStillCurrentTrack())
 		{
-			const auto trackEvent = parser->parseEvent();
+			const auto trackEvent = parser.parseEvent();
 			switch (trackEvent.second)
 			{
 			case ChartEvent::LYRIC:
 			case ChartEvent::VOCAL:
 			{
-				auto lyric = parser->extractLyric();
+				auto lyric = parser.extractLyric();
 				if (lyric.first == 0 || lyric.first > numTracks)
 					throw std::runtime_error("Invalid track index");
 
@@ -161,7 +161,7 @@ public:
 
 				if (trackEvent.second == ChartEvent::VOCAL)
 				{
-					auto values = parser->extractPitchAndDuration();
+					auto values = parser.extractPitchAndDuration();
 					if (!vocal.set(values.first, values.second))
 						throw std::runtime_error("Invalid pitch");
 				}
@@ -170,14 +170,14 @@ public:
 			case ChartEvent::VOCAL_PERCUSSION:
 			{
 				auto& perc = m_percussion.get_or_emplace_back(trackEvent.first);
-				const auto& modifiers = parser->extractSingleNoteMods();
+				const auto& modifiers = parser.extractSingleNoteMods();
 				for (const auto mod : modifiers)
 					perc.modify(mod);
 				break;
 			}
 			case ChartEvent::SPECIAL:
 			{
-				auto phrase = parser->extractSpecialPhrase();
+				auto phrase = parser.extractSpecialPhrase();
 				switch (phrase.getType())
 				{
 				case SpecialPhraseType::LyricShift:
@@ -194,11 +194,11 @@ public:
 			case ChartEvent::EVENT:
 			{
 				auto& events = m_events.get_or_emplace_back(trackEvent.first);
-				events.push_back(UnicodeString::strToU32(parser->extractText()));
+				events.push_back(UnicodeString::strToU32(parser.extractText()));
 				break;
 			}
 			}
-			parser->nextEvent();
+			parser.nextEvent();
 		}
 		shrink();
 	}
@@ -208,7 +208,7 @@ public:
 		const Vocal* m_vocals[numTracks] = {};
 		const VocalPercussion* m_perc = nullptr;
 
-		void writeVocals(const uint32_t position, CommonChartWriter* writer) const
+		void writeVocals(const uint32_t position, CommonChartWriter& writer) const
 		{
 			for (size_t i = 0; i < numTracks; ++i)
 			{
@@ -218,33 +218,33 @@ public:
 				const Vocal* const vocal = m_vocals[i];
 				if (vocal->isPlayable())
 				{
-					writer->startEvent(position, ChartEvent::VOCAL);
-					writer->writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
-					writer->writePitchAndDuration(vocal->getPitchAndDuration());
+					writer.startEvent(position, ChartEvent::VOCAL);
+					writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
+					writer.writePitchAndDuration(vocal->getPitchAndDuration());
 				}
 				else
 				{
-					writer->startEvent(position, ChartEvent::LYRIC);
-					writer->writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
+					writer.startEvent(position, ChartEvent::LYRIC);
+					writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
 				}
-				writer->finishEvent();
+				writer.finishEvent();
 			}
 		}
 
-		void writePercussion(const uint32_t position, CommonChartWriter* writer) const
+		void writePercussion(const uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_perc == nullptr)
 				return;
 
-			writer->startEvent(position, ChartEvent::VOCAL_PERCUSSION);
-			writer->writeSingleNoteMods(m_perc->getActiveModifiers());
-			writer->finishEvent();
+			writer.startEvent(position, ChartEvent::VOCAL_PERCUSSION);
+			writer.writeSingleNoteMods(m_perc->getActiveModifiers());
+			writer.finishEvent();
 		}
 	};
 
-	virtual void save(CommonChartWriter* writer) const override
+	virtual void save(CommonChartWriter& writer) const override
 	{
-		writer->setPitchMode(PitchWriteMode::Sharp);
+		writer.setPitchMode(PitchWriteMode::Sharp);
 
 		SimpleFlatMap<VocalWriteNode> nodes;
 		size_t vocalSize = 0;

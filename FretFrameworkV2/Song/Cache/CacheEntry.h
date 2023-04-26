@@ -37,8 +37,8 @@ private:
 	void scan_bch(const std::filesystem::path& path);
 	void scan_mid(const std::filesystem::path& path);
 
-	void scan(CommonChartParser* parser);
-	void scan_noteTrack(CommonChartParser* parser);
+	void scan(CommonChartParser& parser);
+	void scan_noteTrack(CommonChartParser& parser);
 
 	int  load_songInfo_cht(TxtFileReader& reader);
 	void scan_cht_V1(TxtFileReader& reader);

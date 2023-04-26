@@ -116,25 +116,25 @@ public:
 	}
 
 public:
-	virtual void load(CommonChartParser* parser) override
+	virtual void load(CommonChartParser& parser) override
 	{
 		if (isOccupied())
 			throw std::runtime_error("Difficulty defined multiple times in file");
 
 		m_notes.reserve(5000);
-		while (parser->isStillCurrentTrack())
+		while (parser.isStillCurrentTrack())
 		{
-			const auto trackEvent = parser->parseEvent();
+			const auto trackEvent = parser.parseEvent();
 			switch (trackEvent.second)
 			{
 			case ChartEvent::NOTE:
 			{
 				auto& note = m_notes.get_or_emplace_back(trackEvent.first);
-				const auto color = parser->extractSingleNote();
+				const auto color = parser.extractSingleNote();
 				if (!note.set(color.first, color.second))
 					throw std::runtime_error("Note color is invalid");
 
-				const auto& modifiers = parser->extractSingleNoteMods();
+				const auto& modifiers = parser.extractSingleNoteMods();
 				for (const auto mod : modifiers)
 					note.modify(mod, color.first);
 				break;
@@ -142,7 +142,7 @@ public:
 			case ChartEvent::MULTI_NOTE:
 			{
 				auto& note = m_notes.get_or_emplace_back(trackEvent.first);
-				const auto colors = parser->extractMultiNote();
+				const auto colors = parser.extractMultiNote();
 				for (const auto& color : colors)
 					if (!note.set(color.first, color.second))
 						throw std::runtime_error("Note color is invalid");
@@ -152,14 +152,14 @@ public:
 			{
 				auto& note = m_notes.back(trackEvent.first);
 
-				const auto& modifiers = parser->extractMultiNoteMods();
+				const auto& modifiers = parser.extractMultiNoteMods();
 				for (const auto& node : modifiers)
 					note.modify(node.first, node.second);
 				break;
 			}
 			case ChartEvent::SPECIAL:
 			{
-				auto phrase = parser->extractSpecialPhrase();
+				auto phrase = parser.extractSpecialPhrase();
 				switch (phrase.getType())
 				{
 				case SpecialPhraseType::StarPower:
@@ -174,11 +174,11 @@ public:
 			case ChartEvent::EVENT:
 			{
 				auto& events = m_events.get_or_emplace_back(trackEvent.first);
-				events.push_back(UnicodeString::strToU32(parser->extractText()));
+				events.push_back(UnicodeString::strToU32(parser.extractText()));
 				break;
 			}
 			}
-			parser->nextEvent();
+			parser.nextEvent();
 		}
 		shrink();
 	}
@@ -187,7 +187,7 @@ public:
 	{
 		const T* m_note = nullptr;
 
-		void writeNote(const uint32_t position, CommonChartWriter* writer) const
+		void writeNote(const uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_note == nullptr)
 				return;
@@ -195,29 +195,29 @@ public:
 			std::vector<std::pair<size_t, uint32_t>> colors = m_note->getActiveColors();
 			if (colors.size() == 1)
 			{
-				writer->startEvent(position, ChartEvent::NOTE);
-				writer->writeSingleNote(colors[0]);
-				writer->writeSingleNoteMods(m_note->getActiveModifiers(colors[0].first));
-				writer->finishEvent();
+				writer.startEvent(position, ChartEvent::NOTE);
+				writer.writeSingleNote(colors[0]);
+				writer.writeSingleNoteMods(m_note->getActiveModifiers(colors[0].first));
+				writer.finishEvent();
 			}
 			else if (colors.size() > 1)
 			{
-				writer->startEvent(position, ChartEvent::MULTI_NOTE);
-				writer->writeMultiNote(colors);
-				writer->finishEvent();
+				writer.startEvent(position, ChartEvent::MULTI_NOTE);
+				writer.writeMultiNote(colors);
+				writer.finishEvent();
 
 				const std::vector<std::pair<char, size_t>> modifiers = m_note->getActiveModifiers();
 				if (!modifiers.empty())
 				{
-					writer->startEvent(position, ChartEvent::MODIFIER);
-					writer->writeMultiNoteMods(modifiers);
-					writer->finishEvent();
+					writer.startEvent(position, ChartEvent::MODIFIER);
+					writer.writeMultiNoteMods(modifiers);
+					writer.finishEvent();
 				}
 			}
 		}
 	};
 
-	virtual void save(CommonChartWriter* writer) const override
+	virtual void save(CommonChartWriter& writer) const override
 	{
 		SimpleFlatMap<DiffWriteNode> nodes(m_notes.size() + m_specialPhrases.size() + m_events.size());
 		for (const auto& phrases : m_specialPhrases)

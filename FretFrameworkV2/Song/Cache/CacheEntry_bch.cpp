@@ -9,5 +9,5 @@ void CacheEntry::scan_bch(const std::filesystem::path& path)
 		throw std::runtime_error("Header track not found at the start of the file");
 
 	reader.nextEvent();
-	scan(&reader);
+	scan(reader);
 }

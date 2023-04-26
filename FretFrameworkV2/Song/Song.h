@@ -61,10 +61,10 @@ private:
 	void load_bch(const std::filesystem::path& path);
 	void load_mid(const std::filesystem::path& path);
 
-	void load(CommonChartParser* parser);
-	void load_tempoMap(CommonChartParser* parser);
-	void load_events(CommonChartParser* parser);
-	void load_noteTrack(CommonChartParser* parser);
+	void load(CommonChartParser& parser);
+	void load_tempoMap(CommonChartParser& parser);
+	void load_events(CommonChartParser& parser);
+	void load_noteTrack(CommonChartParser& parser);
 
 	int  load_songInfo_cht(TxtFileReader& reader);
 	void load_cht_V1(TxtFileReader& reader);
@@ -77,9 +77,9 @@ private:
 	void save_bch(const std::filesystem::path& path);
 	void save_mid(const std::filesystem::path& path);
 
-	void save(CommonChartWriter* writer) const;
-	void save_header(CommonChartWriter* writer) const;
-	void save_tempoMap(CommonChartWriter* writer) const;
-	void save_events(CommonChartWriter* writer) const;
-	void save_noteTracks(CommonChartWriter* writer) const;
+	void save(CommonChartWriter& writer) const;
+	void save_header(CommonChartWriter& writer) const;
+	void save_tempoMap(CommonChartWriter& writer) const;
+	void save_events(CommonChartWriter& writer) const;
+	void save_noteTracks(CommonChartWriter& writer) const;
 };

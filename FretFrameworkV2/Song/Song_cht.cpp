@@ -8,7 +8,7 @@ void Song::load_cht(const std::filesystem::path& path)
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
 	if (load_songInfo_cht(reader) > 1)
-		load(&reader);
+		load(reader);
 	else
 		load_cht_V1(reader);
 }
@@ -16,7 +16,7 @@ void Song::load_cht(const std::filesystem::path& path)
 void Song::save_cht(const std::filesystem::path& path)
 {
 	ChtFileWriter writer(path);
-	save(&writer);
+	save(writer);
 }
 
 int Song::load_songInfo_cht(TxtFileReader& reader)

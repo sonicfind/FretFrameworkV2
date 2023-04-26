@@ -258,54 +258,54 @@ class InstrumentalTrack_Extended : public InstrumentalTrack<T>, public BCH_CHT_E
 public:
 	using InstrumentalTrack<T>::InstrumentalTrack;
 	using InstrumentalTrack<T>::load;
-	virtual void load(CommonChartParser* parser) override
+	virtual void load(CommonChartParser& parser) override
 	{
-		while (parser->isStillCurrentTrack())
+		while (parser.isStillCurrentTrack())
 		{
-			if (!parser->isStartOfTrack())
+			if (!parser.isStartOfTrack())
 				parse_event(parser);
 			else
 			{
-				if (parser->validateDifficultyTrack())
+				if (parser.validateDifficultyTrack())
 				{
-					const size_t diff = parser->getDifficulty();
+					const size_t diff = parser.getDifficulty();
 					if (diff < 5)
 						this->m_difficulties[diff].load(parser);
 					else // BCH only
-						parser->skipTrack();
+						parser.skipTrack();
 
 				}
-				else if (parser->validateAnimationTrack())
+				else if (parser.validateAnimationTrack())
 					load_anim(parser);
 				else
-					parser->skipTrack();
+					parser.skipTrack();
 			}
 		}
 	}
 
-	virtual void save(CommonChartWriter* writer) const override
+	virtual void save(CommonChartWriter& writer) const override
 	{
 		save_events(writer);
 		save_anim(writer);
 		for (size_t i = 0; i < 5; ++i)
 			if (this->m_difficulties[i].isOccupied())
 			{
-				writer->writeDifficultyTrack(i);
+				writer.writeDifficultyTrack(i);
 				this->m_difficulties[i].save(writer);
-				writer->finishTrack();
+				writer.finishTrack();
 			}
 	}
 
 protected:
-	virtual void parse_event(CommonChartParser* parser)
+	virtual void parse_event(CommonChartParser& parser)
 	{
-		const auto trackEvent = parser->parseEvent();
+		const auto trackEvent = parser.parseEvent();
 		switch (trackEvent.second)
 		{
 		case ChartEvent::SPECIAL:
 		{
 			auto& phrases = this->m_specialPhrases.get_or_emplace_back(trackEvent.first);
-			auto phrase = parser->extractSpecialPhrase();
+			auto phrase = parser.extractSpecialPhrase();
 			switch (phrase.getType())
 			{
 			case SpecialPhraseType::StarPower:
@@ -320,23 +320,23 @@ protected:
 		case ChartEvent::EVENT:
 		{
 			auto& events = this->m_events.get_or_emplace_back(trackEvent.first);
-			events.push_back(UnicodeString::strToU32(parser->extractText()));
+			events.push_back(UnicodeString::strToU32(parser.extractText()));
 			break;
 		}
 		}
-		parser->nextEvent();
+		parser.nextEvent();
 	}
 
-	virtual void load_anim(CommonChartParser* parser)
+	virtual void load_anim(CommonChartParser& parser)
 	{
-		while (parser->isStillCurrentTrack())
+		while (parser.isStillCurrentTrack())
 		{
-			const auto trackEvent = parser->parseEvent();
-			parser->nextEvent();
+			const auto trackEvent = parser.parseEvent();
+			parser.nextEvent();
 		}
 	}
 
-	virtual void save_events(CommonChartWriter* writer) const
+	virtual void save_events(CommonChartWriter& writer) const
 	{
 		SimpleFlatMap<WriteNode> nodes(this->m_specialPhrases.size() + this->m_events.size());
 		for (const auto& note : this->m_specialPhrases)
@@ -352,7 +352,7 @@ protected:
 		}
 	}
 
-	virtual void save_anim(CommonChartWriter* parser) const
+	virtual void save_anim(CommonChartWriter& parser) const
 	{
 	}
 };

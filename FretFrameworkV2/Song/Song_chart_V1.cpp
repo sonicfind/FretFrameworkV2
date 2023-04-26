@@ -8,7 +8,7 @@ void Song::load_cht_V1(TxtFileReader& reader)
 	while (reader.isStartOfTrack())
 	{
 		if (reader.validateSyncTrack())
-			load_tempoMap(&reader);
+			load_tempoMap(reader);
 		else if (reader.validateEventTrack())
 			load_events_V1(reader);
 		else

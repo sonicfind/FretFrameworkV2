@@ -10,5 +10,5 @@ public:
 class BCH_CHT_Scannable
 {
 public:
-	virtual void scan(CommonChartParser* parser) = 0;
+	virtual void scan(CommonChartParser& parser) = 0;
 };

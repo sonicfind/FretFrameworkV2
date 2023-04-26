@@ -49,33 +49,33 @@ protected:
 		const std::vector<SpecialPhrase>* m_phrases = nullptr;
 		const std::vector<std::u32string>* m_events = nullptr;
 
-		void writePhrases(const uint32_t position, CommonChartWriter* writer) const
+		void writePhrases(const uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_phrases == nullptr)
 				return;
 
 			for (const auto& phrase : *m_phrases)
 			{
-				writer->startEvent(position, ChartEvent::SPECIAL);
-				writer->writeSpecialPhrase(phrase);
-				writer->finishEvent();
+				writer.startEvent(position, ChartEvent::SPECIAL);
+				writer.writeSpecialPhrase(phrase);
+				writer.finishEvent();
 			}
 		}
 
-		void writeEvents(const uint32_t position, CommonChartWriter* writer) const
+		void writeEvents(const uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_events == nullptr)
 				return;
 
 			for (const auto& str : *m_events)
 			{
-				writer->startEvent(position, ChartEvent::EVENT);
-				writer->writeText(UnicodeString::U32ToStr(str));
-				writer->finishEvent();
+				writer.startEvent(position, ChartEvent::EVENT);
+				writer.writeText(UnicodeString::U32ToStr(str));
+				writer.finishEvent();
 			}
 		}
 	};
 public:
-	virtual void load(CommonChartParser* parser) = 0;
-	virtual void save(CommonChartWriter* writer) const = 0;
+	virtual void load(CommonChartParser& parser) = 0;
+	virtual void save(CommonChartWriter& writer) const = 0;
 };

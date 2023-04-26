@@ -70,49 +70,49 @@ void Song::clear()
 		track->clear();
 }
 
-void Song::load(CommonChartParser* parser)
+void Song::load(CommonChartParser& parser)
 {
-	while (parser->isStartOfTrack())
+	while (parser.isStartOfTrack())
 	{
-		if (parser->validateNoteTrack())
+		if (parser.validateNoteTrack())
 			load_noteTrack(parser);
-		else if (parser->validateSyncTrack())
+		else if (parser.validateSyncTrack())
 			load_tempoMap(parser);
-		else if (parser->validateEventTrack())
+		else if (parser.validateEventTrack())
 			load_events(parser);
 		else
-			parser->skipTrack();
+			parser.skipTrack();
 	}
 }
 
-void Song::load_tempoMap(CommonChartParser* parser)
+void Song::load_tempoMap(CommonChartParser& parser)
 {
-	while (parser->isStillCurrentTrack())
+	while (parser.isStillCurrentTrack())
 	{
-		const auto trackEvent = parser->parseEvent();
+		const auto trackEvent = parser.parseEvent();
 		switch (trackEvent.second)
 		{
 		case ChartEvent::BPM:
-			m_tempoMarkers.get_or_emplace_back(trackEvent.first) = parser->extractMicrosPerQuarter();
+			m_tempoMarkers.get_or_emplace_back(trackEvent.first) = parser.extractMicrosPerQuarter();
 			break;
 		case ChartEvent::TIME_SIG:
-			m_timeSigs.get_or_emplace_back(trackEvent.first).combine(parser->extractTimeSig());
+			m_timeSigs.get_or_emplace_back(trackEvent.first).combine(parser.extractTimeSig());
 			break;
 		}
-		parser->nextEvent();
+		parser.nextEvent();
 	}
 }
 
-void Song::load_events(CommonChartParser* parser)
+void Song::load_events(CommonChartParser& parser)
 {
-	while (parser->isStillCurrentTrack())
+	while (parser.isStillCurrentTrack())
 	{
-		const auto trackEvent = parser->parseEvent();
+		const auto trackEvent = parser.parseEvent();
 		switch (trackEvent.second)
 		{
 		case ChartEvent::EVENT:
 		{
-			std::string_view str = parser->extractText();
+			std::string_view str = parser.extractText();
 			if (str.starts_with("section "))
 				m_sectionMarkers.get_or_emplace_back(trackEvent.first) = str.substr(8);
 			else
@@ -120,14 +120,14 @@ void Song::load_events(CommonChartParser* parser)
 			break;
 		}
 		case ChartEvent::SECTION:
-			m_sectionMarkers.get_or_emplace_back(trackEvent.first) = parser->extractText();
+			m_sectionMarkers.get_or_emplace_back(trackEvent.first) = parser.extractText();
 			break;
 		}
-		parser->nextEvent();
+		parser.nextEvent();
 	}
 }
 
-void Song::load_noteTrack(CommonChartParser* parser)
+void Song::load_noteTrack(CommonChartParser& parser)
 {
 	BCH_CHT_Extensions* const arr[11] =
 	{
@@ -144,14 +144,14 @@ void Song::load_noteTrack(CommonChartParser* parser)
 		&m_noteTracks.harmonies
 	};
 
-	const size_t index = parser->geNoteTrackID();
+	const size_t index = parser.geNoteTrackID();
 	if (index < std::size(arr))
-		arr[parser->geNoteTrackID()]->load(parser);
+		arr[parser.geNoteTrackID()]->load(parser);
 	else //BCH only
-		parser->skipTrack();
+		parser.skipTrack();
 }
 
-void Song::save(CommonChartWriter* writer) const
+void Song::save(CommonChartWriter& writer) const
 {
 	save_header(writer);
 	save_tempoMap(writer);
@@ -159,70 +159,70 @@ void Song::save(CommonChartWriter* writer) const
 	save_noteTracks(writer);
 }
 
-void Song::save_header(CommonChartWriter* writer) const
+void Song::save_header(CommonChartWriter& writer) const
 {
-	writer->writeHeaderTrack(m_tickrate);
-	writer->finishTrack();
+	writer.writeHeaderTrack(m_tickrate);
+	writer.finishTrack();
 }
 
-void Song::save_tempoMap(CommonChartWriter* writer) const
+void Song::save_tempoMap(CommonChartWriter& writer) const
 {
-	writer->writeSyncTrack();
+	writer.writeSyncTrack();
 	auto tempo = m_tempoMarkers.begin();
 	auto timeSig = m_timeSigs.begin();
 	while (tempo != m_tempoMarkers.end() || timeSig != m_timeSigs.end())
 	{
 		while (tempo != m_tempoMarkers.end() && (timeSig == m_timeSigs.end() || tempo->key <= timeSig->key))
 		{
-			writer->startEvent(tempo->key, ChartEvent::BPM);
-			writer->writeMicrosPerQuarter(**tempo);
-			writer->finishEvent();
+			writer.startEvent(tempo->key, ChartEvent::BPM);
+			writer.writeMicrosPerQuarter(**tempo);
+			writer.finishEvent();
 			++tempo;
 		}
 
 		while (timeSig != m_timeSigs.end() && (tempo == m_tempoMarkers.end() || timeSig->key < tempo->key))
 		{
-			writer->startEvent(timeSig->key, ChartEvent::TIME_SIG);
-			writer->writeTimeSig(**timeSig);
-			writer->finishEvent();
+			writer.startEvent(timeSig->key, ChartEvent::TIME_SIG);
+			writer.writeTimeSig(**timeSig);
+			writer.finishEvent();
 			++timeSig;
 		}
 	}
-	writer->finishTrack();
+	writer.finishTrack();
 }
 
-void Song::save_events(CommonChartWriter* writer) const
+void Song::save_events(CommonChartWriter& writer) const
 {
 	struct EventPointer
 	{
 		const UnicodeString* m_section = nullptr;
 		const std::vector<std::u32string>* m_events = nullptr;
 
-		void writeSection(uint32_t position, CommonChartWriter* writer) const
+		void writeSection(uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_section == nullptr)
 				return;
 
-			writer->startEvent(position, ChartEvent::SECTION);
-			writer->writeText(m_section->toString());
-			writer->finishEvent();
+			writer.startEvent(position, ChartEvent::SECTION);
+			writer.writeText(m_section->toString());
+			writer.finishEvent();
 		}
 
-		void writeEvents(uint32_t position, CommonChartWriter* writer) const
+		void writeEvents(uint32_t position, CommonChartWriter& writer) const
 		{
 			if (m_events == nullptr)
 				return;
 
 			for (const std::u32string& ev : *m_events)
 			{
-				writer->startEvent(position, ChartEvent::EVENT);
-				writer->writeText(UnicodeString::U32ToStr(ev));
-				writer->finishEvent();
+				writer.startEvent(position, ChartEvent::EVENT);
+				writer.writeText(UnicodeString::U32ToStr(ev));
+				writer.finishEvent();
 			}
 		}
 	};
 
-	writer->writeEventTrack();
+	writer.writeEventTrack();
 
 	SimpleFlatMap<EventPointer> nodes;
 	for (const auto& section : m_sectionMarkers)
@@ -237,10 +237,10 @@ void Song::save_events(CommonChartWriter* writer) const
 		node->writeEvents(node.key, writer);
 	}
 	
-	writer->finishTrack();
+	writer.finishTrack();
 }
 
-void Song::save_noteTracks(CommonChartWriter* writer) const
+void Song::save_noteTracks(CommonChartWriter& writer) const
 {
 	const BCH_CHT_Extensions* const arr[11] =
 	{
@@ -261,9 +261,9 @@ void Song::save_noteTracks(CommonChartWriter* writer) const
 	{
 		if (m_noteTracks.arr[i]->isOccupied())
 		{
-			writer->writeNoteTrack(i);
+			writer.writeNoteTrack(i);
 			arr[i]->save(writer);
-			writer->finishTrack();
+			writer.finishTrack();
 		}
 	}
 }

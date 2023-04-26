@@ -8,7 +8,7 @@ void CacheEntry::scan_cht(const std::filesystem::path& path)
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
 	if (load_songInfo_cht(reader) > 1)
-		scan(&reader);
+		scan(reader);
 	else
 		scan_cht_V1(reader);
 }

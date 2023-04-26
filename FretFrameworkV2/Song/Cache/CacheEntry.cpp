@@ -29,18 +29,18 @@ bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 	return true;
 }
 
-void CacheEntry::scan(CommonChartParser* parser)
+void CacheEntry::scan(CommonChartParser& parser)
 {
-	while (parser->isStartOfTrack())
+	while (parser.isStartOfTrack())
 	{
-		if (parser->validateNoteTrack())
+		if (parser.validateNoteTrack())
 			scan_noteTrack(parser);
 		else
-			parser->skipTrack();
+			parser.skipTrack();
 	}
 }
 
-void CacheEntry::scan_noteTrack(CommonChartParser* parser)
+void CacheEntry::scan_noteTrack(CommonChartParser& parser)
 {
 	BCH_CHT_Scannable* const arr[11] =
 	{
@@ -57,9 +57,9 @@ void CacheEntry::scan_noteTrack(CommonChartParser* parser)
 		&m_noteTracks.harmonies
 	};
 
-	const size_t index = parser->geNoteTrackID();
+	const size_t index = parser.geNoteTrackID();
 	if (index < std::size(arr))
-		arr[parser->geNoteTrackID()]->scan(parser);
+		arr[parser.geNoteTrackID()]->scan(parser);
 	else //BCH only
-		parser->skipTrack();
+		parser.skipTrack();
 }

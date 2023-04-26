@@ -163,40 +163,40 @@ class InstrumentalScan_Extended : public InstrumentalScan<T>, public BCH_CHT_Sca
 public:
 	using InstrumentalScan<T>::InstrumentalScan;
 	using InstrumentalScan<T>::scan;
-	virtual void scan(CommonChartParser* parser) override
+	virtual void scan(CommonChartParser& parser) override
 	{
-		while (parser->isStillCurrentTrack())
+		while (parser.isStillCurrentTrack())
 		{
-			if (!parser->isStartOfTrack())
-				parser->nextEvent();
-			else if (parser->validateDifficultyTrack())
+			if (!parser.isStartOfTrack())
+				parser.nextEvent();
+			else if (parser.validateDifficultyTrack())
 			{
-				const size_t diff = parser->getDifficulty();
+				const size_t diff = parser.getDifficulty();
 				if (diff < 5 && ((1 << diff) & this->m_subTracks) == 0)
 					scanDifficulty(diff, parser);
 				else // BCH only
-					parser->skipTrack();
+					parser.skipTrack();
 			}
 			else
-				parser->skipTrack();
+				parser.skipTrack();
 		}
 	}
 
 private:
-	void scanDifficulty(size_t diff, CommonChartParser* parser)
+	void scanDifficulty(size_t diff, CommonChartParser& parser)
 	{
-		while (parser->isStillCurrentTrack())
+		while (parser.isStillCurrentTrack())
 		{
-			const auto trackEvent = parser->parseEvent();
+			const auto trackEvent = parser.parseEvent();
 			bool add = false;
 			if (trackEvent.second == ChartEvent::NOTE)
 			{
-				auto color = parser->extractSingleNote();
+				auto color = parser.extractSingleNote();
 				add = T::TestIndex(color.first);
 			}
 			else if (trackEvent.second == ChartEvent::MULTI_NOTE)
 			{
-				const auto colors = parser->extractMultiNote();
+				const auto colors = parser.extractMultiNote();
 				if (!colors.empty())
 				{
 					for (const auto& color : colors)
@@ -213,10 +213,10 @@ private:
 			if (add)
 			{
 				this->m_subTracks |= 1 << diff;
-				parser->skipTrack();
+				parser.skipTrack();
 				return;
 			}
-			parser->nextEvent();
+			parser.nextEvent();
 		}
 	}
 };
