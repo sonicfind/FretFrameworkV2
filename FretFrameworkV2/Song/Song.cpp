@@ -66,7 +66,7 @@ void Song::clear()
 	resetTempoMap();
 	m_sectionMarkers.clear();
 	m_globalEvents.clear();
-	for (Track* track : m_noteTracks.trackArray)
+	for (Track* track : m_noteTracks.arr)
 		track->clear();
 }
 
@@ -82,7 +82,7 @@ void Song::load(CommonChartParser* parser)
 			load_events(parser);
 		else
 			parser->skipTrack();
-	}	
+	}
 }
 
 void Song::load_tempoMap(CommonChartParser* parser)
@@ -129,9 +129,24 @@ void Song::load_events(CommonChartParser* parser)
 
 void Song::load_noteTrack(CommonChartParser* parser)
 {
+	BCH_CHT_Extensions* const arr[11] =
+	{
+		&m_noteTracks.lead_5,
+		&m_noteTracks.lead_6,
+		&m_noteTracks.bass_5,
+		&m_noteTracks.bass_6,
+		&m_noteTracks.rhythm,
+		&m_noteTracks.coop,
+		&m_noteTracks.keys,
+		&m_noteTracks.drums4_pro,
+		&m_noteTracks.drums5,
+		&m_noteTracks.vocals,
+		&m_noteTracks.harmonies
+	};
+
 	const size_t index = parser->geNoteTrackID();
-	if (index < std::size(m_noteTracks.extendsArray))
-		m_noteTracks.extendsArray[parser->geNoteTrackID()]->load(parser);
+	if (index < std::size(arr))
+		arr[parser->geNoteTrackID()]->load(parser);
 	else //BCH only
 		parser->skipTrack();
 }
@@ -227,12 +242,27 @@ void Song::save_events(CommonChartWriter* writer) const
 
 void Song::save_noteTracks(CommonChartWriter* writer) const
 {
-	for (size_t i = 0; i < std::size(m_noteTracks.trackArray); ++i)
+	const BCH_CHT_Extensions* const arr[11] =
 	{
-		if (m_noteTracks.trackArray[i]->isOccupied())
+		&m_noteTracks.lead_5,
+		&m_noteTracks.lead_6,
+		&m_noteTracks.bass_5,
+		&m_noteTracks.bass_6,
+		&m_noteTracks.rhythm,
+		&m_noteTracks.coop,
+		&m_noteTracks.keys,
+		&m_noteTracks.drums4_pro,
+		&m_noteTracks.drums5,
+		&m_noteTracks.vocals,
+		&m_noteTracks.harmonies
+	};
+
+	for (size_t i = 0; i < std::size(arr); ++i)
+	{
+		if (m_noteTracks.arr[i]->isOccupied())
 		{
 			writer->writeNoteTrack(i);
-			m_noteTracks.extendsArray[i]->save(writer);
+			arr[i]->save(writer);
 			writer->finishTrack();
 		}
 	}

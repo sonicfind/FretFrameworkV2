@@ -10,34 +10,19 @@ class Song
 {
 	struct
 	{
-		InstrumentalTrack_Extended<GuitarNote<5>>            lead_5;
-		InstrumentalTrack_Extended<GuitarNote<6>>            lead_6;
-		InstrumentalTrack_Extended<GuitarNote<5>>            bass_5;
-		InstrumentalTrack_Extended<GuitarNote<6>>            bass_6;
-		InstrumentalTrack_Extended<GuitarNote<5>>            rhythm;
-		InstrumentalTrack_Extended<GuitarNote<5>>            coop;
-		InstrumentalTrack_Extended<Keys<5>>                  keys;
-		InstrumentalTrack_Extended<DrumNote<4, true>>        drums4_pro;
-		InstrumentalTrack_Extended<DrumNote<5, false>>       drums5;
-		VocalTrack<1>                               vocals;
-		VocalTrack<3>                               harmonies;
+		InstrumentalTrack_Extended<GuitarNote<5>>      lead_5;
+		InstrumentalTrack_Extended<GuitarNote<6>>      lead_6;
+		InstrumentalTrack_Extended<GuitarNote<5>>      bass_5;
+		InstrumentalTrack_Extended<GuitarNote<6>>      bass_6;
+		InstrumentalTrack_Extended<GuitarNote<5>>      rhythm;
+		InstrumentalTrack_Extended<GuitarNote<5>>      coop;
+		InstrumentalTrack_Extended<Keys<5>>            keys;
+		InstrumentalTrack_Extended<DrumNote<4, true>>  drums4_pro;
+		InstrumentalTrack_Extended<DrumNote<5, false>> drums5;
+		VocalTrack<1>                                  vocals;
+		VocalTrack<3>                                  harmonies;
 
-		BCH_CHT_Extensions* const extendsArray[11] =
-		{
-			&lead_5,
-			&lead_6,
-			&bass_5,
-			&bass_6,
-			&rhythm,
-			&coop,
-			&keys,
-			&drums4_pro,
-			&drums5,
-			&vocals,
-			&harmonies
-		};
-
-		Track* const trackArray[11] =
+		Track* const arr[11] =
 		{
 			&lead_5,
 			&lead_6,
