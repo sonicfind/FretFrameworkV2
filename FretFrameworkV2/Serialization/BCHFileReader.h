@@ -42,7 +42,7 @@ public:
 	[[nodiscard]] virtual bool validateNoteTrack() override;
 	[[nodiscard]] virtual bool validateDifficultyTrack() override;
 	[[nodiscard]] virtual bool validateAnimationTrack() override;
-	virtual void skipUnknownTrack() override;
+	virtual void skipTrack() override;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() override;
 	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() override;

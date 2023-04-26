@@ -272,13 +272,13 @@ public:
 					if (diff < 5)
 						this->m_difficulties[diff].load(parser);
 					else // BCH only
-						parser->skipUnknownTrack();
+						parser->skipTrack();
 
 				}
 				else if (parser->validateAnimationTrack())
 					load_anim(parser);
 				else
-					parser->skipUnknownTrack();
+					parser->skipTrack();
 			}
 		}
 	}

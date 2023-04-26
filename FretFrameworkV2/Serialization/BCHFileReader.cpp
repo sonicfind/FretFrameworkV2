@@ -84,7 +84,7 @@ bool BCHFileReader::validateAnimationTrack()
 	return true;
 }
 
-void BCHFileReader::skipUnknownTrack()
+void BCHFileReader::skipTrack()
 {
 	if (isStartOfTrack())
 		parseTrackHeader();

@@ -80,7 +80,7 @@ void Song::load(CommonChartParser* parser)
 		else if (parser->validateEventTrack())
 			load_events(parser);
 		else
-			parser->skipUnknownTrack();
+			parser->skipTrack();
 	}	
 }
 
@@ -132,7 +132,7 @@ void Song::load_noteTrack(CommonChartParser* parser)
 	if (index < std::size(m_noteTracks.extendsArray))
 		m_noteTracks.extendsArray[parser->geNoteTrackID()]->load(parser);
 	else //BCH only
-		parser->skipUnknownTrack();
+		parser->skipTrack();
 }
 
 void Song::save(CommonChartWriter* writer) const

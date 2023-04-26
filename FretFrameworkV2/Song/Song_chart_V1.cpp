@@ -46,7 +46,7 @@ void Song::load_cht_V1(TxtFileReader& reader)
 				m_noteTracks.bass_6.load_V1(reader.getDifficulty(), reader);
 				break;
 			default:
-				reader.skipUnknownTrack();
+				reader.skipTrack();
 			}
 		}
 	}

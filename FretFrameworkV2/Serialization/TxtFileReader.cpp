@@ -188,7 +188,7 @@ bool TxtFileReader::doesStringMatch_noCase(std::string_view str) const
 	return true;
 }
 
-void TxtFileReader::skipUnknownTrack()
+void TxtFileReader::skipTrack()
 {
 	gotoNextLine();
 	uint32_t scopeLevel = 1;

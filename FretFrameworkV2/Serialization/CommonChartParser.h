@@ -16,7 +16,7 @@ public:
 	[[nodiscard]] virtual bool validateNoteTrack() = 0;
 	[[nodiscard]] virtual bool validateDifficultyTrack() = 0;
 	[[nodiscard]] virtual bool validateAnimationTrack() = 0;
-	virtual void skipUnknownTrack() = 0;
+	virtual void skipTrack() = 0;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() = 0;
 	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() = 0;
