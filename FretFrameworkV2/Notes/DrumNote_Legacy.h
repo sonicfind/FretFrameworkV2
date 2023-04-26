@@ -44,4 +44,14 @@ public:
 		else
 			return DrumType_Enum::LEGACY;
 	}
+
+	static DrumType_Enum EvaluateDrumType(size_t index)
+	{
+		if (index == 5)
+			return DrumType_Enum::FIVELANE;
+		else if (66 <= index && index <= 68)
+			return DrumType_Enum::FOURLANE_PRO;
+		else
+			return DrumType_Enum::LEGACY;
+	}
 };
