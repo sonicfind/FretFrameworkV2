@@ -299,12 +299,12 @@ public:
 protected:
 	virtual void parse_event(CommonChartParser* parser)
 	{
-		const uint32_t position = parser->parsePosition();
-		switch (parser->parseEvent())
+		const auto trackEvent = parser->parseEvent();
+		switch (trackEvent.second)
 		{
 		case ChartEvent::SPECIAL:
 		{
-			auto& phrases = this->m_specialPhrases.get_or_emplace_back(position);
+			auto& phrases = this->m_specialPhrases.get_or_emplace_back(trackEvent.first);
 			auto phrase = parser->extractSpecialPhrase();
 			switch (phrase.getType())
 			{
@@ -319,7 +319,7 @@ protected:
 		}
 		case ChartEvent::EVENT:
 		{
-			auto& events = this->m_events.get_or_emplace_back(position);
+			auto& events = this->m_events.get_or_emplace_back(trackEvent.first);
 			events.push_back(UnicodeString::strToU32(parser->extractText()));
 			break;
 		}
@@ -331,8 +331,7 @@ protected:
 	{
 		while (parser->isStillCurrentTrack())
 		{
-			uint32_t position = parser->parsePosition();
-			ChartEvent ev = parser->parseEvent();
+			const auto trackEvent = parser->parseEvent();
 			parser->nextEvent();
 		}
 	}

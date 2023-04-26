@@ -101,14 +101,10 @@ bool BCHFileReader::isStillCurrentTrack()
 	return false;
 }
 
-uint32_t BCHFileReader::parsePosition()
+std::pair<uint32_t, ChartEvent>  BCHFileReader::parseEvent()
 {
 	m_tickPosition += extractWebType<false>();
-	return m_tickPosition;
-}
 
-ChartEvent BCHFileReader::parseEvent()
-{
 	ChartEvent type = (ChartEvent)extract_nonvirtual<unsigned char>();
 	if (type > ChartEvent::VOCAL_PERCUSSION)
 		type = ChartEvent::UNKNOWN;
@@ -118,7 +114,8 @@ ChartEvent BCHFileReader::parseEvent()
 
 	if (m_next > m_nextTracks.back())
 		throw std::runtime_error("Invalid length for BCH Track event");
-	return type;
+
+	return { m_tickPosition, type };
 }
 
 void BCHFileReader::nextEvent()

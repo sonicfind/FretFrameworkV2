@@ -19,8 +19,7 @@ public:
 	virtual void skipUnknownTrack() = 0;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() = 0;
-	[[nodiscard]] virtual uint32_t parsePosition() = 0;
-	[[nodiscard]] virtual ChartEvent parseEvent() = 0;
+	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() = 0;
 	virtual void nextEvent() = 0;
 
 	[[nodiscard]] virtual std::pair<size_t, uint32_t> extractSingleNote() = 0;

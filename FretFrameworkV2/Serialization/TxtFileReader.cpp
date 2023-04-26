@@ -237,20 +237,14 @@ bool TxtFileReader::isStillCurrentTrack()
 	return ch != 0;
 }
 
-uint32_t TxtFileReader::parsePosition()
+std::pair<uint32_t, ChartEvent> TxtFileReader::parseEvent()
 {
-	const uint32_t prevPosition = m_tickPosition;
-	const uint32_t newPosition = extract<uint32_t>();
+	const uint32_t position = extract<uint32_t>();
+	if (position < m_tickPosition)
+		throw ".Cht/.Chart position out of order (previous:  " + std::to_string(m_tickPosition) + ')';
 
-	if (newPosition < prevPosition)
-		throw ".Cht/.Chart position out of order (previous:  " + std::to_string(prevPosition) + ')';
+	m_tickPosition = position;
 
-	m_tickPosition = newPosition;
-	return newPosition;
-}
-
-ChartEvent TxtFileReader::parseEvent()
-{
 	const char* const start = m_currentPosition;
 	while (('A' <= *m_currentPosition && *m_currentPosition <= 'Z') || ('a' <= *m_currentPosition && *m_currentPosition <= 'z'))
 		++m_currentPosition;
@@ -260,16 +254,16 @@ ChartEvent TxtFileReader::parseEvent()
 		if (type == combo.first)
 		{
 			skipWhiteSpace();
-			return combo.second;
+			return { position, combo.second };
 		}
 
 	for (const auto& combo : g_ALLEVENTS)
 		if (type == combo.first)
 		{
 			skipWhiteSpace();
-			return combo.second;
+			return { position, combo.second };
 		}
-	return ChartEvent::UNKNOWN;
+	return { position, ChartEvent::UNKNOWN };
 }
 
 void TxtFileReader::nextEvent()

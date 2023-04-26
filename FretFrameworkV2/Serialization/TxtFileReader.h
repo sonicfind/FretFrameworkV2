@@ -89,8 +89,7 @@ public:
 	virtual void skipUnknownTrack() override;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() override;
-	[[nodiscard]] virtual uint32_t parsePosition() override;
-	[[nodiscard]] virtual ChartEvent parseEvent() override;
+	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() override;
 	virtual void nextEvent() override;
 
 	[[nodiscard]] virtual std::pair<size_t, uint32_t> extractSingleNote() override;

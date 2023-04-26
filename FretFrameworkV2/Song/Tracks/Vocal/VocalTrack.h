@@ -165,9 +165,8 @@ public:
 		parser->nextEvent();
 		while (parser->isStillCurrentTrack())
 		{
-			const uint32_t position = parser->parsePosition();
-			const ChartEvent ev = parser->parseEvent();
-			switch (ev)
+			const auto trackEvent = parser->parseEvent();
+			switch (trackEvent.second)
 			{
 			case ChartEvent::LYRIC:
 			case ChartEvent::VOCAL:
@@ -176,10 +175,10 @@ public:
 				if (lyric.first == 0 || lyric.first > numTracks)
 					throw std::runtime_error("Invalid track index");
 
-				Vocal& vocal = m_vocals[lyric.first - 1].get_or_emplace_back(position);
+				Vocal& vocal = m_vocals[lyric.first - 1].get_or_emplace_back(trackEvent.first);
 				vocal.setLyric(lyric.second);
 
-				if (ev == ChartEvent::VOCAL)
+				if (trackEvent.second == ChartEvent::VOCAL)
 				{
 					auto values = parser->extractPitchAndDuration();
 					if (!vocal.set(values.first, values.second))
@@ -189,7 +188,7 @@ public:
 			}
 			case ChartEvent::VOCAL_PERCUSSION:
 			{
-				auto& perc = m_percussion.get_or_emplace_back(position);
+				auto& perc = m_percussion.get_or_emplace_back(trackEvent.first);
 				const auto& modifiers = parser->extractSingleNoteMods();
 				for (const auto mod : modifiers)
 					perc.modify(mod);
@@ -207,13 +206,13 @@ public:
 				case SpecialPhraseType::LyricLine:
 				case SpecialPhraseType::RangeShift:
 				case SpecialPhraseType::HarmonyLine:
-					m_specialPhrases.get_or_emplace_back(position).push_back(phrase);
+					m_specialPhrases.get_or_emplace_back(trackEvent.first).push_back(phrase);
 				}
 				break;
 			}
 			case ChartEvent::EVENT:
 			{
-				auto& events = m_events.get_or_emplace_back(position);
+				auto& events = m_events.get_or_emplace_back(trackEvent.first);
 				events.push_back(UnicodeString::strToU32(parser->extractText()));
 				break;
 			}

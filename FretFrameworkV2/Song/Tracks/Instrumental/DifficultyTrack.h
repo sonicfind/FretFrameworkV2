@@ -19,13 +19,13 @@ public:
 		m_notes.reserve(5000);
 		while (reader.isStillCurrentTrack())
 		{
-			const uint32_t position = reader.parsePosition();
-			switch (reader.parseEvent())
+			const auto trackEvent = reader.parseEvent();
+			switch (trackEvent.second)
 			{
 			case ChartEvent::NOTE:
 			{
 				auto note = reader.extractColorAndSustain_V1();
-				if (!m_notes.get_or_emplace_back(position).set_V1(note.first, note.second))
+				if (!m_notes.get_or_emplace_back(trackEvent.first).set_V1(note.first, note.second))
 					throw std::runtime_error("Note color is invalid");
 				break;
 			}
@@ -38,7 +38,7 @@ public:
 				case SpecialPhraseType::StarPowerActivation:
 				case SpecialPhraseType::Tremolo:
 				case SpecialPhraseType::Trill:
-					m_specialPhrases.get_or_emplace_back(position).push_back(phrase);
+					m_specialPhrases.get_or_emplace_back(trackEvent.first).push_back(phrase);
 				}
 				break;
 			}
@@ -46,11 +46,11 @@ public:
 			{
 				std::string_view str = reader.extractText();
 				if (str.starts_with("soloend"))
-					m_specialPhrases[position].push_back({ SpecialPhraseType::Solo, position - solo });
+					m_specialPhrases[trackEvent.first].push_back({ SpecialPhraseType::Solo, trackEvent.first - solo });
 				else if (str.starts_with("solo"))
-					solo = position;
+					solo = trackEvent.first;
 				else
-					m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+					m_events.get_or_emplace_back(trackEvent.first).push_back(UnicodeString::strToU32(str));
 				break;
 			}
 			}
@@ -124,12 +124,12 @@ public:
 		m_notes.reserve(5000);
 		while (parser->isStillCurrentTrack())
 		{
-			const uint32_t position = parser->parsePosition();
-			switch (parser->parseEvent())
+			const auto trackEvent = parser->parseEvent();
+			switch (trackEvent.second)
 			{
 			case ChartEvent::NOTE:
 			{
-				auto& note = m_notes.get_or_emplace_back(position);
+				auto& note = m_notes.get_or_emplace_back(trackEvent.first);
 				const auto color = parser->extractSingleNote();
 				if (!note.set(color.first, color.second))
 					throw std::runtime_error("Note color is invalid");
@@ -141,7 +141,7 @@ public:
 			}
 			case ChartEvent::MULTI_NOTE:
 			{
-				auto& note = m_notes.get_or_emplace_back(position);
+				auto& note = m_notes.get_or_emplace_back(trackEvent.first);
 				const auto colors = parser->extractMultiNote();
 				for (const auto& color : colors)
 					if (!note.set(color.first, color.second))
@@ -150,7 +150,7 @@ public:
 			}
 			case ChartEvent::MODIFIER:
 			{
-				auto& note = m_notes.back(position);
+				auto& note = m_notes.back(trackEvent.first);
 
 				const auto& modifiers = parser->extractMultiNoteMods();
 				for (const auto& node : modifiers)
@@ -167,13 +167,13 @@ public:
 				case SpecialPhraseType::StarPowerActivation:
 				case SpecialPhraseType::Tremolo:
 				case SpecialPhraseType::Trill:
-					m_specialPhrases.get_or_emplace_back(position).push_back(phrase);
+					m_specialPhrases.get_or_emplace_back(trackEvent.first).push_back(phrase);
 				}
 				break;
 			}
 			case ChartEvent::EVENT:
 			{
-				auto& events = m_events.get_or_emplace_back(position);
+				auto& events = m_events.get_or_emplace_back(trackEvent.first);
 				events.push_back(UnicodeString::strToU32(parser->extractText()));
 				break;
 			}

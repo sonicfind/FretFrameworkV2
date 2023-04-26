@@ -88,14 +88,14 @@ void Song::load_tempoMap(CommonChartParser* parser)
 {
 	while (parser->isStillCurrentTrack())
 	{
-		const uint32_t position = parser->parsePosition();
-		switch (parser->parseEvent())
+		const auto trackEvent = parser->parseEvent();
+		switch (trackEvent.second)
 		{
 		case ChartEvent::BPM:
-			m_tempoMarkers.get_or_emplace_back(position) = parser->extractMicrosPerQuarter();
+			m_tempoMarkers.get_or_emplace_back(trackEvent.first) = parser->extractMicrosPerQuarter();
 			break;
 		case ChartEvent::TIME_SIG:
-			m_timeSigs.get_or_emplace_back(position).combine(parser->extractTimeSig());
+			m_timeSigs.get_or_emplace_back(trackEvent.first).combine(parser->extractTimeSig());
 			break;
 		}
 		parser->nextEvent();
@@ -106,20 +106,20 @@ void Song::load_events(CommonChartParser* parser)
 {
 	while (parser->isStillCurrentTrack())
 	{
-		const uint32_t position = parser->parsePosition();
-		switch (parser->parseEvent())
+		const auto trackEvent = parser->parseEvent();
+		switch (trackEvent.second)
 		{
 		case ChartEvent::EVENT:
 		{
 			std::string_view str = parser->extractText();
 			if (str.starts_with("section "))
-				m_sectionMarkers.get_or_emplace_back(position) = str.substr(8);
+				m_sectionMarkers.get_or_emplace_back(trackEvent.first) = str.substr(8);
 			else
-				m_globalEvents.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+				m_globalEvents.get_or_emplace_back(trackEvent.first).push_back(UnicodeString::strToU32(str));
 			break;
 		}
 		case ChartEvent::SECTION:
-			m_sectionMarkers.get_or_emplace_back(position) = parser->extractText();
+			m_sectionMarkers.get_or_emplace_back(trackEvent.first) = parser->extractText();
 			break;
 		}
 		parser->nextEvent();

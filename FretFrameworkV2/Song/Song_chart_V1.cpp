@@ -65,30 +65,30 @@ void Song::load_events_V1(TxtFileReader& reader)
 	uint32_t phrase = UINT32_MAX;
 	while (reader.isStillCurrentTrack())
 	{
-		const uint32_t position = reader.parsePosition();
-		if (reader.parseEvent() == ChartEvent::EVENT)
+		const auto trackEvent = reader.parseEvent();
+		if (trackEvent.second == ChartEvent::EVENT)
 		{
 			std::string_view str = reader.extractText();
 			if (str.starts_with("section "))
-				m_sectionMarkers.get_or_emplace_back(position) = str.substr(8);
+				m_sectionMarkers.get_or_emplace_back(trackEvent.first) = str.substr(8);
 			else if (str.starts_with("lyric "))
-				m_noteTracks.vocals.get_or_emplaceVocal(0, position).setLyric(str.substr(6));
+				m_noteTracks.vocals.get_or_emplaceVocal(0, trackEvent.first).setLyric(str.substr(6));
 			else if (str.starts_with("phrase_start"))
 			{
 				if (phrase < UINT32_MAX)
-					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, position - phrase });
-				phrase = position;
+					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
+				phrase = trackEvent.first;
 			}
 			else if (str.starts_with("phrase_end"))
 			{
 				if (phrase < UINT32_MAX)
 				{
-					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, position - phrase });
+					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
 					phrase = UINT32_MAX;
 				}
 			}
 			else
-				m_globalEvents.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+				m_globalEvents.get_or_emplace_back(trackEvent.first).push_back(UnicodeString::strToU32(str));
 		}
 		reader.nextEvent();
 	}
