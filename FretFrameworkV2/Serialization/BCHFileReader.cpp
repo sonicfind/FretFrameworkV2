@@ -87,7 +87,10 @@ bool BCHFileReader::validateAnimationTrack()
 void BCHFileReader::skipTrack()
 {
 	if (isStartOfTrack())
+	{
+		FileReader::move(4);
 		parseTrackHeader();
+	}
 	m_currentPosition = m_next = m_nextTracks.back();
 	m_nextTracks.pop_back();
 }
