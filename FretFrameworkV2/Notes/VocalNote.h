@@ -11,8 +11,24 @@ class Vocal
 	uint32_t m_duration = 0;
 
 public:
-	bool set(VocalPitch pitch, uint32_t duration) noexcept;
-	bool setPitch(VocalPitch pitch) noexcept;
+	bool set(unsigned char pitch, uint32_t duration) noexcept;
+
+	template <int min, int max>
+	bool set(Pitch<min, max> pitch, uint32_t duration) noexcept
+	{
+		if (!setPitch(pitch))
+			return false;
+
+		setDuration(duration);
+		return true;
+	}
+
+	template <int min, int max>
+	bool setPitch(Pitch<min, max> pitch) noexcept
+	{
+		return m_pitch.set(pitch);
+	}
+
 	void setDuration(uint32_t duration) noexcept;
 
 	void setLyric(std::string_view lyric);
