@@ -8,6 +8,11 @@
 template <size_t numTracks>
 class VocalTrack : public Track, public BCH_CHT_Extensions
 {
+public:
+	SimpleFlatMap<Vocal> m_vocals[numTracks];
+	SimpleFlatMap<VocalPercussion> m_percussion;
+
+private:
 	struct Midi_Tracker_Vocal
 	{
 		const unsigned char starPowerNote;
@@ -105,37 +110,11 @@ public:
 			perc.key = uint32_t(perc.key * multiplier);
 	}
 
-	[[nodiscard]] Vocal& get_or_emplaceVocal(size_t track, uint32_t position)
+public:
+	SimpleFlatMap<Vocal>& operator[](size_t i)
 	{
-		assert(track < numTracks);
-		return m_vocals[track][position];
-	}
-
-	[[nodiscard]] VocalPercussion& get_or_emplacePercussion(uint32_t position)
-	{
-		return m_percussion[position];
-	}
-
-	[[nodiscard]] Vocal& getVocal(size_t track, uint32_t position)
-	{
-		assert(track < numTracks);
-		return m_vocals[track].at(position);
-	}
-
-	[[nodiscard]] VocalPercussion& getPercussion(uint32_t position)
-	{
-		return m_percussion.at(position);
-	}
-
-	[[nodiscard]] const Vocal& getVocal(size_t track, uint32_t position) const
-	{
-		assert(track < numTracks);
-		return m_vocals[track].at(position);
-	}
-
-	[[nodiscard]] const VocalPercussion& getPercussion(uint32_t position) const
-	{
-		return m_percussion.at(position);
+		assert(i < numTracks);
+		return m_vocals[i];
 	}
 
 	uint32_t getLongestSustain(uint32_t position) const
@@ -147,6 +126,8 @@ public:
 					sustain = vocal->getDuration();
 		return sustain;
 	}
+
+public:
 
 	virtual void load(CommonChartParser* parser) override
 	{
@@ -397,8 +378,4 @@ private:
 			percPos = UINT32_MAX;
 		}
 	}
-
-private:
-	SimpleFlatMap<Vocal> m_vocals[numTracks];
-	SimpleFlatMap<VocalPercussion> m_percussion;
 };

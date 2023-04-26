@@ -72,7 +72,7 @@ void Song::load_events_V1(TxtFileReader& reader)
 			if (str.starts_with("section "))
 				m_sectionMarkers.get_or_emplace_back(trackEvent.first) = str.substr(8);
 			else if (str.starts_with("lyric "))
-				m_noteTracks.vocals.get_or_emplaceVocal(0, trackEvent.first).setLyric(str.substr(6));
+				m_noteTracks.vocals[0][trackEvent.first].setLyric(str.substr(6));
 			else if (str.starts_with("phrase_start"))
 			{
 				if (phrase < UINT32_MAX)
