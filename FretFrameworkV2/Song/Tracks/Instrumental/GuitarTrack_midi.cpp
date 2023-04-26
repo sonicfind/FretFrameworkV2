@@ -19,7 +19,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseSysEx(Midi_Tracker& tracker, std::st
 					tracker.difficulties[diff].sliderNotes = str[6];
 					if (str[6])
 					{
-						if (GuitarNote<5>*note = m_difficulties[diff].m_notes.try_back(position))
+						if (GuitarNote<5>* note = m_difficulties[diff].m_notes.try_back(position))
 							note->setTap(true);
 					}
 				}
@@ -37,7 +37,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseSysEx(Midi_Tracker& tracker, std::st
 				if (str[6])
 				{
 					tracker.difficulties[str[4]].sliderNotes = true;
-					if (GuitarNote<5>*note = m_difficulties[str[4]].m_notes.try_back(position))
+					if (GuitarNote<5>* note = m_difficulties[str[4]].m_notes.try_back(position))
 						note->setTap(true);
 				}
 				else

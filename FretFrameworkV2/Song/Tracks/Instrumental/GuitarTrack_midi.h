@@ -50,6 +50,31 @@ template <>
 template <bool NoteOn>
 void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
+	auto replaceSoloesWithStarPower = [&]
+	{
+		for (size_t i = 0; i < 4; ++i)
+			tracker.laneValues[12 * i + 8] = 12;
+
+		for (auto iter = m_specialPhrases.begin(); iter < m_specialPhrases.end();)
+		{
+			for (auto phraseIter = (*iter)->begin(); phraseIter < (*iter)->end();)
+			{
+				if (phraseIter->getMidiNote() == 103)
+				{
+					m_difficulties[3].m_specialPhrases[iter->key].push_back({ SpecialPhraseType::StarPower, phraseIter->getDuration() });
+					phraseIter = (*iter)->erase(phraseIter);
+				}
+				else
+					++phraseIter;
+			}
+
+			if ((*iter)->empty())
+				iter = m_specialPhrases.erase(iter);
+			else
+				++iter;
+		}
+	};
+
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
 
@@ -112,30 +137,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 			return;
 		}
 
-		// lane 8 now corresponds to lane 12 (or per-difficulty star power)
-
-		for (size_t i = 0; i < 4; ++i)
-			tracker.laneValues[12 * i + 8] = 12;
-
-		for (auto iter = m_specialPhrases.begin(); iter < m_specialPhrases.end();)
-		{
-			for (auto phraseIter = (*iter)->begin(); phraseIter < (*iter)->end();)
-			{
-				if (phraseIter->getMidiNote() == 103)
-				{
-					m_difficulties[3].m_specialPhrases[iter->key].push_back({ SpecialPhraseType::StarPower, phraseIter->getDuration() });
-					phraseIter = (*iter)->erase(phraseIter);
-				}
-				else
-					++phraseIter;
-			}
-
-			if ((*iter)->empty())
-				iter = m_specialPhrases.erase(iter);
-			else
-				++iter;
-		}
-
+		replaceSoloesWithStarPower();
 		addSpecialPhrase<NoteOn>(tracker.difficulties[diff].starPower, diff, position);
 	}
 	else if (lane == 9)
