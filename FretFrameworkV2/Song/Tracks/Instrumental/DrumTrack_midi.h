@@ -38,10 +38,10 @@ void InstrumentalTrack<DrumNote<4, true>>::parseLaneColor(Midi_Tracker& tracker,
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
-	const int diff = s_diffValues[noteValue];
 
 	if (lane < 5)
 	{
+		const int diff = s_diffValues[noteValue];
 		if constexpr (NoteOn)
 		{
 			DrumNote<4, true>& drums = m_difficulties[diff].get_or_construct_note_midi(position);
@@ -96,10 +96,10 @@ void InstrumentalTrack<DrumNote<5, false>>::parseLaneColor(Midi_Tracker& tracker
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
-	const int diff = s_diffValues[noteValue];
 
 	if (lane < 6)
 	{
+		const int diff = s_diffValues[noteValue];
 		if constexpr (NoteOn)
 		{
 			DrumNote<5, false>& drums = m_difficulties[diff].get_or_construct_note_midi(position);
