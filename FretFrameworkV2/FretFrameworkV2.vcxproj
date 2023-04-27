@@ -189,6 +189,7 @@
     <ClInclude Include="Serialization\CommonChartWriter.h" />
     <ClInclude Include="Serialization\FileReader.h" />
     <ClInclude Include="Serialization\MidiFileReader.h" />
+    <ClInclude Include="Serialization\NodeExtraction.h" />
     <ClInclude Include="Serialization\TxtFileReader.h" />
     <ClInclude Include="Serialization\ChtFileWriter.h" />
     <ClInclude Include="Serialization\TxtFileWriter.h" />
