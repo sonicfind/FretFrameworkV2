@@ -66,9 +66,9 @@ private:
 	void load_events(CommonChartParser& parser);
 	void load_noteTrack(CommonChartParser& parser);
 
-	int  load_songInfo_cht(TxtFileReader& reader);
-	void load_cht_V1(TxtFileReader& reader);
-	void load_events_V1(TxtFileReader& reader);
+	int  load_songInfo_cht(ChtFileReader& reader);
+	void load_cht_V1(ChtFileReader& reader);
+	void load_events_V1(ChtFileReader& reader);
 
 	void load_tempoMap_midi(MidiFileReader& reader);
 	void load_events_midi(MidiFileReader& reader);

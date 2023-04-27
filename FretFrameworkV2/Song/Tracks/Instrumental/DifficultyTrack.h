@@ -1,6 +1,6 @@
 #pragma once
 #include "../Track.h"
-#include "Serialization/TxtFileReader.h"
+#include "Serialization/ChtFileReader.h"
 
 template <typename T>
 struct DifficultyTrack : public Track, public BCH_CHT_Extensions
@@ -9,7 +9,7 @@ public:
 	SimpleFlatMap<T> m_notes;
 
 public:
-	void load_V1(TxtFileReader& reader)
+	void load_V1(ChtFileReader& reader)
 	{
 		if (isOccupied())
 			throw std::runtime_error("Track defined multiple times in file");

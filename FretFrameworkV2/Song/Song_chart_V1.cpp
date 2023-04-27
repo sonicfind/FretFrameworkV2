@@ -1,8 +1,7 @@
 #include "Song.h"
-#include "Serialization/ChtFileWriter.h"
 #include "Tracks/Instrumental/Legacy_DrumTrack.h"
 
-void Song::load_cht_V1(TxtFileReader& reader)
+void Song::load_cht_V1(ChtFileReader& reader)
 {
 	Legacy_DrumTrack drumsLegacy;
 	while (reader.isStartOfTrack())
@@ -16,19 +15,19 @@ void Song::load_cht_V1(TxtFileReader& reader)
 			auto track = reader.extractTrack_V1();
 			switch (track)
 			{
-			case TxtFileReader::Single:
+			case ChtFileReader::Single:
 				m_noteTracks.lead_5.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::DoubleGuitar:
+			case ChtFileReader::DoubleGuitar:
 				m_noteTracks.coop.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::DoubleBass:
+			case ChtFileReader::DoubleBass:
 				m_noteTracks.bass_5.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::DoubleRhythm:
+			case ChtFileReader::DoubleRhythm:
 				m_noteTracks.rhythm.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::Drums:
+			case ChtFileReader::Drums:
 				switch (drumsLegacy.getDrumType())
 				{
 				case DrumType_Enum::LEGACY:       drumsLegacy.load_V1(reader.getDifficulty(), reader); break;
@@ -36,13 +35,13 @@ void Song::load_cht_V1(TxtFileReader& reader)
 				case DrumType_Enum::FIVELANE:     m_noteTracks.drums5.load_V1(reader.getDifficulty(), reader); break;
 				}
 				break;
-			case TxtFileReader::Keys:
+			case ChtFileReader::Keys:
 				m_noteTracks.keys.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::GHLGuitar:
+			case ChtFileReader::GHLGuitar:
 				m_noteTracks.lead_6.load_V1(reader.getDifficulty(), reader);
 				break;
-			case TxtFileReader::GHLBass:
+			case ChtFileReader::GHLBass:
 				m_noteTracks.bass_6.load_V1(reader.getDifficulty(), reader);
 				break;
 			default:
@@ -60,7 +59,7 @@ void Song::load_cht_V1(TxtFileReader& reader)
 	}
 }
 
-void Song::load_events_V1(TxtFileReader& reader)
+void Song::load_events_V1(ChtFileReader& reader)
 {
 	uint32_t phrase = UINT32_MAX;
 	while (reader.isStillCurrentTrack())

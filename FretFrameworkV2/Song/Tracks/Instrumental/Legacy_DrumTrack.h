@@ -17,7 +17,7 @@ public:
 
 	Legacy_DrumTrack(MidiFileReader& reader);
 
-	void load_V1(size_t diff, TxtFileReader& reader);
+	void load_V1(size_t diff, ChtFileReader& reader);
 
 	[[nodiscard]] DrumType_Enum getDrumType() const noexcept { return m_type; }
 

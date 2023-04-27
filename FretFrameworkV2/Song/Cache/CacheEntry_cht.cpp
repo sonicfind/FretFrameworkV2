@@ -1,9 +1,8 @@
 #include "CacheEntry.h"
-#include "Serialization/ChtFileWriter.h"
 
 void CacheEntry::scan_cht(const std::filesystem::path& path)
 {
-	TxtFileReader reader(path);
+	ChtFileReader reader(path);
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
@@ -13,7 +12,7 @@ void CacheEntry::scan_cht(const std::filesystem::path& path)
 		scan_cht_V1(reader);
 }
 
-int CacheEntry::load_songInfo_cht(TxtFileReader& reader)
+int CacheEntry::load_songInfo_cht(ChtFileReader& reader)
 {
 	int version = 0;
 	while (reader.isStillCurrentTrack())

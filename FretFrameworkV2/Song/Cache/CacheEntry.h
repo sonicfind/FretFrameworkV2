@@ -40,6 +40,6 @@ private:
 	void scan(CommonChartParser& parser);
 	void scan_noteTrack(CommonChartParser& parser);
 
-	int  load_songInfo_cht(TxtFileReader& reader);
-	void scan_cht_V1(TxtFileReader& reader);
+	int  load_songInfo_cht(ChtFileReader& reader);
+	void scan_cht_V1(ChtFileReader& reader);
 };

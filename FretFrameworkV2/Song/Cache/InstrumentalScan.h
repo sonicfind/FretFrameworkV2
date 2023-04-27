@@ -1,6 +1,6 @@
 #pragma once
 #include "ScanTrack.h"
-#include "Serialization/TxtFileReader.h"
+#include "Serialization/ChtFileReader.h"
 #include "Serialization/MidiFileReader.h"
 
 template <class T>
@@ -14,7 +14,7 @@ public:
 	InstrumentalScan(const InstrumentalScan&) = delete;
 	InstrumentalScan& operator=(const InstrumentalScan&) = delete;
 
-	void scan_V1(size_t diff, TxtFileReader& reader)
+	void scan_V1(size_t diff, ChtFileReader& reader)
 	{
 		if ((1 << diff) & m_subTracks)
 			return;

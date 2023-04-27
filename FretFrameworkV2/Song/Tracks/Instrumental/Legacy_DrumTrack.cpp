@@ -11,7 +11,7 @@ Legacy_DrumTrack::Legacy_DrumTrack(MidiFileReader& reader)
 	}
 }
 
-void Legacy_DrumTrack::load_V1(size_t diff, TxtFileReader& reader)
+void Legacy_DrumTrack::load_V1(size_t diff, ChtFileReader& reader)
 {
 	InstrumentalTrack<DrumNote_Legacy>::load_V1(diff, reader);
 	m_type = evaluateDrumType(diff);

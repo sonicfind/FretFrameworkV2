@@ -16,7 +16,7 @@ public:
 	InstrumentalTrack(const InstrumentalTrack&) = delete;
 	InstrumentalTrack& operator=(const InstrumentalTrack&) = delete;
 
-	void load_V1(size_t diff, TxtFileReader& reader)
+	void load_V1(size_t diff, ChtFileReader& reader)
 	{
 		m_difficulties[diff].load_V1(reader);
 	}

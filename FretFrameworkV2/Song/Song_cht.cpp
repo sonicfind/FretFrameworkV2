@@ -3,7 +3,7 @@
 
 void Song::load_cht(const std::filesystem::path& path)
 {
-	TxtFileReader reader(path);
+	ChtFileReader reader(path);
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
@@ -19,7 +19,7 @@ void Song::save_cht(const std::filesystem::path& path)
 	save(writer);
 }
 
-int Song::load_songInfo_cht(TxtFileReader& reader)
+int Song::load_songInfo_cht(ChtFileReader& reader)
 {
 	int version = 0;
 	while (reader.isStillCurrentTrack())
