@@ -153,6 +153,7 @@
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Serialization\TxtFileWriter.cpp" />
     <ClCompile Include="Song\Cache\CacheEntry.cpp" />
     <ClCompile Include="Song\Cache\CacheEntry_bch.cpp" />
     <ClCompile Include="Song\Cache\CacheEntry_chart_V1.cpp" />
