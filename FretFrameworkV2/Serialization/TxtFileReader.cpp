@@ -97,19 +97,22 @@ void TxtFileReader::skipTrack()
 	m_next = m_currentPosition = getEndOfFile();
 }
 
-std::string_view TxtFileReader::extractText()
+std::string_view TxtFileReader::extractText(bool checkForQuotes)
 {
-	auto boundaries = [&]() -> std::pair<const char*, const char*>
+	std::pair<const char*, const char*> boundaries = [&]() -> std::pair<const char*, const char*>
 	{
-		const size_t offset = size_t(1) + (m_next != getEndOfFile());
-		if (*m_currentPosition != '\"' || *(m_next - offset) != '\"' || *(m_next - (offset + 1)) == '\\' || m_currentPosition + 1 > m_next - offset)
-			return {};
+		const char* const endOfLine = m_next - (m_next != getEndOfFile());
+		if (checkForQuotes && *m_currentPosition == '\"')
+		{
+			const char* end = endOfLine - 1;
+			while (m_currentPosition + 1 < end && (unsigned char)*end <= 32)
+				--end;
 
-		return { m_currentPosition + 1, m_next - offset };
+			if (m_currentPosition < end && *end == '\"' && end[-1] != '\\')
+				return { m_currentPosition + 1, end };
+		}
+		return { m_currentPosition, endOfLine };
 	}();
-
-	if (!boundaries.first)
-		boundaries = { m_currentPosition, m_next - (m_next != getEndOfFile()) };
 
 	while (boundaries.second > boundaries.first && unsigned char(boundaries.second[-1]) <= 32)
 		--boundaries.second;

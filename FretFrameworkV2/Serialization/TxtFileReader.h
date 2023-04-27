@@ -62,8 +62,7 @@ public:
 		return value;
 	}
 
-	std::string_view extractText();
-
+	std::string_view extractText(bool checkForQuotes = true);
 	void skipTrack();
 
 public:
