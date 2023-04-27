@@ -162,6 +162,7 @@
     <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp" />
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
+    <ClCompile Include="Song\Info\Modifiers\Modifiers.cpp" />
     <ClCompile Include="Song\Song.cpp" />
     <ClCompile Include="Song\Song_bch.cpp" />
     <ClCompile Include="Song\Song_chart_V1.cpp" />
@@ -212,6 +213,8 @@
     <ClInclude Include="Notes\VocalPercussion.h" />
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
     <ClInclude Include="Song\Cache\VocalScan.h" />
+    <ClInclude Include="Song\Info\Modifiers\ModifierNode.h" />
+    <ClInclude Include="Song\Info\Modifiers\Modifiers.h" />
     <ClInclude Include="Song\MicrosPerQuarter.h" />
     <ClInclude Include="Song\Song.h" />
     <ClInclude Include="Song\TimeSig.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="Types\WebType.h" />
   </ItemGroup>
   <ItemGroup>
+    <Natvis Include="Song\Info\Modifiers\Modifier.natvis" />
     <Natvis Include="Types\UnicodeString.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

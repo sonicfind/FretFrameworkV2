@@ -154,6 +154,9 @@
     <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
+    <ClCompile Include="Song\Info\Modifiers\Modifiers.cpp">
+      <Filter>SongInfo</Filter>
+    </ClCompile>
     <ClCompile Include="Serialization\ChtFileReader.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
@@ -303,6 +306,12 @@
     <ClInclude Include="Song\Cache\VocalScan.h">
       <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
+    <ClInclude Include="Song\Info\Modifiers\ModifierNode.h">
+      <Filter>SongInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Info\Modifiers\Modifiers.h">
+      <Filter>SongInfo</Filter>
+    </ClInclude>
     <ClInclude Include="Serialization\ChtFileReader.h">
       <Filter>Serialization\FileReader</Filter>
     </ClInclude>
@@ -313,6 +322,9 @@
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">
       <Filter>Unicode</Filter>
+    </Natvis>
+    <Natvis Include="Song\Info\Modifiers\Modifier.natvis">
+      <Filter>SongInfo</Filter>
     </Natvis>
   </ItemGroup>
 </Project>
