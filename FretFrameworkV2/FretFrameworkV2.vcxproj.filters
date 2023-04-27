@@ -43,9 +43,6 @@
     <Filter Include="TempoMap">
       <UniqueIdentifier>{541496ce-0c36-4fe3-a690-3d96f9abf197}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Serialization\MD5">
-      <UniqueIdentifier>{6ed6681a-8855-4705-8423-229709146146}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MD5">
       <UniqueIdentifier>{a9a06000-e5f8-48fc-951d-a5359855f8f3}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization\ChtFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +302,12 @@
     </ClInclude>
     <ClInclude Include="Song\Cache\VocalScan.h">
       <Filter>Song Library\Entry\Track\Vocal</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\ChtFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\NodeExtraction.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
