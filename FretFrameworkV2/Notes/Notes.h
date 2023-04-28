@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <stdexcept>
 #include "NoteColor.h"
 
 template <class NoteType, size_t numColors>
