@@ -154,14 +154,14 @@
     <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Info\Modifiers\Modifiers.cpp">
-      <Filter>SongInfo</Filter>
-    </ClCompile>
     <ClCompile Include="Serialization\ChtFileReader.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
     <ClCompile Include="Serialization\TxtFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization\Modifiers.cpp">
+      <Filter>Serialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -312,22 +312,22 @@
     <ClInclude Include="Song\Info\Modifiers\ModifierNode.h">
       <Filter>SongInfo</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Info\Modifiers\Modifiers.h">
-      <Filter>SongInfo</Filter>
-    </ClInclude>
     <ClInclude Include="Serialization\ChtFileReader.h">
       <Filter>Serialization\FileReader</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\NodeExtraction.h">
       <Filter>Serialization\FileReader</Filter>
     </ClInclude>
+    <ClInclude Include="Serialization\Modifiers.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">
       <Filter>Unicode</Filter>
     </Natvis>
-    <Natvis Include="Song\Info\Modifiers\Modifier.natvis">
-      <Filter>SongInfo</Filter>
+    <Natvis Include="Serialization\Modifier.natvis">
+      <Filter>Serialization</Filter>
     </Natvis>
   </ItemGroup>
 </Project>

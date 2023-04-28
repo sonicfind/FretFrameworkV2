@@ -150,6 +150,7 @@
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
     <ClCompile Include="Serialization\FileReader.cpp" />
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
+    <ClCompile Include="Serialization\Modifiers.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -163,7 +164,6 @@
     <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp" />
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
-    <ClCompile Include="Song\Info\Modifiers\Modifiers.cpp" />
     <ClCompile Include="Song\Song.cpp" />
     <ClCompile Include="Song\Song_bch.cpp" />
     <ClCompile Include="Song\Song_chart_V1.cpp" />
@@ -192,6 +192,7 @@
     <ClInclude Include="Serialization\FileReader.h" />
     <ClInclude Include="Serialization\MidiFileReader.h" />
     <ClInclude Include="Serialization\NodeExtraction.h" />
+    <ClInclude Include="Serialization\Modifiers.h" />
     <ClInclude Include="Serialization\TxtFileReader.h" />
     <ClInclude Include="Serialization\ChtFileWriter.h" />
     <ClInclude Include="Serialization\TxtFileWriter.h" />
@@ -215,7 +216,6 @@
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
     <ClInclude Include="Song\Cache\VocalScan.h" />
     <ClInclude Include="Song\Info\Modifiers\ModifierNode.h" />
-    <ClInclude Include="Song\Info\Modifiers\Modifiers.h" />
     <ClInclude Include="Song\MicrosPerQuarter.h" />
     <ClInclude Include="Song\Song.h" />
     <ClInclude Include="Song\TimeSig.h" />
@@ -234,7 +234,7 @@
     <ClInclude Include="Types\WebType.h" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="Song\Info\Modifiers\Modifier.natvis" />
+    <Natvis Include="Serialization\Modifier.natvis" />
     <Natvis Include="Types\UnicodeString.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
