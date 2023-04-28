@@ -55,11 +55,6 @@ public:
 	UnicodeString& operator=(std::string_view str);
 
 	constexpr void setCasedStrings() noexcept;
-	void writeToWebTypedFile(std::fstream& outFile) const;
-
-	static char s_writeBuffer[5];
-	static char* s_bufferStart;
-	static size_t s_bufferSize;
 	std::string toString() const;
 
 	std::u32string& get() { return m_string; }
@@ -71,14 +66,6 @@ public:
 	std::u32string& getUpperCase() { return m_string_uppercase; }
 	const std::u32string& getUpperCase() const { return m_string_uppercase; }
 
-	// Comapres by the lowercase versions of the string
-	bool operator==(const UnicodeString& str) const;
-
-	// Comapres by the lowercase versions of the string
-	bool operator<(const UnicodeString& str) const;
-
-	int compare(const UnicodeString& str) const;
-	
 	operator std::string() const { return toString(); }
 	friend std::ostream& operator<<(std::ostream& outFile, const UnicodeString& str);
 	constexpr std::u32string* operator->() const { return (std::u32string*)&m_string; }
@@ -86,6 +73,19 @@ public:
 	char32_t& operator[](size_t i) { return m_string[i]; }
 	const char32_t& operator[](size_t i) const { return m_string[i]; }
 
+	// Comapres by the lowercase versions of the string
+	bool operator==(const UnicodeString& str) const;
+
+	// Comapres by the lowercase versions of the string
+	bool operator<(const UnicodeString& str) const;
+
+	int compare(const UnicodeString& str) const;
+
+	void writeToWebTypedFile(std::fstream& outFile) const;
+
+	static char s_writeBuffer[5];
+	static char* s_bufferStart;
+	static size_t s_bufferSize;
 
 	static std::u32string strToU32(const std::string_view str);
 	static std::u32string bufferToU32(const unsigned char* dataPtr, size_t length);
