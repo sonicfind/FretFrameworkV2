@@ -77,6 +77,7 @@ namespace Modifiers
 
 		Modifier& operator=(const Modifier& other) noexcept
 		{
+			clear();
 			m_name = other.m_name;
 			m_type = other.m_type;
 			switch (m_type)
@@ -92,6 +93,7 @@ namespace Modifiers
 
 		Modifier& operator=(Modifier&& other) noexcept
 		{
+			clear();
 			m_name = other.m_name;
 			m_type = other.m_type;
 			memcpy(m_BUFFER, other.m_BUFFER, sizeof(m_BUFFER));
@@ -101,10 +103,7 @@ namespace Modifiers
 
 		~Modifier() noexcept
 		{
-			if (m_type == Type::STRING)
-				destruct<UnicodeString>();
-			else if (m_type == Type::STRING_NOCASE)
-				destruct<std::u32string>();
+			clear();
 		}
 
 	private:
@@ -124,6 +123,14 @@ namespace Modifiers
 		void destruct()
 		{
 			reinterpret_cast<T*>(m_BUFFER)->~T();
+		}
+
+		void clear()
+		{
+			if (m_type == Type::STRING)
+				destruct<UnicodeString>();
+			else if (m_type == Type::STRING_NOCASE)
+				destruct<std::u32string>();
 		}
 
 	public:
