@@ -40,7 +40,7 @@ const std::vector<EventCombo> g_validTypes[] =
 	{ g_PITCH,       g_SPECIAL,   g_TEXT },                          // Pro Keys Difficulty
 };
 
-bool ChtFileReader::isStartOfTrack()
+bool ChtFileReader::isStartOfTrack() const
 {
 	return *m_currentPosition == '[';
 }

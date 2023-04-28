@@ -27,7 +27,7 @@ bool BCHFileReader::move(size_t amount)
 	return FileReader::move(amount);
 }
 
-bool BCHFileReader::isStartOfTrack()
+bool BCHFileReader::isStartOfTrack() const
 {
 	return strncmp(m_currentPosition, "BT", 2) == 0;
 }

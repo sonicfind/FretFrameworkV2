@@ -35,7 +35,7 @@ public:
 
 	virtual bool move(size_t amount) override;
 
-	[[nodiscard]] virtual bool isStartOfTrack() override;
+	[[nodiscard]] virtual bool isStartOfTrack() const override;
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
 	[[nodiscard]] virtual bool validateSyncTrack() override;
 	[[nodiscard]] virtual bool validateEventTrack() override;

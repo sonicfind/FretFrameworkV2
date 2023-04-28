@@ -22,7 +22,7 @@ public:
 public:
 	using TxtFileReader::TxtFileReader;
 
-	[[nodiscard]] virtual bool isStartOfTrack() override;
+	[[nodiscard]] virtual bool isStartOfTrack() const override;
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
 	[[nodiscard]] virtual bool validateSyncTrack() override;
 	[[nodiscard]] virtual bool validateEventTrack() override;

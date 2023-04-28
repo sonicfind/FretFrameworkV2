@@ -9,7 +9,7 @@ protected:
 	size_t m_difficulty = 0;
 
 public:
-	[[nodiscard]] virtual bool isStartOfTrack() = 0;
+	[[nodiscard]] virtual bool isStartOfTrack() const = 0;
 	[[nodiscard]] virtual bool validateHeaderTrack() = 0;
 	[[nodiscard]] virtual bool validateSyncTrack() = 0;
 	[[nodiscard]] virtual bool validateEventTrack() = 0;
