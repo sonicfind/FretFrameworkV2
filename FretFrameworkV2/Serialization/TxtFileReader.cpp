@@ -114,6 +114,9 @@ std::string_view TxtFileReader::extractText(bool checkForQuotes)
 		return { m_currentPosition, endOfLine };
 	}();
 
+	if (boundaries.second < boundaries.first)
+		return { boundaries.first, boundaries.first };
+
 	while (boundaries.second > boundaries.first && unsigned char(boundaries.second[-1]) <= 32)
 		--boundaries.second;
 
