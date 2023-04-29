@@ -40,11 +40,11 @@ bool CacheEntry::scan_cht(const std::filesystem::path& path)
 	{
 		if (mod.getName() == "FileVersion")
 			version = mod.getValue<uint32_t>();
-		else if (auto iter = getModifier(mod.getName()); iter != m_modifiers.end())
+		else if (auto modifier = getModifier(mod.getName()))
 		{
-			if (isModifierDefault(*iter))
+			if (isModifierDefault(*modifier))
 			{
-				*iter = std::move(mod);
+				*modifier = std::move(mod);
 				updateIni = true;
 			}
 		}

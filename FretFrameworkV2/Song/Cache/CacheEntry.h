@@ -61,8 +61,33 @@ public:
 	void mapModifierVariables();
 
 private:
-	std::vector<Modifiers::Modifier>::const_iterator getModifier(std::string_view name) const noexcept;
-	std::vector<Modifiers::Modifier>::iterator getModifier(std::string_view name) noexcept;
+	class OptionalModifier
+	{
+		Modifiers::Modifier* mod = nullptr;
+
+	public:
+		OptionalModifier() = default;
+		OptionalModifier(Modifiers::Modifier& md) : mod(&md){}
+		Modifiers::Modifier* operator->() { return mod; }
+		const Modifiers::Modifier* operator->() const noexcept { return mod; }
+		Modifiers::Modifier& operator*() { return *mod; }
+		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
+		operator bool() { return mod != nullptr; }
+	};
+
+	struct OptionalModifier_const
+	{
+		const Modifiers::Modifier* mod = nullptr;
+
+	public:
+		OptionalModifier_const() = default;
+		OptionalModifier_const(const Modifiers::Modifier& md) : mod(&md) {}
+		const Modifiers::Modifier* operator->() const noexcept { return mod; }
+		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
+		operator bool() { return mod != nullptr; }
+	};
+	OptionalModifier_const getModifier(std::string_view name) const noexcept;
+	OptionalModifier getModifier(std::string_view name) noexcept;
 
 private:
 	static const std::filesystem::path s_EXTS_CHT[2];

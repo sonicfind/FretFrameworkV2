@@ -22,7 +22,7 @@ bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 		if (ext == s_EXTS_CHT[0] || ext == s_EXTS_CHT[1])
 			iniChanged = scan_cht(path);
 		
-		if (getModifier("name") == m_modifiers.end())
+		if (!getModifier("name"))
 			return false;
 
 		if (ext == s_EXTS_MID[0] || ext == s_EXTS_MID[1])
@@ -44,20 +44,20 @@ bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 	return true;
 }
 
-std::vector<Modifiers::Modifier>::const_iterator CacheEntry::getModifier(std::string_view name) const noexcept
+CacheEntry::OptionalModifier_const CacheEntry::getModifier(std::string_view name) const noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
-			return iter;
-	return m_modifiers.end();
+			return *iter;
+	return {};
 }
 
-std::vector<Modifiers::Modifier>::iterator CacheEntry::getModifier(std::string_view name) noexcept
+CacheEntry::OptionalModifier CacheEntry::getModifier(std::string_view name) noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
-			return iter;
-	return m_modifiers.end();
+			return *iter;
+	return {};
 }
 
 void CacheEntry::scan(CommonChartParser& parser)
@@ -165,27 +165,27 @@ void CacheEntry::mapModifierVariables()
 		m_playlist = &m_modifiers.back().getValue<UnicodeString>();
 	}
 
-	if (auto iter = getModifier("song_length"); iter != m_modifiers.end())
-		m_song_length = iter->getValue<uint32_t>();
+	if (auto modifier = getModifier("song_length"))
+		m_song_length = modifier->getValue<uint32_t>();
 
-	if (auto iter = getModifier("preview_start_time"); iter != m_modifiers.end())
-		m_previewRange[0] = iter->getValue<float>();
+	if (auto modifier = getModifier("preview_start_time"))
+		m_previewRange[0] = modifier->getValue<float>();
 
-	if (auto iter = getModifier("preview_end_time"); iter != m_modifiers.end())
-		m_previewRange[1] = iter->getValue<float>();
+	if (auto modifier = getModifier("preview_end_time"))
+		m_previewRange[1] = modifier->getValue<float>();
 
-	if (auto iter = getModifier("album_track"); iter != m_modifiers.end())
-		m_album_track = iter->getValue<uint16_t>();
+	if (auto modifier = getModifier("album_track"))
+		m_album_track = modifier->getValue<uint16_t>();
 
-	if (auto iter = getModifier("playlist_track"); iter != m_modifiers.end())
-		m_playlist_track = iter->getValue<uint16_t>();
+	if (auto modifier = getModifier("playlist_track"))
+		m_playlist_track = modifier->getValue<uint16_t>();
 
-	if (auto iter = getModifier("icon"); iter != m_modifiers.end())
-		m_icon = iter->getValue<std::u32string>();
+	if (auto modifier = getModifier("icon"))
+		m_icon = modifier->getValue<std::u32string>();
 
-	if (auto iter = getModifier("source"); iter != m_modifiers.end())
-		m_source = iter->getValue<std::u32string>();
+	if (auto modifier = getModifier("source"))
+		m_source = modifier->getValue<std::u32string>();
 
-	if (auto iter = getModifier("hopo_frequency"); iter != m_modifiers.end())
-		m_hopo_frequency = iter->getValue<uint32_t>();
+	if (auto modifier = getModifier("hopo_frequency"))
+		m_hopo_frequency = modifier->getValue<uint32_t>();
 }
