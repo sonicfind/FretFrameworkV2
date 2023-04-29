@@ -60,6 +60,16 @@ public:
 	bool scan(const std::filesystem::path& path) noexcept;
 	void mapModifierVariables();
 
+	const UnicodeString& getArtist() const { return *m_artist; }
+	const UnicodeString& getName() const { return *m_name; }
+	const UnicodeString& getAlbum() const { return *m_album; }
+	const UnicodeString& getGenre() const { return *m_genre; }
+	const UnicodeString& getYear() const { return *m_year; }
+	const UnicodeString& getCharter() const { return *m_charter; }
+	const UnicodeString& getPlaylist() const { return *m_playlist; }
+	const uint32_t& getSongLength() const { return m_song_length; }
+	const std::filesystem::path& getDirectory() const { return m_directory; }
+
 private:
 	class OptionalModifier
 	{
