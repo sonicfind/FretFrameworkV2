@@ -30,6 +30,22 @@ class CacheEntry
 		VocalScan<3>                                  harmonies;
 	} m_noteTracks;
 
+	const UnicodeString* m_name = nullptr;
+	const UnicodeString* m_artist = nullptr;
+	const UnicodeString* m_album = nullptr;
+	const UnicodeString* m_genre = nullptr;
+	const UnicodeString* m_year = nullptr;
+	const UnicodeString* m_charter = nullptr;
+	const UnicodeString* m_playlist = nullptr;
+	uint32_t m_song_length = 0;
+
+	float m_previewRange[2]{};
+	uint16_t m_album_track = UINT16_MAX;
+	uint16_t m_playlist_track = UINT16_MAX;
+	std::u32string m_icon;
+	std::u32string m_source;
+	uint32_t m_hopo_frequency = 0;
+
 	std::vector<Modifiers::Modifier> m_modifiers;
 
 	std::filesystem::path m_directory;
@@ -42,6 +58,8 @@ public:
 	CacheEntry(std::filesystem::file_time_type chartTime);
 	void readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime);
 	bool scan(const std::filesystem::path& path) noexcept;
+	void mapModifierVariables();
+
 private:
 	std::vector<Modifiers::Modifier>::const_iterator getModifier(std::string_view name) const noexcept;
 	std::vector<Modifiers::Modifier>::iterator getModifier(std::string_view name) noexcept;
