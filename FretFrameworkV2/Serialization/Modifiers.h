@@ -135,6 +135,7 @@ namespace Modifiers
 
 	public:
 		constexpr std::string_view getName() const noexcept { return m_name; }
+		constexpr Type getType() const noexcept { return m_type; }
 
 	private:
 		template <class T>
@@ -180,18 +181,5 @@ namespace Modifiers
 			cast<T>() = value;
 			return *this;
 		}
-
-		void write_cht(std::fstream& outFile) const;
-
-		template <class T>
-		void writeVal(std::fstream& outFile) const
-		{
-			if      constexpr (std::is_same_v<T, bool>)           outFile << m_name << " = " << std::boolalpha << cast<T>() << '\n';
-			else if constexpr (std::is_same_v<T, float[2]>)       outFile << m_name << " = " << cast<T>()[0] << ' ' << cast<T>()[1] << '\n';
-			else if constexpr (std::is_same_v<T, std::u32string>) outFile << m_name << " = " << UnicodeString::U32ToStr(cast<T>()) << '\n';
-			else                                                  outFile << m_name << " = " << cast<T>() << '\n';
-		}
-
-		void write_ini(std::fstream& outFile) const;
 	};
 };

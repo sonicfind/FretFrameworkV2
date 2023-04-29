@@ -160,9 +160,6 @@
     <ClCompile Include="Serialization\TxtFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
-    <ClCompile Include="Serialization\Modifiers.cpp">
-      <Filter>Serialization</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">

@@ -150,7 +150,6 @@
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
     <ClCompile Include="Serialization\FileReader.cpp" />
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
-    <ClCompile Include="Serialization\Modifiers.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Main.cpp" />
