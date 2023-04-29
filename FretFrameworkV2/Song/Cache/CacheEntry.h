@@ -4,9 +4,17 @@
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
 #include "Notes/DrumNote.h"
+#include "Types/UnicodeString.h"
 
 class CacheEntry
 {
+	static const UnicodeString s_DEFAULT_NAME;
+	static const UnicodeString s_DEFAULT_ARTIST;
+	static const UnicodeString s_DEFAULT_ALBUM;
+	static const UnicodeString s_DEFAULT_GENRE;
+	static const UnicodeString s_DEFAULT_YEAR;
+	static const UnicodeString s_DEFAULT_CHARTER;
+
 	struct
 	{
 		InstrumentalScan_Extended<GuitarNote<5>>      lead_5;

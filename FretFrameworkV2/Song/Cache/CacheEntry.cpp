@@ -1,6 +1,13 @@
 #include "CacheEntry.h"
 #include <iostream>
 
+const UnicodeString CacheEntry::s_DEFAULT_NAME{ U"Unknown Title" };
+const UnicodeString CacheEntry::s_DEFAULT_ARTIST{ U"Unknown Artist" };
+const UnicodeString CacheEntry::s_DEFAULT_ALBUM{ U"Unknown Album" };
+const UnicodeString CacheEntry::s_DEFAULT_GENRE{ U"Unknown Genre" };
+const UnicodeString CacheEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
+const UnicodeString CacheEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
+
 const std::filesystem::path CacheEntry::s_EXTS_CHT[2] = { ".cht", ".chart" };
 const std::filesystem::path CacheEntry::s_EXTS_MID[2] = { ".mid", ".midi" };
 const std::filesystem::path CacheEntry::s_EXT_BCH = ".bch";
