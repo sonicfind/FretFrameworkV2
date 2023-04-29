@@ -40,6 +40,11 @@ const std::vector<EventCombo> g_validTypes[] =
 	{ g_PITCH,       g_SPECIAL,   g_TEXT },                          // Pro Keys Difficulty
 };
 
+bool ChtFileReader::doesStringMatch(std::string_view str) const
+{
+	return strncmp((const char*)m_currentPosition, str.data(), str.size()) == 0;
+}
+
 bool ChtFileReader::isStartOfTrack() const
 {
 	return *m_currentPosition == '[';
@@ -323,11 +328,16 @@ std::pair<size_t, std::string_view> ChtFileReader::extractLyric()
 	{
 		const size_t offset = size_t(1) + (m_next != getEndOfFile());
 		if (*m_currentPosition == '\"')
+		{
 			for (const char* test = m_currentPosition + 1; test < m_next; ++test)
+			{
 				if (*test == '\"')
 					return { m_currentPosition + 1, test };
-				else if (*test == '\\')
+
+				if (*test == '\\')
 					++test;
+			}
+		}
 		return {};
 	}();
 
@@ -420,4 +430,16 @@ ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrack_V1()
 
 	gotoNextLine();
 	return type;
+}
+
+std::vector<Modifiers::Modifier> ChtFileReader::extractModifiers(const ModifierOutline& list)
+{
+	std::vector<Modifiers::Modifier> modifiers;
+	while (isStillCurrentTrack())
+	{
+		if (auto node = findNode(extractModifierName(), list))
+			modifiers.push_back(createModifier(*node));
+		nextEvent();
+	}
+	return modifiers;
 }

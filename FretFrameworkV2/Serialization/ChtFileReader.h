@@ -3,7 +3,7 @@
 #include "CommonChartParser.h"
 
 using EventCombo = std::pair<std::string_view, ChartEvent>;
-class ChtFileReader : public TxtFileReader, public CommonChartParser
+class ChtFileReader : private TxtFileReader, public CommonChartParser
 {
 public:
 	enum NoteTracks_V1
@@ -22,6 +22,10 @@ public:
 public:
 	using TxtFileReader::TxtFileReader;
 
+private:
+	[[nodiscard]] bool doesStringMatch(std::string_view str) const;
+
+public:
 	[[nodiscard]] virtual bool isStartOfTrack() const override;
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
 	[[nodiscard]] virtual bool validateSyncTrack() override;
@@ -64,4 +68,7 @@ private:
 
 	bool checkDifficulty_V1();
 	NoteTracks_V1 checkTrack_V1();
+
+public:
+	std::vector<Modifiers::Modifier> extractModifiers(const ModifierOutline& list);
 };

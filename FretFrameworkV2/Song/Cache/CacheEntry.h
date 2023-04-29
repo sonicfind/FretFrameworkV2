@@ -30,26 +30,33 @@ class CacheEntry
 		VocalScan<3>                                  harmonies;
 	} m_noteTracks;
 
-	std::filesystem::directory_entry m_fileEntry;
+	std::vector<Modifiers::Modifier> m_modifiers;
+
 	std::filesystem::path m_directory;
+	std::filesystem::path m_filename;
+
 	std::filesystem::file_time_type m_chartModifiedTime;
+	std::filesystem::file_time_type m_iniModifiedTime;
 
 public:
 	CacheEntry(std::filesystem::file_time_type chartTime);
+	void readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime);
 	bool scan(const std::filesystem::path& path) noexcept;
+private:
+	std::vector<Modifiers::Modifier>::const_iterator getModifier(std::string_view name) const noexcept;
+	std::vector<Modifiers::Modifier>::iterator getModifier(std::string_view name) noexcept;
 
 private:
 	static const std::filesystem::path s_EXTS_CHT[2];
 	static const std::filesystem::path s_EXTS_MID[2];
 	static const std::filesystem::path s_EXT_BCH;
 
-	void scan_cht(const std::filesystem::path& path);
+	bool scan_cht(const std::filesystem::path& path);
 	void scan_bch(const std::filesystem::path& path);
 	void scan_mid(const std::filesystem::path& path);
 
 	void scan(CommonChartParser& parser);
 	void scan_noteTrack(CommonChartParser& parser);
 
-	int  load_songInfo_cht(ChtFileReader& reader);
 	void scan_cht_V1(ChtFileReader& reader);
 };

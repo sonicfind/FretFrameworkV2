@@ -25,10 +25,14 @@ int main()
 	else
 		std::cout << "Load failed\n";
 	
+	
+	std::filesystem::directory_entry ini(std::filesystem::path(filename).replace_filename(U"song.ini"));
 	std::filesystem::directory_entry chart(filename);
 
 	CacheEntry entry(chart.last_write_time());
 	t1 = std::chrono::high_resolution_clock::now();
+	if (ini.exists())
+		entry.readIni(ini.path(), ini.last_write_time());
 	if (entry.scan(filename))
 	{
 		auto t2 = std::chrono::high_resolution_clock::now();

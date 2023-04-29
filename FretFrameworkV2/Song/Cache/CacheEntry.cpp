@@ -15,26 +15,46 @@ const std::filesystem::path CacheEntry::s_EXT_BCH = ".bch";
 CacheEntry::CacheEntry(std::filesystem::file_time_type chartTime) : m_chartModifiedTime(chartTime) {}
 bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 {
-   // m_fileEntry = entry;
-   // m_directory = entry.path().parent_path();
+	bool iniChanged = false;
 	try
 	{
 		const std::filesystem::path ext = path.extension();
 		if (ext == s_EXTS_CHT[0] || ext == s_EXTS_CHT[1])
-			scan_cht(path);
-		else if (ext == s_EXTS_MID[0] || ext == s_EXTS_MID[1])
+			iniChanged = scan_cht(path);
+		
+		if (getModifier("name") == m_modifiers.end())
+			return false;
+
+		if (ext == s_EXTS_MID[0] || ext == s_EXTS_MID[1])
 			scan_mid(path);
 		else if (ext == s_EXT_BCH)
 			scan_bch(path);
-		else
-			throw std::runtime_error(ext.generic_string() + " is not a valid chart type");
 	}
 	catch (std::runtime_error err)
 	{
 		std::cout << err.what() << std::endl;
 		return false;
 	}
+
+	m_filename = path.filename();
+	m_directory = path.parent_path();
 	return true;
+}
+
+std::vector<Modifiers::Modifier>::const_iterator CacheEntry::getModifier(std::string_view name) const noexcept
+{
+	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
+		if (iter->getName() == name)
+			return iter;
+	return m_modifiers.end();
+}
+
+std::vector<Modifiers::Modifier>::iterator CacheEntry::getModifier(std::string_view name) noexcept
+{
+	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
+		if (iter->getName() == name)
+			return iter;
+	return m_modifiers.end();
 }
 
 void CacheEntry::scan(CommonChartParser& parser)

@@ -64,6 +64,9 @@
     <Filter Include="Song Library\Entry\Track\Vocal">
       <UniqueIdentifier>{014e508f-39e9-4357-910d-b70eeafdaf77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ini">
+      <UniqueIdentifier>{34e6a135-a441-4600-bed3-96e0141fe9ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -157,8 +160,17 @@
     <ClCompile Include="Serialization\ChtFileReader.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\IniFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
+    </ClCompile>
     <ClCompile Include="Serialization\TxtFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Cache\CahceEntry_Ini.cpp">
+      <Filter>Song Library\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Song\Info\Ini.cpp">
+      <Filter>Ini</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,17 +318,17 @@
     <ClInclude Include="Song\Cache\VocalScan.h">
       <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Info\Modifiers\ModifierNode.h">
-      <Filter>SongInfo</Filter>
-    </ClInclude>
     <ClInclude Include="Serialization\ChtFileReader.h">
       <Filter>Serialization\FileReader</Filter>
     </ClInclude>
-    <ClInclude Include="Serialization\NodeExtraction.h">
+    <ClInclude Include="Serialization\IniFileReader.h">
       <Filter>Serialization\FileReader</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\Modifiers.h">
       <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Info\Ini.h">
+      <Filter>Ini</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

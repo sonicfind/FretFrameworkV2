@@ -1,5 +1,7 @@
 #pragma once
 #include "FileReader.h"
+#include "Modifiers.h"
+#include <vector>
 
 class TxtFileReader : public FileReader
 {
@@ -63,15 +65,34 @@ public:
 	}
 
 	std::string_view extractText(bool checkForQuotes = true);
-	void skipTrack();
-
-public:
-	std::string_view parseModifierName();
 
 protected:
+	void gotoNextLine();
 	void skipWhiteSpace();
 	void setNextPointer();
-	void gotoNextLine();
-	[[nodiscard]] bool doesStringMatch(std::string_view str) const;
-	[[nodiscard]] bool doesStringMatch_noCase(std::string_view str) const;
+
+public:
+	struct ModifierNode
+	{
+		std::string_view name;
+		enum Type
+		{
+			STRING,
+			STRING_NOCASE,
+			STRING_CHART,
+			STRING_CHART_NOCASE,
+			UINT32,
+			INT32,
+			UINT16,
+			BOOL,
+			FLOAT,
+			FLOATARRAY
+		} type;
+	};
+
+	using ModifierOutline = std::vector<std::pair<std::string_view, ModifierNode>>;
+protected:
+	std::string_view extractModifierName();
+	std::optional<ModifierNode> findNode(std::string_view name, const ModifierOutline& list);
+	Modifiers::Modifier createModifier(ModifierNode node);
 };

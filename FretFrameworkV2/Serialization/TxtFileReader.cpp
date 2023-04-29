@@ -42,61 +42,6 @@ void TxtFileReader::gotoNextLine()
 	} while (*m_currentPosition == '\n' || strncmp(m_currentPosition, "//", 2) == 0);
 }
 
-bool TxtFileReader::doesStringMatch(std::string_view str) const
-{
-	return strncmp((const char*)m_currentPosition, str.data(), str.size()) == 0;
-}
-
-bool TxtFileReader::doesStringMatch_noCase(std::string_view str) const
-{
-	for (size_t i = 0; i < str.size(); ++i)
-	{
-		char character = m_currentPosition[i];
-		if (65 <= character && character <= 90)
-			character += 32;
-
-		if (character != str[i])
-			return false;
-	}
-	return true;
-}
-
-void TxtFileReader::skipTrack()
-{
-	gotoNextLine();
-	uint32_t scopeLevel = 1;
-	size_t length = strcspn(m_currentPosition, "[}");
-	while (m_currentPosition + length != getEndOfFile())
-	{
-		size_t index = length - 1;
-		char point = m_currentPosition[index];
-		while (index > 0 && point <= 32 && point != '\n')
-			point = m_currentPosition[--index];
-
-		m_currentPosition += length;
-		if (point == '\n')
-		{
-			if (*m_currentPosition == '}')
-			{
-				if (scopeLevel == 1)
-				{
-					setNextPointer();
-					gotoNextLine();
-					return;
-				}
-				else
-					--scopeLevel;
-			}
-			else
-				++scopeLevel;
-		}
-
-		length = strcspn(++m_currentPosition, "[}");
-	}
-
-	m_next = m_currentPosition = getEndOfFile();
-}
-
 std::string_view TxtFileReader::extractText(bool checkForQuotes)
 {
 	std::pair<const char*, const char*> boundaries = [&]() -> std::pair<const char*, const char*>
@@ -122,17 +67,6 @@ std::string_view TxtFileReader::extractText(bool checkForQuotes)
 
 	m_currentPosition = m_next;
 	return { boundaries.first, boundaries.second };
-}
-
-std::string_view TxtFileReader::parseModifierName()
-{
-	const char* const start = m_currentPosition;
-	while (*m_currentPosition > 32 && *m_currentPosition != '=')
-		++m_currentPosition;
-
-	std::string_view name(start, m_currentPosition);
-	skipWhiteSpace();
-	return name;
 }
 
 template <>
@@ -163,4 +97,62 @@ bool TxtFileReader::extract(bool& value)
 			(m_currentPosition[3] == 'e' || m_currentPosition[3] == 'E');
 	}
 	return true;
+}
+
+std::string_view TxtFileReader::extractModifierName()
+{
+	const char* const start = m_currentPosition;
+	while (*m_currentPosition > 32 && *m_currentPosition != '=')
+		++m_currentPosition;
+
+	std::string_view name(start, m_currentPosition);
+	skipWhiteSpace();
+	return name;
+}
+
+std::optional<TxtFileReader::ModifierNode> TxtFileReader::findNode(std::string_view name, const std::vector<std::pair<std::string_view, ModifierNode>>& list)
+{
+	const auto pairIter = std::lower_bound(std::begin(list), std::end(list), name,
+		[](const std::pair<std::string_view, ModifierNode>& pair, const std::string_view str)
+		{
+			return pair.first < str;
+		});
+
+	if (pairIter == std::end(list) || name != pairIter->first)
+		return {};
+
+	return pairIter->second;
+}
+
+Modifiers::Modifier TxtFileReader::createModifier(ModifierNode node)
+{
+	switch (node.type)
+	{
+	case ModifierNode::STRING:
+		return { node.name, UnicodeString(extractText(false)) };
+	case ModifierNode::STRING_NOCASE:
+		return { node.name, UnicodeString::strToU32(extractText(false)) };
+	case ModifierNode::STRING_CHART:
+		return { node.name, UnicodeString(extractText()) };
+	case ModifierNode::STRING_CHART_NOCASE:
+		return { node.name, UnicodeString::strToU32(extractText()) };
+	case ModifierNode::UINT32:
+		return { node.name, extract<uint32_t>() };
+	case ModifierNode::INT32:
+		return { node.name, extract<int32_t>() };
+	case ModifierNode::UINT16:
+		return { node.name, extract<uint16_t>() };
+	case ModifierNode::BOOL:
+		return { node.name, extract<bool>() };
+	case ModifierNode::FLOAT:
+		return { node.name, extract<float>() };
+	case ModifierNode::FLOATARRAY:
+	{
+		float flt1 = extract<float>();
+		float flt2 = extract<float>();
+		return { node.name, flt1, flt2 };
+	}
+	default:
+		throw std::runtime_error("How in the fu-");
+	}
 }
