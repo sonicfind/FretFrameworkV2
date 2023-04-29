@@ -188,4 +188,23 @@ void CacheEntry::mapModifierVariables()
 
 	if (auto modifier = getModifier("hopo_frequency"))
 		m_hopo_frequency = modifier->getValue<uint32_t>();
+
+	const std::pair<std::string_view, ScanTrack*> intensities[]
+	{
+		{ "diff_guitar",      &m_scanTracks.lead_5 },
+		{ "diff_guitarghl",	  &m_scanTracks.lead_6 },
+		{ "diff_bass",		  &m_scanTracks.bass_5 },
+		{ "diff_bassghl",     &m_scanTracks.bass_6 },
+		{ "diff_rhythm",	  &m_scanTracks.rhythm },
+		{ "diff_guitar_coop", &m_scanTracks.coop },
+		{ "diff_keys",		  &m_scanTracks.keys },
+		{ "diff_drums",		  &m_scanTracks.drums4_pro },
+		{ "diff_drums",		  &m_scanTracks.drums5 },
+		{ "diff_vocals",	  &m_scanTracks.vocals },
+		{ "diff_vocals_harm", &m_scanTracks.harmonies },
+	};
+
+	for (int i = 0; i < 11; ++i)
+		if (auto modifier = getModifier(intensities[i].first))
+			intensities[i].second->m_intensity = modifier->getValue<int32_t>();
 }
