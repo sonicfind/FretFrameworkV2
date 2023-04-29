@@ -28,7 +28,7 @@ class CacheEntry
 		InstrumentalScan_Extended<DrumNote<5, false>> drums5;
 		VocalScan<1>                                  vocals;
 		VocalScan<3>                                  harmonies;
-	} m_noteTracks;
+	} m_scanTracks;
 
 	const UnicodeString* m_name = nullptr;
 	const UnicodeString* m_artist = nullptr;

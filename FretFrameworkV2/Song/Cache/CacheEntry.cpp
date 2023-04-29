@@ -75,17 +75,17 @@ void CacheEntry::scan_noteTrack(CommonChartParser& parser)
 {
 	BCH_CHT_Scannable* const arr[11] =
 	{
-		&m_noteTracks.lead_5,
-		&m_noteTracks.lead_6,
-		&m_noteTracks.bass_5,
-		&m_noteTracks.bass_6,
-		&m_noteTracks.rhythm,
-		&m_noteTracks.coop,
-		&m_noteTracks.keys,
-		&m_noteTracks.drums4_pro,
-		&m_noteTracks.drums5,
-		&m_noteTracks.vocals,
-		&m_noteTracks.harmonies
+		&m_scanTracks.lead_5,
+		&m_scanTracks.lead_6,
+		&m_scanTracks.bass_5,
+		&m_scanTracks.bass_6,
+		&m_scanTracks.rhythm,
+		&m_scanTracks.coop,
+		&m_scanTracks.keys,
+		&m_scanTracks.drums4_pro,
+		&m_scanTracks.drums5,
+		&m_scanTracks.vocals,
+		&m_scanTracks.harmonies
 	};
 
 	const size_t index = parser.geNoteTrackID();

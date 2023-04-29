@@ -10,33 +10,33 @@ void CacheEntry::scan_cht_V1(ChtFileReader& reader)
 		switch (track)
 		{
 		case ChtFileReader::Single:
-			m_noteTracks.lead_5.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.lead_5.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::DoubleGuitar:
-			m_noteTracks.coop.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.coop.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::DoubleBass:
-			m_noteTracks.bass_5.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.bass_5.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::DoubleRhythm:
-			m_noteTracks.rhythm.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.rhythm.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::Drums:
 			switch (drumsLegacy.getDrumType())
 			{
 			case DrumType_Enum::LEGACY:       drumsLegacy.scan_V1(reader.getDifficulty(), reader); break;
-			case DrumType_Enum::FOURLANE_PRO: m_noteTracks.drums4_pro.scan_V1(reader.getDifficulty(), reader); break;
-			case DrumType_Enum::FIVELANE:     m_noteTracks.drums5.scan_V1(reader.getDifficulty(), reader); break;
+			case DrumType_Enum::FOURLANE_PRO: m_scanTracks.drums4_pro.scan_V1(reader.getDifficulty(), reader); break;
+			case DrumType_Enum::FIVELANE:     m_scanTracks.drums5.scan_V1(reader.getDifficulty(), reader); break;
 			}
 			break;
 		case ChtFileReader::Keys:
-			m_noteTracks.keys.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.keys.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::GHLGuitar:
-			m_noteTracks.lead_6.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.lead_6.scan_V1(reader.getDifficulty(), reader);
 			break;
 		case ChtFileReader::GHLBass:
-			m_noteTracks.bass_6.scan_V1(reader.getDifficulty(), reader);
+			m_scanTracks.bass_6.scan_V1(reader.getDifficulty(), reader);
 			break;
 		default:
 			reader.skipTrack();
@@ -44,7 +44,7 @@ void CacheEntry::scan_cht_V1(ChtFileReader& reader)
 	}
 
 	if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
-		drumsLegacy.transfer(m_noteTracks.drums4_pro);
+		drumsLegacy.transfer(m_scanTracks.drums4_pro);
 	else
-		drumsLegacy.transfer(m_noteTracks.drums5);
+		drumsLegacy.transfer(m_scanTracks.drums5);
 }
