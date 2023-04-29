@@ -129,3 +129,8 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 		return {};
 	return modifiers.back();
 }
+
+void Ini::WriteSongIniFile(const std::filesystem::path& path, const std::vector<Modifiers::Modifier>& modifiers)
+{
+	WriteIniFile(path, { { "[song]", modifiers } });
+}

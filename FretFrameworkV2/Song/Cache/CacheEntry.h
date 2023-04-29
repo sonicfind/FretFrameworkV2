@@ -59,4 +59,7 @@ private:
 	void scan_noteTrack(CommonChartParser& parser);
 
 	void scan_cht_V1(ChtFileReader& reader);
+
+	void reorderModifiers();
+	void writeIni();
 };

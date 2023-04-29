@@ -166,6 +166,9 @@
     <ClCompile Include="Serialization\TxtFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\IniFileWriter.cpp">
+      <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
     <ClCompile Include="Song\Cache\CahceEntry_Ini.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
@@ -329,6 +332,9 @@
     </ClInclude>
     <ClInclude Include="Song\Info\Ini.h">
       <Filter>Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\IniFileWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

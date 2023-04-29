@@ -150,6 +150,7 @@
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
     <ClCompile Include="Serialization\FileReader.cpp" />
     <ClCompile Include="Serialization\IniFileReader.cpp" />
+    <ClCompile Include="Serialization\IniFileWriter.cpp" />
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Serialization\CommonChartWriter.h" />
     <ClInclude Include="Serialization\FileReader.h" />
     <ClInclude Include="Serialization\IniFileReader.h" />
+    <ClInclude Include="Serialization\IniFileWriter.h" />
     <ClInclude Include="Serialization\MidiFileReader.h" />
     <ClInclude Include="Serialization\Modifiers.h" />
     <ClInclude Include="Serialization\TxtFileReader.h" />

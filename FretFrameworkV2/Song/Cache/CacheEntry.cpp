@@ -38,6 +38,9 @@ bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 
 	m_filename = path.filename();
 	m_directory = path.parent_path();
+	reorderModifiers();
+	if (iniChanged)
+		writeIni();
 	return true;
 }
 
@@ -90,4 +93,41 @@ void CacheEntry::scan_noteTrack(CommonChartParser& parser)
 		arr[parser.geNoteTrackID()]->scan(parser);
 	else //BCH only
 		parser.skipTrack();
+}
+
+void CacheEntry::reorderModifiers()
+{
+	static constexpr std::string_view INI_ORDER[]
+	{
+		"name", "artist", "album", "genre", "year", "charter", "playlist",
+		"album_track", "playlist_track",
+		"diff_band",
+		"diff_guitar", "diff_guitarghl", "diff_guitar_real", "diff_guitar_real_22",
+		"diff_bass", "diff_bassghl", "diff_bass_real", "diff_bass_real_22",
+		"diff_rhythm", "diff_guitar_coop",
+		"diff_drums", "diff_drums_real", "diff_drums_real_ps",
+		"diff_keys", "diff_keys_real", "diff_keys_real_ps",
+		"diff_vocals", "diff_vocals_harm",
+		"preview_start_time", "preview_end_time",
+	};
+
+
+	std::vector<Modifiers::Modifier> reorder;
+	reorder.reserve(m_modifiers.size());
+	for (std::string_view str : INI_ORDER)
+	{
+		for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
+		{
+			if (iter->getName() == str)
+			{
+				reorder.push_back(std::move(*iter));
+				m_modifiers.erase(iter);
+				break;
+			}
+		}
+	}
+
+	for (Modifiers::Modifier& mod : m_modifiers)
+		reorder.push_back(std::move(mod));
+	m_modifiers = std::move(reorder);
 }

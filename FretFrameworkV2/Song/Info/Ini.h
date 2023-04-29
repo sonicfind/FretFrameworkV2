@@ -1,5 +1,6 @@
 #pragma once
 #include "Serialization/IniFileReader.h"
+#include "Serialization/IniFileWriter.h"
 #include "SimpleFlatMap/SimpleFlatMap.h"
 namespace Ini
 {
@@ -29,5 +30,18 @@ namespace Ini
 				reader.skipSection();
 		return modifierMap;
 	}
+
+	template <size_t SIZE>
+	void WriteIniFile(const std::filesystem::path& path, const std::pair<std::string_view, std::vector<Modifiers::Modifier>>(&sections)[SIZE])
+	{
+		IniFileWriter writer(path);
+		for (const auto& section : sections)
+		{
+			writer.writeSection(section.first);
+			writer.writeModifiers(section.second);
+		}
+	}
+
 	std::vector<Modifiers::Modifier> ReadSongIniFile(const std::filesystem::path& path);
+	void WriteSongIniFile(const std::filesystem::path& path, const std::vector<Modifiers::Modifier>& modifiers);
 };
