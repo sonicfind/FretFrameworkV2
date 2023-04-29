@@ -32,8 +32,10 @@ class CacheEntry
 
 	std::filesystem::directory_entry m_fileEntry;
 	std::filesystem::path m_directory;
+	std::filesystem::file_time_type m_chartModifiedTime;
 
 public:
+	CacheEntry(std::filesystem::file_time_type chartTime);
 	bool scan(const std::filesystem::path& path) noexcept;
 
 private:

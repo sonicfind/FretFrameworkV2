@@ -12,6 +12,7 @@ const std::filesystem::path CacheEntry::s_EXTS_CHT[2] = { ".cht", ".chart" };
 const std::filesystem::path CacheEntry::s_EXTS_MID[2] = { ".mid", ".midi" };
 const std::filesystem::path CacheEntry::s_EXT_BCH = ".bch";
 
+CacheEntry::CacheEntry(std::filesystem::file_time_type chartTime) : m_chartModifiedTime(chartTime) {}
 bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 {
    // m_fileEntry = entry;

@@ -4,7 +4,6 @@
 int main()
 {
 	Song song;
-	CacheEntry entry;
 
 	std::string filename;
 	std::cout << "Drag and drop a file:";
@@ -20,12 +19,15 @@ int main()
 		long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 		std::cout << "Load took " << count / 1000.0 << " milliseconds\n";
 
-		if (filename.ends_with(".chart") || filename.ends_with(".mid"))
-			song.save(filename);
+		//if (filename.ends_with(".chart") || filename.ends_with(".mid"))
+			//song.save(filename);
 	}
 	else
 		std::cout << "Load failed\n";
 	
+	std::filesystem::directory_entry chart(filename);
+
+	CacheEntry entry(chart.last_write_time());
 	t1 = std::chrono::high_resolution_clock::now();
 	if (entry.scan(filename))
 	{
