@@ -35,5 +35,5 @@ const char* LoadedFile::end() const noexcept
 
 MD5 LoadedFile::calculateMD5() const noexcept
 {
-	return MD5();
+	return MD5(begin(), m_fileSize);
 }
