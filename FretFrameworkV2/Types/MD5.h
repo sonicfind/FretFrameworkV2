@@ -48,15 +48,15 @@ public:
     
     void display() const;
     void writeToBinaryFile(std::fstream& outFile) const;
-	friend bool operator<(const MD5& _lhs, const MD5& _rhs)
+	friend auto operator<=>(const MD5& _lhs, const MD5& _rhs)
     {
         const uint64_t* result64 = reinterpret_cast<const uint64_t*>(_lhs.m_value);
         const uint64_t* other64 = reinterpret_cast<const uint64_t*>(_rhs.m_value);
 
         if (result64[1] == other64[1])
-            return result64[0] < other64[0];
+            return result64[0] <=> other64[0];
 
-        return result64[1] < other64[1];
+        return result64[1] <=> other64[1];
     }
 
     friend bool operator==(const MD5& _lhs, const MD5& _rhs)
