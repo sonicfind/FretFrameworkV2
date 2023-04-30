@@ -136,33 +136,54 @@ std::optional<TxtFileReader::ModifierNode> TxtFileReader::findNode(std::string_v
 
 Modifiers::Modifier TxtFileReader::createModifier(ModifierNode node)
 {
-	switch (node.type)
+	try
 	{
-	case ModifierNode::STRING:
-		return { node.name, UnicodeString(extractText(false)) };
-	case ModifierNode::STRING_NOCASE:
-		return { node.name, UnicodeString::strToU32(extractText(false)) };
-	case ModifierNode::STRING_CHART:
-		return { node.name, UnicodeString(extractText()) };
-	case ModifierNode::STRING_CHART_NOCASE:
-		return { node.name, UnicodeString::strToU32(extractText()) };
-	case ModifierNode::UINT32:
-		return { node.name, extract<uint32_t>() };
-	case ModifierNode::INT32:
-		return { node.name, extract<int32_t>() };
-	case ModifierNode::UINT16:
-		return { node.name, extract<uint16_t>() };
-	case ModifierNode::BOOL:
-		return { node.name, extract<bool>() };
-	case ModifierNode::FLOAT:
-		return { node.name, extract<float>() };
-	case ModifierNode::FLOATARRAY:
-	{
-		float flt1 = extract<float>();
-		float flt2 = extract<float>();
-		return { node.name, flt1, flt2 };
+		switch (node.type)
+		{
+		case ModifierNode::STRING:
+			return { node.name, UnicodeString(extractText(false)) };
+		case ModifierNode::STRING_NOCASE:
+			return { node.name, UnicodeString::strToU32(extractText(false)) };
+		case ModifierNode::STRING_CHART:
+			return { node.name, UnicodeString(extractText()) };
+		case ModifierNode::STRING_CHART_NOCASE:
+			return { node.name, UnicodeString::strToU32(extractText()) };
+		case ModifierNode::UINT32:
+			return { node.name, extract<uint32_t>() };
+		case ModifierNode::INT32:
+			return { node.name, extract<int32_t>() };
+		case ModifierNode::UINT16:
+			return { node.name, extract<uint16_t>() };
+		case ModifierNode::BOOL:
+			return { node.name, extract<bool>() };
+		case ModifierNode::FLOAT:
+			return { node.name, extract<float>() };
+		case ModifierNode::FLOATARRAY:
+		{
+			float flt1 = extract<float>();
+			float flt2 = extract<float>();
+			return { node.name, flt1, flt2 };
+		}
+		default:
+			throw std::runtime_error("How in the fu-");
+		}
 	}
-	default:
-		throw std::runtime_error("How in the fu-");
+	catch (...)
+	{
+		switch (node.type)
+		{
+		case ModifierNode::UINT32:
+			return { node.name, uint32_t(0) };
+		case ModifierNode::INT32:
+			return { node.name, int32_t(0) };
+		case ModifierNode::UINT16:
+			return { node.name, uint16_t(0) };
+		case ModifierNode::BOOL:
+			return { node.name, false };
+		case ModifierNode::FLOAT:
+			return { node.name, .0f };
+		case ModifierNode::FLOATARRAY:
+			return { node.name, 0, 0 };
+		}
 	}
 }
