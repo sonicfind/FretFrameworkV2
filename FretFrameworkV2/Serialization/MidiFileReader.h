@@ -71,8 +71,7 @@ class MidiFileReader : private BinaryFileReader<true>
 {
 public:
 	MidiFileReader(const std::filesystem::path& path);
-	MidiFileReader(const MidiFileReader&) = default;
-	MidiFileReader(MidiFileReader&&) = default;
+	MidiFileReader(const LoadedFile& file);
 
 	[[nodiscard]] bool startNextTrack();
 	[[nodiscard]] std::optional<MidiEvent> parseEvent();
@@ -94,6 +93,7 @@ public:
 	[[nodiscard]] TimeSig extractTimeSig() const noexcept;
 
 private:
+	void processHeaderChunk();
 	[[nodiscard]] uint32_t readVLQ();
 
 private:

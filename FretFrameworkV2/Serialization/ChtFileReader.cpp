@@ -136,7 +136,7 @@ void ChtFileReader::skipTrack()
 	gotoNextLine();
 	uint32_t scopeLevel = 1;
 	size_t length = strcspn(m_currentPosition, "[}");
-	while (m_currentPosition + length != getEndOfFile())
+	while (m_currentPosition + length != m_file.end())
 	{
 		size_t index = length - 1;
 		char point = m_currentPosition[index];
@@ -164,7 +164,7 @@ void ChtFileReader::skipTrack()
 		length = strcspn(++m_currentPosition, "[}");
 	}
 
-	m_next = m_currentPosition = getEndOfFile();
+	m_next = m_currentPosition = m_file.end();
 }
 
 bool ChtFileReader::isStillCurrentTrack()
@@ -326,7 +326,7 @@ std::pair<size_t, std::string_view> ChtFileReader::extractLyric()
 
 	auto boundaries = [&]() -> std::pair<const char*, const char*>
 	{
-		const size_t offset = size_t(1) + (m_next != getEndOfFile());
+		const size_t offset = size_t(1) + (m_next != m_file.end());
 		if (*m_currentPosition == '\"')
 		{
 			for (const char* test = m_currentPosition + 1; test < m_next; ++test)

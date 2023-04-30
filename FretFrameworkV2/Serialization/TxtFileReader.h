@@ -7,8 +7,7 @@ class TxtFileReader : public FileReader
 {
 public:
 	TxtFileReader(const std::filesystem::path& path);
-	TxtFileReader(const TxtFileReader&) = default;
-	TxtFileReader(TxtFileReader&&) = default;
+	TxtFileReader(const LoadedFile& file);
 
 	template <typename T>
 	bool extract(T& value) noexcept
@@ -70,6 +69,9 @@ protected:
 	void gotoNextLine();
 	void skipWhiteSpace();
 	void setNextPointer();
+
+private:
+	void startRead();
 
 public:
 	struct ModifierNode

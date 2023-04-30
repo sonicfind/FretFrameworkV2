@@ -4,7 +4,7 @@
 void BCHFileReader::parseTrackHeader()
 {
 	uint32_t trackSize = extract_nonvirtual<uint32_t>();
-	if (m_currentPosition + trackSize > getEndOfFile())
+	if (m_currentPosition + trackSize > m_file.end())
 		throw std::runtime_error("BCH Track extends past EOF");
 
 	m_nextTracks.push_back(m_currentPosition + trackSize);

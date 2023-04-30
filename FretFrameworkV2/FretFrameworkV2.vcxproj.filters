@@ -178,6 +178,9 @@
     <ClCompile Include="Song Library\SongLibrary.cpp">
       <Filter>Song Library</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\LoadedFile.cpp">
+      <Filter>Serialization\FileReader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -341,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="Song Library\SongLibrary.h">
       <Filter>Song Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\LoadedFile.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

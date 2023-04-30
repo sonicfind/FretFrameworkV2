@@ -22,7 +22,7 @@ uint32_t MidiFileReader::readVLQ()
 	return value;
 }
 
-MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileReader(path)
+void MidiFileReader::processHeaderChunk()
 {
 	if (!checkTag("MThd"))
 		throw std::runtime_error("Midi Header Chunk Tag 'MTrk' not found");
@@ -35,6 +35,16 @@ MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileRe
 	m_header.format = extract<uint16_t>();
 	m_header.numTracks = extract<uint16_t>();
 	m_header.tickRate = extract<uint16_t>();
+}
+
+MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileReader(path)
+{
+	processHeaderChunk();
+}
+
+MidiFileReader::MidiFileReader(const LoadedFile& file) : BinaryFileReader(file)
+{
+	processHeaderChunk();
 }
 
 bool MidiFileReader::startNextTrack()
@@ -51,7 +61,7 @@ bool MidiFileReader::startNextTrack()
 	const uint32_t trackLength = extract<uint32_t>();
 	m_nextTrack = m_currentPosition + trackLength;
 
-	if (m_nextTrack > getEndOfFile())
+	if (m_nextTrack > m_file.end())
 		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + "'s length extends past End of File");
 
 	m_event.position = 0;

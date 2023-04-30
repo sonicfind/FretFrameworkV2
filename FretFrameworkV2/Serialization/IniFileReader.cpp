@@ -41,7 +41,7 @@ void IniFileReader::skipSection()
 		curr = next + 1;
 	}
 
-	m_next = m_currentPosition = getEndOfFile();
+	m_next = m_currentPosition = m_file.end();
 }
 
 bool IniFileReader::isStillCurrentSection()

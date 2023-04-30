@@ -10,10 +10,10 @@ void TxtFileReader::skipWhiteSpace()
 
 void TxtFileReader::setNextPointer()
 {
-	m_next = std::find(m_currentPosition, getEndOfFile(), '\n');
+	m_next = std::find(m_currentPosition, m_file.end(), '\n');
 }
 
-TxtFileReader::TxtFileReader(const std::filesystem::path& path) : FileReader(path)
+void TxtFileReader::startRead()
 {
 	skipWhiteSpace();
 	setNextPointer();
@@ -21,12 +21,22 @@ TxtFileReader::TxtFileReader(const std::filesystem::path& path) : FileReader(pat
 		gotoNextLine();
 }
 
+TxtFileReader::TxtFileReader(const std::filesystem::path& path) : FileReader(path)
+{
+	startRead();
+}
+
+TxtFileReader::TxtFileReader(const LoadedFile& file) : FileReader(file)
+{
+	startRead();
+}
+
 void TxtFileReader::gotoNextLine()
 {
 	do
 	{
 		m_currentPosition = m_next;
-		if (m_currentPosition == getEndOfFile())
+		if (m_currentPosition == m_file.end())
 			break;
 
 		m_currentPosition++;
@@ -46,7 +56,7 @@ std::string_view TxtFileReader::extractText(bool checkForQuotes)
 {
 	std::pair<const char*, const char*> boundaries = [&]() -> std::pair<const char*, const char*>
 	{
-		const char* const endOfLine = m_next - (m_next != getEndOfFile());
+		const char* const endOfLine = m_next - (m_next != m_file.end());
 		if (checkForQuotes && *m_currentPosition == '\"')
 		{
 			const char* end = endOfLine - 1;
