@@ -6,6 +6,20 @@
 #include "Notes/DrumNote.h"
 #include "Types/UnicodeString.h"
 
+enum class SongAttribute
+{
+	UNSPECIFIED,
+	TITLE,
+	ARTIST,
+	ALBUM,
+	GENRE,
+	YEAR,
+	CHARTER,
+	PLAYLIST,
+	SONG_LENGTH,
+	SOURCE,
+};
+
 class LibraryEntry
 {
 public:
@@ -31,6 +45,29 @@ public:
 	const UnicodeString& getPlaylist() const { return *m_playlist; }
 	const uint32_t& getSongLength() const { return m_song_length; }
 	const std::filesystem::path& getDirectory() const { return m_chartFile.path().parent_path(); }
+
+	template<SongAttribute Attribute>
+	const auto& getAttribute() const
+	{
+		if constexpr (Attribute == SongAttribute::TITLE)
+			return *m_name;
+		else if constexpr (Attribute == SongAttribute::ARTIST)
+			return *m_artist;
+		else if constexpr (Attribute == SongAttribute::ALBUM)
+			return *m_album;
+		else if constexpr (Attribute == SongAttribute::GENRE)
+			return *m_genre;
+		else if constexpr (Attribute == SongAttribute::YEAR)
+			return *m_year;
+		else if constexpr (Attribute == SongAttribute::CHARTER)
+			return *m_charter;
+		else if constexpr (Attribute == SongAttribute::PLAYLIST)
+			return *m_playlist;
+		else if constexpr (Attribute == SongAttribute::SONG_LENGTH)
+			return m_song_length;
+		else if constexpr (Attribute == SongAttribute::SOURCE)
+			return m_source;
+	}
 
 private:
 	class OptionalModifier
