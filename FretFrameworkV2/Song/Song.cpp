@@ -66,8 +66,17 @@ void Song::clear()
 	resetTempoMap();
 	m_sectionMarkers.clear();
 	m_globalEvents.clear();
-	for (Track* track : m_noteTracks.arr)
-		track->clear();
+	m_noteTracks.lead_5.clear();
+	m_noteTracks.lead_6.clear();
+	m_noteTracks.bass_5.clear();
+	m_noteTracks.bass_6.clear();
+	m_noteTracks.rhythm.clear();
+	m_noteTracks.coop.clear();
+	m_noteTracks.keys.clear();
+	m_noteTracks.drums4_pro.clear();
+	m_noteTracks.drums5.clear();
+	m_noteTracks.vocals.clear();
+	m_noteTracks.harmonies.clear();
 }
 
 void Song::load(CommonChartParser& parser)
@@ -242,28 +251,24 @@ void Song::save_events(CommonChartWriter& writer) const
 
 void Song::save_noteTracks(CommonChartWriter& writer) const
 {
-	const BCH_CHT_Extensions* const arr[11] =
+	const auto write = [&writer](const auto& track, unsigned char index)
 	{
-		&m_noteTracks.lead_5,
-		&m_noteTracks.lead_6,
-		&m_noteTracks.bass_5,
-		&m_noteTracks.bass_6,
-		&m_noteTracks.rhythm,
-		&m_noteTracks.coop,
-		&m_noteTracks.keys,
-		&m_noteTracks.drums4_pro,
-		&m_noteTracks.drums5,
-		&m_noteTracks.vocals,
-		&m_noteTracks.harmonies
-	};
-
-	for (size_t i = 0; i < std::size(arr); ++i)
-	{
-		if (m_noteTracks.arr[i]->isOccupied())
+		if (track.isOccupied())
 		{
-			writer.writeNoteTrack(i);
-			arr[i]->save(writer);
+			writer.writeNoteTrack(index);
+			track.save(writer);
 			writer.finishTrack();
 		}
-	}
+	};
+	write(m_noteTracks.lead_5, 0);
+	write(m_noteTracks.lead_6, 1);
+	write(m_noteTracks.bass_5, 2);
+	write(m_noteTracks.bass_6, 3);
+	write(m_noteTracks.rhythm, 4);
+	write(m_noteTracks.coop, 5);
+	write(m_noteTracks.keys, 6);
+	write(m_noteTracks.drums4_pro, 7);
+	write(m_noteTracks.drums5, 8);
+	write(m_noteTracks.vocals, 9);
+	write(m_noteTracks.harmonies, 10);
 }

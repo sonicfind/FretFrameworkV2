@@ -14,8 +14,8 @@ public:
 	virtual void writeHeaderTrack(uint32_t tickRate) = 0;
 	virtual void writeSyncTrack() = 0;
 	virtual void writeEventTrack() = 0;
-	virtual void writeNoteTrack(size_t index) = 0;
-	virtual void writeDifficultyTrack(size_t index) = 0;
+	virtual void writeNoteTrack(unsigned char index) = 0;
+	virtual void writeDifficultyTrack(unsigned char index) = 0;
 	virtual void writeAnimationTrack() = 0;
 	virtual void finishTrack() = 0;
 	virtual void startEvent(uint32_t position, ChartEvent ev) = 0;

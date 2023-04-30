@@ -13,8 +13,8 @@ public:
 	virtual void writeHeaderTrack(uint32_t tickRate) override;
 	virtual void writeSyncTrack() override;
 	virtual void writeEventTrack() override;
-	virtual void writeNoteTrack(size_t index) override;
-	virtual void writeDifficultyTrack(size_t index) override;
+	virtual void writeNoteTrack(unsigned char index) override;
+	virtual void writeDifficultyTrack(unsigned char index) override;
 	virtual void writeAnimationTrack() override;
 	virtual void finishTrack() override;
 	virtual void startEvent(uint32_t position, ChartEvent ev) override;

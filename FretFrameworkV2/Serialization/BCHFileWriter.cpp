@@ -17,7 +17,7 @@ void BCHFileWriter::writeEventTrack()
 	writeTrackHeader("BTev");
 }
 
-void BCHFileWriter::writeNoteTrack(size_t index)
+void BCHFileWriter::writeNoteTrack(unsigned char index)
 {
 	if (index < 9)
 		writeTrackHeader("BTin");
@@ -25,13 +25,13 @@ void BCHFileWriter::writeNoteTrack(size_t index)
 		writeTrackHeader("BTvc");
 	else // Possible Pro Instrument Tag
 		writeTrackHeader("BTin");
-	write(index, 1);
+	write(index);
 }
 
-void BCHFileWriter::writeDifficultyTrack(size_t index)
+void BCHFileWriter::writeDifficultyTrack(unsigned char index)
 {
 	writeTrackHeader("BTdf");
-	write(index, 1);
+	write(index);
 }
 
 void BCHFileWriter::writeAnimationTrack()

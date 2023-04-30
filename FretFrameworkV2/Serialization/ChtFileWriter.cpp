@@ -21,12 +21,12 @@ void ChtFileWriter::writeEventTrack()
 	writeTrack("[Events]");
 }
 
-void ChtFileWriter::writeNoteTrack(size_t index)
+void ChtFileWriter::writeNoteTrack(unsigned char index)
 {
 	writeTrack(g_NOTETRACKS[index]);
 }
 
-void ChtFileWriter::writeDifficultyTrack(size_t index)
+void ChtFileWriter::writeDifficultyTrack(unsigned char index)
 {
 	writeTrack(g_DIFFICULTIES[index]);
 }

@@ -287,7 +287,7 @@ public:
 	{
 		save_events(writer);
 		save_anim(writer);
-		for (size_t i = 0; i < 5; ++i)
+		for (unsigned char i = 0; i < 5; ++i)
 			if (this->m_difficulties[i].isOccupied())
 			{
 				writer.writeDifficultyTrack(i);

@@ -21,21 +21,6 @@ class Song
 		InstrumentalTrack_Extended<DrumNote<5, false>> drums5;
 		VocalTrack<1>                                  vocals;
 		VocalTrack<3>                                  harmonies;
-
-		Track* const arr[11] =
-		{
-			&lead_5,
-			&lead_6,
-			&bass_5,
-			&bass_6,
-			&rhythm,
-			&coop,
-			&keys,
-			&drums4_pro,
-			&drums5,
-			&vocals,
-			&harmonies
-		};
 	} m_noteTracks;
 
 	uint32_t m_tickrate = 192;
