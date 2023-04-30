@@ -136,25 +136,25 @@
     <ClCompile Include="Types\MD5.cpp">
       <Filter>MD5</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CacheEntry_mid.cpp">
+    <ClCompile Include="Song Library\Entry\CacheEntry_mid.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CacheEntry.cpp">
+    <ClCompile Include="Song Library\Entry\CacheEntry.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CacheEntry_bch.cpp">
+    <ClCompile Include="Song Library\Entry\CacheEntry_bch.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CacheEntry_chart_V1.cpp">
+    <ClCompile Include="Song Library\Entry\CacheEntry_chart_V1.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CacheEntry_cht.cpp">
+    <ClCompile Include="Song Library\Entry\CacheEntry_cht.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\GuitarScan_midi.cpp">
+    <ClCompile Include="Song Library\Entry\GuitarScan_midi.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp">
+    <ClCompile Include="Song Library\Entry\Legacy_DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
     <ClCompile Include="Serialization\ChtFileReader.cpp">
@@ -169,10 +169,10 @@
     <ClCompile Include="Serialization\IniFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Cache\CahceEntry_Ini.cpp">
+    <ClCompile Include="Song Library\Entry\CahceEntry_Ini.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song\Info\Ini.cpp">
+    <ClCompile Include="Ini\Ini.cpp">
       <Filter>Ini</Filter>
     </ClCompile>
   </ItemGroup>
@@ -300,25 +300,25 @@
     <ClInclude Include="Types\MD5.h">
       <Filter>MD5</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\ScanTrack.h">
+    <ClInclude Include="Song Library\Entry\ScanTrack.h">
       <Filter>Song Library\Entry\Track</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\CacheEntry.h">
+    <ClInclude Include="Song Library\Entry\CacheEntry.h">
       <Filter>Song Library\Entry</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\DrumScan_midi.h">
+    <ClInclude Include="Song Library\Entry\DrumScan_midi.h">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\GuitarScan_midi.h">
+    <ClInclude Include="Song Library\Entry\GuitarScan_midi.h">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\InstrumentalScan.h">
+    <ClInclude Include="Song Library\Entry\InstrumentalScan.h">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\Legacy_DrumScan.h">
+    <ClInclude Include="Song Library\Entry\Legacy_DrumScan.h">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Cache\VocalScan.h">
+    <ClInclude Include="Song Library\Entry\VocalScan.h">
       <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\ChtFileReader.h">
@@ -330,11 +330,11 @@
     <ClInclude Include="Serialization\Modifiers.h">
       <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Info\Ini.h">
-      <Filter>Ini</Filter>
-    </ClInclude>
     <ClInclude Include="Serialization\IniFileWriter.h">
       <Filter>Serialization\FileWriter</Filter>
+    </ClInclude>
+    <ClInclude Include="Ini\Ini.h">
+      <Filter>Ini</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

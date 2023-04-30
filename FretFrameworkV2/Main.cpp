@@ -1,5 +1,5 @@
 #include "Song/Song.h"
-#include "Song/Cache/CacheEntry.h"
+#include "Song Library/Entry/CacheEntry.h"
 #include <iostream>
 int main()
 {

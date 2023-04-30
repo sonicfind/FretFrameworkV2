@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ini\Ini.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
     <ClCompile Include="Serialization\BCHFileWriter.cpp" />
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
@@ -154,19 +155,18 @@
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Serialization\TxtFileWriter.cpp" />
-    <ClCompile Include="Song\Cache\CacheEntry.cpp" />
-    <ClCompile Include="Song\Cache\CacheEntry_bch.cpp" />
-    <ClCompile Include="Song\Cache\CacheEntry_chart_V1.cpp" />
-    <ClCompile Include="Song\Cache\CacheEntry_cht.cpp" />
-    <ClCompile Include="Song\Cache\CacheEntry_mid.cpp" />
-    <ClCompile Include="Song\Cache\CahceEntry_Ini.cpp" />
-    <ClCompile Include="Song\Cache\GuitarScan_midi.cpp" />
-    <ClCompile Include="Song\Cache\Legacy_DrumScan.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
-    <ClCompile Include="Song\Info\Ini.cpp" />
+	<ClCompile Include="Song Library\Entry\CacheEntry.cpp" />
+    <ClCompile Include="Song Library\Entry\CacheEntry_bch.cpp" />
+    <ClCompile Include="Song Library\Entry\CacheEntry_chart_V1.cpp" />
+    <ClCompile Include="Song Library\Entry\CacheEntry_cht.cpp" />
+    <ClCompile Include="Song Library\Entry\CacheEntry_mid.cpp" />
+    <ClCompile Include="Song Library\Entry\CahceEntry_Ini.cpp" />
+    <ClCompile Include="Song Library\Entry\GuitarScan_midi.cpp" />
+    <ClCompile Include="Song Library\Entry\Legacy_DrumScan.cpp" />
     <ClCompile Include="Song\Song.cpp" />
     <ClCompile Include="Song\Song_bch.cpp" />
     <ClCompile Include="Song\Song_chart_V1.cpp" />
@@ -183,6 +183,18 @@
     <ClCompile Include="Types\WebType.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ini\Ini.h" />
+    <ClInclude Include="Notes\DrumNote.h" />
+    <ClInclude Include="Notes\DrumNote_Legacy.h" />
+    <ClInclude Include="Notes\GuitarNote.h" />
+    <ClInclude Include="Notes\Keys.h" />
+    <ClInclude Include="Notes\NoteColor.h" />
+    <ClInclude Include="Notes\NoteName.h" />
+    <ClInclude Include="Notes\Notes.h" />
+    <ClInclude Include="Notes\Notes_Special.h" />
+    <ClInclude Include="Notes\Pitch.h" />
+    <ClInclude Include="Notes\VocalNote.h" />
+    <ClInclude Include="Notes\VocalPercussion.h" />
     <ClInclude Include="Serialization\BCHFileReader.h" />
     <ClInclude Include="Serialization\BCHFileWriter.h" />
     <ClInclude Include="Serialization\BinaryFileReader.h" />
@@ -200,26 +212,15 @@
     <ClInclude Include="Serialization\TxtFileReader.h" />
     <ClInclude Include="Serialization\ChtFileWriter.h" />
     <ClInclude Include="Serialization\TxtFileWriter.h" />
-    <ClInclude Include="Song\Cache\CacheEntry.h" />
-    <ClInclude Include="Song\Cache\DrumScan_midi.h" />
-    <ClInclude Include="Song\Cache\GuitarScan_midi.h" />
-    <ClInclude Include="Song\Cache\InstrumentalScan.h" />
-    <ClInclude Include="Song\Cache\Legacy_DrumScan.h" />
-    <ClInclude Include="Song\Cache\ScanTrack.h" />
-    <ClInclude Include="Notes\DrumNote.h" />
-    <ClInclude Include="Notes\DrumNote_Legacy.h" />
-    <ClInclude Include="Notes\GuitarNote.h" />
-    <ClInclude Include="Notes\Keys.h" />
-    <ClInclude Include="Notes\NoteColor.h" />
-    <ClInclude Include="Notes\NoteName.h" />
-    <ClInclude Include="Notes\Notes.h" />
-    <ClInclude Include="Notes\Notes_Special.h" />
-    <ClInclude Include="Notes\Pitch.h" />
-    <ClInclude Include="Notes\VocalNote.h" />
-    <ClInclude Include="Notes\VocalPercussion.h" />
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
-    <ClInclude Include="Song\Cache\VocalScan.h" />
-    <ClInclude Include="Song\Info\Ini.h" />
+	<ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
+	<ClInclude Include="Song Library\Entry\CacheEntry.h" />
+    <ClInclude Include="Song Library\Entry\DrumScan_midi.h" />
+    <ClInclude Include="Song Library\Entry\GuitarScan_midi.h" />
+    <ClInclude Include="Song Library\Entry\InstrumentalScan.h" />
+    <ClInclude Include="Song Library\Entry\Legacy_DrumScan.h" />
+    <ClInclude Include="Song Library\Entry\ScanTrack.h" />
+    <ClInclude Include="Song Library\Entry\VocalScan.h" />
     <ClInclude Include="Song\MicrosPerQuarter.h" />
     <ClInclude Include="Song\Song.h" />
     <ClInclude Include="Song\TimeSig.h" />
@@ -230,7 +231,6 @@
     <ClInclude Include="Song\Tracks\Instrumental\Legacy_DrumTrack.h" />
     <ClInclude Include="Song\Tracks\SpecialPhrase.h" />
     <ClInclude Include="Song\Tracks\Track.h" />
-    <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
     <ClInclude Include="Types\MD5.h" />
     <ClInclude Include="Types\UnicodeString.h" />
     <ClInclude Include="Types\utf_utils.h" />

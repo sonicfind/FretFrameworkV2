@@ -1,5 +1,5 @@
 #include "CacheEntry.h"
-#include "Song/Info/Ini.h"
+#include "Ini/Ini.h"
 
 void CacheEntry::readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime)
 {
