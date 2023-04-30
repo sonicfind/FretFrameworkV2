@@ -51,7 +51,7 @@ private:
 	void load_events(CommonChartParser& parser);
 	void load_noteTrack(CommonChartParser& parser);
 
-	int  load_songInfo_cht(ChtFileReader& reader);
+	int  load_header_cht(ChtFileReader& reader);
 	void load_cht_V1(ChtFileReader& reader);
 	void load_events_V1(ChtFileReader& reader);
 
