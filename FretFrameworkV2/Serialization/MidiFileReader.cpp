@@ -27,10 +27,11 @@ void MidiFileReader::processHeaderChunk()
 	if (!checkTag("MThd"))
 		throw std::runtime_error("Midi Header Chunk Tag 'MTrk' not found");
 
-	if (extract<uint32_t>() != 6)
-		throw std::runtime_error("Midi Header length is invalid (must be six)");
+	const uint32_t length = extract<uint32_t>();
+	if (length < 6)
+		throw std::runtime_error("Midi Header length is invalid (must be at least six)");
 
-	m_nextTrack = m_currentPosition + 6;
+	m_nextTrack = m_currentPosition + length;
 
 	m_header.format = extract<uint16_t>();
 	m_header.numTracks = extract<uint16_t>();
