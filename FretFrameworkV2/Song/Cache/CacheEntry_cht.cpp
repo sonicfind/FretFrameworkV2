@@ -17,7 +17,21 @@ const TxtFileReader::ModifierOutline MODIFIER_LIST =
 
 bool CacheEntry::scan_cht(const std::filesystem::path& path)
 {
-	static constexpr auto isModifierDefault = [](const Modifiers::Modifier & modifier)
+	ChtFileReader reader(path);
+	if (!reader.validateHeaderTrack())
+		throw std::runtime_error("[Song] track expected at the start of the file");
+
+	std::pair<int, bool> versionAndUpdate = scan_header_cht(reader);
+	if (versionAndUpdate.first > 1)
+		scan(reader);
+	else
+		scan_cht_V1(reader);
+	return versionAndUpdate.second;
+}
+
+std::pair<int, bool> CacheEntry::scan_header_cht(ChtFileReader& reader)
+{
+	static constexpr auto isModifierDefault = [](const Modifiers::Modifier& modifier)
 	{
 		if (modifier.getName() == "name")             return modifier.getValue<UnicodeString>() == s_DEFAULT_NAME;
 		else if (modifier.getName() == "artist")      return modifier.getValue<UnicodeString>() == s_DEFAULT_ARTIST;
@@ -29,35 +43,24 @@ bool CacheEntry::scan_cht(const std::filesystem::path& path)
 		return false;
 	};
 
-	ChtFileReader reader(path);
-	if (!reader.validateHeaderTrack())
-		throw std::runtime_error("[Song] track expected at the start of the file");
-
-	auto modifiers = reader.extractModifiers(MODIFIER_LIST);
-	bool updateIni = false;
-	int version = 0;
-	for (auto& mod : modifiers)
+	std::pair<int, bool> versionAndUpdate;
+	for (auto& mod : reader.extractModifiers(MODIFIER_LIST))
 	{
 		if (mod.getName() == "FileVersion")
-			version = mod.getValue<uint32_t>();
+			versionAndUpdate.first = mod.getValue<uint32_t>();
 		else if (auto modifier = getModifier(mod.getName()))
 		{
 			if (isModifierDefault(*modifier))
 			{
 				*modifier = std::move(mod);
-				updateIni = true;
+				versionAndUpdate.second = true;
 			}
 		}
 		else
 		{
 			m_modifiers.push_back(std::move(mod));
-			updateIni = true;
+			versionAndUpdate.second = true;
 		}
 	}
-
-	if (version > 1)
-		scan(reader);
-	else
-		scan_cht_V1(reader);
-	return updateIni;
+	return versionAndUpdate;
 }

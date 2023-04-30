@@ -111,6 +111,7 @@ private:
 	void scan(CommonChartParser& parser);
 	void scan_noteTrack(CommonChartParser& parser);
 
+	std::pair<int, bool> scan_header_cht(ChtFileReader& reader);
 	void scan_cht_V1(ChtFileReader& reader);
 
 	void reorderModifiers();
