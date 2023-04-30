@@ -7,13 +7,6 @@ template <class T>
 class InstrumentalScan : public ScanTrack
 {
 public:
-	InstrumentalScan() = default;
-	InstrumentalScan(InstrumentalScan&&) = default;
-	InstrumentalScan& operator=(InstrumentalScan&&) = default;
-
-	InstrumentalScan(const InstrumentalScan&) = delete;
-	InstrumentalScan& operator=(const InstrumentalScan&) = delete;
-
 	void scan_V1(size_t diff, ChtFileReader& reader)
 	{
 		if ((1 << diff) & m_subTracks)

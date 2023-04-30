@@ -9,12 +9,6 @@ private:
 
 public:
 	Legacy_DrumScan() = default;
-	Legacy_DrumScan(Legacy_DrumScan&&) = default;
-	Legacy_DrumScan& operator=(Legacy_DrumScan&&) = default;
-
-	Legacy_DrumScan(const Legacy_DrumScan&) = default;
-	Legacy_DrumScan& operator=(const Legacy_DrumScan&) = default;
-
 	Legacy_DrumScan(MidiFileReader& reader);
 
 	[[nodiscard]] bool extraTest_V1(size_t note) override;
