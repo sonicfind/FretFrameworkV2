@@ -197,6 +197,7 @@
     <ClInclude Include="Notes\Pitch.h" />
     <ClInclude Include="Notes\VocalNote.h" />
     <ClInclude Include="Notes\VocalPercussion.h" />
+    <ClInclude Include="PtrWrapper\PtrWrapper.h" />
     <ClInclude Include="Serialization\BCHFileReader.h" />
     <ClInclude Include="Serialization\BCHFileWriter.h" />
     <ClInclude Include="Serialization\BinaryFileReader.h" />

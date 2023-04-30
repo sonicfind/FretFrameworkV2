@@ -67,6 +67,9 @@
     <Filter Include="Ini">
       <UniqueIdentifier>{34e6a135-a441-4600-bed3-96e0141fe9ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PtrWrapper">
+      <UniqueIdentifier>{0f91efa1-e2d3-40c7-b9a0-0768d261bf96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -347,6 +350,9 @@
     </ClInclude>
     <ClInclude Include="Serialization\LoadedFile.h">
       <Filter>Serialization\FileReader</Filter>
+    </ClInclude>
+    <ClInclude Include="PtrWrapper\PtrWrapper.h">
+      <Filter>PtrWrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

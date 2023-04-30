@@ -44,7 +44,7 @@ void LibraryEntry::finalize()
 	}
 }
 
-LibraryEntry::OptionalModifier_const LibraryEntry::getModifier(std::string_view name) const noexcept
+PointerWrapper<const Modifiers::Modifier> LibraryEntry::getModifier(std::string_view name) const noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
@@ -52,7 +52,7 @@ LibraryEntry::OptionalModifier_const LibraryEntry::getModifier(std::string_view 
 	return {};
 }
 
-LibraryEntry::OptionalModifier LibraryEntry::getModifier(std::string_view name) noexcept
+PointerWrapper<Modifiers::Modifier> LibraryEntry::getModifier(std::string_view name) noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
