@@ -1,7 +1,7 @@
-#include "CacheEntry.h"
+#include "LibraryEntry.h"
 #include "Legacy_DrumScan.h"
 
-void CacheEntry::scan_cht_V1(ChtFileReader& reader)
+void LibraryEntry::scan_cht_V1(ChtFileReader& reader)
 {
 	Legacy_DrumScan drumsLegacy;
 	while (reader.isStartOfTrack())

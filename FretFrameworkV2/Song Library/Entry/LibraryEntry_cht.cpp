@@ -1,4 +1,4 @@
-#include "CacheEntry.h"
+#include "LibraryEntry.h"
 
 using ModifierNode = TxtFileReader::ModifierNode;
 const TxtFileReader::ModifierOutline MODIFIER_LIST =
@@ -15,7 +15,7 @@ const TxtFileReader::ModifierOutline MODIFIER_LIST =
 	{ "Year",         { "year", ModifierNode::STRING_CHART } },
 };
 
-bool CacheEntry::scan_cht(const std::filesystem::path& path)
+bool LibraryEntry::scan_cht(const std::filesystem::path& path)
 {
 	ChtFileReader reader(path);
 	if (!reader.validateHeaderTrack())
@@ -29,7 +29,7 @@ bool CacheEntry::scan_cht(const std::filesystem::path& path)
 	return versionAndUpdate.second;
 }
 
-std::pair<int, bool> CacheEntry::scan_header_cht(ChtFileReader& reader)
+std::pair<int, bool> LibraryEntry::scan_header_cht(ChtFileReader& reader)
 {
 	static constexpr auto isModifierDefault = [](const Modifiers::Modifier& modifier)
 	{

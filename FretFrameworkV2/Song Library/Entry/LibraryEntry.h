@@ -6,7 +6,7 @@
 #include "Notes/DrumNote.h"
 #include "Types/UnicodeString.h"
 
-class CacheEntry
+class LibraryEntry
 {
 	static const UnicodeString s_DEFAULT_NAME;
 	static const UnicodeString s_DEFAULT_ARTIST;
@@ -55,7 +55,7 @@ class CacheEntry
 	std::filesystem::file_time_type m_iniModifiedTime;
 
 public:
-	CacheEntry(std::filesystem::file_time_type chartTime);
+	LibraryEntry(std::filesystem::file_time_type chartTime);
 	void readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime);
 	bool scan(const std::filesystem::path& path) noexcept;
 	void mapModifierVariables();

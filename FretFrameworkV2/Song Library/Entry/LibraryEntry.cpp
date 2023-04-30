@@ -1,19 +1,19 @@
-#include "CacheEntry.h"
+#include "LibraryEntry.h"
 #include <iostream>
 
-const UnicodeString CacheEntry::s_DEFAULT_NAME{ U"Unknown Title" };
-const UnicodeString CacheEntry::s_DEFAULT_ARTIST{ U"Unknown Artist" };
-const UnicodeString CacheEntry::s_DEFAULT_ALBUM{ U"Unknown Album" };
-const UnicodeString CacheEntry::s_DEFAULT_GENRE{ U"Unknown Genre" };
-const UnicodeString CacheEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
-const UnicodeString CacheEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
+const UnicodeString LibraryEntry::s_DEFAULT_NAME{ U"Unknown Title" };
+const UnicodeString LibraryEntry::s_DEFAULT_ARTIST{ U"Unknown Artist" };
+const UnicodeString LibraryEntry::s_DEFAULT_ALBUM{ U"Unknown Album" };
+const UnicodeString LibraryEntry::s_DEFAULT_GENRE{ U"Unknown Genre" };
+const UnicodeString LibraryEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
+const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 
-const std::filesystem::path CacheEntry::s_EXTS_CHT[2] = { ".cht", ".chart" };
-const std::filesystem::path CacheEntry::s_EXTS_MID[2] = { ".mid", ".midi" };
-const std::filesystem::path CacheEntry::s_EXT_BCH = ".bch";
+const std::filesystem::path LibraryEntry::s_EXTS_CHT[2] = { ".cht", ".chart" };
+const std::filesystem::path LibraryEntry::s_EXTS_MID[2] = { ".mid", ".midi" };
+const std::filesystem::path LibraryEntry::s_EXT_BCH = ".bch";
 
-CacheEntry::CacheEntry(std::filesystem::file_time_type chartTime) : m_chartModifiedTime(chartTime) {}
-bool CacheEntry::scan(const std::filesystem::path& path) noexcept
+LibraryEntry::LibraryEntry(std::filesystem::file_time_type chartTime) : m_chartModifiedTime(chartTime) {}
+bool LibraryEntry::scan(const std::filesystem::path& path) noexcept
 {
 	bool iniChanged = false;
 	try
@@ -44,7 +44,7 @@ bool CacheEntry::scan(const std::filesystem::path& path) noexcept
 	return true;
 }
 
-CacheEntry::OptionalModifier_const CacheEntry::getModifier(std::string_view name) const noexcept
+LibraryEntry::OptionalModifier_const LibraryEntry::getModifier(std::string_view name) const noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
@@ -52,7 +52,7 @@ CacheEntry::OptionalModifier_const CacheEntry::getModifier(std::string_view name
 	return {};
 }
 
-CacheEntry::OptionalModifier CacheEntry::getModifier(std::string_view name) noexcept
+LibraryEntry::OptionalModifier LibraryEntry::getModifier(std::string_view name) noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
 		if (iter->getName() == name)
@@ -60,7 +60,7 @@ CacheEntry::OptionalModifier CacheEntry::getModifier(std::string_view name) noex
 	return {};
 }
 
-void CacheEntry::scan(CommonChartParser& parser)
+void LibraryEntry::scan(CommonChartParser& parser)
 {
 	while (parser.isStartOfTrack())
 	{
@@ -71,7 +71,7 @@ void CacheEntry::scan(CommonChartParser& parser)
 	}
 }
 
-void CacheEntry::scan_noteTrack(CommonChartParser& parser)
+void LibraryEntry::scan_noteTrack(CommonChartParser& parser)
 {
 	BCH_CHT_Scannable* const arr[11] =
 	{
@@ -95,7 +95,7 @@ void CacheEntry::scan_noteTrack(CommonChartParser& parser)
 		parser.skipTrack();
 }
 
-void CacheEntry::reorderModifiers()
+void LibraryEntry::reorderModifiers()
 {
 	static constexpr std::string_view INI_ORDER[]
 	{
@@ -132,7 +132,7 @@ void CacheEntry::reorderModifiers()
 	m_modifiers = std::move(reorder);
 }
 
-void CacheEntry::mapModifierVariables()
+void LibraryEntry::mapModifierVariables()
 {
 	m_name = &m_modifiers.front().getValue<UnicodeString>();
 

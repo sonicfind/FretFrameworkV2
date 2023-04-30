@@ -1,9 +1,9 @@
-#include "CacheEntry.h"
+#include "LibraryEntry.h"
 #include "GuitarScan_midi.h"
 #include "DrumScan_midi.h"
 #include "Legacy_DrumScan.h"
 
-void CacheEntry::scan_mid(const std::filesystem::path& path)
+void LibraryEntry::scan_mid(const std::filesystem::path& path)
 {
 	MidiFileReader reader(path);
 	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;

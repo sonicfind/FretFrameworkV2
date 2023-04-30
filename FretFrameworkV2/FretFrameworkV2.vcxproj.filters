@@ -136,19 +136,19 @@
     <ClCompile Include="Types\MD5.cpp">
       <Filter>MD5</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CacheEntry_mid.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry_mid.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CacheEntry.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CacheEntry_bch.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry_bch.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CacheEntry_chart_V1.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry_chart_V1.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CacheEntry_cht.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry_cht.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
     <ClCompile Include="Song Library\Entry\GuitarScan_midi.cpp">
@@ -169,7 +169,7 @@
     <ClCompile Include="Serialization\IniFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\CahceEntry_Ini.cpp">
+    <ClCompile Include="Song Library\Entry\LibraryEntry_Ini.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
     <ClCompile Include="Ini\Ini.cpp">
@@ -303,7 +303,7 @@
     <ClInclude Include="Song Library\Entry\ScanTrack.h">
       <Filter>Song Library\Entry\Track</Filter>
     </ClInclude>
-    <ClInclude Include="Song Library\Entry\CacheEntry.h">
+    <ClInclude Include="Song Library\Entry\LibraryEntry.h">
       <Filter>Song Library\Entry</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\DrumScan_midi.h">

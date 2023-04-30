@@ -1,8 +1,8 @@
-#include "CacheEntry.h"
+#include "LibraryEntry.h"
 #include "Serialization/BCHFileReader.h"
 #include "Serialization/BCHFileWriter.h"
 
-void CacheEntry::scan_bch(const std::filesystem::path& path)
+void LibraryEntry::scan_bch(const std::filesystem::path& path)
 {
 	BCHFileReader reader(path);
 	if (!reader.validateHeaderTrack())

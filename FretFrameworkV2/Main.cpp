@@ -1,5 +1,5 @@
 #include "Song/Song.h"
-#include "Song Library/Entry/CacheEntry.h"
+#include "Song Library/Entry/LibraryEntry.h"
 #include <iostream>
 int main()
 {
@@ -29,7 +29,7 @@ int main()
 	std::filesystem::directory_entry ini(std::filesystem::path(filename).replace_filename(U"song.ini"));
 	std::filesystem::directory_entry chart(filename);
 
-	CacheEntry entry(chart.last_write_time());
+	LibraryEntry entry(chart.last_write_time());
 	t1 = std::chrono::high_resolution_clock::now();
 	if (ini.exists())
 		entry.readIni(ini.path(), ini.last_write_time());
