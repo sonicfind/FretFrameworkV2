@@ -18,7 +18,7 @@ public:
 
 public:
 	LibraryEntry(const std::filesystem::directory_entry& chartFile);
-	void readIni(const std::filesystem::directory_entry& iniFile);
+	LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile);
 	bool scan(const LoadedFile& file, const ChartType type) noexcept;
 	void finalize();
 

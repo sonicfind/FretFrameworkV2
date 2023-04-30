@@ -69,15 +69,10 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 	{
 		if (charts[i])
 		{
-			LibraryEntry entry(*charts[i]);
 			if (ini)
-				entry.readIni(*ini);
-
-			LoadedFile file(charts[i]->path());
-			if (entry.scan(file, CHARTTYPES[i].second))
-				addEntry(file.calculateMD5(), std::move(entry));
+				addEntry(LibraryEntry(*charts[i], *ini), CHARTTYPES[i].second, charts[i]->path());
 			else
-				std::cout << "Failed: " << UnicodeString::U32ToStr(charts[i]->path().u32string()) << '\n';
+				addEntry(LibraryEntry(*charts[i]), CHARTTYPES[i].second, charts[i]->path());
 			return;
 		}
 	}
@@ -86,7 +81,11 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 		scanDirectory(subDirectory);
 }
 
-void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
+void SongLibrary::addEntry(LibraryEntry&& entry, LibraryEntry::ChartType type, const std::filesystem::path& chartPath)
 {
-	m_songlist[hash].push_back(std::move(entry));
+	LoadedFile file(chartPath);
+	if (entry.scan(file, type))
+		m_songlist[file.calculateMD5()].push_back(std::move(entry));
+	else
+		std::cout << "Failed: " << UnicodeString::U32ToStr(chartPath.u32string()) << '\n';
 }
