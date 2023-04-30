@@ -175,6 +175,9 @@
     <ClCompile Include="Ini\Ini.cpp">
       <Filter>Ini</Filter>
     </ClCompile>
+    <ClCompile Include="Song Library\SongLibrary.cpp">
+      <Filter>Song Library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -335,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="Ini\Ini.h">
       <Filter>Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\SongLibrary.h">
+      <Filter>Song Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
