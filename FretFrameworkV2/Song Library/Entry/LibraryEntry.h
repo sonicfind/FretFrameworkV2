@@ -8,6 +8,76 @@
 
 class LibraryEntry
 {
+public:
+	enum ChartType
+	{
+		BCH,
+		CHT,
+		MID
+	};
+
+public:
+	LibraryEntry(const std::filesystem::directory_entry& chartFile);
+	void readIni(const std::filesystem::directory_entry& iniFile);
+	bool scan(const LoadedFile& file, const ChartType type) noexcept;
+	void finalize();
+
+	const UnicodeString& getArtist() const { return *m_artist; }
+	const UnicodeString& getName() const { return *m_name; }
+	const UnicodeString& getAlbum() const { return *m_album; }
+	const UnicodeString& getGenre() const { return *m_genre; }
+	const UnicodeString& getYear() const { return *m_year; }
+	const UnicodeString& getCharter() const { return *m_charter; }
+	const UnicodeString& getPlaylist() const { return *m_playlist; }
+	const uint32_t& getSongLength() const { return m_song_length; }
+	const std::filesystem::path& getDirectory() const { return m_chartFile.path().parent_path(); }
+
+private:
+	class OptionalModifier
+	{
+		Modifiers::Modifier* mod = nullptr;
+
+	public:
+		OptionalModifier() = default;
+		OptionalModifier(Modifiers::Modifier& md) : mod(&md){}
+		Modifiers::Modifier* operator->() { return mod; }
+		const Modifiers::Modifier* operator->() const noexcept { return mod; }
+		Modifiers::Modifier& operator*() { return *mod; }
+		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
+		operator bool() { return mod != nullptr; }
+	};
+
+	struct OptionalModifier_const
+	{
+		const Modifiers::Modifier* mod = nullptr;
+
+	public:
+		OptionalModifier_const() = default;
+		OptionalModifier_const(const Modifiers::Modifier& md) : mod(&md) {}
+		const Modifiers::Modifier* operator->() const noexcept { return mod; }
+		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
+		operator bool() { return mod != nullptr; }
+	};
+	OptionalModifier_const getModifier(std::string_view name) const noexcept;
+	OptionalModifier getModifier(std::string_view name) noexcept;
+
+private:
+	void scan_cht(const LoadedFile& file);
+	void scan_bch(const LoadedFile& file);
+	void scan_mid(const LoadedFile& file);
+
+	void scan(CommonChartParser& parser);
+	void scan_noteTrack(CommonChartParser& parser);
+
+	int scan_header_cht(ChtFileReader& reader);
+	void scan_cht_V1(ChtFileReader& reader);
+
+	bool validateForNotes() const noexcept;
+	void reorderModifiers();
+	void mapModifierVariables();
+	void writeIni();
+
+private:
 	static const UnicodeString s_DEFAULT_NAME;
 	static const UnicodeString s_DEFAULT_ARTIST;
 	static const UnicodeString s_DEFAULT_ALBUM;
@@ -48,72 +118,8 @@ class LibraryEntry
 
 	std::vector<Modifiers::Modifier> m_modifiers;
 
-	std::filesystem::path m_directory;
-	std::filesystem::path m_filename;
-
-	std::filesystem::file_time_type m_chartModifiedTime;
+	std::filesystem::directory_entry m_chartFile;
 	std::filesystem::file_time_type m_iniModifiedTime;
 
-public:
-	LibraryEntry(std::filesystem::file_time_type chartTime);
-	void readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime);
-	bool scan(const std::filesystem::path& path) noexcept;
-	void mapModifierVariables();
-
-	const UnicodeString& getArtist() const { return *m_artist; }
-	const UnicodeString& getName() const { return *m_name; }
-	const UnicodeString& getAlbum() const { return *m_album; }
-	const UnicodeString& getGenre() const { return *m_genre; }
-	const UnicodeString& getYear() const { return *m_year; }
-	const UnicodeString& getCharter() const { return *m_charter; }
-	const UnicodeString& getPlaylist() const { return *m_playlist; }
-	const uint32_t& getSongLength() const { return m_song_length; }
-	const std::filesystem::path& getDirectory() const { return m_directory; }
-
-private:
-	class OptionalModifier
-	{
-		Modifiers::Modifier* mod = nullptr;
-
-	public:
-		OptionalModifier() = default;
-		OptionalModifier(Modifiers::Modifier& md) : mod(&md){}
-		Modifiers::Modifier* operator->() { return mod; }
-		const Modifiers::Modifier* operator->() const noexcept { return mod; }
-		Modifiers::Modifier& operator*() { return *mod; }
-		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
-		operator bool() { return mod != nullptr; }
-	};
-
-	struct OptionalModifier_const
-	{
-		const Modifiers::Modifier* mod = nullptr;
-
-	public:
-		OptionalModifier_const() = default;
-		OptionalModifier_const(const Modifiers::Modifier& md) : mod(&md) {}
-		const Modifiers::Modifier* operator->() const noexcept { return mod; }
-		const Modifiers::Modifier& operator*() const noexcept { return *mod; }
-		operator bool() { return mod != nullptr; }
-	};
-	OptionalModifier_const getModifier(std::string_view name) const noexcept;
-	OptionalModifier getModifier(std::string_view name) noexcept;
-
-private:
-	static const std::filesystem::path s_EXTS_CHT[2];
-	static const std::filesystem::path s_EXTS_MID[2];
-	static const std::filesystem::path s_EXT_BCH;
-
-	bool scan_cht(const std::filesystem::path& path);
-	void scan_bch(const std::filesystem::path& path);
-	void scan_mid(const std::filesystem::path& path);
-
-	void scan(CommonChartParser& parser);
-	void scan_noteTrack(CommonChartParser& parser);
-
-	std::pair<int, bool> scan_header_cht(ChtFileReader& reader);
-	void scan_cht_V1(ChtFileReader& reader);
-
-	void reorderModifiers();
-	void writeIni();
+	bool m_rewriteIni = false;
 };

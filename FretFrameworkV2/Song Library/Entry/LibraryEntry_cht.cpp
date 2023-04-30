@@ -15,21 +15,20 @@ const TxtFileReader::ModifierOutline MODIFIER_LIST =
 	{ "Year",         { "year", ModifierNode::STRING_CHART } },
 };
 
-bool LibraryEntry::scan_cht(const std::filesystem::path& path)
+void LibraryEntry::scan_cht(const LoadedFile& file)
 {
-	ChtFileReader reader(path);
+	ChtFileReader reader(file);
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
-	std::pair<int, bool> versionAndUpdate = scan_header_cht(reader);
-	if (versionAndUpdate.first > 1)
+	int version = scan_header_cht(reader);
+	if (version > 1)
 		scan(reader);
 	else
 		scan_cht_V1(reader);
-	return versionAndUpdate.second;
 }
 
-std::pair<int, bool> LibraryEntry::scan_header_cht(ChtFileReader& reader)
+int LibraryEntry::scan_header_cht(ChtFileReader& reader)
 {
 	static constexpr auto isModifierDefault = [](const Modifiers::Modifier& modifier)
 	{
@@ -43,24 +42,24 @@ std::pair<int, bool> LibraryEntry::scan_header_cht(ChtFileReader& reader)
 		return false;
 	};
 
-	std::pair<int, bool> versionAndUpdate;
+	int version = 0;
 	for (auto& mod : reader.extractModifiers(MODIFIER_LIST))
 	{
 		if (mod.getName() == "FileVersion")
-			versionAndUpdate.first = mod.getValue<uint32_t>();
+			version = mod.getValue<uint32_t>();
 		else if (auto modifier = getModifier(mod.getName()))
 		{
 			if (isModifierDefault(*modifier))
 			{
 				*modifier = std::move(mod);
-				versionAndUpdate.second = true;
+				m_rewriteIni = true;
 			}
 		}
 		else
 		{
 			m_modifiers.push_back(std::move(mod));
-			versionAndUpdate.second = true;
+			m_rewriteIni = true;
 		}
 	}
-	return versionAndUpdate;
+	return version;
 }

@@ -1,10 +1,9 @@
 #include "LibraryEntry.h"
 #include "Serialization/BCHFileReader.h"
-#include "Serialization/BCHFileWriter.h"
 
-void LibraryEntry::scan_bch(const std::filesystem::path& path)
+void LibraryEntry::scan_bch(const LoadedFile& file)
 {
-	BCHFileReader reader(path);
+	BCHFileReader reader(file);
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("Header track not found at the start of the file");
 

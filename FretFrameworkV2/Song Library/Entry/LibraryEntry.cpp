@@ -8,40 +8,40 @@ const UnicodeString LibraryEntry::s_DEFAULT_GENRE{ U"Unknown Genre" };
 const UnicodeString LibraryEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
 const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 
-const std::filesystem::path LibraryEntry::s_EXTS_CHT[2] = { ".cht", ".chart" };
-const std::filesystem::path LibraryEntry::s_EXTS_MID[2] = { ".mid", ".midi" };
-const std::filesystem::path LibraryEntry::s_EXT_BCH = ".bch";
+LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile) : m_chartFile(chartFile) {}
 
-LibraryEntry::LibraryEntry(std::filesystem::file_time_type chartTime) : m_chartModifiedTime(chartTime) {}
-bool LibraryEntry::scan(const std::filesystem::path& path) noexcept
+bool LibraryEntry::scan(const LoadedFile& file, const ChartType type) noexcept
 {
-	bool iniChanged = false;
 	try
 	{
-		const std::filesystem::path ext = path.extension();
-		if (ext == s_EXTS_CHT[0] || ext == s_EXTS_CHT[1])
-			iniChanged = scan_cht(path);
-		
+		if (type == CHT)
+			scan_cht(file);
+
 		if (!getModifier("name"))
 			return false;
 
-		if (ext == s_EXTS_MID[0] || ext == s_EXTS_MID[1])
-			scan_mid(path);
-		else if (ext == s_EXT_BCH)
-			scan_bch(path);
+		if (type == MID)
+			scan_mid(file);
+		else if (type == BCH)
+			scan_bch(file);
+
+		return validateForNotes();
 	}
 	catch (std::runtime_error err)
 	{
-		std::cout << err.what() << std::endl;
 		return false;
 	}
+}
 
-	m_filename = path.filename();
-	m_directory = path.parent_path();
+void LibraryEntry::finalize()
+{
 	reorderModifiers();
-	if (iniChanged)
+	mapModifierVariables();
+	if (m_rewriteIni)
+	{
 		writeIni();
-	return true;
+		m_rewriteIni = false;
+	}
 }
 
 LibraryEntry::OptionalModifier_const LibraryEntry::getModifier(std::string_view name) const noexcept
@@ -93,6 +93,29 @@ void LibraryEntry::scan_noteTrack(CommonChartParser& parser)
 		arr[parser.geNoteTrackID()]->scan(parser);
 	else //BCH only
 		parser.skipTrack();
+}
+
+bool LibraryEntry::validateForNotes() const noexcept
+{
+	const ScanTrack* const arr[11] =
+	{
+		&m_scanTracks.lead_5,
+		&m_scanTracks.lead_6,
+		&m_scanTracks.bass_5,
+		&m_scanTracks.bass_6,
+		&m_scanTracks.rhythm,
+		&m_scanTracks.coop,
+		&m_scanTracks.keys,
+		&m_scanTracks.drums4_pro,
+		&m_scanTracks.drums5,
+		&m_scanTracks.vocals,
+		&m_scanTracks.harmonies
+	};
+
+	for (const ScanTrack* track : arr)
+		if (track->m_subTracks > 0)
+			return true;
+	return false;
 }
 
 void LibraryEntry::reorderModifiers()
@@ -161,7 +184,7 @@ void LibraryEntry::mapModifierVariables()
 	else
 	{
 		m_modifiers.reserve(m_modifiers.size() + 1);
-		m_modifiers.push_back({ "playlist", UnicodeString(m_directory.parent_path().u32string()) });
+		m_modifiers.push_back({ "playlist", UnicodeString(m_chartFile.path().parent_path().parent_path().u32string())});
 		m_playlist = &m_modifiers.back().getValue<UnicodeString>();
 	}
 

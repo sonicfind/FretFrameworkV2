@@ -1,14 +1,15 @@
 #include "LibraryEntry.h"
 #include "Ini/Ini.h"
 
-void LibraryEntry::readIni(const std::filesystem::path& path, std::filesystem::file_time_type iniTime)
+void LibraryEntry::readIni(const std::filesystem::directory_entry& iniFile)
 {
-	m_modifiers = Ini::ReadSongIniFile(path);
-	m_iniModifiedTime = iniTime;
+	m_modifiers = Ini::ReadSongIniFile(iniFile.path());
+	m_iniModifiedTime = iniFile.last_write_time();
 }
 
 void LibraryEntry::writeIni()
 {
-	Ini::WriteSongIniFile(m_directory / "song.ini", m_modifiers);
-	m_iniModifiedTime = std::filesystem::last_write_time(m_directory / "song.ini");
+	const std::filesystem::path directory = m_chartFile.path().parent_path();
+	Ini::WriteSongIniFile(directory / "song.ini", m_modifiers);
+	m_iniModifiedTime = std::filesystem::last_write_time(directory / "song.ini");
 }

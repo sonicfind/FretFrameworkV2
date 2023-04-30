@@ -3,9 +3,9 @@
 #include "DrumScan_midi.h"
 #include "Legacy_DrumScan.h"
 
-void LibraryEntry::scan_mid(const std::filesystem::path& path)
+void LibraryEntry::scan_mid(const LoadedFile& file)
 {
-	MidiFileReader reader(path);
+	MidiFileReader reader(file);
 	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;
 	while (reader.startNextTrack())
 	{
