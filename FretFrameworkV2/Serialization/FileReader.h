@@ -10,7 +10,7 @@ public:
 	virtual bool move(size_t amount);
 
 protected:
-	LoadedFile m_file;
+	const LoadedFile m_file;
 	const char* m_currentPosition = nullptr;
 	const char* m_next = nullptr;
 };
