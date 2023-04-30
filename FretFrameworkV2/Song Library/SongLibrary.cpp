@@ -7,6 +7,16 @@ void SongLibrary::scan(const std::vector<std::filesystem::path>& baseDirectories
 		scanDirectory(directory);
 }
 
+void SongLibrary::clear()
+{
+	m_songlist.clear();
+}
+
+size_t SongLibrary::getNumSongs() const noexcept
+{
+	return m_songlist.size();
+}
+
 void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 {
 	static const std::pair<std::filesystem::path, LibraryEntry::ChartType> CHARTTYPES[] =
@@ -64,11 +74,19 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 				entry.readIni(*ini);
 
 			LoadedFile file(charts[i]->path());
-			entry.scan(file, CHARTTYPES[i].second);
+			if (entry.scan(file, CHARTTYPES[i].second))
+				addEntry(file.calculateMD5(), std::move(entry));
+			else
+				std::cout << "Failed: " << UnicodeString::U32ToStr(charts[i]->path().u32string()) << '\n';
 			return;
 		}
 	}
 
 	for (const auto& subDirectory : directories)
 		scanDirectory(subDirectory);
+}
+
+void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
+{
+	m_songlist[hash].push_back(std::move(entry));
 }

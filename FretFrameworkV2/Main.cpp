@@ -17,6 +17,7 @@ int main()
 	auto t2 = std::chrono::high_resolution_clock::now();
 	long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 	std::cout << "Full scan took " << count / 1000.0 << " milliseconds\n";
+	std::cout << "# of Songs: " << library.getNumSongs() << '\n';
 
 	std::cout << "Press Enter to Exit" << std::endl;
 	std::getline(std::cin, filename);
