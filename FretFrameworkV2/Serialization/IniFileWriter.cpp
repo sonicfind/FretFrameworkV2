@@ -12,7 +12,7 @@ void IniFileWriter::writeModifiers(const std::vector<Modifiers::Modifier>& list)
 		m_file << mod.getName() << " =";
 		switch (mod.getType())
 		{
-		case Modifiers::Type::STRING:        write(mod.getValue<UnicodeString>());  break;
+		case Modifiers::Type::STRING:        write(mod.getValue<UnicodeString>().toString());  break;
 		case Modifiers::Type::STRING_NOCASE: write(UnicodeString::U32ToStr(mod.getValue<std::u32string>())); break;
 		case Modifiers::Type::UINT32:        write(mod.getValue<uint32_t      >()); break;
 		case Modifiers::Type::INT32:         write(mod.getValue<int32_t       >()); break;

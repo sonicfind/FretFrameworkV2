@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <stdexcept>
-#include <fstream>
 
 class UnicodeString
 {
@@ -66,10 +65,6 @@ public:
 	std::u32string& getUpperCase() { return m_string_uppercase; }
 	const std::u32string& getUpperCase() const { return m_string_uppercase; }
 
-	operator std::string() const { return toString(); }
-	friend std::ostream& operator<<(std::ostream& outFile, const UnicodeString& str);
-	constexpr std::u32string* operator->() const { return (std::u32string*)&m_string; }
-
 	char32_t& operator[](size_t i) { return m_string[i]; }
 	const char32_t& operator[](size_t i) const { return m_string[i]; }
 
@@ -84,16 +79,8 @@ public:
 
 	int compare(const UnicodeString& str) const;
 
-	void writeToWebTypedFile(std::fstream& outFile) const;
-
-	static char s_writeBuffer[5];
-	static char* s_bufferStart;
-	static size_t s_bufferSize;
-
 	static std::u32string strToU32(const std::string_view str);
 	static std::u32string bufferToU32(const unsigned char* dataPtr, size_t length);
 	static std::string U32ToStr(const std::u32string& u32);
-	static std::u32string U32FromWebTypedFile(const char*& dataPtr);
-	static void U32ToWebTypedFile(const std::u32string& u32, std::fstream& outFile);
 };
 

@@ -1,6 +1,5 @@
 #include "UnicodeString.h"
 #include "utf_utils.h"
-#include "Types/WebType.h"
 
 UnicodeString::InvalidCharacterException::InvalidCharacterException(char32_t value)
 	: std::runtime_error("Character value in a u32string cannot exceed 1114111 (value: " + std::to_string(value) + ")") {}
@@ -45,19 +44,9 @@ constexpr void UnicodeString::setCasedStrings() noexcept
 	}
 }
 
-void UnicodeString::writeToWebTypedFile(std::fstream& outFile) const
-{
-	U32ToWebTypedFile(m_string, outFile);
-}
-
 std::string UnicodeString::toString() const
 {
 	return U32ToStr(m_string);
-}
-
-std::ostream& operator<<(std::ostream& outFile, const UnicodeString& str)
-{
-	return outFile << str.toString();
 }
 
 bool UnicodeString::operator==(const UnicodeString& str) const
@@ -95,19 +84,4 @@ std::string UnicodeString::U32ToStr(const std::u32string& u32)
 			*current++ = '_';
 	str.resize((char*)current - str.data());
 	return str;
-}
-
-std::u32string UnicodeString::U32FromWebTypedFile(const char*& dataPtr)
-{
-	uint32_t length = WebType::extract(dataPtr);
-	const char* const start = dataPtr;
-	dataPtr += length;
-	return bufferToU32((const unsigned char*)start, length);
-}
-
-void UnicodeString::U32ToWebTypedFile(const std::u32string& u32, std::fstream& outFile)
-{
-	const std::string str = U32ToStr(u32);
-	WebType::writeToFile((uint32_t)str.size(), outFile);
-	outFile.write(str.data(), str.size());
 }
