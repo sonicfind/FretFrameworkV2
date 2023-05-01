@@ -164,8 +164,6 @@ Modifiers::Modifier TxtFileReader::createModifier(ModifierNode node)
 			float flt2 = extract<float>();
 			return { node.name, flt1, flt2 };
 		}
-		default:
-			throw std::runtime_error("How in the fu-");
 		}
 	}
 	catch (...)
@@ -186,4 +184,5 @@ Modifiers::Modifier TxtFileReader::createModifier(ModifierNode node)
 			return { node.name, 0, 0 };
 		}
 	}
+	throw std::runtime_error("How in the fu-");
 }
