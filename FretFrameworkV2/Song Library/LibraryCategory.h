@@ -1,6 +1,19 @@
 #pragma once
 #include "Entry/LibraryEntry.h"
 #include "SimpleFlatMap/SimpleFlatMap.h"
+#include "Serialization/BufferedBinaryWriter.h"
+#include <unordered_map>
+
+struct CacheIndices
+{
+	uint32_t nameIndex = UINT32_MAX;
+	uint32_t artistIndex = UINT32_MAX;
+	uint32_t albumIndex = UINT32_MAX;
+	uint32_t genreIndex = UINT32_MAX;
+	uint32_t yearIndex = UINT32_MAX;
+	uint32_t charterIndex = UINT32_MAX;
+	uint32_t playlistIndex = UINT32_MAX;
+};
 
 template <SongAttribute Attribute>
 class CategoryNode
@@ -39,6 +52,25 @@ public:
 		m_elements[song->getAttribute<Attribute>()].add(song);
 	}
 
+	void fillCacheIndices(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	{
+		writer.write((uint32_t)m_elements.size());
+		for (uint32_t i = 0; i < m_elements.size(); ++i)
+		{
+			const auto& element = m_elements.at_index(i);
+			writer.writeString(element.key->toString());
+			for (const auto& song : *element)
+			{
+				if      constexpr (Attribute == SongAttribute::ARTIST)   nodes.at(song.raw()).second.artistIndex = i;
+				else if constexpr (Attribute == SongAttribute::ALBUM)    nodes.at(song.raw()).second.albumIndex = i;
+				else if constexpr (Attribute == SongAttribute::GENRE)    nodes.at(song.raw()).second.genreIndex = i;
+				else if constexpr (Attribute == SongAttribute::YEAR)     nodes.at(song.raw()).second.yearIndex = i;
+				else if constexpr (Attribute == SongAttribute::CHARTER)  nodes.at(song.raw()).second.charterIndex = i;
+				else if constexpr (Attribute == SongAttribute::PLAYLIST) nodes.at(song.raw()).second.playlistIndex = i;
+			}
+		}
+	}
+
 	auto begin() const noexcept { return m_elements.begin(); }
 	auto end() const noexcept { return m_elements.end(); }
 
@@ -57,6 +89,28 @@ public:
 	void add(PointerWrapper<LibraryEntry> song)
 	{
 		m_elements[song->getAttribute<SongAttribute::TITLE>().getLowerCase().front()].add(song);
+	}
+
+	void fillCacheIndices(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	{
+		const UnicodeString* currentString = nullptr;
+		uint32_t index = UINT32_MAX;
+		for (const auto& element : m_elements)
+		{
+			for (const auto& song : *element)
+			{
+				if (!currentString || currentString->get() != song->getName().get())
+				{
+					++index;
+					currentString = &song->getName();
+					writer.appendString(currentString->toString());
+				}
+
+				nodes.at(song.raw()).second.nameIndex = index;
+			}
+		}
+		writer.write(index);
+		writer.flushBuffer_NoSize();
 	}
 
 	auto begin() const noexcept { return m_elements.begin(); }

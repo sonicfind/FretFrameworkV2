@@ -110,3 +110,23 @@ void SongLibrary::addEntry(LibraryEntry&& entry, LibraryEntry::ChartType type, c
 	else
 		std::cout << "Failed: " << UnicodeString::U32ToStr(chartPath.u32string()) << '\n';
 }
+
+void SongLibrary::writeToCacheFile() const
+{
+	static constexpr std::pair<MD5, CacheIndices> ye;
+	std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>> nodes;
+	for (auto& node : m_songlist)
+		for (auto& entry : *node)
+			nodes.insert({ &entry, { node.key, {} } });
+
+	BufferedBinaryWriter writer("songcache.bin");
+	writer.write(s_CACHE_VERSION);
+	m_category_title.fillCacheIndices(writer, nodes);
+	m_category_artist.fillCacheIndices(writer, nodes);
+	m_category_album.fillCacheIndices(writer, nodes);
+	m_category_genre.fillCacheIndices(writer, nodes);
+	m_category_year.fillCacheIndices(writer, nodes);
+	m_category_charter.fillCacheIndices(writer, nodes);
+	m_category_playlist.fillCacheIndices(writer, nodes);
+
+}

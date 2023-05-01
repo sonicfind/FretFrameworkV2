@@ -4,9 +4,12 @@
 
 class SongLibrary
 {
+	static constexpr uint32_t s_CACHE_VERSION = 0x05012023;
+
 public:
 	void scan(const std::vector<std::filesystem::path>& baseDirectories);
 	void finalize();
+	void writeToCacheFile() const;
 	void clear();
 
 	[[nodiscard]] size_t getNumSongs() const noexcept;
