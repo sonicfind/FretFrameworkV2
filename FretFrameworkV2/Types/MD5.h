@@ -25,7 +25,7 @@ documentation and/or software.
  
 #include <stdint.h>
 #include <intrin.h>
-#include <fstream>
+#include <compare>
 
 class MD5
 {
@@ -44,10 +44,8 @@ public:
     MD5& operator=(MD5&&) = default;
     MD5& operator=(const MD5&) = default;
     MD5(const char* const inputBuffer, size_t const length);
-    MD5(const char*& _hash);
     
     void display() const;
-    void writeToBinaryFile(std::fstream& outFile) const;
 	friend auto operator<=>(const MD5& _lhs, const MD5& _rhs)
     {
         const uint64_t* result64 = reinterpret_cast<const uint64_t*>(_lhs.m_value);
@@ -65,16 +63,5 @@ public:
             _lhs.m_value[1] == _rhs.m_value[1] &&
             _lhs.m_value[2] == _rhs.m_value[2] &&
             _lhs.m_value[3] == _rhs.m_value[3];
-    }
-};
-
-template<>
-struct std::hash<MD5>
-{
-    std::size_t operator()(MD5 const& md5) const noexcept
-    {
-        size_t value;
-        memcpy(&value, &md5, sizeof(size_t));
-        return value;
     }
 };

@@ -204,12 +204,6 @@ MD5::MD5(const char* const inputBuffer, size_t const length)
     processor.evaluateBlock(block);
 }
 
-MD5::MD5(const char*& _hash)
-{
-    memcpy(m_value, _hash, sizeof(m_value));
-    _hash += sizeof(m_value);
-}
-
 // displays hex representation of hash to console
 void MD5::display() const
 {
@@ -219,11 +213,6 @@ void MD5::display() const
     for (unsigned char num : str)
         printf_s("%02x", num);
     putchar('\n');
-}
-
-void MD5::writeToBinaryFile(std::fstream& outFile) const
-{
-    outFile.write((char*)m_value, sizeof(m_value));
 }
 
 
