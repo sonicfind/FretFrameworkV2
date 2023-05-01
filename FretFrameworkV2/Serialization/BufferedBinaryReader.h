@@ -7,6 +7,7 @@ public:
 	using BinaryFileReader::BinaryFileReader;
 	[[nodiscard]] std::string_view extractString();
 	void setNextSectionBounds();
+	void gotoEndOfBuffer();
 
 protected:
 	virtual bool move(size_t amount) override;

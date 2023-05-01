@@ -106,7 +106,7 @@ std::pair<uint32_t, ChartEvent>  BCHFileReader::parseEvent()
 
 void BCHFileReader::nextEvent()
 {
-	m_currentPosition = m_next;
+	gotoEndOfBuffer();
 }
 
 std::pair<size_t, uint32_t> BCHFileReader::extractSingleNote()

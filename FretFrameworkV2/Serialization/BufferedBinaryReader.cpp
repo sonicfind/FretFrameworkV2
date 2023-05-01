@@ -15,6 +15,11 @@ void BufferedBinaryReader::setNextSectionBounds()
 		throw std::runtime_error("Invalid length for section; Extends past EOF");
 }
 
+void BufferedBinaryReader::gotoEndOfBuffer()
+{
+	m_currentPosition = m_next;
+}
+
 bool BufferedBinaryReader::move(size_t amount)
 {
 	if (m_currentPosition + amount > m_next)
