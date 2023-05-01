@@ -148,6 +148,7 @@
     <ClCompile Include="Ini\Ini.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
     <ClCompile Include="Serialization\BCHFileWriter.cpp" />
+    <ClCompile Include="Serialization\BufferedBinaryReader.cpp" />
     <ClCompile Include="Serialization\BufferedBinaryWriter.cpp" />
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
     <ClCompile Include="Serialization\FileReader.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Serialization\BCHFileWriter.h" />
     <ClInclude Include="Serialization\BinaryFileReader.h" />
     <ClInclude Include="Serialization\BinaryFileWriter.h" />
+    <ClInclude Include="Serialization\BufferedBinaryReader.h" />
     <ClInclude Include="Serialization\BufferedBinaryWriter.h" />
     <ClInclude Include="Serialization\ChtConstants.h" />
     <ClInclude Include="Serialization\ChtFileReader.h" />

@@ -178,6 +178,9 @@
     <ClCompile Include="Serialization\BufferedBinaryWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\BufferedBinaryReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="Serialization\BufferedBinaryWriter.h">
       <Filter>Serialization\FileWriter</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\BufferedBinaryReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,23 +10,6 @@ void BCHFileReader::parseTrackHeader()
 	m_nextTracks.push_back(m_currentPosition + trackSize);
 }
 
-bool BCHFileReader::testExtractWebType() noexcept
-{
-	unsigned char val;
-	if (!extract(val))
-		return false;
-
-	return val < 254 || move(2 + 2ULL * (val == 255));
-}
-
-bool BCHFileReader::move(size_t amount)
-{
-	if (m_currentPosition + amount > m_next)
-		return false;
-
-	return FileReader::move(amount);
-}
-
 bool BCHFileReader::isStartOfTrack() const
 {
 	return strncmp(m_currentPosition, "BT", 2) == 0;
@@ -184,17 +167,9 @@ std::vector<std::pair<char, size_t>> BCHFileReader::extractMultiNoteMods()
 	return mods;
 }
 
-std::string_view BCHFileReader::extractText(size_t length)
-{
-	std::string_view str(m_currentPosition, length);
-	if (!move(length))
-		throw std::runtime_error("length of text invalid");
-	return str;
-}
-
 std::string_view BCHFileReader::extractText()
 {
-	return extractText(m_next - m_currentPosition);
+	return extractString(m_next - m_currentPosition);
 }
 
 SpecialPhrase BCHFileReader::extractSpecialPhrase()
@@ -221,8 +196,7 @@ std::pair<size_t, std::string_view> BCHFileReader::extractLyric()
 	if (lane == 0)
 		return { 0, {} };
 
-	const uint32_t length = extractWebType();
-	return { lane, extractText(length) };
+	return { lane, extractString() };
 }
 
 std::pair<Pitch<-1, 9>, uint32_t> BCHFileReader::extractPitchAndDuration()

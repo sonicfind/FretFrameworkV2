@@ -1,39 +1,11 @@
 #pragma once
-#include "BinaryFileReader.h"
+#include "BufferedBinaryReader.h"
 #include "CommonChartParser.h"
 
-class BCHFileReader : public BinaryFileReader<false>, public CommonChartParser
+class BCHFileReader : public BufferedBinaryReader, public CommonChartParser
 {
 public:
-	using BinaryFileReader::BinaryFileReader;
-
-	template <typename T>
-	[[nodiscard]] bool testExtract() const noexcept
-	{
-		return move(sizeof(T));
-	}
-
-	template <bool useVirtual = true>
-	bool extractWebType(uint32_t& value)
-	{
-		value = 0;
-		if (!extract<uint32_t, useVirtual>(value, 1))
-			return false;
-
-		return value < 254 || extract<uint32_t, useVirtual>(value, 2 + 2ULL * (value == 255));
-	}
-
-	template <bool useVirtual = true>
-	[[nodiscard]] uint32_t extractWebType()
-	{
-		uint32_t value;
-		if (!extractWebType<useVirtual>(value))
-			throw std::runtime_error("can not parse this data");
-		return value;
-	}
-	[[nodiscard]] bool testExtractWebType() noexcept;
-
-	virtual bool move(size_t amount) override;
+	using BufferedBinaryReader::BufferedBinaryReader;
 
 	[[nodiscard]] virtual bool isStartOfTrack() const override;
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
@@ -73,5 +45,4 @@ private:
 	void parseTrackHeader();
 	
 	[[nodiscard]] bool validateTrack(const char(&str)[5]);
-	[[nodiscard]] std::string_view extractText(size_t length);
 };
