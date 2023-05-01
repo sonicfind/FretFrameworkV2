@@ -70,6 +70,30 @@ public:
 			return m_source;
 	}
 
+	template <SongAttribute Attribute>
+	bool isBelow(const LibraryEntry& other) const
+	{
+		if constexpr (Attribute == SongAttribute::ALBUM)
+		{
+			if (m_album_track != other.m_album_track)
+				return m_album_track < other.m_album_track;
+		}
+		else if constexpr (Attribute == SongAttribute::PLAYLIST)
+		{
+			if (m_playlist_track != other.m_playlist_track)
+				return m_playlist_track < other.m_playlist_track;
+		}
+
+		int strCmp = 0;
+		if ((strCmp = m_name->compare(*other.m_name)) != 0 ||
+			(strCmp = m_artist->compare(*other.m_artist)) != 0 ||
+			(strCmp = m_album->compare(*other.m_album)) != 0 ||
+			(strCmp = m_charter->compare(*other.m_charter)) != 0)
+			return strCmp < 0;
+		else
+			return m_chartFile.path().parent_path() < other.m_chartFile.path().parent_path();
+	}
+
 private:
 	
 	PointerWrapper<const Modifiers::Modifier> getModifier(std::string_view name) const noexcept;
