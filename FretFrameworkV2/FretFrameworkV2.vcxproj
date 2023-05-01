@@ -183,7 +183,6 @@
     <ClCompile Include="Types\UnicodeString.cpp" />
     <ClCompile Include="Types\utf_utils.cpp" />
     <ClCompile Include="Types\VariableLengthQuantity.cpp" />
-    <ClCompile Include="Types\WebType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ini\Ini.h" />
@@ -243,7 +242,6 @@
     <ClInclude Include="Types\UnicodeString.h" />
     <ClInclude Include="Types\utf_utils.h" />
     <ClInclude Include="Types\VariableLengthQuantity.h" />
-    <ClInclude Include="Types\WebType.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Serialization\Modifier.natvis" />

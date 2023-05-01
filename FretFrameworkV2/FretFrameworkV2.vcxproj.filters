@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="WebType">
-      <UniqueIdentifier>{bc999fb6-d7a8-4064-a246-6177e78b1c85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VariableLengthQuantity">
       <UniqueIdentifier>{e559c9e2-3b8f-4825-8dc8-9556721b3330}</UniqueIdentifier>
     </Filter>
@@ -90,9 +87,6 @@
     </ClCompile>
     <ClCompile Include="Types\utf_utils.cpp">
       <Filter>Unicode</Filter>
-    </ClCompile>
-    <ClCompile Include="Types\WebType.cpp">
-      <Filter>WebType</Filter>
     </ClCompile>
     <ClCompile Include="Song\Song.cpp">
       <Filter>Song</Filter>
@@ -209,9 +203,6 @@
     </ClInclude>
     <ClInclude Include="Types\utf_utils.h">
       <Filter>Unicode</Filter>
-    </ClInclude>
-    <ClInclude Include="Types\WebType.h">
-      <Filter>WebType</Filter>
     </ClInclude>
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h">
       <Filter>SimpleFlatMap</Filter>
