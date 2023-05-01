@@ -56,14 +56,13 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 	std::vector<std::filesystem::path> directories;
 	for (const auto& file : std::filesystem::directory_iterator(directory))
 	{
-		const std::filesystem::path& path = file.path();
 		if (file.is_directory())
 		{
-			directories.push_back(path);
+			directories.push_back(file.path());
 			continue;
 		}
 
-		const std::filesystem::path filename = path.filename();
+		const std::filesystem::path filename = file.path().filename();
 		if (filename == ININAME)
 		{
 			ini = file;
