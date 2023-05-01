@@ -146,6 +146,16 @@ public:
 		return nullptr;
 	}
 
+	[[nodiscard]] Node& at_index(size_t index)
+	{
+		return m_list[index];
+	}
+
+	[[nodiscard]] const Node& at_index(size_t index) const
+	{
+		return m_list[index];
+	}
+
 	// Assumes key exists
 	T& getNodeFromBack(uint32_t position)
 	{
