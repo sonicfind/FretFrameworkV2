@@ -7,6 +7,25 @@ void SongLibrary::scan(const std::vector<std::filesystem::path>& baseDirectories
 		scanDirectory(directory);
 }
 
+void SongLibrary::finalize()
+{
+	for (auto& node : m_songlist)
+		for (auto& entry : *node)
+		{
+			entry.finalize();
+			m_category_title.add(entry);
+			m_category_artist.add(entry);
+			m_category_genre.add(entry);
+			m_category_year.add(entry);
+			m_category_charter.add(entry);
+
+			m_category_album.add(entry);
+			m_category_artistAlbum.add(entry);
+
+			m_category_playlist.add(entry);
+		}
+}
+
 void SongLibrary::clear()
 {
 	m_songlist.clear();

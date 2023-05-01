@@ -14,6 +14,7 @@ int main()
 	std::vector<std::filesystem::path> directories = { filename };
 	auto t1 = std::chrono::high_resolution_clock::now();
 	library.scan(directories);
+	library.finalize();
 	auto t2 = std::chrono::high_resolution_clock::now();
 	long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 	std::cout << "Full scan took " << count / 1000.0 << " milliseconds\n";

@@ -354,6 +354,9 @@
     <ClInclude Include="PtrWrapper\PtrWrapper.h">
       <Filter>PtrWrapper</Filter>
     </ClInclude>
+    <ClInclude Include="Song Library\LibraryCategory.h">
+      <Filter>Song Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">

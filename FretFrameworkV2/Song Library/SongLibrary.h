@@ -1,11 +1,12 @@
 #pragma once
 #include "SimpleFlatMap/SimpleFlatMap.h"
-#include "Entry/LibraryEntry.h"
+#include "LibraryCategory.h"
 
 class SongLibrary
 {
 public:
 	void scan(const std::vector<std::filesystem::path>& baseDirectories);
+	void finalize();
 	void clear();
 
 	[[nodiscard]] size_t getNumSongs() const noexcept;
@@ -16,5 +17,14 @@ private:
 
 private:
 	SimpleFlatMap<std::vector<LibraryEntry>, MD5> m_songlist;
+
+	LibraryCategory<SongAttribute::TITLE>       m_category_title;
+	LibraryCategory<SongAttribute::ARTIST>      m_category_artist;
+	LibraryCategory<SongAttribute::ALBUM>       m_category_album;
+	LibraryCategory<SongAttribute::GENRE>       m_category_genre;
+	LibraryCategory<SongAttribute::YEAR>        m_category_year;
+	LibraryCategory<SongAttribute::CHARTER>     m_category_charter;
+	LibraryCategory<SongAttribute::PLAYLIST>    m_category_playlist;
+	LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> m_category_artistAlbum;
 };
 
