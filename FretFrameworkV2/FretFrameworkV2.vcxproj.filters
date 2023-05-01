@@ -181,6 +181,9 @@
     <ClCompile Include="Serialization\LoadedFile.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\BufferedBinaryWriter.cpp">
+      <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -353,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="Song Library\LibraryCategory.h">
       <Filter>Song Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\BufferedBinaryWriter.h">
+      <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

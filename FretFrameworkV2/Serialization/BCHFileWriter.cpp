@@ -56,9 +56,7 @@ void BCHFileWriter::startEvent(uint32_t position, ChartEvent ev)
 
 void BCHFileWriter::finishEvent()
 {
-	writeWebType((uint32_t)m_event.size());
-	write(m_event.data(), m_event.size());
-	m_event.clear();
+	flushBuffer();
 }
 
 void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
@@ -154,30 +152,6 @@ void BCHFileWriter::writeMicrosPerQuarter(uint32_t micros)
 void BCHFileWriter::writeTimeSig(TimeSig timeSig)
 {
 	append(timeSig);
-}
-
-void BCHFileWriter::writeWebType(uint32_t value)
-{
-	if (value < 254)
-		write(value, 1);
-	else
-	{
-		bool is32 = value > UINT16_MAX;
-		write<char>(254 + is32);
-		write(value, 2 + 2ULL * is32);
-	}
-}
-
-void BCHFileWriter::appendWebType(uint32_t value)
-{
-	if (value < 254)
-		append(value, 1);
-	else
-	{
-		bool is32 = value > UINT16_MAX;
-		append<char>(254 + is32);
-		append(value, 2 + 2ULL * is32);
-	}
 }
 
 void BCHFileWriter::writeTrackHeader(const char(&tag)[5])

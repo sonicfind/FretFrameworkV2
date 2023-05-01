@@ -1,11 +1,11 @@
 #pragma once
-#include "BinaryFileWriter.h"
+#include "BufferedBinaryWriter.h"
 #include "CommonChartWriter.h"
 
-class BCHFileWriter : private BinaryFileWriter<false>, public CommonChartWriter
+class BCHFileWriter : private BufferedBinaryWriter, public CommonChartWriter
 {
 public:
-	using BinaryFileWriter::BinaryFileWriter;
+	using BufferedBinaryWriter::BufferedBinaryWriter;
 
 public:
 	virtual void setPitchMode(PitchWriteMode mode) override {}
@@ -41,30 +41,7 @@ private:
 
 	std::vector<std::streampos> m_trackPositions;
 	uint32_t m_position;
-	std::string m_event;
 	void writeTrackHeader(const char(&tag)[5]);
 
 	void writeTrackLength();
-
-	void writeWebType(uint32_t value);
-
-	template <typename T>
-	void append(const T* const data, size_t size)
-	{
-		m_event.append((const char*)data, size);
-	}
-
-	template <typename T>
-	void append(const T& value, size_t size)
-	{
-		append(&value, size);
-	}
-
-	template <typename T>
-	void append(const T& value)
-	{
-		append(value, sizeof(T));
-	}
-
-	void appendWebType(uint32_t value);
 };
