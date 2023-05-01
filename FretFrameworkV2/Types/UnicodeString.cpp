@@ -65,11 +65,6 @@ bool UnicodeString::operator==(const UnicodeString& str) const
 	return m_string_lowercase == str.m_string_lowercase;
 }
 
-bool UnicodeString::operator<(const UnicodeString& str) const
-{
-	return m_string_lowercase < str.m_string_lowercase;
-}
-
 int UnicodeString::compare(const UnicodeString& str) const
 {
 	return m_string_lowercase.compare(str.m_string_lowercase);

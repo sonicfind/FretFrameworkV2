@@ -77,7 +77,10 @@ public:
 	bool operator==(const UnicodeString& str) const;
 
 	// Comapres by the lowercase versions of the string
-	bool operator<(const UnicodeString& str) const;
+	auto operator<=>(const UnicodeString& str) const
+	{
+		return m_string_lowercase <=> str.m_string_lowercase;
+	}
 
 	int compare(const UnicodeString& str) const;
 
