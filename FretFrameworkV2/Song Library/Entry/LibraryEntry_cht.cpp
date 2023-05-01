@@ -46,7 +46,7 @@ int LibraryEntry::scan_header_cht(ChtFileReader& reader)
 	for (auto& mod : reader.extractModifiers(MODIFIER_LIST))
 	{
 		if (mod.getName() == "FileVersion")
-			version = mod.getValue<uint32_t>();
+			version = mod.getValue<uint16_t>();
 		else if (auto modifier = getModifier(mod.getName()))
 		{
 			if (isModifierDefault(*modifier))

@@ -62,7 +62,7 @@ int Song::load_header_cht(ChtFileReader& reader)
 		if (modifier.getName() == "Resolution")
 			m_tickrate = modifier.getValue<uint32_t>();
 		else if (modifier.getName() == "FileVersion")
-			version = modifier.getValue<uint32_t>();
+			version = modifier.getValue<uint16_t>();
 	}
 	return version;
 }
