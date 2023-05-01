@@ -49,9 +49,6 @@
     <Filter Include="Song Library">
       <UniqueIdentifier>{185b7129-e31a-411a-9c5f-6242cf49aa46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SimpleFlatSet">
-      <UniqueIdentifier>{cd5119a3-ff01-47dc-940b-f02d8fb18cd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Song Library\Entry">
       <UniqueIdentifier>{f2fe8e7a-dabe-4602-bc2a-5c36f75163c0}</UniqueIdentifier>
     </Filter>
