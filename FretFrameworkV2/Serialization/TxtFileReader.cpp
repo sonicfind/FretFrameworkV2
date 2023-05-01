@@ -2,7 +2,7 @@
 
 void TxtFileReader::skipWhiteSpace()
 {
-	while ([ch = *m_currentPosition] {
+	while ([ch = (unsigned char)*m_currentPosition] {
 		if (ch <= 32) return ch && ch != '\n';
 		else          return ch == '='; }())
 		++m_currentPosition;
@@ -15,6 +15,10 @@ void TxtFileReader::setNextPointer()
 
 void TxtFileReader::startRead()
 {
+	static const char BOM[4] = { (char)0xEF, (char)0xBB, (char)0xBF };
+	if (strncmp(m_currentPosition, BOM, 3) == 0)
+		m_currentPosition += 3;
+
 	skipWhiteSpace();
 	setNextPointer();
 	if (*m_currentPosition == '\n')
