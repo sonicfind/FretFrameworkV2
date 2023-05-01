@@ -14,7 +14,10 @@ void SongLibrary::clear()
 
 size_t SongLibrary::getNumSongs() const noexcept
 {
-	return m_songlist.size();
+	size_t size = 0;
+	for (const auto& node : m_songlist)
+		size += node->size();
+	return size;
 }
 
 void SongLibrary::scanDirectory(const std::filesystem::path& directory)
