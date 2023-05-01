@@ -56,7 +56,7 @@ void BCHFileWriter::startEvent(uint32_t position, ChartEvent ev)
 
 void BCHFileWriter::finishEvent()
 {
-	flushBuffer();
+	writeBuffer();
 }
 
 void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)

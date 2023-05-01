@@ -52,13 +52,13 @@ public:
 		m_elements[song->getAttribute<Attribute>()].add(song);
 	}
 
-	void fillCacheIndices(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
 	{
-		writer.write((uint32_t)m_elements.size());
+		writer.append((uint32_t)m_elements.size());
 		for (uint32_t i = 0; i < m_elements.size(); ++i)
 		{
 			const auto& element = m_elements.at_index(i);
-			writer.writeString(element.key->toString());
+			writer.appendString(element.key->toString());
 			for (const auto& song : *element)
 			{
 				if      constexpr (Attribute == SongAttribute::ARTIST)   nodes.at(song.raw()).second.artistIndex = i;
@@ -69,6 +69,7 @@ public:
 				else if constexpr (Attribute == SongAttribute::PLAYLIST) nodes.at(song.raw()).second.playlistIndex = i;
 			}
 		}
+		writer.writeBuffer();
 	}
 
 	auto begin() const noexcept { return m_elements.begin(); }
@@ -91,26 +92,24 @@ public:
 		m_elements[song->getAttribute<SongAttribute::TITLE>().getLowerCase().front()].add(song);
 	}
 
-	void fillCacheIndices(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
 	{
-		const UnicodeString* currentString = nullptr;
-		uint32_t index = UINT32_MAX;
+		std::vector<const UnicodeString*> strings;
 		for (const auto& element : m_elements)
 		{
 			for (const auto& song : *element)
 			{
-				if (!currentString || currentString->get() != song->getName().get())
-				{
-					++index;
-					currentString = &song->getName();
-					writer.appendString(currentString->toString());
-				}
+				if (strings.empty() || strings.back()->get() != song->getName().get())
+					strings.push_back(&song->getName());
 
-				nodes.at(song.raw()).second.nameIndex = index;
+				nodes.at(song.raw()).second.nameIndex = (uint32_t)strings.size() - 1;
 			}
 		}
-		writer.write(index);
-		writer.flushBuffer_NoSize();
+
+		writer.append((uint32_t)strings.size());
+		for (const auto& string : strings)
+			writer.appendString(string->toString());
+		writer.writeBuffer();
 	}
 
 	auto begin() const noexcept { return m_elements.begin(); }

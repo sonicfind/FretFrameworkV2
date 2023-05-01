@@ -14,8 +14,7 @@ public:
 
 	void writeString(std::string_view str);
 	void appendString(std::string_view str);
-	void flushBuffer();
-	void flushBuffer_NoSize();
+	void writeBuffer();
 
 protected:
 	template <typename T>

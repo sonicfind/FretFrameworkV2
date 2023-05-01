@@ -123,13 +123,13 @@ void SongLibrary::writeToCacheFile() const
 
 	BufferedBinaryWriter writer("songcache.bin");
 	writer.write(s_CACHE_VERSION);
-	m_category_title.fillCacheIndices(writer, nodes);
-	m_category_artist.fillCacheIndices(writer, nodes);
-	m_category_album.fillCacheIndices(writer, nodes);
-	m_category_genre.fillCacheIndices(writer, nodes);
-	m_category_year.fillCacheIndices(writer, nodes);
-	m_category_charter.fillCacheIndices(writer, nodes);
-	m_category_playlist.fillCacheIndices(writer, nodes);
+	m_category_title.mapToCache(writer, nodes);
+	m_category_artist.mapToCache(writer, nodes);
+	m_category_album.mapToCache(writer, nodes);
+	m_category_genre.mapToCache(writer, nodes);
+	m_category_year.mapToCache(writer, nodes);
+	m_category_charter.mapToCache(writer, nodes);
+	m_category_playlist.mapToCache(writer, nodes);
 	
 	writer.write((uint32_t)nodes.size());
 	for (const auto& node : nodes)
@@ -138,6 +138,6 @@ void SongLibrary::writeToCacheFile() const
 		writer.append(node.second.first);
 		node.first->serializeSongInfo(writer);
 		writer.append(node.second.second);
-		writer.flushBuffer();
+		writer.writeBuffer();
 	}
 }

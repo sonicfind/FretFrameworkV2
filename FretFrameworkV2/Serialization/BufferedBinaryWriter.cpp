@@ -12,14 +12,9 @@ void BufferedBinaryWriter::appendString(std::string_view str)
 	append(str.data(), str.size());
 }
 
-void BufferedBinaryWriter::flushBuffer()
+void BufferedBinaryWriter::writeBuffer()
 {
 	writeWebType((uint32_t)m_buffer.size());
-	flushBuffer_NoSize();
-}
-
-void BufferedBinaryWriter::flushBuffer_NoSize()
-{
 	write(m_buffer.data(), m_buffer.size());
 	m_buffer.clear();
 }
