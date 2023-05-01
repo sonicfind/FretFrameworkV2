@@ -44,6 +44,45 @@ void LibraryEntry::finalize()
 	}
 }
 
+void LibraryEntry::serializeChartData(BufferedBinaryWriter& writer) const noexcept
+{
+	const ScanTrack* const arr[11] =
+	{
+		&m_scanTracks.lead_5,
+		&m_scanTracks.lead_6,
+		&m_scanTracks.bass_5,
+		&m_scanTracks.bass_6,
+		&m_scanTracks.rhythm,
+		&m_scanTracks.coop,
+		&m_scanTracks.keys,
+		&m_scanTracks.drums4_pro,
+		&m_scanTracks.drums5,
+		&m_scanTracks.vocals,
+		&m_scanTracks.harmonies
+	};
+
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().parent_path().u32string()));
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().filename().u32string()));
+	writer.append(m_chartFile.last_write_time().time_since_epoch().count());
+	for (auto track : arr)
+	{
+		writer.append(track->m_subTracks);
+		writer.append(track->m_intensity);
+	}
+}
+
+void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
+{
+	writer.append(m_iniModifiedTime.time_since_epoch().count());
+	writer.append(m_previewRange);
+	writer.append(m_album_track);
+	writer.append(m_playlist_track);
+	writer.append(m_song_length);
+	writer.append(m_hopo_frequency);
+	writer.appendString(UnicodeString::U32ToStr(m_icon));
+	writer.appendString(UnicodeString::U32ToStr(m_source));
+}
+
 PointerWrapper<const Modifiers::Modifier> LibraryEntry::getModifier(std::string_view name) const noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)

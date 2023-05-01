@@ -113,11 +113,13 @@ void SongLibrary::addEntry(LibraryEntry&& entry, LibraryEntry::ChartType type, c
 
 void SongLibrary::writeToCacheFile() const
 {
-	static constexpr std::pair<MD5, CacheIndices> ye;
 	std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>> nodes;
 	for (auto& node : m_songlist)
+	{
+		const std::pair<MD5, CacheIndices> base = { node.key, {} };
 		for (auto& entry : *node)
-			nodes.insert({ &entry, { node.key, {} } });
+			nodes.insert({ &entry, base });
+	}
 
 	BufferedBinaryWriter writer("songcache.bin");
 	writer.write(s_CACHE_VERSION);
@@ -128,5 +130,14 @@ void SongLibrary::writeToCacheFile() const
 	m_category_year.fillCacheIndices(writer, nodes);
 	m_category_charter.fillCacheIndices(writer, nodes);
 	m_category_playlist.fillCacheIndices(writer, nodes);
-
+	
+	writer.write((uint32_t)nodes.size());
+	for (const auto& node : nodes)
+	{
+		node.first->serializeChartData(writer);
+		writer.append(node.second.first);
+		node.first->serializeSongInfo(writer);
+		writer.append(node.second.second);
+		writer.flushBuffer();
+	}
 }
