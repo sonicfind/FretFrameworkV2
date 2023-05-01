@@ -19,6 +19,9 @@ public:
 		m_songs.insert(iter, song);
 	}
 
+	auto begin() const noexcept { return m_songs.begin(); }
+	auto end() const noexcept { return m_songs.end(); }
+
 	void clear()
 	{
 		m_songs.clear();
@@ -36,6 +39,9 @@ public:
 		m_elements[song->getAttribute<Attribute>()].add(song);
 	}
 
+	auto begin() const noexcept { return m_elements.begin(); }
+	auto end() const noexcept { return m_elements.end(); }
+
 	void clear()
 	{
 		m_elements.clear();
@@ -52,6 +58,9 @@ public:
 	{
 		m_elements[song->getAttribute<SongAttribute::TITLE>().getLowerCase().front()].add(song);
 	}
+
+	auto begin() const noexcept { return m_elements.begin(); }
+	auto end() const noexcept { return m_elements.end(); }
 
 	void clear()
 	{
