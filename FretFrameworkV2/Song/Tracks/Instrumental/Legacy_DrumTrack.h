@@ -8,13 +8,7 @@ private:
 	using InstrumentalTrack<DrumNote_Legacy>::load;
 
 public:
-	Legacy_DrumTrack() = default;
-	Legacy_DrumTrack(Legacy_DrumTrack&&) = default;
-	Legacy_DrumTrack& operator=(Legacy_DrumTrack&&) = default;
-
-	Legacy_DrumTrack(const InstrumentalTrack&) = delete;
-	Legacy_DrumTrack& operator=(const InstrumentalTrack&) = delete;
-
+	Legacy_DrumTrack(DrumType_Enum type);
 	Legacy_DrumTrack(MidiFileReader& reader);
 
 	void load_V1(size_t diff, ChtFileReader& reader);

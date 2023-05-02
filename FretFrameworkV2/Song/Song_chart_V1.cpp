@@ -3,7 +3,7 @@
 
 void Song::traverse_cht_V1(ChtFileReader& reader)
 {
-	Legacy_DrumTrack drumsLegacy;
+	Legacy_DrumTrack drumsLegacy(m_baseDrumType);
 	while (reader.isStartOfTrack())
 	{
 		if (reader.validateSyncTrack())

@@ -6,6 +6,7 @@
 void Song::load_mid(const std::filesystem::path& path)
 {
 	MidiFileReader reader(path);
+	reader.setStarPowerValue(m_midiStarPowerNote);
 	while (reader.startNextTrack())
 	{
 		if (reader.getTrackNumber() == 1)
@@ -38,11 +39,18 @@ void Song::load_mid(const std::filesystem::path& path)
 				m_noteTracks.keys.load(reader);
 			else if (name == "PART DRUMS")
 			{
-				Legacy_DrumTrack drumsLegacy(reader);
-				if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
-					drumsLegacy.transfer(m_noteTracks.drums4_pro);
+				if (m_baseDrumType == DrumType_Enum::LEGACY)
+				{
+					Legacy_DrumTrack drumsLegacy(reader);
+					if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
+						drumsLegacy.transfer(m_noteTracks.drums4_pro);
+					else
+						drumsLegacy.transfer(m_noteTracks.drums5);
+				}
+				else if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO)
+					m_noteTracks.drums4_pro.load(reader);
 				else
-					drumsLegacy.transfer(m_noteTracks.drums5);
+					m_noteTracks.drums5.load(reader);
 			}
 			else if (name == "PART VOCALS")
 				m_noteTracks.vocals.load(reader);

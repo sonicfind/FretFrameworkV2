@@ -1,5 +1,6 @@
 #include "Legacy_DrumTrack.h"
 
+Legacy_DrumTrack::Legacy_DrumTrack(DrumType_Enum type) : m_type(type) {}
 Legacy_DrumTrack::Legacy_DrumTrack(MidiFileReader& reader)
 {
 	InstrumentalTrack<DrumNote_Legacy>::load(reader);
