@@ -5,18 +5,21 @@
 std::string parseInput();
 std::vector<std::u32string> getDirectories();
 void loadSong();
+void startClock();
+void stopClock(std::string_view str);
+
+std::chrono::steady_clock::time_point g_t1;
+std::chrono::steady_clock::time_point g_t2;
+long long g_count;
 
 int main()
 {
 	SongLibrary library;
-	auto t1 = std::chrono::high_resolution_clock::now();
-	auto t2 = std::chrono::high_resolution_clock::now();
-	long long count;
+	
+	startClock();
 	if (library.runPartialScan())
 	{
-		t2 = std::chrono::high_resolution_clock::now();
-		count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-		std::cout << "Partial scan took " << count / 1000.0 << " milliseconds\n";
+		stopClock("Partial scan");
 		std::cout << "# of Songs: " << library.getNumSongs() << '\n';
 	}
 
@@ -39,11 +42,9 @@ int main()
 			{
 				std::cout << '\n';
 				const std::vector<std::u32string> directories = getDirectories();
-				t1 = std::chrono::high_resolution_clock::now();
+				startClock();
 				library.runFullScan(directories);
-				t2 = std::chrono::high_resolution_clock::now();
-				count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-				std::cout << "Full scan took " << count / 1000.0 << " milliseconds\n";
+				stopClock("Full scan");
 				std::cout << "# of Songs: " << library.getNumSongs() << '\n';
 			}
 				break;
@@ -61,6 +62,18 @@ int main()
 	std::string buf;
 	std::getline(std::cin, buf);
 	return 0;
+}
+
+void startClock()
+{
+	g_t1 = std::chrono::high_resolution_clock::now();
+}
+
+void stopClock(std::string_view str)
+{
+	g_t2 = std::chrono::high_resolution_clock::now();
+	g_count = std::chrono::duration_cast<std::chrono::microseconds>(g_t2 - g_t1).count();
+	std::cout << str << " took " << g_count / 1000.0 << " milliseconds\n";
 }
 
 std::string parseInput()
