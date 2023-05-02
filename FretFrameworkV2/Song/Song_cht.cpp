@@ -93,6 +93,16 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 			if (m_playlist.empty())
 				m_playlist = modifier.getValue<UnicodeString>().get();
 		}
+		else if (modifier.getName() == "diff_band")
+		{
+			if (auto diff = getModifier("diff_band"))
+			{
+				if (diff->getValue<int32_t>() == -1)
+					*diff = modifier.getValue<int32_t>();
+			}
+			else
+				m_modifiers.push_back(modifier);
+		}
 	}
 	return version;
 }

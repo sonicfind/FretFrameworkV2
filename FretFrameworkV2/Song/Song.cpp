@@ -324,3 +324,11 @@ void Song::save_noteTracks(CommonChartWriter& writer) const
 	write(m_noteTracks.vocals, 9);
 	write(m_noteTracks.harmonies, 10);
 }
+
+PointerWrapper<Modifiers::Modifier> Song::getModifier(std::string_view name) noexcept
+{
+	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)
+		if (iter->getName() == name)
+			return *iter;
+	return {};
+}

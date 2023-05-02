@@ -56,6 +56,9 @@ private:
 	void save_noteTracks(CommonChartWriter& writer) const;
 
 private:
+	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
+
+private:
 	std::u32string m_name;
 	std::u32string m_artist;
 	std::u32string m_album;
