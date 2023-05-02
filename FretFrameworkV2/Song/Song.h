@@ -36,7 +36,7 @@ private:
 	void load_events(CommonChartParser& parser);
 	void load_noteTrack(CommonChartParser& parser);
 
-	int  load_header_cht(ChtFileReader& reader);
+	int16_t load_header_cht(ChtFileReader& reader);
 
 	void traverse_cht_V1(ChtFileReader& reader);
 	void load_events_V1(ChtFileReader& reader);

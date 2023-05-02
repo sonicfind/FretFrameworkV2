@@ -11,6 +11,7 @@ namespace Modifiers
 		UINT32,
 		INT32,
 		UINT16,
+		INT16,
 		BOOL,
 		FLOAT,
 		FLOATARRAY,
@@ -33,6 +34,7 @@ namespace Modifiers
 				           std::is_same<base_T, uint32_t>::value ||
 				           std::is_same<base_T, int32_t>::value ||
 				           std::is_same<base_T, uint16_t>::value ||
+				           std::is_same<base_T, int16_t>::value ||
 				           std::is_same<base_T, bool>::value ||
 				           std::is_same<base_T, float>::value, "Type is not allowed in a modifier");
 
@@ -46,6 +48,8 @@ namespace Modifiers
 				m_type = Type::INT32;
 			else if constexpr (std::is_same<base_T, uint16_t>::value)
 				m_type = Type::UINT16;
+			else if constexpr (std::is_same<base_T, uint16_t>::value)
+				m_type = Type::INT16;
 			else if constexpr (std::is_same<base_T, bool>::value)
 				m_type = Type::BOOL;
 			else
@@ -146,6 +150,7 @@ namespace Modifiers
 			else if constexpr (std::is_same_v<T, uint32_t>)       return m_type == Type::UINT32;
 			else if constexpr (std::is_same_v<T, int32_t>)        return m_type == Type::INT32;
 			else if constexpr (std::is_same_v<T, uint16_t>)       return m_type == Type::UINT16;
+			else if constexpr (std::is_same_v<T, int16_t>)        return m_type == Type::INT16;
 			else if constexpr (std::is_same_v<T, float>)          return m_type == Type::FLOAT;
 			else if constexpr (std::is_same_v<T, bool>)           return m_type == Type::BOOL;
 			else if constexpr (std::is_same_v<T, float[2]>)       return m_type == Type::FLOATARRAY;

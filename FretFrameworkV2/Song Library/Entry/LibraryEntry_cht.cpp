@@ -1,20 +1,5 @@
 #include "LibraryEntry.h"
 
-using ModifierNode = TxtFileReader::ModifierNode;
-const TxtFileReader::ModifierOutline MODIFIER_LIST =
-{
-	{ "Album",        { "album", ModifierNode::STRING_CHART } },
-	{ "Artist",       { "artist", ModifierNode::STRING_CHART } },
-	{ "Charter",      { "charter", ModifierNode::STRING_CHART } },
-	{ "Difficulty",   { "diff_band", ModifierNode::INT32 } },
-	{ "FileVersion",  { "FileVersion", ModifierNode::UINT16 } },
-	{ "Genre",        { "genre", ModifierNode::STRING_CHART } },
-	{ "Name",         { "name", ModifierNode::STRING_CHART } },
-	{ "PreviewEnd",   { "preview_end_time", ModifierNode::FLOAT } },
-	{ "PreviewStart", { "preview_start_time", ModifierNode::FLOAT } },
-	{ "Year",         { "year", ModifierNode::STRING_CHART } },
-};
-
 void LibraryEntry::scan_cht(const LoadedFile& file)
 {
 	ChtFileReader reader(file);
@@ -30,6 +15,21 @@ void LibraryEntry::scan_cht(const LoadedFile& file)
 
 int LibraryEntry::scan_header_cht(ChtFileReader& reader)
 {
+	using ModifierNode = TxtFileReader::ModifierNode;
+	static const TxtFileReader::ModifierOutline MODIFIER_LIST =
+	{
+		{ "Album",        { "album", ModifierNode::STRING_CHART } },
+		{ "Artist",       { "artist", ModifierNode::STRING_CHART } },
+		{ "Charter",      { "charter", ModifierNode::STRING_CHART } },
+		{ "Difficulty",   { "diff_band", ModifierNode::INT32 } },
+		{ "FileVersion",  { "FileVersion", ModifierNode::INT16 } },
+		{ "Genre",        { "genre", ModifierNode::STRING_CHART } },
+		{ "Name",         { "name", ModifierNode::STRING_CHART } },
+		{ "PreviewEnd",   { "preview_end_time", ModifierNode::FLOAT } },
+		{ "PreviewStart", { "preview_start_time", ModifierNode::FLOAT } },
+		{ "Year",         { "year", ModifierNode::STRING_CHART } },
+	};
+
 	static constexpr auto isModifierDefault = [](const Modifiers::Modifier& modifier)
 	{
 		if (modifier.getName() == "name")             return modifier.getValue<UnicodeString>() == s_DEFAULT_NAME;
@@ -46,7 +46,7 @@ int LibraryEntry::scan_header_cht(ChtFileReader& reader)
 	for (auto& mod : reader.extractModifiers(MODIFIER_LIST))
 	{
 		if (mod.getName() == "FileVersion")
-			version = mod.getValue<uint16_t>();
+			version = mod.getValue<int16_t>();
 		else if (auto modifier = getModifier(mod.getName()))
 		{
 			if (isModifierDefault(*modifier))

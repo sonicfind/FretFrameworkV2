@@ -19,9 +19,9 @@ void Song::save_cht(const std::filesystem::path& path)
 	save(writer);
 }
 
-int Song::load_header_cht(ChtFileReader& reader)
+using ModifierNode = TxtFileReader::ModifierNode;
+int16_t Song::load_header_cht(ChtFileReader& reader)
 {
-	using ModifierNode = TxtFileReader::ModifierNode;
 	static const TxtFileReader::ModifierOutline FULL_MODIFIERS =
 	{
 		{ "Album",        { "album", ModifierNode::STRING_CHART_NOCASE } },
@@ -34,7 +34,7 @@ int Song::load_header_cht(ChtFileReader& reader)
 		{ "Drum3Stream",  { "Drum3Stream", ModifierNode::STRING_CHART_NOCASE } },
 		{ "Drum4Stream",  { "Drum4Stream", ModifierNode::STRING_CHART_NOCASE } },
 		{ "DrumStream",   { "DrumStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "FileVersion",  { "FileVersion", ModifierNode::UINT16 } },
+		{ "FileVersion",  { "FileVersion", ModifierNode::INT16 } },
 		{ "Genre",        { "genre", ModifierNode::STRING_CHART_NOCASE } },
 		{ "GuitarStream", { "GuitarStream", ModifierNode::STRING_CHART_NOCASE } },
 		{ "KeysStream",   { "KeysStream", ModifierNode::STRING_CHART_NOCASE } },
@@ -51,18 +51,35 @@ int Song::load_header_cht(ChtFileReader& reader)
 
 	static const TxtFileReader::ModifierOutline PARTIAL_MODIFIERS =
 	{
-		{ "FileVersion", { "FileVersion", ModifierNode::UINT16 } },
+		{ "FileVersion", { "FileVersion", ModifierNode::INT16 } },
 		{ "Resolution",  { "Resolution" , ModifierNode::UINT16 } },
 	};
 
-	int version = 0;
-	auto modifiers = reader.extractModifiers(FULL_MODIFIERS);
+	std::pair<bool, bool> checked;
+	int16_t version = 0;
+	auto modifiers = reader.extractModifiers(PARTIAL_MODIFIERS);
 	for (const auto& modifier : modifiers)
 	{
 		if (modifier.getName() == "Resolution")
-			m_tickrate = modifier.getValue<uint16_t>();
+		{
+			if (!checked.first)
+			{
+				m_tickrate = modifier.getValue<uint16_t>();
+				if (checked.second)
+					break;
+			}
+			checked.first = true;
+		}
 		else if (modifier.getName() == "FileVersion")
-			version = modifier.getValue<uint16_t>();
+		{
+			if (!checked.second)
+			{
+				version = modifier.getValue<int16_t>();
+				if (checked.first)
+					break;
+			}
+			checked.second = true;
+		}
 	}
 	return version;
 }

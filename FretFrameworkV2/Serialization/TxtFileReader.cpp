@@ -158,6 +158,8 @@ Modifiers::Modifier TxtFileReader::createModifier(ModifierNode node)
 			return { node.name, extract<int32_t>() };
 		case ModifierNode::UINT16:
 			return { node.name, extract<uint16_t>() };
+		case ModifierNode::INT16:
+			return { node.name, extract<int16_t>() };
 		case ModifierNode::BOOL:
 			return { node.name, extract<bool>() };
 		case ModifierNode::FLOAT:

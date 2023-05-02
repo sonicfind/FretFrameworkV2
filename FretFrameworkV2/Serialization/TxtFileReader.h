@@ -86,6 +86,7 @@ public:
 			UINT32,
 			INT32,
 			UINT16,
+			INT16,
 			BOOL,
 			FLOAT,
 			FLOATARRAY
