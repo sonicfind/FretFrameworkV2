@@ -8,7 +8,7 @@ const UnicodeString LibraryEntry::s_DEFAULT_GENRE{ U"Unknown Genre" };
 const UnicodeString LibraryEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
 const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 
-LibraryEntry::LibraryEntry(const std::filesystem::path& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite)
+LibraryEntry::LibraryEntry(const std::pair<std::filesystem::path, ChartType>& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite)
 	: m_chartFile(chartpath), m_chartWriteTime(chartLastWrite), m_iniWriteTime(iniLastWrite) {}
 
 void LibraryEntry::mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist)
@@ -22,19 +22,19 @@ void LibraryEntry::mapStrings(UnicodeWrapper name, UnicodeWrapper artist, Unicod
 	m_playlist = playlist;
 }
 
-bool LibraryEntry::scan(const LoadedFile& file, const ChartType type) noexcept
+bool LibraryEntry::scan(const LoadedFile& file) noexcept
 {
 	try
 	{
-		if (type == CHT)
+		if (m_chartFile.second == ChartType::CHT)
 			scan_cht(file);
 
 		if (!getModifier("name"))
 			return false;
 
-		if (type == MID)
+		if (m_chartFile.second == ChartType::MID)
 			scan_mid(file);
-		else if (type == BCH)
+		else if (m_chartFile.second == ChartType::BCH)
 			scan_bch(file);
 
 		return validateForNotes();
@@ -92,8 +92,8 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 
 void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcept
 {
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.parent_path().u32string()));
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.filename().u32string()));
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.first.parent_path().u32string()));
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.first.filename().u32string()));
 	writer.append(m_chartWriteTime.time_since_epoch().count());
 	writer.append(m_iniWriteTime.time_since_epoch().count());
 }
@@ -247,7 +247,7 @@ void LibraryEntry::mapModifierVariables()
 	else
 	{
 		m_modifiers.reserve(m_modifiers.size() + 1);
-		m_modifiers.push_back({ "playlist", UnicodeString(m_chartFile.parent_path().parent_path().u32string()) });
+		m_modifiers.push_back({ "playlist", UnicodeString(m_chartFile.first.parent_path().parent_path().u32string()) });
 		m_playlist = m_modifiers.back().getValue<UnicodeString>();
 	}
 

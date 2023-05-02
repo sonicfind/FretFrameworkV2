@@ -18,8 +18,7 @@ private:
 	void finalize();
 	std::optional<BufferedBinaryReader> loadCachefile();
 	void readStrings(BufferedBinaryReader& reader);
-	void readNodes(BufferedBinaryReader& reader);
-	void readNodes(BufferedBinaryReader& reader, const std::vector<std::u32string>& baseDirectories);
+	void readNodes(BufferedBinaryReader& reader, auto&& validationFunc);
 	void writeToCacheFile() const;
 
 	void scanDirectory(const std::filesystem::path& directory);

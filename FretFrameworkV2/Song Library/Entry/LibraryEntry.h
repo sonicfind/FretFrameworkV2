@@ -23,24 +23,33 @@ enum class SongAttribute
 	SOURCE,
 };
 
+enum class ChartType
+{
+	BCH,
+	CHT,
+	MID
+};
+
+static const std::pair<std::filesystem::path, ChartType> CHARTTYPES[] =
+{
+	{ U"notes.bch",	  ChartType::BCH },
+	{ U"notes.cht",   ChartType::CHT },
+	{ U"notes.mid",   ChartType::MID },
+	{ U"notes.midi",  ChartType::MID },
+	{ U"notes.chart", ChartType::CHT },
+};
+
 class LibraryEntry
 {
 public:
-	enum ChartType
-	{
-		BCH,
-		CHT,
-		MID
-	};
-
 	using UnicodeWrapper = PointerWrapper<const UnicodeString>;
 
 public:
-	LibraryEntry(const std::filesystem::path& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite = {});
+	LibraryEntry(const std::pair<std::filesystem::path, ChartType>& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite = {});
 
 	void mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist);
 	void readIni(const std::filesystem::directory_entry& iniFile);
-	bool scan(const LoadedFile& file, const ChartType type) noexcept;
+	bool scan(const LoadedFile& file) noexcept;
 	void finalize();
 	void extractSongInfo(BufferedBinaryReader& reader);
 	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
@@ -54,7 +63,7 @@ public:
 	const UnicodeString& getCharter() const { return *m_charter; }
 	const UnicodeString& getPlaylist() const { return *m_playlist; }
 	const uint32_t& getSongLength() const { return m_song_length; }
-	std::filesystem::path getDirectory() const { return m_chartFile.parent_path(); }
+	std::filesystem::path getDirectory() const { return m_chartFile.first.parent_path(); }
 
 	template<SongAttribute Attribute>
 	const auto& getAttribute() const
@@ -103,9 +112,8 @@ public:
 			return getDirectory() < other.getDirectory();
 	}
 
-private:
-	
 	PointerWrapper<const Modifiers::Modifier> getModifier(std::string_view name) const noexcept;
+private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
 
 private:
@@ -165,7 +173,7 @@ private:
 
 	std::vector<Modifiers::Modifier> m_modifiers;
 
-	std::filesystem::path m_chartFile;
+	std::pair<std::filesystem::path, ChartType> m_chartFile;
 	std::filesystem::file_time_type m_chartWriteTime;
 	std::filesystem::file_time_type m_iniWriteTime;
 
