@@ -18,13 +18,12 @@ void Song::setMetaData(const LibraryEntry& entry)
 }
 
 EntryStatus Song::load(const LibraryEntry& entry)
-{
-	clear();
-	setMetaData(entry);
+{	
 	const std::filesystem::directory_entry fileEntry = entry.getFileEntry();
 	if (!fileEntry.exists() || fileEntry.last_write_time() != entry.getLastWriteTime())
 		return EntryStatus::NEEDS_RESCAN;
 
+	setMetaData(entry);
 	if (!loadIni(entry.getDirectory() / U"song.ini"))
 		return EntryStatus::NEEDS_RESCAN;
 
@@ -55,7 +54,6 @@ EntryStatus Song::load(const LibraryEntry& entry)
 
 bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept
 {
-	clear();
 	setMetaData(chartFile.first.parent_path() / U"song.ini");
 
 	try

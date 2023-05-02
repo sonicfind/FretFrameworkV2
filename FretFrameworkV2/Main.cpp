@@ -130,6 +130,7 @@ void loadSong()
 				startClock();
 				song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second });
 				stopClock("Song load");
+				song.clear();
 				break;
 			}
 		}
