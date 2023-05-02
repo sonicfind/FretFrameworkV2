@@ -55,6 +55,8 @@ public:
 	const UnicodeString& getCharter() const noexcept { return *m_charter; }
 	const UnicodeString& getPlaylist() const noexcept { return *m_playlist; }
 	const uint32_t& getSongLength() const noexcept { return m_song_length; }
+	const uint32_t& getHopoFrequency() const noexcept { return m_hopo_frequency; }
+	const uint32_t& getMidiStarPowerNote() const noexcept { return m_midiStarPowerNote; }
 	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
 
 	template<SongAttribute Attribute>
