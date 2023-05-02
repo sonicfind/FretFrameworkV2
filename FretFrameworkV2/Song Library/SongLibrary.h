@@ -7,8 +7,10 @@ class SongLibrary
 	static constexpr uint32_t s_CACHE_VERSION = 0x05012023;
 
 public:
+	
 	void scan(const std::vector<std::filesystem::path>& baseDirectories);
 	void finalize();
+	void readFromCacheFile();
 	void writeToCacheFile() const;
 	void clear();
 
@@ -29,5 +31,15 @@ private:
 	LibraryCategory<SongAttribute::CHARTER>     m_category_charter;
 	LibraryCategory<SongAttribute::PLAYLIST>    m_category_playlist;
 	LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> m_category_artistAlbum;
+	struct
+	{
+		std::vector<UnicodeString> titles;
+		std::vector<UnicodeString> artists;
+		std::vector<UnicodeString> albums;
+		std::vector<UnicodeString> genres;
+		std::vector<UnicodeString> years;
+		std::vector<UnicodeString> charters;
+		std::vector<UnicodeString> playlists;
+	} m_stringBuffers;
 };
 

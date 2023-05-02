@@ -111,6 +111,36 @@ void SongLibrary::addEntry(LibraryEntry&& entry, LibraryEntry::ChartType type, c
 		std::cout << "Failed: " << UnicodeString::U32ToStr(chartPath.u32string()) << '\n';
 }
 
+void SongLibrary::readFromCacheFile()
+{
+	if (!std::filesystem::exists("songcache.bin"))
+		return;
+
+	BufferedBinaryReader reader("songcache.bin");
+	if (s_CACHE_VERSION != reader.extract<uint32_t, false>())
+		return;
+
+	const auto getStrings = [&reader]()
+	{
+		reader.setNextSectionBounds();
+
+		const uint32_t numStrings = reader.extract<uint32_t>();
+		std::vector<UnicodeString> strings;
+		strings.reserve(numStrings);
+		for (uint32_t i = 0; i < numStrings; ++i)
+			strings.emplace_back(reader.extractString());
+		return strings;
+	};
+
+	m_stringBuffers.titles = getStrings();
+	m_stringBuffers.artists = getStrings();
+	m_stringBuffers.albums = getStrings();
+	m_stringBuffers.genres = getStrings();
+	m_stringBuffers.years = getStrings();
+	m_stringBuffers.charters = getStrings();
+	m_stringBuffers.playlists = getStrings();
+}
+
 void SongLibrary::writeToCacheFile() const
 {
 	std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>> nodes;
