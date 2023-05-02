@@ -55,18 +55,19 @@ public:
 	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
 	void serializeSongInfo(BufferedBinaryWriter& writer) const noexcept;
 
-	const UnicodeString& getArtist() const { return *m_artist; }
-	const UnicodeString& getName() const { return *m_name; }
-	const UnicodeString& getAlbum() const { return *m_album; }
-	const UnicodeString& getGenre() const { return *m_genre; }
-	const UnicodeString& getYear() const { return *m_year; }
-	const UnicodeString& getCharter() const { return *m_charter; }
-	const UnicodeString& getPlaylist() const { return *m_playlist; }
-	const uint32_t& getSongLength() const { return m_song_length; }
-	std::filesystem::path getDirectory() const { return m_chartFile.first.parent_path(); }
+	ChartType getChartType() const noexcept { return m_chartFile.second; }
+	const UnicodeString& getArtist() const noexcept { return *m_artist; }
+	const UnicodeString& getName() const noexcept { return *m_name; }
+	const UnicodeString& getAlbum() const noexcept { return *m_album; }
+	const UnicodeString& getGenre() const noexcept { return *m_genre; }
+	const UnicodeString& getYear() const noexcept { return *m_year; }
+	const UnicodeString& getCharter() const noexcept { return *m_charter; }
+	const UnicodeString& getPlaylist() const noexcept { return *m_playlist; }
+	const uint32_t& getSongLength() const noexcept { return m_song_length; }
+	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
 
 	template<SongAttribute Attribute>
-	const auto& getAttribute() const
+	const auto& getAttribute() const noexcept
 	{
 		if constexpr (Attribute == SongAttribute::TITLE)
 			return *m_name;
