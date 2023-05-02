@@ -8,6 +8,8 @@ class PointerWrapper
 public:
 	PointerWrapper() = default;
 	PointerWrapper(T& obj) : ptr(&obj) {}
+	PointerWrapper& operator=(const PointerWrapper&) = default;
+	PointerWrapper& operator=(T& obj) { ptr = &obj; return *this; }
 	T* operator->() noexcept { return ptr; }
 	T& operator*() noexcept { return *ptr; }
 	const T* operator->() const noexcept { return ptr; }

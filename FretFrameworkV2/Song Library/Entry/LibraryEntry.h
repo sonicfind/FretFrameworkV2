@@ -33,11 +33,13 @@ public:
 		MID
 	};
 
+	using UnicodeWrapper = PointerWrapper<const UnicodeString>;
+
 public:
 	LibraryEntry(const std::filesystem::directory_entry& chartFile);
 	LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile);
 
-	void mapStrings(const UnicodeString* name, const UnicodeString* artist, const UnicodeString* album, const UnicodeString* genre, const UnicodeString* year, const UnicodeString* charter, const UnicodeString* playlist);
+	void mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist);
 	void readIni(const std::filesystem::directory_entry& iniFile);
 	bool scan(const LoadedFile& file, const ChartType type) noexcept;
 	void finalize();
@@ -146,13 +148,13 @@ private:
 		VocalScan<3>                                  harmonies;
 	} m_scanTracks;
 
-	const UnicodeString* m_name = nullptr;
-	const UnicodeString* m_artist = nullptr;
-	const UnicodeString* m_album = nullptr;
-	const UnicodeString* m_genre = nullptr;
-	const UnicodeString* m_year = nullptr;
-	const UnicodeString* m_charter = nullptr;
-	const UnicodeString* m_playlist = nullptr;
+	UnicodeWrapper m_name;
+	UnicodeWrapper m_artist;
+	UnicodeWrapper m_album ;
+	UnicodeWrapper m_genre;
+	UnicodeWrapper m_year;
+	UnicodeWrapper m_charter;
+	UnicodeWrapper m_playlist;
 
 	uint32_t m_song_length = 0;
 	float m_previewRange[2]{};

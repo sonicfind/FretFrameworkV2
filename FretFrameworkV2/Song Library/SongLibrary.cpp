@@ -180,13 +180,13 @@ void SongLibrary::readFromCacheFile()
 
 		LibraryEntry entry(chartFile, iniFile);
 		{
-			const UnicodeString* const name = &m_stringBuffers.titles[reader.extract<uint32_t>()];
-			const UnicodeString* const artist = &m_stringBuffers.artists[reader.extract<uint32_t>()];
-			const UnicodeString* const album = &m_stringBuffers.albums[reader.extract<uint32_t>()];
-			const UnicodeString* const genre = &m_stringBuffers.genres[reader.extract<uint32_t>()];
-			const UnicodeString* const year = &m_stringBuffers.years[reader.extract<uint32_t>()];
-			const UnicodeString* const charter = &m_stringBuffers.charters[reader.extract<uint32_t>()];
-			const UnicodeString* const playlist = &m_stringBuffers.playlists[reader.extract<uint32_t>()];
+			const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
+			const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
+			const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
+			const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
+			const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
+			const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
+			const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
 			entry.mapStrings(name, artist, album, genre, year, charter, playlist);
 		}
 		entry.extractSongInfo(reader);

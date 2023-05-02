@@ -11,7 +11,7 @@ const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile) : m_chartFile(chartFile) {}
 LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile) : m_chartFile(chartFile), m_iniModifiedTime(iniFile.last_write_time()) {}
 
-void LibraryEntry::mapStrings(const UnicodeString* name, const UnicodeString* artist, const UnicodeString* album, const UnicodeString* genre, const UnicodeString* year, const UnicodeString* charter, const UnicodeString* playlist)
+void LibraryEntry::mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist)
 {
 	m_name = name;
 	m_artist = artist;
@@ -243,25 +243,25 @@ void LibraryEntry::reorderModifiers()
 void LibraryEntry::mapModifierVariables()
 {
 	if (auto playlist = getModifier("playlist"))
-		m_playlist = &playlist->getValue<UnicodeString>();
+		m_playlist = playlist->getValue<UnicodeString>();
 	else
 	{
 		m_modifiers.reserve(m_modifiers.size() + 1);
 		m_modifiers.push_back({ "playlist", UnicodeString(m_chartFile.path().parent_path().parent_path().u32string()) });
-		m_playlist = &m_modifiers.back().getValue<UnicodeString>();
+		m_playlist = m_modifiers.back().getValue<UnicodeString>();
 	}
 
-	m_name = &m_modifiers.front().getValue<UnicodeString>();
+	m_name = m_modifiers.front().getValue<UnicodeString>();
 	std::vector<Modifiers::Modifier>::const_iterator iter = m_modifiers.begin() + 1;
-	const auto apply = [&](const UnicodeString*& ptr, std::string_view str, const UnicodeString& def)
+	const auto apply = [&](UnicodeWrapper& ptr, std::string_view str, const UnicodeString& def)
 	{
 		if (iter != m_modifiers.end() && iter->getName() == str)
 		{
-			ptr = &iter->getValue<UnicodeString>();
+			ptr = iter->getValue<UnicodeString>();
 			++iter;
 		}
 		else
-			ptr = &def;
+			ptr = def;
 	};
 	apply(m_artist, "artist", s_DEFAULT_ARTIST);
 	apply(m_album, "album", s_DEFAULT_ALBUM);
