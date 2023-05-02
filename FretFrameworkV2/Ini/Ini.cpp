@@ -127,7 +127,18 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 	auto modifiers = ReadIniFile(path, { SONG_INI_MODIFIERS });
 	if (modifiers.isEmpty())
 		return {};
-	return modifiers.back();
+	return modifiers.front();
+}
+
+std::vector<Modifiers::Modifier> Ini::GrabLoadingPhrase(const std::filesystem::path& path)
+{
+	static const std::pair<std::string_view, IniFileReader::ModifierOutline> LOADING_PHRASE =
+	{ "[song]", { { "loading_phrase", { "loading_phrase",   ModifierNode::STRING_NOCASE } } } };
+
+	auto modifiers = ReadIniFile(path, { LOADING_PHRASE });
+	if (modifiers.isEmpty())
+		return {};
+	return modifiers.front();
 }
 
 void Ini::WriteSongIniFile(const std::filesystem::path& path, const std::vector<Modifiers::Modifier>& modifiers)

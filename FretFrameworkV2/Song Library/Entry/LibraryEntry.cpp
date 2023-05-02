@@ -251,6 +251,15 @@ void LibraryEntry::reorderModifiers()
 
 void LibraryEntry::mapModifierVariables()
 {
+	for (size_t i = 0; i < m_modifiers.size(); ++i)
+	{
+		if (m_modifiers[i].getName() == "loading_phrase")
+		{
+			m_modifiers.erase(m_modifiers.begin() + i);
+			break;
+		}
+	}
+
 	m_name = m_modifiers.front().getValue<UnicodeString>();
 	std::vector<Modifiers::Modifier>::const_iterator iter = m_modifiers.begin() + 1;
 	const auto apply = [&](UnicodeWrapper& ptr, std::string_view str, const UnicodeString& def)

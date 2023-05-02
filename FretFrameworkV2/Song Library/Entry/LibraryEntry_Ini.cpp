@@ -9,7 +9,15 @@ void LibraryEntry::readIni(const std::filesystem::directory_entry& iniFile)
 
 void LibraryEntry::writeIni()
 {
-	const std::filesystem::path directory = m_chartFile.first.parent_path();
-	Ini::WriteSongIniFile(directory / "song.ini", m_modifiers);
-	m_iniWriteTime = std::filesystem::last_write_time(directory / "song.ini");
+	const std::filesystem::path iniFile = m_chartFile.first.parent_path() / "song.ini";
+	Ini::WriteSongIniFile(iniFile, m_modifiers);
+	m_iniWriteTime = std::filesystem::last_write_time(iniFile);
+}
+
+std::u32string LibraryEntry::grabLoadingPhrase() const noexcept
+{
+	auto mods = Ini::ReadSongIniFile(m_chartFile.first.parent_path() / "song.ini");
+	if (mods.empty())
+		return {};
+	return mods.front().getValue<std::u32string>();
 }

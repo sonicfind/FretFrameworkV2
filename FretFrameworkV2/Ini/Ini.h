@@ -43,5 +43,6 @@ namespace Ini
 	}
 
 	std::vector<Modifiers::Modifier> ReadSongIniFile(const std::filesystem::path& path);
+	std::vector<Modifiers::Modifier> GrabLoadingPhrase(const std::filesystem::path& path);
 	void WriteSongIniFile(const std::filesystem::path& path, const std::vector<Modifiers::Modifier>& modifiers);
 };

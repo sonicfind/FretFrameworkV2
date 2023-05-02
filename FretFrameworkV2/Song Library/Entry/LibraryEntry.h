@@ -109,6 +109,8 @@ public:
 			return getDirectory() < other.getDirectory();
 	}
 
+	std::u32string grabLoadingPhrase() const noexcept;
+
 	DrumType_Enum getDrumType() const noexcept;
 	PointerWrapper<const Modifiers::Modifier> getModifier(std::string_view name) const noexcept;
 private:
