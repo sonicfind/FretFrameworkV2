@@ -13,6 +13,8 @@ void Song::setMetaData(const LibraryEntry& entry)
 	m_baseDrumType = entry.getDrumType();
 	m_hopo_frequency = entry.getHopoFrequency();
 	m_multiplier_note = entry.getMultiplierNote();
+	m_eighthnote_hopo = entry.getEightNoteHopo();
+	m_sustain_cutoff_threshold = entry.getSustainCutoffThreshold();
 }
 
 EntryStatus Song::load(const LibraryEntry& entry)

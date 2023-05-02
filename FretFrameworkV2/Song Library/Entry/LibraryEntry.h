@@ -56,6 +56,9 @@ public:
 	uint32_t getSongLength() const noexcept { return m_song_length; }
 	uint32_t getHopoFrequency() const noexcept { return m_hopo_frequency; }
 	uint32_t getMultiplierNote() const noexcept { return m_multiplier_note; }
+	uint32_t getSustainCutoffThreshold() const noexcept { return m_sustain_cutoff_threshold; }
+	bool getEightNoteHopo() const noexcept { return m_eighthnote_hopo; }
+
 	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
 
 	std::filesystem::directory_entry getFileEntry() const noexcept { return std::filesystem::directory_entry(m_chartFile.first); }
@@ -171,6 +174,8 @@ private:
 	std::u32string m_source;
 	uint32_t m_hopo_frequency = 0;
 	unsigned char m_multiplier_note = 116;
+	uint32_t m_sustain_cutoff_threshold = 0;
+	bool m_eighthnote_hopo = false;
 
 	UnicodeString m_directory_playlist;
 

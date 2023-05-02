@@ -69,6 +69,14 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 			if (mod.getValue<uint16_t>() == 103)
 				m_multiplier_note = 103;
 		}
+		else if (mod.getName() == "eighthnote_hopo")
+		{
+			m_eighthnote_hopo = mod.getValue<bool>();
+		}
+		else if (mod.getName() == "sustain_cutoff_threshold")
+		{
+			m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
+		}
 		else
 			m_modifiers.push_back(mod);
 	}
@@ -135,6 +143,16 @@ bool Song::loadIni(const std::filesystem::path& iniFile)
 		else if (mod.getName() == "multiplier_note")
 		{
 			if (m_multiplier_note != mod.getValue<uint16_t>())
+				return false;
+		}
+		else if (mod.getName() == "eighthnote_hopo")
+		{
+			if (m_eighthnote_hopo != mod.getValue<bool>())
+				return false;
+		}
+		else if (mod.getName() == "sustain_cutoff_threshold")
+		{
+			if (m_sustain_cutoff_threshold != mod.getValue<uint32_t>())
 				return false;
 		}
 		else

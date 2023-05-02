@@ -65,6 +65,8 @@ private:
 
 	uint32_t m_hopo_frequency = 0;
 	unsigned char m_multiplier_note = 116;
+	uint32_t m_sustain_cutoff_threshold = 0;
+	bool m_eighthnote_hopo = false;
 	DrumType_Enum m_baseDrumType = DrumType_Enum::LEGACY;
 
 	std::vector<Modifiers::Modifier> m_modifiers;
