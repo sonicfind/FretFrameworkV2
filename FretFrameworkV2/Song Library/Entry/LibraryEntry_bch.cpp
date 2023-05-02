@@ -8,5 +8,5 @@ void LibraryEntry::scan_bch(const LoadedFile& file)
 		throw std::runtime_error("Header track not found at the start of the file");
 
 	reader.nextEvent();
-	scan(reader);
+	traverse(reader);
 }

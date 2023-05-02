@@ -60,13 +60,14 @@ private:
 	void load_bch(const std::filesystem::path& path);
 	void load_mid(const std::filesystem::path& path);
 
-	void load(CommonChartParser& parser);
+	void traverse(CommonChartParser& parser);
 	void load_tempoMap(CommonChartParser& parser);
 	void load_events(CommonChartParser& parser);
 	void load_noteTrack(CommonChartParser& parser);
 
 	int  load_header_cht(ChtFileReader& reader);
-	void load_cht_V1(ChtFileReader& reader);
+
+	void traverse_cht_V1(ChtFileReader& reader);
 	void load_events_V1(ChtFileReader& reader);
 
 	void load_tempoMap_midi(MidiFileReader& reader);

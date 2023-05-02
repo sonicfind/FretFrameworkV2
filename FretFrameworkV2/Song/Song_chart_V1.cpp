@@ -1,7 +1,7 @@
 #include "Song.h"
 #include "Tracks/Instrumental/Legacy_DrumTrack.h"
 
-void Song::load_cht_V1(ChtFileReader& reader)
+void Song::traverse_cht_V1(ChtFileReader& reader)
 {
 	Legacy_DrumTrack drumsLegacy;
 	while (reader.isStartOfTrack())

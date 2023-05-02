@@ -149,7 +149,7 @@ void Song::clear()
 	m_noteTracks.harmonies.clear();
 }
 
-void Song::load(CommonChartParser& parser)
+void Song::traverse(CommonChartParser& parser)
 {
 	while (parser.isStartOfTrack())
 	{

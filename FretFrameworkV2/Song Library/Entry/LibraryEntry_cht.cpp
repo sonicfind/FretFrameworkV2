@@ -23,9 +23,9 @@ void LibraryEntry::scan_cht(const LoadedFile& file)
 
 	int version = scan_header_cht(reader);
 	if (version > 1)
-		scan(reader);
+		traverse(reader);
 	else
-		scan_cht_V1(reader);
+		traverse_cht_V1(reader);
 }
 
 int LibraryEntry::scan_header_cht(ChtFileReader& reader)

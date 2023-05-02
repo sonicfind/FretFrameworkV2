@@ -8,9 +8,9 @@ void Song::load_cht(const std::filesystem::path& path)
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
 	if (load_header_cht(reader) > 1)
-		load(reader);
+		traverse(reader);
 	else
-		load_cht_V1(reader);
+		traverse_cht_V1(reader);
 }
 
 void Song::save_cht(const std::filesystem::path& path)

@@ -10,7 +10,7 @@ void Song::load_bch(const std::filesystem::path& path)
 
 	m_tickrate = reader.extract<uint32_t>();
 	reader.nextEvent();
-	load(reader);
+	traverse(reader);
 }
 
 void Song::save_bch(const std::filesystem::path& path)

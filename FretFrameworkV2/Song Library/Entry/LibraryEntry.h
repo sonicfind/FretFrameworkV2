@@ -123,11 +123,11 @@ private:
 	void scan_bch(const LoadedFile& file);
 	void scan_mid(const LoadedFile& file);
 
-	void scan(CommonChartParser& parser);
+	void traverse(CommonChartParser& parser);
 	void scan_noteTrack(CommonChartParser& parser);
 
 	int scan_header_cht(ChtFileReader& reader);
-	void scan_cht_V1(ChtFileReader& reader);
+	void traverse_cht_V1(ChtFileReader& reader);
 
 	bool validateForNotes() const noexcept;
 	void reorderModifiers();

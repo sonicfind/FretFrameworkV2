@@ -154,7 +154,7 @@ PointerWrapper<Modifiers::Modifier> LibraryEntry::getModifier(std::string_view n
 	return {};
 }
 
-void LibraryEntry::scan(CommonChartParser& parser)
+void LibraryEntry::traverse(CommonChartParser& parser)
 {
 	while (parser.isStartOfTrack())
 	{

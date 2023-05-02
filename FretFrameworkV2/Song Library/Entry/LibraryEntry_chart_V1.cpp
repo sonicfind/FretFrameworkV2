@@ -1,7 +1,7 @@
 #include "LibraryEntry.h"
 #include "Legacy_DrumScan.h"
 
-void LibraryEntry::scan_cht_V1(ChtFileReader& reader)
+void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 {
 	Legacy_DrumScan drumsLegacy = [&]() -> Legacy_DrumScan {
 		if (auto fivelane = getModifier("five_lane_drums"))
