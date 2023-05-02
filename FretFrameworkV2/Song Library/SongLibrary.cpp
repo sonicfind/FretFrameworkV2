@@ -2,6 +2,15 @@
 #include <iostream>
 const std::filesystem::path ININAME = U"song.ini";
 
+const std::pair<std::filesystem::path, ChartType> CHARTTYPES[] =
+{
+	{ U"notes.bch",	  ChartType::BCH },
+	{ U"notes.cht",   ChartType::CHT },
+	{ U"notes.mid",   ChartType::MID },
+	{ U"notes.midi",  ChartType::MID },
+	{ U"notes.chart", ChartType::CHT },
+};
+
 void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories)
 {
 	clear();
