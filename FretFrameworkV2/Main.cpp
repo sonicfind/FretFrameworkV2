@@ -108,11 +108,11 @@ void loadSong()
 {
 	static const std::pair<std::string_view, ChartType> CHARTTYPES[] =
 	{
-		{ "notes.bch",	 ChartType::BCH },
-		{ "notes.cht",   ChartType::CHT },
-		{ "notes.mid",   ChartType::MID },
-		{ "notes.midi",  ChartType::MID },
-		{ "notes.chart", ChartType::CHT },
+		{ ".bch",	 ChartType::BCH },
+		{ ".cht",   ChartType::CHT },
+		{ ".mid",   ChartType::MID },
+		{ ".midi",  ChartType::MID },
+		{ ".chart", ChartType::CHT },
 	};
 
 	Song song;
