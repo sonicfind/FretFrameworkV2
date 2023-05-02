@@ -1,5 +1,6 @@
 #pragma once
 #include "SimpleFlatMap/SimpleFlatMap.h"
+#include <unordered_set>
 #include "LibraryCategory.h"
 
 class SongLibrary
@@ -19,6 +20,7 @@ public:
 private:
 	void scanDirectory(const std::filesystem::path& directory);
 	void addEntry(MD5 hash, LibraryEntry&& entry);
+	void markScannedDirectory(const std::filesystem::path& directory);
 
 private:
 	SimpleFlatMap<std::vector<LibraryEntry>, MD5> m_songlist;
@@ -45,5 +47,7 @@ private:
 		LibraryCategory<SongAttribute::PLAYLIST> playlist;
 		LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> artistAlbum;
 	} m_categories;
+
+	std::unordered_set<std::filesystem::path> m_preScannedDirectories;
 };
 

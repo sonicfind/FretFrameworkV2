@@ -9,6 +9,7 @@ void SongLibrary::scan(const std::vector<std::filesystem::path>& baseDirectories
 
 void SongLibrary::finalize()
 {
+	m_preScannedDirectories.clear();
 	for (auto& node : m_songlist)
 		for (auto& entry : *node)
 		{
@@ -48,6 +49,9 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 		{ U"notes.chart", LibraryEntry::CHT },
 	};
 	static const std::filesystem::path ININAME = U"song.ini";
+
+	if (m_preScannedDirectories.contains(directory))
+		return;
 
 	std::optional<std::filesystem::directory_entry> charts[5]{};
 	std::optional<std::filesystem::directory_entry> ini;
@@ -108,6 +112,11 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
 {
 	m_songlist[hash].push_back(std::move(entry));
+}
+
+void SongLibrary::markScannedDirectory(const std::filesystem::path& directory)
+{
+	m_preScannedDirectories.insert(directory);
 }
 
 void SongLibrary::readFromCacheFile()
@@ -174,7 +183,10 @@ void SongLibrary::readFromCacheFile()
 	{
 		reader.setNextSectionBounds();
 		if (auto entry = parseEntry())
+		{
+			markScannedDirectory(entry->getDirectory());
 			addEntry(reader.extract<MD5>(), std::move(*entry));
+		}
 		else
 			reader.gotoEndOfBuffer();
 	}
