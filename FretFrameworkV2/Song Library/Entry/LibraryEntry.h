@@ -172,6 +172,7 @@ private:
 	std::u32string m_icon;
 	std::u32string m_source;
 	uint32_t m_hopo_frequency = 0;
+	unsigned char m_midiStarPowerNote = 116;
 
 	UnicodeString m_directory_playlist;
 
