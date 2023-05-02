@@ -15,7 +15,6 @@ public:
 			throw std::runtime_error("Track defined multiple times in file");
 
 		uint32_t solo = 0;
-
 		m_notes.reserve(5000);
 		while (reader.isStillCurrentTrack())
 		{

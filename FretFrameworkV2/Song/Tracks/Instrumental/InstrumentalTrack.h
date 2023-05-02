@@ -21,7 +21,7 @@ public:
 		m_difficulties[diff].load_V1(reader);
 	}
 
-public:
+private:
 	struct Midi_Tracker_Diff
 	{
 		uint32_t notes[T::GetLaneCount()];
@@ -60,6 +60,7 @@ public:
 		}
 	};
 
+public:
 	void load(MidiFileReader& reader)
 	{
 		if (isOccupied())

@@ -41,7 +41,7 @@ protected:
 		return true;
 	}
 
-public:
+protected:
 	struct Midi_Scanner_Extensions {};
 	struct Midi_Scanner
 	{
@@ -71,6 +71,7 @@ public:
 		}
 	};
 
+public:
 	void scan(MidiFileReader& reader)
 	{
 		if (m_subTracks > 0)
