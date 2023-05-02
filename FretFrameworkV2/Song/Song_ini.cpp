@@ -16,6 +16,11 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 	if (!std::filesystem::exists(iniFile))
 		return;
 	
+	bool five_lane_drumsSet = false;
+	bool hopo_frequencySet = false;
+	bool multiplier_noteSet = false;
+	bool eighthnote_hopoSet = false;
+	bool sustain_thresholdSet = false;
 	auto modifiers = Ini::ReadSongIniFile(iniFile);
 	for (const auto& mod : modifiers)
 	{
@@ -54,28 +59,35 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 			if (m_playlist.empty() || m_playlist == iniFile.parent_path().parent_path())
 				m_playlist = mod.getValue<UnicodeString>().get();
 		}
-		else if (mod.getName() == "hopo_frequency")
-		{
-			if (m_hopo_frequency == 0)
-				m_hopo_frequency = mod.getValue<uint32_t>();
-		}
 		else if (mod.getName() == "five_lane_drums")
 		{
-			if (m_baseDrumType == DrumType_Enum::LEGACY)
+			if (!five_lane_drumsSet && m_baseDrumType == DrumType_Enum::LEGACY)
 				m_baseDrumType = mod.getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
+			five_lane_drumsSet = true;
+		}
+		else if (mod.getName() == "hopo_frequency")
+		{
+			if (!hopo_frequencySet)
+				m_hopo_frequency = mod.getValue<uint32_t>();
+			hopo_frequencySet = true;
 		}
 		else if (mod.getName() == "multiplier_note")
 		{
-			if (mod.getValue<uint16_t>() == 103)
+			if (!multiplier_noteSet && mod.getValue<uint16_t>() == 103)
 				m_multiplier_note = 103;
+			multiplier_noteSet = true;
 		}
 		else if (mod.getName() == "eighthnote_hopo")
 		{
-			m_eighthnote_hopo = mod.getValue<bool>();
+			if (!eighthnote_hopoSet)
+				m_eighthnote_hopo = mod.getValue<bool>();
+			eighthnote_hopoSet = true;
 		}
 		else if (mod.getName() == "sustain_cutoff_threshold")
 		{
-			m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
+			if (!sustain_thresholdSet)
+				m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
+			sustain_thresholdSet = true;
 		}
 		else
 			m_modifiers.push_back(mod);
@@ -87,6 +99,11 @@ bool Song::loadIni(const std::filesystem::path& iniFile)
 	if (!std::filesystem::exists(iniFile))
 		return false;
 
+	bool five_lane_drumsTested = false;
+	bool hopo_frequencyTested = false;
+	bool multiplier_noteTested = false;
+	bool eighthnote_hopoTested = false;
+	bool sustain_thresholdTested = false;
 	auto modifiers = Ini::ReadSongIniFile(iniFile);
 	for (const auto& mod : modifiers)
 	{
@@ -125,38 +142,44 @@ bool Song::loadIni(const std::filesystem::path& iniFile)
 			if (m_playlist != mod.getValue<UnicodeString>().get())
 				return false;
 		}
-		else if (mod.getName() == "hopo_frequency")
-		{
-			if (m_hopo_frequency != mod.getValue<uint32_t>())
-				return false;
-		}
 		else if (mod.getName() == "five_lane_drums")
 		{
-			if (mod.getValue<bool>())
+			if (!five_lane_drumsTested)
 			{
-				if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO)
+				if (mod.getValue<bool>())
+				{
+					if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO)
+						return false;
+				}
+				else if (m_baseDrumType == DrumType_Enum::FIVELANE)
 					return false;
 			}
-			else if (m_baseDrumType == DrumType_Enum::FIVELANE)
+			five_lane_drumsTested = true;
+		}
+		else if (mod.getName() == "hopo_frequency")
+		{
+			if (!hopo_frequencyTested && m_hopo_frequency != mod.getValue<uint32_t>())
 				return false;
+			hopo_frequencyTested = true;
 		}
 		else if (mod.getName() == "multiplier_note")
 		{
-			if (m_multiplier_note != mod.getValue<uint16_t>())
+			if (!multiplier_noteTested && m_multiplier_note != mod.getValue<uint16_t>())
 				return false;
+			multiplier_noteTested = true;
 		}
 		else if (mod.getName() == "eighthnote_hopo")
 		{
-			if (m_eighthnote_hopo != mod.getValue<bool>())
+			if (!eighthnote_hopoTested && m_eighthnote_hopo != mod.getValue<bool>())
 				return false;
+			eighthnote_hopoTested = true;
 		}
 		else if (mod.getName() == "sustain_cutoff_threshold")
 		{
-			if (m_sustain_cutoff_threshold != mod.getValue<uint32_t>())
+			if (!sustain_thresholdTested && m_sustain_cutoff_threshold != mod.getValue<uint32_t>())
 				return false;
+			sustain_thresholdTested = true;
 		}
-		else
-			m_modifiers.push_back(mod);
 	}
 	return true;
 }
