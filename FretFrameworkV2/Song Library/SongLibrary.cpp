@@ -27,6 +27,21 @@ void SongLibrary::finalize()
 
 void SongLibrary::clear()
 {
+	m_stringBuffers.titles.clear();
+	m_stringBuffers.artists.clear();
+	m_stringBuffers.albums.clear();
+	m_stringBuffers.genres.clear();
+	m_stringBuffers.years.clear();
+	m_stringBuffers.charters.clear();
+	m_stringBuffers.playlists.clear();
+	m_categories.title.clear();
+	m_categories.artist.clear();
+	m_categories.album.clear();
+	m_categories.genre.clear();
+	m_categories.year.clear();
+	m_categories.charter.clear();
+	m_categories.playlist.clear();
+	m_categories.artistAlbum.clear();
 	m_songlist.clear();
 }
 

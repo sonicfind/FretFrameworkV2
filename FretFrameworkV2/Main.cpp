@@ -13,6 +13,7 @@ int main()
 
 	std::vector<std::filesystem::path> directories = { filename };
 	auto t1 = std::chrono::high_resolution_clock::now();
+	library.clear();
 	library.readFromCacheFile();
 	library.scan(directories);
 	library.finalize();
