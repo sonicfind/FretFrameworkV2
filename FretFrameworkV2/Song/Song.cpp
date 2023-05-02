@@ -12,7 +12,7 @@ void Song::setMetaData(const LibraryEntry& entry)
 	m_playlist = entry.getName().get();
 	m_baseDrumType = entry.getDrumType();
 	m_hopo_frequency = entry.getHopoFrequency();
-	m_midiStarPowerNote = entry.getMidiStarPowerNote();
+	m_multiplier_note = entry.getMultiplierNote();
 }
 
 EntryStatus Song::load(const LibraryEntry& entry)

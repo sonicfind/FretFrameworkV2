@@ -64,10 +64,10 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 			if (m_baseDrumType == DrumType_Enum::LEGACY)
 				m_baseDrumType = mod.getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
 		}
-		else if (mod.getName() == "star_power_note")
+		else if (mod.getName() == "multiplier_note")
 		{
 			if (mod.getValue<uint16_t>() == 103)
-				m_midiStarPowerNote = 103;
+				m_multiplier_note = 103;
 		}
 		else
 			m_modifiers.push_back(mod);
@@ -132,9 +132,9 @@ bool Song::loadIni(const std::filesystem::path& iniFile)
 			else if (m_baseDrumType == DrumType_Enum::FIVELANE)
 				return false;
 		}
-		else if (mod.getName() == "star_power_note")
+		else if (mod.getName() == "multiplier_note")
 		{
-			if (m_midiStarPowerNote != mod.getValue<uint16_t>())
+			if (m_multiplier_note != mod.getValue<uint16_t>())
 				return false;
 		}
 		else

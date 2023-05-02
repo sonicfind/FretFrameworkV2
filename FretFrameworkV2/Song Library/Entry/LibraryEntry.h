@@ -53,9 +53,9 @@ public:
 	const UnicodeString& getYear() const noexcept { return *m_year; }
 	const UnicodeString& getCharter() const noexcept { return *m_charter; }
 	const UnicodeString& getPlaylist() const noexcept { return *m_playlist; }
-	const uint32_t& getSongLength() const noexcept { return m_song_length; }
-	const uint32_t& getHopoFrequency() const noexcept { return m_hopo_frequency; }
-	const uint32_t& getMidiStarPowerNote() const noexcept { return m_midiStarPowerNote; }
+	uint32_t getSongLength() const noexcept { return m_song_length; }
+	uint32_t getHopoFrequency() const noexcept { return m_hopo_frequency; }
+	uint32_t getMultiplierNote() const noexcept { return m_multiplier_note; }
 	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
 
 	std::filesystem::directory_entry getFileEntry() const noexcept { return std::filesystem::directory_entry(m_chartFile.first); }
@@ -170,7 +170,7 @@ private:
 	std::u32string m_icon;
 	std::u32string m_source;
 	uint32_t m_hopo_frequency = 0;
-	unsigned char m_midiStarPowerNote = 116;
+	unsigned char m_multiplier_note = 116;
 
 	UnicodeString m_directory_playlist;
 

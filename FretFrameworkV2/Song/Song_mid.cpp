@@ -6,7 +6,7 @@
 void Song::load_mid(const std::filesystem::path& path)
 {
 	MidiFileReader reader(path);
-	reader.setStarPowerValue(m_midiStarPowerNote);
+	reader.setStarPowerValue(m_multiplier_note);
 	while (reader.startNextTrack())
 	{
 		if (reader.getTrackNumber() == 1)

@@ -310,9 +310,9 @@ void LibraryEntry::mapModifierVariables()
 	if (auto modifier = getModifier("hopo_frequency"))
 		m_hopo_frequency = modifier->getValue<uint32_t>();
 
-	if (auto starPower = getModifier("star_power_note"))
+	if (auto starPower = getModifier("multiplier_note"))
 		if (starPower->getValue<uint16_t>() == 103)
-			m_midiStarPowerNote = 103;
+			m_multiplier_note = 103;
 
 	const std::pair<std::string_view, ScanTrack*> intensities[]
 	{

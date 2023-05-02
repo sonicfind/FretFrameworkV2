@@ -70,7 +70,7 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 			{ "lyrics",                               { "lyrics",   ModifierNode::BOOL } },
 
 			{ "modchart",                             { "modchart",   ModifierNode::BOOL } },
-			{ "multiplier_note",                      { "star_power_note",   ModifierNode::UINT16 } },
+			{ "multiplier_note",                      { "multiplier_note",   ModifierNode::UINT16 } },
 
 			{ "name",                                 { "name",   ModifierNode::STRING } },
 
@@ -94,7 +94,7 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 			{ "scores",                               { "scores",   ModifierNode::STRING_NOCASE } },
 			{ "scores_ext",                           { "scores_ext",   ModifierNode::STRING_NOCASE } },
 			{ "song_length",                          { "song_length",   ModifierNode::UINT32 } },
-			{ "star_power_note",                      { "star_power_note",   ModifierNode::UINT16 } },
+			{ "star_power_note",                      { "multiplier_note",   ModifierNode::UINT16 } },
 			{ "sub_genre",                            { "sub_genre",   ModifierNode::STRING } },
 			{ "sub_playlist",                         { "sub_playlist",   ModifierNode::STRING } },
 			{ "sustain_cutoff_threshold",             { "sustain_cutoff_threshold",   ModifierNode::UINT32 } },
