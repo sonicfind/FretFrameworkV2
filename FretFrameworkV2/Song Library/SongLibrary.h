@@ -8,18 +8,18 @@ class SongLibrary
 	static constexpr uint32_t s_CACHE_VERSION = 0x05012023;
 
 public:
-	void runFullScan(const std::vector<std::filesystem::path>& baseDirectories);
-	void runPartialScan();
+	void runFullScan(const std::vector<std::u32string>& baseDirectories);
+	bool runPartialScan();
 	void clear();
 
 	[[nodiscard]] size_t getNumSongs() const noexcept;
 
 private:
 	void finalize();
-	void readFromCacheFile(bool validateNodes);
+	std::optional<BufferedBinaryReader> loadCachefile();
 	void readStrings(BufferedBinaryReader& reader);
 	void readNodes(BufferedBinaryReader& reader);
-	void readNodes_validated(BufferedBinaryReader& reader);
+	void readNodes(BufferedBinaryReader& reader, const std::vector<std::u32string>& baseDirectories);
 	void writeToCacheFile() const;
 
 	void scanDirectory(const std::filesystem::path& directory);

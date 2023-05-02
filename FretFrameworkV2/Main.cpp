@@ -11,9 +11,9 @@ int main()
 	if (filename[0] == '\"')
 		filename = filename.substr(1, filename.length() - 2);
 
-	std::vector<std::filesystem::path> directories = { filename };
+	std::vector<std::u32string> directories = { UnicodeString::strToU32(filename) };
 	auto t1 = std::chrono::high_resolution_clock::now();
-	library.runPartialScan();
+	library.runFullScan(directories);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	long long count = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 	std::cout << "Partial scan took " << count / 1000.0 << " milliseconds\n";

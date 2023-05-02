@@ -1,5 +1,6 @@
 #include "SongLibrary.h"
 #include <iostream>
+const std::filesystem::path ININAME = U"song.ini";
 
 void SongLibrary::finalize()
 {
@@ -19,10 +20,26 @@ void SongLibrary::finalize()
 		}
 }
 
-void SongLibrary::runFullScan(const std::vector<std::filesystem::path>& baseDirectories)
+std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
+{
+	if (!std::filesystem::exists("songcache.bin"))
+		return {};
+
+	BufferedBinaryReader reader("songcache.bin");
+	if (s_CACHE_VERSION != reader.extract<uint32_t, false>())
+		return {};
+	return reader;
+}
+
+void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories)
 {
 	clear();
-	readFromCacheFile(true);
+
+	if (auto reader = loadCachefile())
+	{
+		readStrings(*reader);
+		readNodes(*reader, baseDirectories);
+	}
 
 	for (const auto& directory : baseDirectories)
 		scanDirectory(directory);
@@ -31,11 +48,16 @@ void SongLibrary::runFullScan(const std::vector<std::filesystem::path>& baseDire
 	writeToCacheFile();
 }
 
-void SongLibrary::runPartialScan()
+bool SongLibrary::runPartialScan()
 {
-	clear();
-	readFromCacheFile(false);
-	finalize();
+	if (auto reader = loadCachefile())
+	{
+		readStrings(*reader);
+		readNodes(*reader);
+		finalize();
+		return true;
+	}
+	return false;
 }
 
 void SongLibrary::clear()
@@ -76,7 +98,6 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 		{ U"notes.midi",  LibraryEntry::MID },
 		{ U"notes.chart", LibraryEntry::CHT },
 	};
-	static const std::filesystem::path ININAME = U"song.ini";
 
 	if (m_preScannedDirectories.contains(directory))
 		return;
@@ -147,22 +168,6 @@ void SongLibrary::markScannedDirectory(const std::filesystem::path& directory)
 	m_preScannedDirectories.insert(directory);
 }
 
-void SongLibrary::readFromCacheFile(bool validateNodes)
-{
-	if (!std::filesystem::exists("songcache.bin"))
-		return;
-
-	BufferedBinaryReader reader("songcache.bin");
-	if (s_CACHE_VERSION != reader.extract<uint32_t, false>())
-		return;
-
-	readStrings(reader);
-	if (validateNodes)
-		readNodes_validated(reader);
-	else
-		readNodes(reader);
-}
-
 void SongLibrary::readStrings(BufferedBinaryReader& reader)
 {
 	const auto getStrings = [&reader]()
@@ -216,14 +221,26 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader)
 	}
 }
 
-void SongLibrary::readNodes_validated(BufferedBinaryReader& reader)
+void SongLibrary::readNodes(BufferedBinaryReader& reader, const std::vector<std::u32string>& baseDirectories)
 {
-	const auto parseEntry = [&reader, this]() -> std::optional<LibraryEntry>
+	const auto parseEntry = [&]() -> std::optional<LibraryEntry>
 	{
-		const std::filesystem::path directory = UnicodeString::strToU32(reader.extractString());
+		const std::u32string directory = UnicodeString::strToU32(reader.extractString());
+
+		const auto checkBase = [&baseDirectories, &directory]
+		{
+			for (const auto& base : baseDirectories)
+				if (directory.starts_with(base))
+					return true;
+			return false;
+		};
+
+		if (!checkBase())
+			return {};
+
 		const std::filesystem::path filename = UnicodeString::strToU32(reader.extractString());
 		const std::filesystem::directory_entry chartFile(directory / filename);
-		const std::filesystem::directory_entry iniFile(directory / U"song.ini");
+		const std::filesystem::directory_entry iniFile(directory / ININAME);
 
 		if (!chartFile.exists() || !iniFile.exists())
 			return {};
