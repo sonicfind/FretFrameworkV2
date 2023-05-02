@@ -22,9 +22,9 @@ public:
 
 private:
 	void setMetaData(const LibraryEntry& entry);
-	void setMetaData(const std::filesystem::path& iniFile);
+	void setMetaData();
 
-	bool loadIni(const std::filesystem::path& iniFile);
+	bool loadIni();
 
 	void load_cht(const std::filesystem::path& path, bool isFull);
 	void load_mid(const std::filesystem::path& path);
@@ -59,6 +59,8 @@ private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
 
 private:
+	std::filesystem::path m_directory;
+
 	std::u32string m_name;
 	std::u32string m_artist;
 	std::u32string m_album;

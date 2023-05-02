@@ -1,7 +1,7 @@
 #include "Song.h"
 #include "Ini/Ini.h"
 
-void Song::setMetaData(const std::filesystem::path& iniFile)
+void Song::setMetaData()
 {
 	m_name.clear();
 	m_artist.clear();
@@ -13,6 +13,7 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 	m_hopo_frequency = 0;
 	m_baseDrumType = DrumType_Enum::LEGACY;
 
+	const std::filesystem::path iniFile(m_directory / U"song.ini");
 	if (!std::filesystem::exists(iniFile))
 		return;
 	
@@ -94,8 +95,9 @@ void Song::setMetaData(const std::filesystem::path& iniFile)
 	}
 }
 
-bool Song::loadIni(const std::filesystem::path& iniFile)
+bool Song::loadIni()
 {
+	const std::filesystem::path iniFile(m_directory / U"song.ini");
 	if (!std::filesystem::exists(iniFile))
 		return false;
 

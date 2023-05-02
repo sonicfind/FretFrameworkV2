@@ -23,8 +23,9 @@ EntryStatus Song::load(const LibraryEntry& entry)
 	if (!fileEntry.exists() || fileEntry.last_write_time() != entry.getLastWriteTime())
 		return EntryStatus::NEEDS_RESCAN;
 
+	m_directory = entry.getDirectory();
 	setMetaData(entry);
-	if (!loadIni(entry.getDirectory() / U"song.ini"))
+	if (!loadIni())
 		return EntryStatus::NEEDS_RESCAN;
 
 	try
@@ -54,7 +55,8 @@ EntryStatus Song::load(const LibraryEntry& entry)
 
 bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept
 {
-	setMetaData(chartFile.first.parent_path() / U"song.ini");
+	m_directory = chartFile.first.parent_path();
+	setMetaData();
 
 	try
 	{
@@ -101,9 +103,9 @@ bool Song::save(std::filesystem::path path) noexcept
 
 	try
 	{
-		save_cht(path.replace_extension(".cht"));
-		save_bch(path.replace_extension(".bch"));
-		save_mid(path.replace_extension(".mid"));
+		save_cht(m_directory / "notes.cht");
+		save_bch(m_directory / "notes.bch");
+		save_mid(m_directory / "notes.mid");
 	}
 	catch (std::runtime_error err)
 	{
