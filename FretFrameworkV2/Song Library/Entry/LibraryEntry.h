@@ -46,7 +46,6 @@ public:
 	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
 	void serializeSongInfo(BufferedBinaryWriter& writer) const noexcept;
 
-	ChartType getChartType() const noexcept { return m_chartFile.second; }
 	const UnicodeString& getArtist() const noexcept { return *m_artist; }
 	const UnicodeString& getName() const noexcept { return *m_name; }
 	const UnicodeString& getAlbum() const noexcept { return *m_album; }
@@ -58,6 +57,10 @@ public:
 	const uint32_t& getHopoFrequency() const noexcept { return m_hopo_frequency; }
 	const uint32_t& getMidiStarPowerNote() const noexcept { return m_midiStarPowerNote; }
 	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
+
+	std::filesystem::directory_entry getFileEntry() const noexcept { return std::filesystem::directory_entry(m_chartFile.first); }
+	ChartType getChartType() const noexcept { return m_chartFile.second; }
+	const auto& getLastWriteTime() const noexcept { return m_chartWriteTime; }
 
 	template<SongAttribute Attribute>
 	const auto& getAttribute() const noexcept
