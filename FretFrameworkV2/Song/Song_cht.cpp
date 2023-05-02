@@ -1,13 +1,14 @@
 #include "Song.h"
 #include "Serialization/ChtFileWriter.h"
 
-void Song::load_cht(const std::filesystem::path& path)
+void Song::load_cht(const std::filesystem::path& path, bool isFull)
 {
 	ChtFileReader reader(path);
 	if (!reader.validateHeaderTrack())
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
-	if (load_header_cht(reader) > 1)
+	const int16_t version = isFull ? load_header_cht(reader) : load_header_cht_basic(reader);
+	if (version > 1)
 		traverse(reader);
 	else
 		traverse_cht_V1(reader);
@@ -49,6 +50,55 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 		{ "Year",         { "year", ModifierNode::STRING_CHART_NOCASE } },
 	};
 
+	int16_t version = 0;
+	auto modifiers = reader.extractModifiers(FULL_MODIFIERS);
+	for (const auto& modifier : modifiers)
+	{
+		if (modifier.getName() == "Resolution")
+			m_tickrate = modifier.getValue<uint16_t>();
+		else if (modifier.getName() == "FileVersion")
+			version = modifier.getValue<int16_t>();
+		else if (modifier.getName() == "name")
+		{
+			if (m_name.empty() || m_name == U"Unknown Title")
+				m_name = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "artist")
+		{
+			if (m_artist.empty() || m_artist == U"Unknown Artist")
+				m_artist = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "album")
+		{
+			if (m_album.empty() || m_album == U"Unknown Album")
+				m_album = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "genre")
+		{
+			if (m_genre.empty() || m_genre == U"Unknown Genre")
+				m_genre = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "year")
+		{
+			if (m_year.empty() || m_year == U"Unknown Year")
+				m_year = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "charter")
+		{
+			if (m_charter.empty() || m_charter == U"Unknown Charter")
+				m_charter = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "playlist")
+		{
+			if (m_playlist.empty())
+				m_playlist = modifier.getValue<UnicodeString>().get();
+		}
+	}
+	return version;
+}
+
+int16_t Song::load_header_cht_basic(ChtFileReader& reader)
+{
 	static const TxtFileReader::ModifierOutline PARTIAL_MODIFIERS =
 	{
 		{ "FileVersion", { "FileVersion", ModifierNode::INT16 } },

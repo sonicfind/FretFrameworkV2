@@ -36,7 +36,7 @@ EntryStatus Song::load(const LibraryEntry& entry)
 			load_bch(fileEntry.path());
 			break;
 		case ChartType::CHT:
-			load_cht(fileEntry.path());
+			load_cht(fileEntry.path(), false);
 			break;
 		case ChartType::MID:
 			load_mid(fileEntry.path());
@@ -66,7 +66,7 @@ bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) no
 			load_bch(chartFile.first);
 			break;
 		case ChartType::CHT:
-			load_cht(chartFile.first);
+			load_cht(chartFile.first, true);
 			break;
 		case ChartType::MID:
 			load_mid(chartFile.first);

@@ -26,7 +26,7 @@ private:
 
 	bool loadIni(const std::filesystem::path& iniFile);
 
-	void load_cht(const std::filesystem::path& path);
+	void load_cht(const std::filesystem::path& path, bool isFull);
 	void load_mid(const std::filesystem::path& path);
 	void load_bch(const std::filesystem::path& path);
 	
@@ -37,6 +37,7 @@ private:
 	void load_noteTrack(CommonChartParser& parser);
 
 	int16_t load_header_cht(ChtFileReader& reader);
+	int16_t load_header_cht_basic(ChtFileReader& reader);
 
 	void traverse_cht_V1(ChtFileReader& reader);
 	void load_events_V1(ChtFileReader& reader);
