@@ -1,95 +1,77 @@
 #include "Song.h"
 #include <iostream>
 
-const std::filesystem::path Song::s_EXTS_CHT[2] = { ".cht", ".chart" };
-const std::filesystem::path Song::s_EXTS_MID[2] = { ".mid", ".midi" };
-const std::filesystem::path Song::s_EXT_BCH = ".bch";
-
-void Song::setMetaData(const std::u32string& name, const std::u32string& artist, const std::u32string& album, const std::u32string& genre, const std::u32string& year, const std::u32string& charter, const std::u32string& playlist, uint32_t hopoFrequency)
+void Song::setMetaData(const LibraryEntry& entry)
 {
-	m_name = name;
-	m_artist = artist;
-	m_album = album;
-	m_genre = genre;
-	m_year = year;
-	m_charter = charter;
-	m_playlist = playlist;
-	m_hopo_frequency = hopoFrequency;
+	m_name = entry.getName().get();
+	m_artist = entry.getName().get();
+	m_album = entry.getName().get();
+	m_genre = entry.getName().get();
+	m_year = entry.getName().get();
+	m_charter = entry.getName().get();
+	m_playlist = entry.getName().get();
+	m_baseDrumType = entry.getDrumType();
+	m_hopo_frequency = entry.getHopoFrequency();
+	m_midiStarPowerNote = entry.getMidiStarPowerNote();
 }
 
-void Song::setMetaData(const std::vector<Modifiers::Modifier>& modifiers, const std::u32string& playlistToCompare)
-{
-	m_name.clear();
-	m_artist.clear();
-	m_album.clear();
-	m_genre.clear();
-	m_year.clear();
-	m_charter.clear();
-	m_playlist.clear();
-	m_hopo_frequency = 0;
-
-	for (const auto& mod : modifiers)
-	{
-		if (mod.getName() == "name")
-		{
-			if (m_name.empty() || m_name == U"Unknown Title")
-				m_name = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "artist")
-		{
-			if (m_artist.empty() || m_artist == U"Unknown Artist")
-				m_artist = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "album")
-		{
-			if (m_album.empty() || m_album == U"Unknown Album")
-				m_album = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "genre")
-		{
-			if (m_genre.empty() || m_genre == U"Unknown Genre")
-				m_genre = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "year")
-		{
-			if (m_year.empty() || m_year == U"Unknown Year")
-				m_year = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "charter")
-		{
-			if (m_charter.empty() || m_charter == U"Unknown Charter")
-				m_charter = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "playlist")
-		{
-			if (m_playlist.empty() || m_playlist == playlistToCompare)
-				m_playlist = mod.getValue<UnicodeString>().get();
-		}
-		else if (mod.getName() == "hopo_frequency")
-		{
-			if (m_hopo_frequency == 0)
-				m_hopo_frequency = mod.getValue<uint32_t>();
-		}
-		else
-			m_modifiers.push_back(mod);
-	}
-}
-
-bool Song::load(const std::filesystem::path& path) noexcept
+EntryStatus Song::load(const LibraryEntry& entry)
 {
 	clear();
+	setMetaData(entry);
+	const std::filesystem::directory_entry fileEntry = entry.getFileEntry();
+	if (!fileEntry.exists() || fileEntry.last_write_time() != entry.getLastWriteTime())
+		return EntryStatus::NEEDS_RESCAN;
+
+	if (!loadIni(entry.getDirectory() / U"song.ini"))
+		return EntryStatus::NEEDS_RESCAN;
 
 	try
 	{
-		const std::filesystem::path ext = path.extension();
-		if (ext == s_EXTS_CHT[0] || ext == s_EXTS_CHT[1])
-			load_cht(path);
-		else if (ext == s_EXTS_MID[0] || ext == s_EXTS_MID[1])
-			load_mid(path);
-		else if (ext == s_EXT_BCH)
-			load_bch(path);
-		else
-			throw std::runtime_error(ext.generic_string() + " is not a valid chart type");
+		switch (entry.getChartType())
+		{
+		case ChartType::BCH:
+			load_bch(fileEntry.path());
+			break;
+		case ChartType::CHT:
+			load_cht(fileEntry.path());
+			break;
+		case ChartType::MID:
+			load_mid(fileEntry.path());
+			break;
+		default:
+			break;
+		}
+	}
+	catch (std::runtime_error err)
+	{
+		std::cout << err.what() << std::endl;
+		return EntryStatus::ERROR;
+	}
+	return EntryStatus::UNCHANGED;
+}
+
+bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept
+{
+	clear();
+	setMetaData(chartFile.first.parent_path() / U"song.ini");
+
+	try
+	{
+		switch (chartFile.second)
+		{
+		case ChartType::BCH:
+			load_bch(chartFile.first);
+			break;
+		case ChartType::CHT:
+			load_cht(chartFile.first);
+			break;
+		case ChartType::MID:
+			load_mid(chartFile.first);
+			break;
+		default:
+			break;
+		}
 	}
 	catch (std::runtime_error err)
 	{

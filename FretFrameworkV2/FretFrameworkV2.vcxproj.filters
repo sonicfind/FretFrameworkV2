@@ -181,6 +181,9 @@
     <ClCompile Include="Serialization\BufferedBinaryReader.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
+    <ClCompile Include="Song\Song_ini.cpp">
+      <Filter>Song</Filter>
+    </ClCompile>
     <ClCompile Include="Notes\GuitarNote_chartV1.cpp">
       <Filter>Notes</Filter>
     </ClCompile>

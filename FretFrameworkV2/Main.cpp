@@ -104,17 +104,32 @@ std::vector<std::u32string> getDirectories()
 
 void loadSong()
 {
+	static const std::pair<std::string_view, ChartType> CHARTTYPES[] =
+	{
+		{ "notes.bch",	 ChartType::BCH },
+		{ "notes.cht",   ChartType::CHT },
+		{ "notes.mid",   ChartType::MID },
+		{ "notes.midi",  ChartType::MID },
+		{ "notes.chart", ChartType::CHT },
+	};
+
 	Song song;
 	while (true)
 	{
-		std::cout << "Drag and drop a chart file or directrory: ";
+		std::cout << "Drag and drop a chart File: ";
 		std::string file = parseInput();
 		if (file.empty())
 			break;
 
-		std::filesystem::directory_entry entry(UnicodeString::strToU32(file));
-		//std::filesystem::directory_entry entry(UnicodeString::strToU32(file));
-		std::filesystem::directory_iterator iter;
-		
+		for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
+		{
+			if (file.ends_with(CHARTTYPES[i].first))
+			{
+				startClock();
+				song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second });
+				stopClock("Song load");
+				break;
+			}
+		}
 	}
 }
