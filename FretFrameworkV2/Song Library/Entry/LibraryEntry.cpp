@@ -85,7 +85,10 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 	reader.extract(m_album_track);
 	reader.extract(m_playlist_track);
 	reader.extract(m_song_length);
+	reader.extract(m_multiplier_note);
 	reader.extract(m_hopo_frequency);
+	reader.extract(m_eighthnote_hopo);
+	reader.extract(m_sustain_cutoff_threshold);
 	m_icon = UnicodeString::strToU32(reader.extractString());
 	m_source = UnicodeString::strToU32(reader.extractString());
 }
@@ -124,7 +127,10 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	writer.append(m_album_track);
 	writer.append(m_playlist_track);
 	writer.append(m_song_length);
+	writer.append(m_multiplier_note);
 	writer.append(m_hopo_frequency);
+	writer.append(m_eighthnote_hopo);
+	writer.append(m_sustain_cutoff_threshold);
 	writer.appendString(UnicodeString::U32ToStr(m_icon));
 	writer.appendString(UnicodeString::U32ToStr(m_source));
 }
