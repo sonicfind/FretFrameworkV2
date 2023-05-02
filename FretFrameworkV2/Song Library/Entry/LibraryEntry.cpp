@@ -46,7 +46,15 @@ void LibraryEntry::finalize()
 	}
 }
 
-void LibraryEntry::serializeChartData(BufferedBinaryWriter& writer) const noexcept
+void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcept
+{
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().parent_path().u32string()));
+	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().filename().u32string()));
+	writer.append(m_chartFile.last_write_time().time_since_epoch().count());
+	writer.append(m_iniModifiedTime.time_since_epoch().count());
+}
+
+void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
 {
 	const ScanTrack* const arr[11] =
 	{
@@ -63,19 +71,11 @@ void LibraryEntry::serializeChartData(BufferedBinaryWriter& writer) const noexce
 		&m_scanTracks.harmonies
 	};
 
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().parent_path().u32string()));
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.path().filename().u32string()));
-	writer.append(m_chartFile.last_write_time().time_since_epoch().count());
 	for (auto track : arr)
 	{
 		writer.append(track->m_subTracks);
 		writer.append(track->m_intensity);
 	}
-}
-
-void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
-{
-	writer.append(m_iniModifiedTime.time_since_epoch().count());
 	writer.append(m_previewRange);
 	writer.append(m_album_track);
 	writer.append(m_playlist_track);

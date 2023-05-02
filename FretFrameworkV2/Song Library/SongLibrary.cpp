@@ -163,7 +163,7 @@ void SongLibrary::writeToCacheFile() const
 	writer.write((uint32_t)nodes.size());
 	for (const auto& node : nodes)
 	{
-		node.first->serializeChartData(writer);
+		node.first->serializeFileInfo(writer);
 		writer.append(node.second.first);
 		node.first->serializeSongInfo(writer);
 		writer.append(node.second.second);

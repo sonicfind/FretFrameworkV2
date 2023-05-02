@@ -38,7 +38,7 @@ public:
 	void readIni(const std::filesystem::directory_entry& iniFile);
 	bool scan(const LoadedFile& file, const ChartType type) noexcept;
 	void finalize();
-	void serializeChartData(BufferedBinaryWriter& writer) const noexcept;
+	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
 	void serializeSongInfo(BufferedBinaryWriter& writer) const noexcept;
 
 	const UnicodeString& getArtist() const { return *m_artist; }
@@ -149,8 +149,8 @@ private:
 	const UnicodeString* m_year = nullptr;
 	const UnicodeString* m_charter = nullptr;
 	const UnicodeString* m_playlist = nullptr;
-	uint32_t m_song_length = 0;
 
+	uint32_t m_song_length = 0;
 	float m_previewRange[2]{};
 	uint16_t m_album_track = UINT16_MAX;
 	uint16_t m_playlist_track = UINT16_MAX;
