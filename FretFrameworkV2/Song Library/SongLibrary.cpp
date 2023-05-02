@@ -13,16 +13,14 @@ void SongLibrary::finalize()
 		for (auto& entry : *node)
 		{
 			entry.finalize();
-			m_category_title.add(entry);
-			m_category_artist.add(entry);
-			m_category_genre.add(entry);
-			m_category_year.add(entry);
-			m_category_charter.add(entry);
-
-			m_category_album.add(entry);
-			m_category_artistAlbum.add(entry);
-
-			m_category_playlist.add(entry);
+			m_categories.title.add(entry);
+			m_categories.artist.add(entry);
+			m_categories.genre.add(entry);
+			m_categories.year.add(entry);
+			m_categories.charter.add(entry);
+			m_categories.album.add(entry);
+			m_categories.artistAlbum.add(entry);
+			m_categories.playlist.add(entry);
 		}
 }
 
@@ -144,23 +142,23 @@ void SongLibrary::readFromCacheFile()
 
 void SongLibrary::writeToCacheFile() const
 {
-	std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>> nodes;
+	std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>> nodes;
 	for (auto& node : m_songlist)
 	{
-		const std::pair<MD5, CacheIndices> base = { node.key, {} };
+		const std::pair<CacheIndices, MD5> base = { {} , node.key};
 		for (auto& entry : *node)
 			nodes.insert({ &entry, base });
 	}
 
 	BufferedBinaryWriter writer("songcache.bin");
 	writer.write(s_CACHE_VERSION);
-	m_category_title.mapToCache(writer, nodes);
-	m_category_artist.mapToCache(writer, nodes);
-	m_category_album.mapToCache(writer, nodes);
-	m_category_genre.mapToCache(writer, nodes);
-	m_category_year.mapToCache(writer, nodes);
-	m_category_charter.mapToCache(writer, nodes);
-	m_category_playlist.mapToCache(writer, nodes);
+	m_categories.title.mapToCache(writer, nodes);
+	m_categories.artist.mapToCache(writer, nodes);
+	m_categories.album.mapToCache(writer, nodes);
+	m_categories.genre.mapToCache(writer, nodes);
+	m_categories.year.mapToCache(writer, nodes);
+	m_categories.charter.mapToCache(writer, nodes);
+	m_categories.playlist.mapToCache(writer, nodes);
 	
 	writer.write((uint32_t)nodes.size());
 	for (const auto& node : nodes)

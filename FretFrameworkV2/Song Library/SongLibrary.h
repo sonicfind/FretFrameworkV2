@@ -23,14 +23,6 @@ private:
 private:
 	SimpleFlatMap<std::vector<LibraryEntry>, MD5> m_songlist;
 
-	LibraryCategory<SongAttribute::TITLE>       m_category_title;
-	LibraryCategory<SongAttribute::ARTIST>      m_category_artist;
-	LibraryCategory<SongAttribute::ALBUM>       m_category_album;
-	LibraryCategory<SongAttribute::GENRE>       m_category_genre;
-	LibraryCategory<SongAttribute::YEAR>        m_category_year;
-	LibraryCategory<SongAttribute::CHARTER>     m_category_charter;
-	LibraryCategory<SongAttribute::PLAYLIST>    m_category_playlist;
-	LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> m_category_artistAlbum;
 	struct
 	{
 		std::vector<UnicodeString> titles;
@@ -41,5 +33,17 @@ private:
 		std::vector<UnicodeString> charters;
 		std::vector<UnicodeString> playlists;
 	} m_stringBuffers;
+
+	struct
+	{
+		LibraryCategory<SongAttribute::TITLE>    title;
+		LibraryCategory<SongAttribute::ARTIST>   artist;
+		LibraryCategory<SongAttribute::ALBUM>    album;
+		LibraryCategory<SongAttribute::GENRE>    genre;
+		LibraryCategory<SongAttribute::YEAR>     year;
+		LibraryCategory<SongAttribute::CHARTER>  charter;
+		LibraryCategory<SongAttribute::PLAYLIST> playlist;
+		LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> artistAlbum;
+	} m_categories;
 };
 

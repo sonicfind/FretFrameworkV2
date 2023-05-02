@@ -52,7 +52,7 @@ public:
 		m_elements[song->getAttribute<Attribute>()].add(song);
 	}
 
-	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>>& nodes) const
 	{
 		writer.append((uint32_t)m_elements.size());
 		for (uint32_t i = 0; i < m_elements.size(); ++i)
@@ -61,12 +61,12 @@ public:
 			writer.appendString(element.key->toString());
 			for (const auto& song : *element)
 			{
-				if      constexpr (Attribute == SongAttribute::ARTIST)   nodes.at(song.raw()).second.artistIndex = i;
-				else if constexpr (Attribute == SongAttribute::ALBUM)    nodes.at(song.raw()).second.albumIndex = i;
-				else if constexpr (Attribute == SongAttribute::GENRE)    nodes.at(song.raw()).second.genreIndex = i;
-				else if constexpr (Attribute == SongAttribute::YEAR)     nodes.at(song.raw()).second.yearIndex = i;
-				else if constexpr (Attribute == SongAttribute::CHARTER)  nodes.at(song.raw()).second.charterIndex = i;
-				else if constexpr (Attribute == SongAttribute::PLAYLIST) nodes.at(song.raw()).second.playlistIndex = i;
+				if      constexpr (Attribute == SongAttribute::ARTIST)   nodes.at(song.raw()).first.artistIndex = i;
+				else if constexpr (Attribute == SongAttribute::ALBUM)    nodes.at(song.raw()).first.albumIndex = i;
+				else if constexpr (Attribute == SongAttribute::GENRE)    nodes.at(song.raw()).first.genreIndex = i;
+				else if constexpr (Attribute == SongAttribute::YEAR)     nodes.at(song.raw()).first.yearIndex = i;
+				else if constexpr (Attribute == SongAttribute::CHARTER)  nodes.at(song.raw()).first.charterIndex = i;
+				else if constexpr (Attribute == SongAttribute::PLAYLIST) nodes.at(song.raw()).first.playlistIndex = i;
 			}
 		}
 		writer.writeBuffer();
@@ -92,7 +92,7 @@ public:
 		m_elements[song->getAttribute<SongAttribute::TITLE>().getLowerCase().front()].add(song);
 	}
 
-	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<MD5, CacheIndices>>& nodes) const
+	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>>& nodes) const
 	{
 		std::vector<const UnicodeString*> strings;
 		for (const auto& element : m_elements)
@@ -102,7 +102,7 @@ public:
 				if (strings.empty() || strings.back()->get() != song->getName().get())
 					strings.push_back(&song->getName());
 
-				nodes.at(song.raw()).second.nameIndex = (uint32_t)strings.size() - 1;
+				nodes.at(song.raw()).first.nameIndex = (uint32_t)strings.size() - 1;
 			}
 		}
 
