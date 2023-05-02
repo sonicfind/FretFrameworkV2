@@ -35,51 +35,7 @@ public:
 
 	bool set_V1(const size_t lane, uint32_t sustain)
 	{
-		if (lane > numColors + 2) [[unlikely]]
-			return false;
-
-		if (sustain < 20)
-			sustain = 1;
-
-		auto testExtension = [&]() -> bool
-		{
-			if constexpr (numColors <= 5)
-				return false;
-
-			if (lane == 8)
-				m_colors[2].set(sustain);
-			else if (lane > 8)
-				m_colors[lane - 3].set(sustain);
-			else
-				return false;
-			return true;
-		};
-
-		if (lane < 5)
-		{
-			if constexpr (numColors > 5)
-			{
-				static constexpr size_t lanes[5] = { 3, 4, 5, 0, 1 };
-				m_colors[lanes[lane]].set(sustain);
-			}
-			else
-				m_colors[lane].set(sustain);
-			m_special = REPLACEMENTS[0];
-		}
-		else if (!testExtension())
-		{
-			if (lane == 7)
-			{
-				m_special.set(sustain);
-				memcpy(m_colors, REPLACEMENTS, sizeof(m_colors));
-			}
-			else if (lane == 5)
-				setForcing(ForceStatus::FORCED);
-			else
-				toggleTap();
-		}
-
-		return true;
+		return false;
 	}
 
 	bool modify(char modifier, size_t lane = 0)
@@ -206,3 +162,9 @@ public:
 		return arr.lanes[lane];
 	}
 };
+
+template<>
+bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain);
+
+template<>
+bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain);
