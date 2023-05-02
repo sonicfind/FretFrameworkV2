@@ -5,9 +5,20 @@
 #include "Notes/Keys.h"
 #include "Notes/DrumNote.h"
 #include "MicrosPerQuarter.h"
+#include "Serialization/Modifiers.h"
 
 class Song
 {
+	std::u32string m_name;
+	std::u32string m_artist;
+	std::u32string m_album;
+	std::u32string m_genre;
+	std::u32string m_year;
+	std::u32string m_charter;
+	std::u32string m_playlist;
+	uint32_t m_hopo_frequency = 0;
+	std::vector<Modifiers::Modifier> m_modifiers;
+
 	struct
 	{
 		InstrumentalTrack_Extended<GuitarNote<5>>      lead_5;
@@ -32,6 +43,9 @@ class Song
 	std::u32string m_midiSequenceName;
 
 public:
+	void setMetaData(const std::u32string& name, const std::u32string& artist, const std::u32string& album, const std::u32string& genre, const std::u32string& year, const std::u32string& charter, const std::u32string& playlist, uint32_t hopoFrequency = 0);
+	void setMetaData(const std::vector<Modifiers::Modifier>& modifiers, const std::u32string& playlistToCompare);
+
 	bool load(const std::filesystem::path& path) noexcept;
 	bool save(std::filesystem::path path) noexcept;
 	void resetTempoMap();

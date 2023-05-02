@@ -5,6 +5,76 @@ const std::filesystem::path Song::s_EXTS_CHT[2] = { ".cht", ".chart" };
 const std::filesystem::path Song::s_EXTS_MID[2] = { ".mid", ".midi" };
 const std::filesystem::path Song::s_EXT_BCH = ".bch";
 
+void Song::setMetaData(const std::u32string& name, const std::u32string& artist, const std::u32string& album, const std::u32string& genre, const std::u32string& year, const std::u32string& charter, const std::u32string& playlist, uint32_t hopoFrequency)
+{
+	m_name = name;
+	m_artist = artist;
+	m_album = album;
+	m_genre = genre;
+	m_year = year;
+	m_charter = charter;
+	m_playlist = playlist;
+	m_hopo_frequency = hopoFrequency;
+}
+
+void Song::setMetaData(const std::vector<Modifiers::Modifier>& modifiers, const std::u32string& playlistToCompare)
+{
+	m_name.clear();
+	m_artist.clear();
+	m_album.clear();
+	m_genre.clear();
+	m_year.clear();
+	m_charter.clear();
+	m_playlist.clear();
+	m_hopo_frequency = 0;
+
+	for (const auto& mod : modifiers)
+	{
+		if (mod.getName() == "name")
+		{
+			if (m_name.empty() || m_name == U"Unknown Title")
+				m_name = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "artist")
+		{
+			if (m_artist.empty() || m_artist == U"Unknown Artist")
+				m_artist = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "album")
+		{
+			if (m_album.empty() || m_album == U"Unknown Album")
+				m_album = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "genre")
+		{
+			if (m_genre.empty() || m_genre == U"Unknown Genre")
+				m_genre = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "year")
+		{
+			if (m_year.empty() || m_year == U"Unknown Year")
+				m_year = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "charter")
+		{
+			if (m_charter.empty() || m_charter == U"Unknown Charter")
+				m_charter = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "playlist")
+		{
+			if (m_playlist.empty() || m_playlist == playlistToCompare)
+				m_playlist = mod.getValue<UnicodeString>().get();
+		}
+		else if (mod.getName() == "hopo_frequency")
+		{
+			if (m_hopo_frequency == 0)
+				m_hopo_frequency = mod.getValue<uint32_t>();
+		}
+		else
+			m_modifiers.push_back(mod);
+	}
+}
+
 bool Song::load(const std::filesystem::path& path) noexcept
 {
 	clear();
