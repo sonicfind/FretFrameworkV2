@@ -6,6 +6,7 @@
 #include "Notes/DrumNote.h"
 #include "Types/UnicodeString.h"
 #include "PtrWrapper/PtrWrapper.h"
+#include "Serialization/BufferedBinaryReader.h"
 #include "Serialization/BufferedBinaryWriter.h"
 
 enum class SongAttribute
@@ -35,9 +36,12 @@ public:
 public:
 	LibraryEntry(const std::filesystem::directory_entry& chartFile);
 	LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile);
+
+	void mapStrings(const UnicodeString* name, const UnicodeString* artist, const UnicodeString* album, const UnicodeString* genre, const UnicodeString* year, const UnicodeString* charter, const UnicodeString* playlist);
 	void readIni(const std::filesystem::directory_entry& iniFile);
 	bool scan(const LoadedFile& file, const ChartType type) noexcept;
 	void finalize();
+	void extractSongInfo(BufferedBinaryReader& reader);
 	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
 	void serializeSongInfo(BufferedBinaryWriter& writer) const noexcept;
 

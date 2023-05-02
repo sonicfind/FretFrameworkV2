@@ -11,6 +11,16 @@ const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile) : m_chartFile(chartFile) {}
 LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile) : m_chartFile(chartFile), m_iniModifiedTime(iniFile.last_write_time()) {}
 
+void LibraryEntry::mapStrings(const UnicodeString* name, const UnicodeString* artist, const UnicodeString* album, const UnicodeString* genre, const UnicodeString* year, const UnicodeString* charter, const UnicodeString* playlist)
+{
+	m_name = name;
+	m_artist = artist;
+	m_album = album;
+	m_genre = genre;
+	m_year = year;
+	m_charter = charter;
+	m_playlist = playlist;
+}
 
 bool LibraryEntry::scan(const LoadedFile& file, const ChartType type) noexcept
 {
@@ -37,6 +47,9 @@ bool LibraryEntry::scan(const LoadedFile& file, const ChartType type) noexcept
 
 void LibraryEntry::finalize()
 {
+	if (m_modifiers.empty())
+		return;
+
 	reorderModifiers();
 	mapModifierVariables();
 	if (m_rewriteIni)
@@ -44,6 +57,37 @@ void LibraryEntry::finalize()
 		writeIni();
 		m_rewriteIni = false;
 	}
+}
+
+void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
+{
+	ScanTrack* const arr[11] =
+	{
+		&m_scanTracks.lead_5,
+		&m_scanTracks.lead_6,
+		&m_scanTracks.bass_5,
+		&m_scanTracks.bass_6,
+		&m_scanTracks.rhythm,
+		&m_scanTracks.coop,
+		&m_scanTracks.keys,
+		&m_scanTracks.drums4_pro,
+		&m_scanTracks.drums5,
+		&m_scanTracks.vocals,
+		&m_scanTracks.harmonies
+	};
+
+	for (auto track : arr)
+	{
+		reader.extract(track->m_subTracks);
+		reader.extract(track->m_intensity);
+	}
+	reader.extract(m_previewRange);
+	reader.extract(m_album_track);
+	reader.extract(m_playlist_track);
+	reader.extract(m_song_length);
+	reader.extract(m_hopo_frequency);
+	m_icon = UnicodeString::strToU32(reader.extractString());
+	m_source = UnicodeString::strToU32(reader.extractString());
 }
 
 void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcept

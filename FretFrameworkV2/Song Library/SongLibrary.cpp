@@ -138,6 +138,46 @@ void SongLibrary::readFromCacheFile()
 	m_stringBuffers.years = getStrings();
 	m_stringBuffers.charters = getStrings();
 	m_stringBuffers.playlists = getStrings();
+
+	const auto parseEntry = [&reader, this]() -> std::optional<LibraryEntry>
+	{
+		const std::filesystem::path directory = UnicodeString::strToU32(reader.extractString());
+		const std::filesystem::path filename = UnicodeString::strToU32(reader.extractString());
+		const std::filesystem::directory_entry chartFile(directory / filename);
+		const std::filesystem::directory_entry iniFile(directory / U"song.ini");
+
+		if (!chartFile.exists() || !iniFile.exists())
+			return {};
+
+		const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+		const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+		if (chartFile.last_write_time() != chartWriteTime || iniFile.last_write_time() != iniWriteTime)
+			return {};
+
+		LibraryEntry entry(chartFile, iniFile);
+		{
+			const UnicodeString* const name = &m_stringBuffers.titles[reader.extract<uint32_t>()];
+			const UnicodeString* const artist = &m_stringBuffers.artists[reader.extract<uint32_t>()];
+			const UnicodeString* const album = &m_stringBuffers.albums[reader.extract<uint32_t>()];
+			const UnicodeString* const genre = &m_stringBuffers.genres[reader.extract<uint32_t>()];
+			const UnicodeString* const year = &m_stringBuffers.years[reader.extract<uint32_t>()];
+			const UnicodeString* const charter = &m_stringBuffers.charters[reader.extract<uint32_t>()];
+			const UnicodeString* const playlist = &m_stringBuffers.playlists[reader.extract<uint32_t>()];
+			entry.mapStrings(name, artist, album, genre, year, charter, playlist);
+		}
+		entry.extractSongInfo(reader);
+		return std::move(entry);
+	};
+
+	const uint32_t numNodes = reader.extract<uint32_t, false>();
+	for (uint32_t i = 0; i < numNodes; ++i)
+	{
+		reader.setNextSectionBounds();
+		if (auto entry = parseEntry())
+			addEntry(reader.extract<MD5>(), std::move(*entry));
+		else
+			reader.gotoEndOfBuffer();
+	}
 }
 
 void SongLibrary::writeToCacheFile() const
