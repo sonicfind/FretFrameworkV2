@@ -49,6 +49,8 @@ int main()
 			}
 				break;
 			case 'L':
+				std::cout << '\n';
+				loadSong();
 				break;
 			default:
 				std::cout << "Invalid option\n";
@@ -131,5 +133,6 @@ void loadSong()
 				break;
 			}
 		}
+		std::cout << '\n';
 	}
 }
