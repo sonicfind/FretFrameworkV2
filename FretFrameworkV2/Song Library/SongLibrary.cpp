@@ -1,12 +1,6 @@
 #include "SongLibrary.h"
 #include <iostream>
 
-void SongLibrary::scan(const std::vector<std::filesystem::path>& baseDirectories)
-{
-	for (const auto& directory : baseDirectories)
-		scanDirectory(directory);
-}
-
 void SongLibrary::finalize()
 {
 	m_preScannedDirectories.clear();
@@ -23,6 +17,25 @@ void SongLibrary::finalize()
 			m_categories.artistAlbum.add(entry);
 			m_categories.playlist.add(entry);
 		}
+}
+
+void SongLibrary::runFullScan(const std::vector<std::filesystem::path>& baseDirectories)
+{
+	clear();
+	readFromCacheFile(true);
+
+	for (const auto& directory : baseDirectories)
+		scanDirectory(directory);
+
+	finalize();
+	writeToCacheFile();
+}
+
+void SongLibrary::runPartialScan()
+{
+	clear();
+	readFromCacheFile(false);
+	finalize();
 }
 
 void SongLibrary::clear()
@@ -107,7 +120,7 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 	{
 		if (charts[i])
 		{
-			LibraryEntry entry(*charts[i]);
+			LibraryEntry entry(charts[i]->path(), charts[i]->last_write_time());
 			if (ini)
 				entry.readIni(*ini);
 
@@ -134,7 +147,7 @@ void SongLibrary::markScannedDirectory(const std::filesystem::path& directory)
 	m_preScannedDirectories.insert(directory);
 }
 
-void SongLibrary::readFromCacheFile()
+void SongLibrary::readFromCacheFile(bool validateNodes)
 {
 	if (!std::filesystem::exists("songcache.bin"))
 		return;
@@ -143,6 +156,15 @@ void SongLibrary::readFromCacheFile()
 	if (s_CACHE_VERSION != reader.extract<uint32_t, false>())
 		return;
 
+	readStrings(reader);
+	if (validateNodes)
+		readNodes_validated(reader);
+	else
+		readNodes(reader);
+}
+
+void SongLibrary::readStrings(BufferedBinaryReader& reader)
+{
 	const auto getStrings = [&reader]()
 	{
 		reader.setNextSectionBounds();
@@ -162,7 +184,40 @@ void SongLibrary::readFromCacheFile()
 	m_stringBuffers.years = getStrings();
 	m_stringBuffers.charters = getStrings();
 	m_stringBuffers.playlists = getStrings();
+}
 
+void SongLibrary::readNodes(BufferedBinaryReader& reader)
+{
+	const uint32_t numNodes = reader.extract<uint32_t, false>();
+	for (uint32_t i = 0; i < numNodes; ++i)
+	{
+		reader.setNextSectionBounds();
+		auto entry = [&reader] {
+			std::filesystem::path filepath = UnicodeString::strToU32(reader.extractString());
+			filepath /= UnicodeString::strToU32(reader.extractString());
+
+			const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+			const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+			return LibraryEntry(filepath, chartWriteTime, iniWriteTime);
+		}();
+		
+		{
+			const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
+			const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
+			const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
+			const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
+			const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
+			const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
+			const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
+			entry.mapStrings(name, artist, album, genre, year, charter, playlist);
+		}
+		entry.extractSongInfo(reader);
+		addEntry(reader.extract<MD5>(), std::move(entry));
+	}
+}
+
+void SongLibrary::readNodes_validated(BufferedBinaryReader& reader)
+{
 	const auto parseEntry = [&reader, this]() -> std::optional<LibraryEntry>
 	{
 		const std::filesystem::path directory = UnicodeString::strToU32(reader.extractString());
@@ -178,7 +233,7 @@ void SongLibrary::readFromCacheFile()
 		if (chartFile.last_write_time() != chartWriteTime || iniFile.last_write_time() != iniWriteTime)
 			return {};
 
-		LibraryEntry entry(chartFile, iniFile);
+		LibraryEntry entry(chartFile.path(), chartWriteTime, iniWriteTime);
 		{
 			const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
 			const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];

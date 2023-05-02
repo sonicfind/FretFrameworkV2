@@ -36,8 +36,7 @@ public:
 	using UnicodeWrapper = PointerWrapper<const UnicodeString>;
 
 public:
-	LibraryEntry(const std::filesystem::directory_entry& chartFile);
-	LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile);
+	LibraryEntry(const std::filesystem::path& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite = {});
 
 	void mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist);
 	void readIni(const std::filesystem::directory_entry& iniFile);
@@ -55,7 +54,7 @@ public:
 	const UnicodeString& getCharter() const { return *m_charter; }
 	const UnicodeString& getPlaylist() const { return *m_playlist; }
 	const uint32_t& getSongLength() const { return m_song_length; }
-	std::filesystem::path getDirectory() const { return m_chartFile.path().parent_path(); }
+	std::filesystem::path getDirectory() const { return m_chartFile.parent_path(); }
 
 	template<SongAttribute Attribute>
 	const auto& getAttribute() const
@@ -101,7 +100,7 @@ public:
 			(strCmp = m_charter->compare(*other.m_charter)) != 0)
 			return strCmp < 0;
 		else
-			return m_chartFile.path().parent_path() < other.m_chartFile.path().parent_path();
+			return getDirectory() < other.getDirectory();
 	}
 
 private:
@@ -166,8 +165,9 @@ private:
 
 	std::vector<Modifiers::Modifier> m_modifiers;
 
-	std::filesystem::directory_entry m_chartFile;
-	std::filesystem::file_time_type m_iniModifiedTime;
+	std::filesystem::path m_chartFile;
+	std::filesystem::file_time_type m_chartWriteTime;
+	std::filesystem::file_time_type m_iniWriteTime;
 
 	bool m_rewriteIni = false;
 };

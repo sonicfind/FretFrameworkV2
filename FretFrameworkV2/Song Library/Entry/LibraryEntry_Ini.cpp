@@ -4,12 +4,12 @@
 void LibraryEntry::readIni(const std::filesystem::directory_entry& iniFile)
 {
 	m_modifiers = Ini::ReadSongIniFile(iniFile.path());
-	m_iniModifiedTime = iniFile.last_write_time();
+	m_iniWriteTime = iniFile.last_write_time();
 }
 
 void LibraryEntry::writeIni()
 {
-	const std::filesystem::path directory = m_chartFile.path().parent_path();
+	const std::filesystem::path directory = m_chartFile.parent_path();
 	Ini::WriteSongIniFile(directory / "song.ini", m_modifiers);
-	m_iniModifiedTime = std::filesystem::last_write_time(directory / "song.ini");
+	m_iniWriteTime = std::filesystem::last_write_time(directory / "song.ini");
 }
