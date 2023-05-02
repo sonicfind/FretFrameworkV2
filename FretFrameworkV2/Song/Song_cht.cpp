@@ -51,8 +51,8 @@ int Song::load_header_cht(ChtFileReader& reader)
 
 	static const TxtFileReader::ModifierOutline PARTIAL_MODIFIERS =
 	{
-		{ "FileVersion", { "FileVersion", ModifierNode::UINT32 } },
-		{ "Resolution",  { "Resolution" , ModifierNode::UINT32 } },
+		{ "FileVersion", { "FileVersion", ModifierNode::UINT16 } },
+		{ "Resolution",  { "Resolution" , ModifierNode::UINT16 } },
 	};
 
 	int version = 0;
@@ -60,7 +60,7 @@ int Song::load_header_cht(ChtFileReader& reader)
 	for (const auto& modifier : modifiers)
 	{
 		if (modifier.getName() == "Resolution")
-			m_tickrate = modifier.getValue<uint32_t>();
+			m_tickrate = modifier.getValue<uint16_t>();
 		else if (modifier.getName() == "FileVersion")
 			version = modifier.getValue<uint16_t>();
 	}
