@@ -10,11 +10,12 @@ void Song::setMetaData(const LibraryEntry& entry)
 	m_year = entry.getName().get();
 	m_charter = entry.getName().get();
 	m_playlist = entry.getName().get();
-	m_baseDrumType = entry.getDrumType();
 	m_hopo_frequency = entry.getHopoFrequency();
 	m_multiplier_note = entry.getMultiplierNote();
 	m_eighthnote_hopo = entry.getEightNoteHopo();
 	m_sustain_cutoff_threshold = entry.getSustainCutoffThreshold();
+	m_baseDrumType = entry.getDrumType();
+	m_modifiers.clear();
 }
 
 EntryStatus Song::load(const LibraryEntry& entry)

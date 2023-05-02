@@ -11,7 +11,11 @@ void Song::setMetaData()
 	m_charter.clear();
 	m_playlist.clear();
 	m_hopo_frequency = 0;
+	m_multiplier_note = 116;
+	m_sustain_cutoff_threshold = 0;
+	m_eighthnote_hopo = false;
 	m_baseDrumType = DrumType_Enum::LEGACY;
+	m_modifiers.clear();
 
 	const std::filesystem::path iniFile(m_directory / U"song.ini");
 	if (!std::filesystem::exists(iniFile))
