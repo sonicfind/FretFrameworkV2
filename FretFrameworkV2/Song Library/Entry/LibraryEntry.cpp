@@ -129,6 +129,15 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	writer.appendString(UnicodeString::U32ToStr(m_source));
 }
 
+DrumType_Enum LibraryEntry::getDrumType() const noexcept
+{
+	if (m_scanTracks.drums4_pro.m_subTracks > 0)
+		return DrumType_Enum::FOURLANE_PRO;
+	else if (m_scanTracks.drums5.m_subTracks > 0)
+		return DrumType_Enum::FIVELANE;
+	return DrumType_Enum::LEGACY;
+}
+
 PointerWrapper<const Modifiers::Modifier> LibraryEntry::getModifier(std::string_view name) const noexcept
 {
 	for (auto iter = m_modifiers.begin(); iter < m_modifiers.end(); iter++)

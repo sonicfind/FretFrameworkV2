@@ -5,6 +5,10 @@
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
+	DrumType_Enum type = DrumType_Enum::LEGACY;
+	if (auto fivelane = getModifier("five_lane_drums"))
+		type = fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
+
 	MidiFileReader reader(file);
 	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;
 	while (reader.startNextTrack())
@@ -31,11 +35,18 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 				m_scanTracks.keys.scan(reader);
 			else if (name == "PART DRUMS")
 			{
-				Legacy_DrumScan drumsLegacy(reader);
-				if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
-					drumsLegacy.transfer(m_scanTracks.drums4_pro);
+				if (type == DrumType_Enum::LEGACY)
+				{
+					Legacy_DrumScan drumsLegacy(reader);
+					if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
+						drumsLegacy.transfer(m_scanTracks.drums4_pro);
+					else
+						drumsLegacy.transfer(m_scanTracks.drums5);
+				}
+				else if (type == DrumType_Enum::FOURLANE_PRO)
+					m_scanTracks.drums4_pro.scan(reader);
 				else
-					drumsLegacy.transfer(m_scanTracks.drums5);
+					m_scanTracks.drums5.scan(reader);
 			}
 			else if (name == "PART VOCALS")
 			{

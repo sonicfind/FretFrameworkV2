@@ -113,6 +113,7 @@ public:
 			return getDirectory() < other.getDirectory();
 	}
 
+	DrumType_Enum getDrumType() const noexcept;
 	PointerWrapper<const Modifiers::Modifier> getModifier(std::string_view name) const noexcept;
 private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;

@@ -8,7 +8,7 @@ private:
 	using InstrumentalScan<DrumNote_Legacy>::scan;
 
 public:
-	Legacy_DrumScan() = default;
+	Legacy_DrumScan(DrumType_Enum type);
 	Legacy_DrumScan(MidiFileReader& reader);
 
 	[[nodiscard]] bool extraTest_V1(size_t note) override;

@@ -12,6 +12,7 @@ void Legacy_DrumScan::applyExtraValue(Midi_Scanner& scanner)
 	InstrumentalScan<DrumNote_Legacy>::applyExtraValue(scanner);
 }
 
+Legacy_DrumScan::Legacy_DrumScan(DrumType_Enum type) : m_type(type){}
 Legacy_DrumScan::Legacy_DrumScan(MidiFileReader& reader)
 {
 	InstrumentalScan<DrumNote_Legacy>::scan(reader);

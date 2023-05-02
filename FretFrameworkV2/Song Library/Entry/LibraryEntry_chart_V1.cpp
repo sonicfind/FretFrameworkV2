@@ -3,7 +3,12 @@
 
 void LibraryEntry::scan_cht_V1(ChtFileReader& reader)
 {
-	Legacy_DrumScan drumsLegacy;
+	Legacy_DrumScan drumsLegacy = [&]() -> Legacy_DrumScan {
+		if (auto fivelane = getModifier("five_lane_drums"))
+			return fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
+		return DrumType_Enum::LEGACY;
+	}();
+
 	while (reader.isStartOfTrack())
 	{
 		auto track = reader.extractTrack_V1();
