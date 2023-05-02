@@ -173,6 +173,8 @@ private:
 	std::u32string m_source;
 	uint32_t m_hopo_frequency = 0;
 
+	UnicodeString m_directory_playlist;
+
 	std::vector<Modifiers::Modifier> m_modifiers;
 
 	std::pair<std::filesystem::path, ChartType> m_chartFile;

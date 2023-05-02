@@ -51,12 +51,12 @@ void LibraryEntry::finalize()
 		return;
 
 	reorderModifiers();
-	mapModifierVariables();
 	if (m_rewriteIni)
 	{
 		writeIni();
 		m_rewriteIni = false;
 	}
+	mapModifierVariables();
 }
 
 void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
@@ -251,15 +251,6 @@ void LibraryEntry::reorderModifiers()
 
 void LibraryEntry::mapModifierVariables()
 {
-	if (auto playlist = getModifier("playlist"))
-		m_playlist = playlist->getValue<UnicodeString>();
-	else
-	{
-		m_modifiers.reserve(m_modifiers.size() + 1);
-		m_modifiers.push_back({ "playlist", UnicodeString(m_chartFile.first.parent_path().parent_path().u32string()) });
-		m_playlist = m_modifiers.back().getValue<UnicodeString>();
-	}
-
 	m_name = m_modifiers.front().getValue<UnicodeString>();
 	std::vector<Modifiers::Modifier>::const_iterator iter = m_modifiers.begin() + 1;
 	const auto apply = [&](UnicodeWrapper& ptr, std::string_view str, const UnicodeString& def)
@@ -277,6 +268,14 @@ void LibraryEntry::mapModifierVariables()
 	apply(m_genre, "genre", s_DEFAULT_GENRE);
 	apply(m_year, "year", s_DEFAULT_YEAR);
 	apply(m_charter, "charter", s_DEFAULT_CHARTER);
+
+	if (iter != m_modifiers.end() && iter->getName() == "playlist")
+		m_playlist = iter->getValue<UnicodeString>();
+	else
+	{
+		m_directory_playlist = m_chartFile.first.parent_path().parent_path().u32string();
+		m_playlist = m_directory_playlist;
+	}
 
 	if (auto modifier = getModifier("song_length"))
 		m_song_length = modifier->getValue<uint32_t>();
