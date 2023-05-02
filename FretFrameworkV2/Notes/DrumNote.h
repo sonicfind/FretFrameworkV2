@@ -75,7 +75,7 @@ public:
 
 		if (lane == 0)
 			this->m_special.set(sustain);
-		else if (lane <= numPads)
+		else if (lane <= numPads && lane < 32)
 			this->m_colors[lane - 1].set(sustain);
 		else if (lane == 32)
 			toggleDoubleBass();
