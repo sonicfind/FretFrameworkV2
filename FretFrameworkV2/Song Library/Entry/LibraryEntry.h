@@ -53,7 +53,7 @@ public:
 	const UnicodeString& getCharter() const { return *m_charter; }
 	const UnicodeString& getPlaylist() const { return *m_playlist; }
 	const uint32_t& getSongLength() const { return m_song_length; }
-	const std::filesystem::path& getDirectory() const { return m_chartFile.path().parent_path(); }
+	std::filesystem::path getDirectory() const { return m_chartFile.path().parent_path(); }
 
 	template<SongAttribute Attribute>
 	const auto& getAttribute() const
