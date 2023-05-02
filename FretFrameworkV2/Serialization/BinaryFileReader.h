@@ -59,11 +59,11 @@ public:
 		return extract<T, useVirtual>(value, sizeof(T));
 	}
 
-	template <typename T>
+	template <typename T, bool useVirtual = true>
 	[[nodiscard]] T extract()
 	{
 		T value;
-		if (!extract<T, true>(value))
+		if (!extract<T, useVirtual>(value))
 			throw std::runtime_error("Could not parse data");
 		return value;
 	}
