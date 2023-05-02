@@ -9,6 +9,8 @@ const UnicodeString LibraryEntry::s_DEFAULT_YEAR{ U"Unknown Year" };
 const UnicodeString LibraryEntry::s_DEFAULT_CHARTER{ U"Unknown Charter" };
 
 LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile) : m_chartFile(chartFile) {}
+LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile) : m_chartFile(chartFile), m_iniModifiedTime(iniFile.last_write_time()) {}
+
 
 bool LibraryEntry::scan(const LoadedFile& file, const ChartType type) noexcept
 {

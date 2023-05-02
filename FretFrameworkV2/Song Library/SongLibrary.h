@@ -18,7 +18,7 @@ public:
 
 private:
 	void scanDirectory(const std::filesystem::path& directory);
-	void addEntry(LibraryEntry&& entry, LibraryEntry::ChartType type, const std::filesystem::path& chartPath);
+	void addEntry(MD5 hash, LibraryEntry&& entry);
 
 private:
 	SimpleFlatMap<std::vector<LibraryEntry>, MD5> m_songlist;

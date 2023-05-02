@@ -35,6 +35,7 @@ public:
 public:
 	LibraryEntry(const std::filesystem::directory_entry& chartFile);
 	LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile);
+	void readIni(const std::filesystem::directory_entry& iniFile);
 	bool scan(const LoadedFile& file, const ChartType type) noexcept;
 	void finalize();
 	void serializeChartData(BufferedBinaryWriter& writer) const noexcept;

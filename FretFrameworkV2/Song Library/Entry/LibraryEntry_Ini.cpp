@@ -1,8 +1,11 @@
 #include "LibraryEntry.h"
 #include "Ini/Ini.h"
 
-LibraryEntry::LibraryEntry(const std::filesystem::directory_entry& chartFile, const std::filesystem::directory_entry& iniFile)
-	: m_chartFile(chartFile), m_modifiers(Ini::ReadSongIniFile(iniFile.path())), m_iniModifiedTime(iniFile.last_write_time()) {}
+void LibraryEntry::readIni(const std::filesystem::directory_entry& iniFile)
+{
+	m_modifiers = Ini::ReadSongIniFile(iniFile.path());
+	m_iniModifiedTime = iniFile.last_write_time();
+}
 
 void LibraryEntry::writeIni()
 {
