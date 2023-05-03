@@ -133,6 +133,7 @@ void MidiFileWriter::writeTrack()
 		}
 		position = node.key;
 	}
+	m_nodes.clear();
 
 	write(char(0));
 	writeMeta(MidiEventType::End_Of_Track, {});
@@ -141,7 +142,7 @@ void MidiFileWriter::writeTrack()
 	seek(start - std::streamoff(4));
 	write(uint32_t(end - start));
 	seek(end);
-
+	
 	m_header.numTracks++;
 }
 
