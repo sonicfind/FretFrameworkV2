@@ -91,11 +91,11 @@ void MidiFileWriter::writeTrack()
 			currChannel = off.first;
 		}
 
-		for (const Sysex sysex : node->sysexOffs)
+		for (const auto& sysex : node->sysexOffs)
 		{
 			writeVLQ(delta);
 			sysex.set();
-			write(Sysex::BUFFER);
+			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 10 });
 
 			delta = 0;
 			currEvent = MidiEventType::SysEx;
@@ -110,11 +110,11 @@ void MidiFileWriter::writeTrack()
 			currEvent = ev.first;
 		}
 
-		for (const Sysex sysex : node->sysexOns)
+		for (const auto& sysex : node->sysexOns)
 		{
 			writeVLQ(delta);
 			sysex.set();
-			write(Sysex::BUFFER);
+			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 10 });
 
 			delta = 0;
 			currEvent = MidiEventType::SysEx;
