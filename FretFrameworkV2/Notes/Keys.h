@@ -12,9 +12,6 @@ public:
 		if (lane >= numColors)
 			return false;
 
-		if (sustain < 20)
-			sustain = 1;
-
 		m_colors[lane].set(sustain);
 		return true;
 	}

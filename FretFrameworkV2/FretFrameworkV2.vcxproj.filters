@@ -184,6 +184,9 @@
     <ClCompile Include="Serialization\MidiFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
+    <ClCompile Include="Notes\NoteColor.cpp">
+      <Filter>Notes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">

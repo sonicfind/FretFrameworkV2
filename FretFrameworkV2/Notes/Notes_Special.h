@@ -12,9 +12,6 @@ public:
 	{
 		if (lane == 0)
 		{
-			if (sustain < 20)
-				sustain = 1;
-
 			m_special.set(sustain);
 			return true;
 		}

@@ -3,9 +3,6 @@
 template<>
 bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain)
 {
-	if (sustain < 20)
-		sustain = 1;
-
 	if (lane < 5)
 	{
 		m_colors[lane].set(sustain);
@@ -28,9 +25,6 @@ bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain)
 
 bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain)
 {
-	if (sustain < 20)
-		sustain = 1;
-
 	if (lane < 5)
 	{
 		static constexpr size_t lanes[5] = { 3, 4, 5, 0, 1 };
