@@ -44,7 +44,7 @@ private:
 private:
 	struct
 	{
-		uint16_t format;
+		uint16_t format = 1;
 		uint16_t numTracks;
 		uint16_t tickRate;
 	} m_header;

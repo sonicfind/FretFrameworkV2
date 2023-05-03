@@ -11,7 +11,9 @@ MidiFileWriter::MidiFileWriter(const std::filesystem::path& path, uint16_t tickR
 MidiFileWriter::~MidiFileWriter()
 {
 	seek(8);
-	write(m_header);
+	write(m_header.format);
+	write(m_header.numTracks);
+	write(m_header.tickRate);
 }
 
 void MidiFileWriter::setTrackName(std::string_view str)
@@ -160,7 +162,7 @@ void MidiFileWriter::writeVLQ(uint32_t value)
 		if (buffer[i] > 0)
 		{
 			for (size_t j = i; j < 3; ++j)
-				buffer[j] |= 0x80;
+				buffer[j] |= (char)0x80;
 			write(buffer + i, 4 - i);
 			return;
 		}
