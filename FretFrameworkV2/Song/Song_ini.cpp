@@ -106,7 +106,7 @@ void Song::setMetaData()
 				m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
 			sustain_thresholdSet = true;
 		}
-		else
+		else if (!getModifier(mod.getName()))
 			m_modifiers.push_back(mod);
 	}
 }
