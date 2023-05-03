@@ -79,11 +79,11 @@ void MidiFileWriter::writeTrack()
 	for (const auto& node : m_nodes)
 	{
 		uint32_t delta = node.key - position;
-		for (const std::pair<char, MidiNote>& off : node->noteOffs)
+		for (const auto& off : node->noteOffs)
 		{
 			writeVLQ(delta);
 			if (currEvent != MidiEventType::Note_On || currChannel != off.first)
-				write((char)MidiEventType::Note_On | off.first);
+				write(char((char)MidiEventType::Note_On | off.first));
 			write(off.second);
 
 			delta = 0;
@@ -120,11 +120,11 @@ void MidiFileWriter::writeTrack()
 			currEvent = MidiEventType::SysEx;
 		}
 
-		for (const std::pair<char, MidiNote>& on : node->noteOns)
+		for (const auto& on : node->noteOns)
 		{
 			writeVLQ(delta);
 			if (currEvent != MidiEventType::Note_On || currChannel != on.first)
-				write((char)MidiEventType::Note_On | on.first);
+				write(char((char)MidiEventType::Note_On | on.first));
 			write(on.second);
 
 			delta = 0;
