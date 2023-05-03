@@ -109,7 +109,7 @@ void Song::load_events_midi(MidiFileReader& reader)
 }
 
 
-void Song::save_mid(const std::filesystem::path& path)
+void Song::save_mid(const std::filesystem::path& path) const
 {
 	MidiFileWriter writer(path, m_tickrate);
 	save_tempoMap(writer);

@@ -111,7 +111,7 @@ void Song::resetTempoMap()
 	m_timeSigs.emplace_back(0) = { 4, 2, 24, 8 };
 }
 
-bool Song::save(ChartType type) noexcept
+bool Song::save(ChartType type) const noexcept
 {
 	try
 	{

@@ -15,7 +15,7 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 		traverse_cht_V1(reader);
 }
 
-void Song::save_cht(const std::filesystem::path& path)
+void Song::save_cht(const std::filesystem::path& path) const
 {
 	ChtFileWriter writer(path);
 	save(writer);

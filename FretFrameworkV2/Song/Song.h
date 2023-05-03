@@ -16,7 +16,7 @@ class Song
 public:
 	EntryStatus load(const LibraryEntry& entry);
 	bool load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept;
-	bool save(ChartType type) noexcept;
+	bool save(ChartType type) const noexcept;
 	void resetTempoMap();
 	void clear();
 
@@ -48,9 +48,9 @@ private:
 	void load_tempoMap_midi(MidiFileReader& reader);
 	void load_events_midi(MidiFileReader& reader);
 
-	void save_cht(const std::filesystem::path& path);
-	void save_bch(const std::filesystem::path& path);
-	void save_mid(const std::filesystem::path& path);
+	void save_cht(const std::filesystem::path& path) const;
+	void save_bch(const std::filesystem::path& path) const;
+	void save_mid(const std::filesystem::path& path) const;
 
 	void save(CommonChartWriter& writer) const;
 	void save_header(CommonChartWriter& writer) const;
