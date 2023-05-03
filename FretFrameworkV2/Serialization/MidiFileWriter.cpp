@@ -21,16 +21,18 @@ void MidiFileWriter::setTrackName(std::string_view str)
 
 void MidiFileWriter::addMidiNote(uint32_t position, unsigned char value, unsigned char velocity, uint32_t length, unsigned char channel)
 {
-	auto& node = m_nodes[position];
-	node.noteOns.push_back({ channel, { value, velocity } });
-	node.noteOffs.insert(node.noteOffs.begin(), { channel, { value, 0 } });
+	m_nodes[position].noteOns.push_back({ channel, { value, velocity } });
+
+	auto& noteOffs = m_nodes[position + length].noteOffs;
+	noteOffs.insert(noteOffs.begin(), { channel, { value, 0 } });
 }
 
 void MidiFileWriter::addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length)
 {
-	auto& node = m_nodes[position];
-	node.sysexOns.push_back({ diff, type, 1 });
-	node.sysexOffs.insert(node.sysexOffs.begin(), { diff, type, 0 });
+	m_nodes[position].sysexOns.push_back({ diff, type, 1 });
+
+	auto& sysexOffs = m_nodes[position + length].sysexOffs;
+	sysexOffs.insert(sysexOffs.begin(), { diff, type, 0 });
 }
 
 void MidiFileWriter::addText(uint32_t position, std::string&& str, MidiEventType type)
