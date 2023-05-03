@@ -12,6 +12,7 @@ enum class SpecialPhraseType
 	RangeShift = 5,
 	HarmonyLine = 6,
 	Arpeggio = 7,
+	StarPower_Diff = 8,
 
 	StarPowerActivation = 64,
 	Tremolo = 65,

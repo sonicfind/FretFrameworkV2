@@ -8,7 +8,7 @@ struct InstrumentalTrack<GuitarNote<5>>::Midi_Tracker_Diff
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
-	std::pair<SpecialPhraseType, uint32_t> starPower = { SpecialPhraseType::StarPower, UINT32_MAX };
+	std::pair<SpecialPhraseType, uint32_t> starPower = { SpecialPhraseType::StarPower_Diff, UINT32_MAX };
 	std::pair<SpecialPhraseType, uint32_t> faceOff[2] = { { SpecialPhraseType::FaceOff_Player1, UINT32_MAX } , { SpecialPhraseType::FaceOff_Player2, UINT32_MAX } };
 	uint32_t notes[6] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
 };
