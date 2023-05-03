@@ -39,6 +39,15 @@ public:
 		return {};
 	}
 
+	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	{
+		auto base = getActiveColors();
+		std::vector<std::tuple<char, char, uint32_t>>  colors;
+		for (const auto& col : base)
+			colors.push_back({ char(col.first), 100, col.second });
+		return colors;
+	}
+
 	bool operator==(const Note& note) const
 	{
 		for (int i = 0; i < numColors; ++i)

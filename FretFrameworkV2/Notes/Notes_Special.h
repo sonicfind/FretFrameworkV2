@@ -26,6 +26,14 @@ public:
 		return activeColors;
 	}
 
+	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	{
+		auto colors = Note<NoteType, numColors>::getMidiNotes();
+		if (m_special.isActive())
+			colors.insert(colors.begin(), { 0, 100, m_special.getSustain() });
+		return colors;
+	}
+
 	bool operator==(const Note_withSpecial& note) const
 	{
 		return m_special == note.m_special && Note<NoteType, numColors>::operator==(note);

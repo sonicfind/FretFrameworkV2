@@ -86,6 +86,49 @@ public:
 		}
 	}
 
+	void save(MidiFileWriter& writer) const
+	{
+		for (const auto& vec : m_events)
+			for (const auto& ev : *vec)
+				writer.addText(vec.key, UnicodeString::U32ToStr(ev));
+
+		bool doPhrases_diff = m_specialPhrases.isEmpty();
+		for (const auto& vec : m_specialPhrases)
+		{
+			for (const auto& phrase : *vec)
+			{
+				switch (phrase.getType())
+				{
+				case SpecialPhraseType::StarPower:
+					writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+					break;
+				case SpecialPhraseType::StarPowerActivation:
+					writer.addMidiNote(vec.key, 120, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 121, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 122, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 123, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 124, 100, phrase.getDuration());
+					break;
+				case SpecialPhraseType::Solo:
+					writer.addMidiNote(vec.key, 103, 100, phrase.getDuration());
+					break;
+				case SpecialPhraseType::Tremolo:
+					writer.addMidiNote(vec.key, 126, 100, phrase.getDuration());
+					break;
+				case SpecialPhraseType::Trill:
+					writer.addMidiNote(vec.key, 127, 100, phrase.getDuration());
+					break;
+				}
+			}
+		}
+
+		for (unsigned char i = 0; i < 4; i++)
+			m_difficulties[i].save(writer, i, doPhrases_diff);
+
+		doPhrases_diff = false;
+		m_difficulties[4].save(writer, 5, doPhrases_diff);
+	}
+
 public:
 	[[nodiscard]] virtual bool hasNotes() const override
 	{
@@ -259,6 +302,7 @@ class InstrumentalTrack_Extended : public InstrumentalTrack<T>, public BCH_CHT_E
 public:
 	using InstrumentalTrack<T>::InstrumentalTrack;
 	using InstrumentalTrack<T>::load;
+	using InstrumentalTrack<T>::save;
 	virtual void load(CommonChartParser& parser) override
 	{
 		while (parser.isStillCurrentTrack())

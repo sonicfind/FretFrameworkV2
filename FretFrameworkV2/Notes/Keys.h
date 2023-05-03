@@ -16,6 +16,15 @@ public:
 		return true;
 	}
 
+	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	{
+		std::vector<std::tuple<char, char, uint32_t>> colors;
+		for (char i = 0; i < numColors; ++i)
+			if (m_colors[i].isActive())
+				colors.push_back({ i, 100, m_colors[i].getSustain() });
+		return colors;
+	}
+
 	uint32_t getLongestSustain() const
 	{
 		uint32_t sustain = 0;

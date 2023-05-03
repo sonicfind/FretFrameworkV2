@@ -158,6 +158,19 @@ public:
 		return modifiers;
 	}
 
+	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	{
+		auto colors = Note_withSpecial<DrumPad, numPads, NoteColor>::getMidiNotes();
+		for (std::tuple<char, char, uint32_t>& col : colors)
+		{
+			if (isAccented(std::get<0>(col)))
+				std::get<1>(col) = 101;
+			else if (isGhosted(std::get<0>(col)))
+				std::get<1>(col) = 1;
+		}
+		return colors;
+	}
+
 	void toggleDoubleBass()
 	{
 		m_isDoubleBass = !m_isDoubleBass;

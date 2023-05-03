@@ -111,5 +111,59 @@ void Song::load_events_midi(MidiFileReader& reader)
 
 void Song::save_mid(const std::filesystem::path& path)
 {
-
+	MidiFileWriter writer(path, m_tickrate);
+	if (m_noteTracks.lead_5.isOccupied())
+	{
+		writer.setTrackName("PART GUITAR");
+		m_noteTracks.lead_5.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.lead_6.isOccupied())
+	{
+		writer.setTrackName("PART GUITAR GHL");
+		m_noteTracks.lead_6.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.bass_5.isOccupied())
+	{
+		writer.setTrackName("PART BASS");
+		m_noteTracks.bass_5.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.bass_6.isOccupied())
+	{
+		writer.setTrackName("PART BASS GHL");
+		m_noteTracks.bass_6.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.rhythm.isOccupied())
+	{
+		writer.setTrackName("PART RHYTHM");
+		m_noteTracks.rhythm.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.coop.isOccupied())
+	{
+		writer.setTrackName("PART GUITAR COOP");
+		m_noteTracks.coop.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.keys.isOccupied())
+	{
+		writer.setTrackName("PART KEYS");
+		m_noteTracks.keys.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.drums4_pro.isOccupied())
+	{
+		writer.setTrackName("PART DRUMS");
+		m_noteTracks.drums4_pro.save(writer);
+		writer.writeTrack();
+	}
+	if (m_noteTracks.drums5.isOccupied())
+	{
+		writer.setTrackName("PART DRUMS");
+		m_noteTracks.drums5.save(writer);
+		writer.writeTrack();
+	}
 }

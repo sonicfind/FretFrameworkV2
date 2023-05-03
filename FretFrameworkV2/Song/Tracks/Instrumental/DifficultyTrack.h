@@ -1,6 +1,7 @@
 #pragma once
 #include "../Track.h"
 #include "Serialization/ChtFileReader.h"
+#include "Serialization/MidiFileWriter.h"
 
 template <typename T>
 struct DifficultyTrack : public Track, public BCH_CHT_Extensions
@@ -57,6 +58,62 @@ public:
 		}
 
 		shrink();
+	}
+
+public:
+	void save(MidiFileWriter& writer, unsigned char diffIndex, bool& doPhrases) const
+	{
+		if (doPhrases)
+		{
+			for (const auto& vec : m_specialPhrases)
+			{
+				for (const auto& phrase : *vec)
+				{
+					switch (phrase.getType())
+					{
+					case SpecialPhraseType::StarPower:
+						writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+						doPhrases = false;
+						break;
+					case SpecialPhraseType::StarPowerActivation:
+						writer.addMidiNote(vec.key, 120, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, 121, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, 122, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, 123, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, 124, 100, phrase.getDuration());
+						doPhrases = false;
+						break;
+					case SpecialPhraseType::Solo:
+						writer.addMidiNote(vec.key, 103, 100, phrase.getDuration());
+						doPhrases = false;
+						break;
+					case SpecialPhraseType::Tremolo:
+						writer.addMidiNote(vec.key, 126, 100, phrase.getDuration());
+						doPhrases = false;
+						break;
+					case SpecialPhraseType::Trill:
+						writer.addMidiNote(vec.key, 127, 100, phrase.getDuration());
+						doPhrases = false;
+						break;
+					case SpecialPhraseType::StarPower_Diff:
+						writer.addMidiNote(vec.key, 67 + 12 * diffIndex, 100, phrase.getDuration());
+						break;
+					case SpecialPhraseType::FaceOff_Player1:
+						writer.addMidiNote(vec.key, 69 + 12 * diffIndex, 100, phrase.getDuration());
+						break;
+					case SpecialPhraseType::FaceOff_Player2:
+						writer.addMidiNote(vec.key, 70 + 12 * diffIndex, 100, phrase.getDuration());
+						break;
+					}
+				}
+			}
+		}
+
+		for (const auto& note : m_notes)
+			for (const auto& col : note->getMidiNotes())
+				writer.addMidiNote(note.key, std::get<0>(col), std::get<1>(col), std::get<2>(col));
+
+		save_instrument_specific_details(writer, diffIndex);
 	}
 
 	virtual void adjustTicks(float multiplier) override
@@ -235,5 +292,8 @@ public:
 			node->writeEvents(node.key, writer);
 		}
 	}
+
+private:
+	void save_instrument_specific_details(MidiFileWriter& writer, unsigned char diffIndex) const {}
 };
 

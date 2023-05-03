@@ -115,6 +115,19 @@ public:
 		return modifiers;
 	}
 
+	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	{
+		auto colors = Note_withSpecial<NoteColor, numColors, NoteColor>::getMidiNotes();
+		for (auto& color : colors)
+		{
+			if constexpr (numColors == 5)
+				std::get<0>(color)--;
+			else if constexpr (numColors == 6)
+				std::get<0>(color) -= 2;
+		}
+		return colors;
+	}
+
 	uint32_t getLongestSustain() const
 	{
 		if (m_special)
