@@ -157,6 +157,7 @@
     <ClCompile Include="Serialization\IniFileWriter.cpp" />
     <ClCompile Include="Serialization\LoadedFile.cpp" />
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
+    <ClCompile Include="Serialization\MidiFileWriter.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Serialization\TxtFileWriter.cpp" />
@@ -216,6 +217,8 @@
     <ClInclude Include="Serialization\IniFileWriter.h" />
     <ClInclude Include="Serialization\LoadedFile.h" />
     <ClInclude Include="Serialization\MidiFileReader.h" />
+    <ClInclude Include="Serialization\MidiFileWriter.h" />
+    <ClInclude Include="Serialization\MidiStructs.h" />
     <ClInclude Include="Serialization\Modifiers.h" />
     <ClInclude Include="Serialization\TxtFileReader.h" />
     <ClInclude Include="Serialization\ChtFileWriter.h" />
