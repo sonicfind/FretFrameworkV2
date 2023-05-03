@@ -115,6 +115,7 @@ bool Song::save(ChartType type) noexcept
 {
 	try
 	{
+		saveIni();
 		switch (type)
 		{
 		case ChartType::BCH:

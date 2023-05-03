@@ -201,3 +201,48 @@ bool Song::loadIni()
 	}
 	return true;
 }
+
+void Song::saveIni() const
+{
+	std::vector<Modifiers::Modifier> modifiers;
+	if (!m_name.empty())
+		modifiers.push_back({ "name", m_name });
+	if (!m_artist.empty())
+		modifiers.push_back({ "artist", m_artist });
+	if (!m_album.empty())
+		modifiers.push_back({ "album", m_album });
+	if (!m_genre.empty())
+		modifiers.push_back({ "genre", m_genre });
+	if (!m_year.empty())
+		modifiers.push_back({ "year", m_year });
+	if (!m_charter.empty())
+		modifiers.push_back({ "charter", m_charter });
+	if (!m_playlist.empty())
+		modifiers.push_back({ "playlist", m_playlist });
+	modifiers.insert(modifiers.end(), m_modifiers.begin(), m_modifiers.end());
+
+	for (size_t i = 0; i < modifiers.size(); ++i)
+	{
+		if (modifiers[i].getName() == "five_lane_drums")
+		{
+			if (m_noteTracks.drums4_pro.isOccupied() && m_noteTracks.drums5.isOccupied())
+				modifiers.erase(modifiers.begin() + i);
+			else if (m_noteTracks.drums4_pro.isOccupied())
+				modifiers[i] = false;
+			else if (m_noteTracks.drums5.isOccupied())
+				modifiers[i] = true;
+			goto Write;
+		}
+	}
+
+	if (!m_noteTracks.drums4_pro.isOccupied() || !m_noteTracks.drums5.isOccupied())
+	{
+		if (m_noteTracks.drums4_pro.isOccupied())
+			modifiers.push_back({ "five_lane_drums", false });
+		else if (m_noteTracks.drums5.isOccupied())
+			modifiers.push_back({ "five_lane_drums", true });
+	}
+
+Write:
+	Ini::WriteSongIniFile(m_directory / U"song.ini", modifiers);
+}

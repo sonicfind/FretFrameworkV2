@@ -26,6 +26,7 @@ private:
 	void setSustainThreshold() const;
 
 	bool loadIni();
+	void saveIni() const;
 	void validateAudioStreams(const std::filesystem::path& directory);
 
 	void load_cht(const std::filesystem::path& path, bool isFull);
