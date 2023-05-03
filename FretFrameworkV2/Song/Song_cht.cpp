@@ -62,37 +62,37 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 		else if (modifier.getName() == "name")
 		{
 			if (m_name.empty() || m_name == U"Unknown Title")
-				m_name = modifier.getValue<UnicodeString>().get();
+				m_name = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "artist")
 		{
 			if (m_artist.empty() || m_artist == U"Unknown Artist")
-				m_artist = modifier.getValue<UnicodeString>().get();
+				m_artist = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "album")
 		{
 			if (m_album.empty() || m_album == U"Unknown Album")
-				m_album = modifier.getValue<UnicodeString>().get();
+				m_album = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "genre")
 		{
 			if (m_genre.empty() || m_genre == U"Unknown Genre")
-				m_genre = modifier.getValue<UnicodeString>().get();
+				m_genre = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "year")
 		{
 			if (m_year.empty() || m_year == U"Unknown Year")
-				m_year = modifier.getValue<UnicodeString>().get();
+				m_year = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "charter")
 		{
 			if (m_charter.empty() || m_charter == U"Unknown Charter")
-				m_charter = modifier.getValue<UnicodeString>().get();
+				m_charter = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "playlist")
 		{
 			if (m_playlist.empty())
-				m_playlist = modifier.getValue<UnicodeString>().get();
+				m_playlist = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "diff_band")
 		{
@@ -107,62 +107,62 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 		else if (modifier.getName() == "MusicStream")
 		{
 			if (m_musicStream.empty())
-				m_musicStream = modifier.getValue<UnicodeString>().get();
+				m_musicStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "GuitarStream")
 		{
 			if (m_guitarStream.empty())
-				m_guitarStream = modifier.getValue<UnicodeString>().get();
+				m_guitarStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "RhythmStream")
 		{
 			if (m_rhythmStream.empty())
-				m_rhythmStream = modifier.getValue<UnicodeString>().get();
+				m_rhythmStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "BassStream")
 		{
 			if (m_bassStream.empty())
-				m_bassStream = modifier.getValue<UnicodeString>().get();
+				m_bassStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "KeysStream")
 		{
 			if (m_keysStream.empty())
-				m_keysStream = modifier.getValue<UnicodeString>().get();
+				m_keysStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "DrumStream")
 		{
 			if (m_drumStream.empty())
-				m_drumStream = modifier.getValue<UnicodeString>().get();
+				m_drumStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "Drum2Stream")
 		{
 			if (m_drum2Stream.empty())
-				m_drum2Stream = modifier.getValue<UnicodeString>().get();
+				m_drum2Stream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "Drum3Stream")
 		{
 			if (m_drum3Stream.empty())
-				m_drum3Stream = modifier.getValue<UnicodeString>().get();
+				m_drum3Stream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "Drum4Stream")
 		{
 			if (m_drum4Stream.empty())
-				m_drum4Stream = modifier.getValue<UnicodeString>().get();
+				m_drum4Stream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "VocalStream")
 		{
 			if (m_vocalStream.empty())
-				m_vocalStream = modifier.getValue<UnicodeString>().get();
+				m_vocalStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "HarmonyStream")
 		{
 			if (m_harmonyStream.empty())
-				m_harmonyStream = modifier.getValue<UnicodeString>().get();
+				m_harmonyStream = modifier.getValue<std::u32string>();
 		}
 		else if (modifier.getName() == "CrowdStream")
 		{
 			if (m_crowdStream.empty())
-				m_crowdStream = modifier.getValue<UnicodeString>().get();
+				m_crowdStream = modifier.getValue<std::u32string>();
 		}
 		else if (!getModifier(modifier.getName()))
 			m_modifiers.push_back(modifier);
