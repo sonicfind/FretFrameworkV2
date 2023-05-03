@@ -10,6 +10,18 @@ void Song::setMetaData()
 	m_year.clear();
 	m_charter.clear();
 	m_playlist.clear();
+	m_musicStream.clear();
+	m_guitarStream.clear();
+	m_rhythmStream.clear();
+	m_bassStream.clear();
+	m_keysStream.clear();
+	m_drumStream.clear();
+	m_drum2Stream.clear();
+	m_drum3Stream.clear();
+	m_drum4Stream.clear();
+	m_vocalStream.clear();
+	m_harmonyStream.clear();
+	m_crowdStream.clear();
 	m_hopo_frequency = 0;
 	m_multiplier_note = 116;
 	m_sustain_cutoff_threshold = 0;

@@ -25,29 +25,30 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 {
 	static const TxtFileReader::ModifierOutline FULL_MODIFIERS =
 	{
-		{ "Album",        { "album", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Artist",       { "artist", ModifierNode::STRING_CHART_NOCASE } },
-		{ "BassStream",   { "BassStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Charter",      { "charter", ModifierNode::STRING_CHART_NOCASE } },
-		{ "CrowdStream",  { "CrowdStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Difficulty",   { "diff_band", ModifierNode::INT32 } },
-		{ "Drum2Stream",  { "Drum2Stream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Drum3Stream",  { "Drum3Stream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Drum4Stream",  { "Drum4Stream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "DrumStream",   { "DrumStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "FileVersion",  { "FileVersion", ModifierNode::INT16 } },
-		{ "Genre",        { "genre", ModifierNode::STRING_CHART_NOCASE } },
-		{ "GuitarStream", { "GuitarStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "KeysStream",   { "KeysStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "MusicStream",  { "MusicStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Name",         { "name", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Offset",       { "delay", ModifierNode::FLOAT } },
-		{ "PreviewEnd",   { "preview_end_time", ModifierNode::FLOAT } },
-		{ "PreviewStart", { "preview_start_time", ModifierNode::FLOAT } },
-		{ "Resolution",   { "Resolution", ModifierNode::UINT16 } },
-		{ "RhythmStream", { "RhythmStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "VocalStream",  { "VocalStream", ModifierNode::STRING_CHART_NOCASE } },
-		{ "Year",         { "year", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Album",         { "album", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Artist",        { "artist", ModifierNode::STRING_CHART_NOCASE } },
+		{ "BassStream",    { "BassStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Charter",       { "charter", ModifierNode::STRING_CHART_NOCASE } },
+		{ "CrowdStream",   { "CrowdStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Difficulty",    { "diff_band", ModifierNode::INT32 } },
+		{ "Drum2Stream",   { "Drum2Stream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Drum3Stream",   { "Drum3Stream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Drum4Stream",   { "Drum4Stream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "DrumStream",    { "DrumStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "FileVersion",   { "FileVersion", ModifierNode::INT16 } },
+		{ "Genre",         { "genre", ModifierNode::STRING_CHART_NOCASE } },
+		{ "GuitarStream",  { "GuitarStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "HarmonyStream", { "HarmonyStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "KeysStream",    { "KeysStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "MusicStream",   { "MusicStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Name",          { "name", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Offset",        { "delay", ModifierNode::FLOAT } },
+		{ "PreviewEnd",    { "preview_end_time", ModifierNode::FLOAT } },
+		{ "PreviewStart",  { "preview_start_time", ModifierNode::FLOAT } },
+		{ "Resolution",    { "Resolution", ModifierNode::UINT16 } },
+		{ "RhythmStream",  { "RhythmStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "VocalStream",   { "VocalStream", ModifierNode::STRING_CHART_NOCASE } },
+		{ "Year",          { "year", ModifierNode::STRING_CHART_NOCASE } },
 	};
 
 	int16_t version = 0;
@@ -103,6 +104,68 @@ int16_t Song::load_header_cht(ChtFileReader& reader)
 			else
 				m_modifiers.push_back(modifier);
 		}
+		else if (modifier.getName() == "MusicStream")
+		{
+			if (m_musicStream.empty())
+				m_musicStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "GuitarStream")
+		{
+			if (m_guitarStream.empty())
+				m_guitarStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "RhythmStream")
+		{
+			if (m_rhythmStream.empty())
+				m_rhythmStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "BassStream")
+		{
+			if (m_bassStream.empty())
+				m_bassStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "KeysStream")
+		{
+			if (m_keysStream.empty())
+				m_keysStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "DrumStream")
+		{
+			if (m_drumStream.empty())
+				m_drumStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "Drum2Stream")
+		{
+			if (m_drum2Stream.empty())
+				m_drum2Stream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "Drum3Stream")
+		{
+			if (m_drum3Stream.empty())
+				m_drum3Stream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "Drum4Stream")
+		{
+			if (m_drum4Stream.empty())
+				m_drum4Stream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "VocalStream")
+		{
+			if (m_vocalStream.empty())
+				m_vocalStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "HarmonyStream")
+		{
+			if (m_harmonyStream.empty())
+				m_harmonyStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (modifier.getName() == "CrowdStream")
+		{
+			if (m_crowdStream.empty())
+				m_crowdStream = modifier.getValue<UnicodeString>().get();
+		}
+		else if (!getModifier(modifier.getName()))
+			m_modifiers.push_back(modifier);
 	}
 	return version;
 }

@@ -3,6 +3,19 @@
 
 void Song::setMetaData(const LibraryEntry& entry)
 {
+	m_musicStream.clear();
+	m_guitarStream.clear();
+	m_rhythmStream.clear();
+	m_bassStream.clear();
+	m_keysStream.clear();
+	m_drumStream.clear();
+	m_drum2Stream.clear();
+	m_drum3Stream.clear();
+	m_drum4Stream.clear();
+	m_vocalStream.clear();
+	m_harmonyStream.clear();
+	m_crowdStream.clear();
+
 	m_name = entry.getName().get();
 	m_artist = entry.getName().get();
 	m_album = entry.getName().get();
@@ -95,13 +108,6 @@ void Song::resetTempoMap()
 
 bool Song::save(std::filesystem::path path) noexcept
 {
-	enum EXT
-	{
-		BCH,
-		CHT,
-		MID
-	};
-
 	try
 	{
 		save_cht(m_directory / "notes.cht");
@@ -334,4 +340,54 @@ PointerWrapper<Modifiers::Modifier> Song::getModifier(std::string_view name) noe
 		if (iter->getName() == name)
 			return *iter;
 	return {};
+}
+
+void Song::validateAudioStreams(const std::filesystem::path& directory)
+{
+	std::tuple<std::filesystem::path, PointerWrapper<std::u32string>, bool> VALIDSTREAMS[] =
+	{ 
+		{ U"song", 	   m_musicStream, false },
+		{ U"guitar",   m_guitarStream, false },
+		{ U"rhythm",   m_rhythmStream, false },
+		{ U"bass", 	   m_bassStream, false },
+		{ U"keys", 	   m_keysStream, false },
+		{ U"drums_1",  m_drumStream, false },
+		{ U"drums_2",  m_drum2Stream, false },
+		{ U"drums_3",  m_drum3Stream, false },
+		{ U"drums_4",  m_drum4Stream, false },
+		{ U"vocals_1", m_vocalStream, false },
+		{ U"vocals_2", m_harmonyStream, false },
+		{ U"crowd",	   m_crowdStream, false }
+	};
+	static const std::filesystem::path AUDIOFORMATS[] = { U".ogg", U".opus", U".mp3", U".wav", U".flac" };
+
+	for (const auto& file : std::filesystem::directory_iterator(m_directory))
+	{
+		const std::filesystem::path stem = file.path().stem();
+		size_t i = 0;
+		for (const auto& stream : VALIDSTREAMS)
+		{
+			if (*std::get<1>(stream) == stem)
+				break;
+			++i;
+		}
+
+		if (i >= std::size(VALIDSTREAMS))
+			continue;
+
+		const std::filesystem::path ext = file.path().extension();
+		for (const auto& format : AUDIOFORMATS)
+		{
+			if (format == ext)
+			{
+				*std::get<1>(VALIDSTREAMS[i]) = file.path().u32string();
+				std::get<2>(VALIDSTREAMS[i]) = true;
+				break;
+			}
+		}
+	}
+
+	for (const auto& stream : VALIDSTREAMS)
+		if (!std::get<2>(stream) && !std::get<1>(stream)->empty() && !std::filesystem::exists(*std::get<1>(stream)))
+			std::get<1>(stream)->clear();
 }

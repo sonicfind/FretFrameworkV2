@@ -25,6 +25,7 @@ private:
 	void setMetaData();
 
 	bool loadIni();
+	void validateAudioStreams(const std::filesystem::path& directory);
 
 	void load_cht(const std::filesystem::path& path, bool isFull);
 	void load_mid(const std::filesystem::path& path);
@@ -99,4 +100,17 @@ private:
 	SimpleFlatMap<std::vector<std::u32string>> m_globalEvents;
 
 	std::u32string m_midiSequenceName;
+
+	std::u32string m_musicStream;
+	std::u32string m_guitarStream;
+	std::u32string m_rhythmStream;
+	std::u32string m_bassStream;
+	std::u32string m_keysStream;
+	std::u32string m_drumStream;
+	std::u32string m_drum2Stream;
+	std::u32string m_drum3Stream;
+	std::u32string m_drum4Stream;
+	std::u32string m_vocalStream;
+	std::u32string m_harmonyStream;
+	std::u32string m_crowdStream;
 };
