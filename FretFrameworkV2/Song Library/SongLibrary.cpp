@@ -137,6 +137,7 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 	if (m_preScannedDirectories.contains(directory))
 		return;
 
+	markScannedDirectory(directory);
 	std::optional<std::filesystem::directory_entry> charts[5]{};
 	std::optional<std::filesystem::directory_entry> ini;
 	std::vector<std::filesystem::path> directories;
