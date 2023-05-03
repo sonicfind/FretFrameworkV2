@@ -427,8 +427,6 @@ ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrack_V1()
 	NoteTracks_V1 type = checkTrack_V1();
 	if (type != Invalid)
 		m_eventSets.push_back(g_validTypes + 2);
-
-	gotoNextLine();
 	return type;
 }
 
