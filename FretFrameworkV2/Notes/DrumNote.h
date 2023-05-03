@@ -182,8 +182,8 @@ public:
 	[[nodiscard]] bool isFlammed() const noexcept { return m_isFlammed; }
 
 public:
-	[[nodiscard]] bool isAccented(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDyanmics() == DrumDynamics::Accent; }
-	[[nodiscard]] bool isGhosted(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDyanmics() == DrumDynamics::Ghost; }
+	[[nodiscard]] bool isAccented(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDynamics() == DrumDynamics::Accent; }
+	[[nodiscard]] bool isGhosted(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDynamics() == DrumDynamics::Ghost; }
 	void setDynamics(size_t lane, DrumDynamics dyn) { if (lane > 0) this->m_colors[lane - 1].setDynamics(dyn); }
 
 	template <typename = std::enable_if<PRO_DRUMS>>
