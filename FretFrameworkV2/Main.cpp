@@ -27,34 +27,37 @@ int main()
 	{
 		std::cout << "S - Full Scan\n";
 		std::cout << "L - Load Song\n";
+		std::cout << "(Leave empty to go to exit)\n";
 		std::cout << "Input: ";
 		std::string input = parseInput();
 		if (input.empty())
 			break;
 		
 		if (input.size() > 1)
-			std::cout << "Invalid input\n";
-		else
 		{
-			switch (std::toupper(input.front()))
-			{
-			case 'S':
-			{
-				std::cout << '\n';
-				const std::vector<std::u32string> directories = getDirectories();
-				startClock();
-				library.runFullScan(directories);
-				stopClock("Full scan");
-				std::cout << "# of Songs: " << library.getNumSongs() << '\n';
-			}
-				break;
-			case 'L':
-				std::cout << '\n';
-				loadSong();
-				break;
-			default:
-				std::cout << "Invalid option\n";
-			}
+			std::cout << "Invalid input\n";
+			continue;
+		}
+
+		
+		switch (std::toupper(input.front()))
+		{
+		case 'S':
+		{
+			std::cout << '\n';
+			const std::vector<std::u32string> directories = getDirectories();
+			startClock();
+			library.runFullScan(directories);
+			stopClock("Full scan");
+			std::cout << "# of Songs: " << library.getNumSongs() << '\n';
+		}
+			break;
+		case 'L':
+			std::cout << '\n';
+			loadSong();
+			break;
+		default:
+			std::cout << "Invalid option\n";
 		}
 
 		std::cout << '\n';
