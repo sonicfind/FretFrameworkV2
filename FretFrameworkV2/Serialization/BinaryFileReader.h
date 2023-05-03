@@ -27,12 +27,16 @@ public:
 
 
 		memcpy(dst, pos, size);
-		if constexpr (byteSwap)
+		if constexpr (byteSwap && (std::is_same<T, uint32_t>::value || std::is_same<T, uint16_t>::value))
 		{
-			if constexpr (std::is_same<T, uint32_t>::value)
-				*dst = _byteswap_ulong(*dst);
-			else if constexpr (std::is_same<T, uint16_t>::value)
-				*dst = _byteswap_ushort(*dst);
+			const size_t count = size / sizeof(T);
+			for (size_t index = 0; index < count; index++)
+			{
+				if constexpr (std::is_same<T, uint32_t>::value)
+					dst[index] = _byteswap_ulong(dst[index]);
+				else
+					dst[index] = _byteswap_ushort(dst[index]);
+			}
 		}
 		return true;
 	}

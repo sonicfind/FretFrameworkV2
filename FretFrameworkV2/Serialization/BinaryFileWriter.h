@@ -22,15 +22,19 @@ public:
 	{
 		if constexpr (byteSwap && (std::is_same<T, uint32_t>::value || std::is_same<T, uint16_t>::value))
 		{
-			for (size_t index = 0; index < size; index += sizeof(T))
+			const size_t count = size / sizeof(T);
+			for (size_t index = 0; index < count; index++)
 			{
-				T buf = *src;
 				if constexpr (std::is_same<T, uint32_t>::value)
-					buf = _byteswap_ulong(buf);
+				{
+					uint32_t buf = _byteswap_ulong(src[index]);
+					m_file.write((char*)&buf, sizeof(uint32_t));
+				}
 				else
-					buf = _byteswap_ushort(buf);
-
-				m_file.write((char*)&buf, size - index);
+				{
+					uint16_t buf = _byteswap_ushort(src[index]);
+					m_file.write((char*)&buf, sizeof(uint16_t));
+				}
 			}
 		}
 		else
