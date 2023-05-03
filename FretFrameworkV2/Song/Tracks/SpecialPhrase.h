@@ -24,24 +24,17 @@ enum class SpecialPhraseType
 class SpecialPhrase
 {
 public:
-	constexpr SpecialPhrase(SpecialPhraseType type, uint32_t duration = 0) : m_type(type), m_duration(duration) {}
+	constexpr SpecialPhrase(SpecialPhraseType type, uint32_t duration = 1) : m_type(type), m_duration(duration) {}
 	char getMidiNote() const;
 
 	void setType(SpecialPhraseType type) { m_type = type; }
-	void setDuration(uint32_t duration) { m_duration = duration; }
+	void setDuration(uint32_t duration) { m_duration = duration > 0 ? duration : 1; }
 
 	SpecialPhraseType getType() const { return m_type; }
 
 	uint32_t getDuration() const
 	{
 		return m_duration;
-	}
-
-	uint32_t getMidiDuration() const
-	{
-		if (m_duration > 0)
-			return m_duration;
-		return 1;
 	}
 	void operator*=(float multiplier);
 
