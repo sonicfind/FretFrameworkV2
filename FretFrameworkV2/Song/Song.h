@@ -57,6 +57,9 @@ private:
 	void save_events(CommonChartWriter& writer) const;
 	void save_noteTracks(CommonChartWriter& writer) const;
 
+	void save_tempoMap(MidiFileWriter& writer) const;
+	void save_events(MidiFileWriter& writer) const;
+
 private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
 

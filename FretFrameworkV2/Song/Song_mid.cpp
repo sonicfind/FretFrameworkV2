@@ -112,6 +112,8 @@ void Song::load_events_midi(MidiFileReader& reader)
 void Song::save_mid(const std::filesystem::path& path)
 {
 	MidiFileWriter writer(path, m_tickrate);
+	save_tempoMap(writer);
+	save_events(writer);
 	if (m_noteTracks.lead_5.isOccupied())
 	{
 		writer.setTrackName("PART GUITAR");
@@ -166,4 +168,26 @@ void Song::save_mid(const std::filesystem::path& path)
 		m_noteTracks.drums5.save(writer);
 		writer.writeTrack();
 	}
+}
+
+void Song::save_tempoMap(MidiFileWriter& writer) const
+{
+	for (const auto& timeSig : m_timeSigs)
+		writer.addTimeSig(timeSig.key, *timeSig);
+
+	for (const auto& tempo : m_tempoMarkers)
+		writer.addMicros(tempo.key, *tempo);
+	writer.writeTrack();
+}
+
+void Song::save_events(MidiFileWriter& writer) const
+{
+	writer.setTrackName("EVENTS");
+	for (const auto& section : m_sectionMarkers)
+			writer.addText(section.key, "[section " + section->toString() + ']');
+
+	for (const auto& vec : m_globalEvents)
+		for (const auto& ev : *vec)
+			writer.addText(vec.key, UnicodeString::U32ToStr(ev));
+	writer.writeTrack();
 }
