@@ -23,6 +23,7 @@ public:
 private:
 	void setMetaData(const LibraryEntry& entry);
 	void setMetaData();
+	void setSustainThreshold() const;
 
 	bool loadIni();
 	void validateAudioStreams(const std::filesystem::path& directory);

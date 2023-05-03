@@ -8,6 +8,7 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 		throw std::runtime_error("[Song] track expected at the start of the file");
 
 	const int16_t version = isFull ? load_header_cht(reader) : load_header_cht_basic(reader);
+	setSustainThreshold();
 	if (version > 1)
 		traverse(reader);
 	else

@@ -6,6 +6,9 @@
 void Song::load_mid(const std::filesystem::path& path)
 {
 	MidiFileReader reader(path, m_multiplier_note);
+	m_tickrate = reader.getTickRate();
+	setSustainThreshold();
+
 	while (reader.startNextTrack())
 	{
 		if (reader.getTrackNumber() == 1)

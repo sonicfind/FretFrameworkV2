@@ -31,6 +31,11 @@ void Song::setMetaData(const LibraryEntry& entry)
 	m_modifiers.clear();
 }
 
+void Song::setSustainThreshold() const
+{
+	NoteColor::s_sustainMinimum = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
+}
+
 EntryStatus Song::load(const LibraryEntry& entry)
 {	
 	const std::filesystem::directory_entry fileEntry = entry.getFileEntry();
