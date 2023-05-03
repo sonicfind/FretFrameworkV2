@@ -18,7 +18,7 @@ public:
 	}
 
 	template <typename T>
-	void write(T* src, const size_t size)
+	void write(const T* src, const size_t size)
 	{
 		if constexpr (byteSwap && (std::is_same<T, uint32_t>::value || std::is_same<T, uint16_t>::value))
 		{
