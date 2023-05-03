@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="VariableLengthQuantity">
-      <UniqueIdentifier>{e559c9e2-3b8f-4825-8dc8-9556721b3330}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Unicode">
       <UniqueIdentifier>{ead493e5-1e5d-4b41-b9d8-521636c09cc0}</UniqueIdentifier>
     </Filter>
@@ -77,9 +74,6 @@
     </ClCompile>
     <ClCompile Include="Serialization\BCHFileReader.cpp">
       <Filter>Serialization\FileReader</Filter>
-    </ClCompile>
-    <ClCompile Include="Types\VariableLengthQuantity.cpp">
-      <Filter>VariableLengthQuantity</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Types\UnicodeString.cpp">
@@ -203,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="Serialization\BCHFileReader.h">
       <Filter>Serialization\FileReader</Filter>
-    </ClInclude>
-    <ClInclude Include="Types\VariableLengthQuantity.h">
-      <Filter>VariableLengthQuantity</Filter>
     </ClInclude>
     <ClInclude Include="Types\UnicodeString.h">
       <Filter>Unicode</Filter>

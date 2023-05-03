@@ -1,5 +1,4 @@
 #include "MidiFileReader.h"
-#include "Types/VariableLengthQuantity.h"
 
 uint32_t MidiFileReader::readVLQ()
 {
