@@ -19,6 +19,20 @@ void MidiFileWriter::setTrackName(std::string_view str)
 	m_trackname = str;
 }
 
+void MidiFileWriter::addMidiNote(uint32_t position, MidiNote note, uint32_t length, char channel = 0)
+{
+	auto& node = m_nodes[position];
+	node.noteOns.push_back({ channel, note });
+	node.noteOffs.insert(node.noteOffs.begin(), { channel, { note.value, 0 } });
+}
+
+void MidiFileWriter::addSysex(uint32_t position, char diff, char type, uint32_t length)
+{
+	auto& node = m_nodes[position];
+	node.sysexOns.push_back({ diff, type, 1 });
+	node.sysexOffs.insert(node.sysexOffs.begin(), { diff, type, 0 });
+}
+
 void MidiFileWriter::addText(uint32_t position, std::string&& str, MidiEventType type)
 {
 	m_nodes[position].events.push_back({ type, std::move(str) });
@@ -102,7 +116,7 @@ void MidiFileWriter::writeTrack()
 			currEvent = MidiEventType::SysEx;
 		}
 
-		for (const std::pair<char, MidiNote>& on : node->noteOffs)
+		for (const std::pair<char, MidiNote>& on : node->noteOns)
 		{
 			writeVLQ(delta);
 			if (currEvent != MidiEventType::Note_On || currChannel != on.first)

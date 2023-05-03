@@ -29,24 +29,8 @@ public:
 	~MidiFileWriter();
 	void setTrackName(std::string_view str);
 
-	template <bool isON>
-	void addMidiNote(uint32_t position, MidiNote note, char channel = 0)
-	{
-		if constexpr (isON)
-			m_nodes[position].noteOns.push_back({ channel, note });
-		else
-			m_nodes[position].noteOffs.push_back({ channel, note });
-	}
-
-	template <bool isON>
-	void addSysex(uint32_t position, char diff, char type, char status)
-	{
-		if constexpr (isON)
-			m_nodes[position].sysexOns.push_back({ diff, type, status });
-		else
-			m_nodes[position].sysexOffs.push_back({ diff, type, status });
-	}
-
+	void addMidiNote(uint32_t position, MidiNote note, uint32_t length, char channel = 0);
+	void addSysex(uint32_t position, char diff, char type, char status, uint32_t length);
 	void addText(uint32_t position, std::string&& str, MidiEventType type = MidiEventType::Text);
 	void addMicros(uint32_t position, uint32_t micros);
 	void addTimeSig(uint32_t position, TimeSig sig);
