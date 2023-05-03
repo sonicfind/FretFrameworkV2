@@ -163,7 +163,7 @@ void MidiFileWriter::writeVLQ(uint32_t value)
 		{
 			for (size_t j = i; j < 3; ++j)
 				buffer[j] |= (char)0x80;
-			write(buffer + i, 4 - i);
+			write<char>(buffer + i, 4 - i);
 			return;
 		}
 	}
