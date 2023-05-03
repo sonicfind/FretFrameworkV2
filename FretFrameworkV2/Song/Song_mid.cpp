@@ -117,6 +117,7 @@ void Song::save_mid(const std::filesystem::path& path) const
 	if (m_noteTracks.lead_5.isOccupied())
 	{
 		writer.setTrackName("PART GUITAR");
+		writer.addText(0, "[ENHANCED_OPENS]");
 		m_noteTracks.lead_5.save(writer);
 		writer.writeTrack();
 	}
@@ -159,12 +160,14 @@ void Song::save_mid(const std::filesystem::path& path) const
 	if (m_noteTracks.drums4_pro.isOccupied())
 	{
 		writer.setTrackName("PART DRUMS");
+		writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
 		m_noteTracks.drums4_pro.save(writer);
 		writer.writeTrack();
 	}
 	if (m_noteTracks.drums5.isOccupied())
 	{
 		writer.setTrackName("PART DRUMS");
+		writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
 		m_noteTracks.drums5.save(writer);
 		writer.writeTrack();
 	}
