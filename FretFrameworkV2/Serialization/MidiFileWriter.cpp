@@ -19,14 +19,14 @@ void MidiFileWriter::setTrackName(std::string_view str)
 	m_trackname = str;
 }
 
-void MidiFileWriter::addMidiNote(uint32_t position, MidiNote note, uint32_t length, char channel = 0)
+void MidiFileWriter::addMidiNote(uint32_t position, unsigned char value, unsigned char velocity, uint32_t length, unsigned char channel)
 {
 	auto& node = m_nodes[position];
-	node.noteOns.push_back({ channel, note });
-	node.noteOffs.insert(node.noteOffs.begin(), { channel, { note.value, 0 } });
+	node.noteOns.push_back({ channel, { value, velocity } });
+	node.noteOffs.insert(node.noteOffs.begin(), { channel, { value, 0 } });
 }
 
-void MidiFileWriter::addSysex(uint32_t position, char diff, char type, uint32_t length)
+void MidiFileWriter::addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length)
 {
 	auto& node = m_nodes[position];
 	node.sysexOns.push_back({ diff, type, 1 });
@@ -180,7 +180,7 @@ void MidiFileWriter::writeString(MidiEventType type, std::string_view str)
 
 void MidiFileWriter::Sysex::set() const
 {
-	Sysex::BUFFER[6] = diff;
-	Sysex::BUFFER[7] = type;
-	Sysex::BUFFER[8] = status;
+	Sysex::BUFFER[6] = (char)diff;
+	Sysex::BUFFER[7] = (char)type;
+	Sysex::BUFFER[8] = (char)status;
 }

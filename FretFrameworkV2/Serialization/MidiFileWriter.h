@@ -10,9 +10,9 @@ class MidiFileWriter : private BinaryFileWriter<true>
 	{
 		static char BUFFER[10];
 
-		char diff;
-		char type;
-		char status;
+		unsigned char diff;
+		unsigned char type;
+		unsigned char status;
 		void set() const;
 	};
 
@@ -29,8 +29,8 @@ public:
 	~MidiFileWriter();
 	void setTrackName(std::string_view str);
 
-	void addMidiNote(uint32_t position, MidiNote note, uint32_t length, char channel = 0);
-	void addSysex(uint32_t position, char diff, char type, char status, uint32_t length);
+	void addMidiNote(uint32_t position, unsigned char value, unsigned char velocity, uint32_t length, unsigned char channel = 0);
+	void addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length);
 	void addText(uint32_t position, std::string&& str, MidiEventType type = MidiEventType::Text);
 	void addMicros(uint32_t position, uint32_t micros);
 	void addTimeSig(uint32_t position, TimeSig sig);
