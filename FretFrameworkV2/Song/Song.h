@@ -16,7 +16,7 @@ class Song
 public:
 	EntryStatus load(const LibraryEntry& entry);
 	bool load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept;
-	bool save(std::filesystem::path path) noexcept;
+	bool save(ChartType type) noexcept;
 	void resetTempoMap();
 	void clear();
 

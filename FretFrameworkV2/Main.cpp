@@ -108,7 +108,7 @@ void loadSong()
 {
 	static const std::pair<std::string_view, ChartType> CHARTTYPES[] =
 	{
-		{ ".bch",	 ChartType::BCH },
+		{ ".bch",	ChartType::BCH },
 		{ ".cht",   ChartType::CHT },
 		{ ".mid",   ChartType::MID },
 		{ ".midi",  ChartType::MID },
@@ -130,6 +130,45 @@ void loadSong()
 				startClock();
 				song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second });
 				stopClock("Song load");
+
+				while (true)
+				{
+					std::cout << "B - Save BCH\n";
+					std::cout << "C - Save CHT\n";
+					std::cout << "M - Save MID\n";
+					std::cout << "(Leave empty to not save)\n";
+					std::cout << "Input: ";
+					std::string input = parseInput();
+					if (input.empty())
+						break;
+
+					if (input.size() > 1)
+						std::cout << "Invalid input\n";
+					else if (input.front() == 'b' || input.front() == 'B')
+					{
+						if (song.save(ChartType::BCH))
+							std::cout << "Successfully saved .bch\n";
+						else
+							std::cout << "Saved failed\n";
+					}
+					else if (input.front() == 'c' || input.front() == 'C')
+					{
+						if (song.save(ChartType::CHT))
+							std::cout << "Successfully saved .cht\n";
+						else
+							std::cout << "Saved failed\n";
+					}
+					else if (input.front() == 'm' || input.front() == 'M')
+					{
+						if (song.save(ChartType::MID))
+							std::cout << "Successfully saved .mid\n";
+						else
+							std::cout << "Saved failed\n";
+					}
+					else
+						std::cout << "Invalid option\n";
+					std::cout << '\n';
+				}
 				song.clear();
 				break;
 			}

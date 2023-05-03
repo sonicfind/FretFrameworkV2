@@ -106,13 +106,24 @@ void Song::resetTempoMap()
 	m_timeSigs.emplace_back(0) = { 4, 2, 24, 8 };
 }
 
-bool Song::save(std::filesystem::path path) noexcept
+bool Song::save(ChartType type) noexcept
 {
 	try
 	{
-		save_cht(m_directory / "notes.cht");
-		save_bch(m_directory / "notes.bch");
-		save_mid(m_directory / "notes.mid");
+		switch (type)
+		{
+		case ChartType::BCH:
+			save_bch(m_directory / "notes.bch");
+			break;
+		case ChartType::CHT:
+			save_cht(m_directory / "notes.cht");
+			break;
+		case ChartType::MID:
+			save_mid(m_directory / "notes.mid");
+			break;
+		default:
+			break;
+		}
 	}
 	catch (std::runtime_error err)
 	{
