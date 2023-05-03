@@ -37,7 +37,7 @@ void MidiFileReader::processHeaderChunk()
 	m_header.tickRate = extract<uint16_t>();
 }
 
-MidiFileReader::MidiFileReader(const std::filesystem::path& path) : BinaryFileReader(path)
+MidiFileReader::MidiFileReader(const std::filesystem::path& path, unsigned char multiplierNote) : BinaryFileReader(path), m_multiplierNote(multiplierNote)
 {
 	processHeaderChunk();
 }

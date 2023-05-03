@@ -70,7 +70,7 @@ struct MidiEvent
 class MidiFileReader : private BinaryFileReader<true>
 {
 public:
-	MidiFileReader(const std::filesystem::path& path);
+	MidiFileReader(const std::filesystem::path& path, unsigned char multiplierNote);
 	MidiFileReader(const LoadedFile& file);
 
 	[[nodiscard]] bool startNextTrack();
@@ -82,8 +82,7 @@ public:
 	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
 	[[nodiscard]] unsigned char getMidiChannel() const noexcept { return m_event.channel; }
 
-	void setStarPowerValue(unsigned char note) noexcept { m_starPowerNote = note; }
-	[[nodiscard]] unsigned char getStarPowerValue() const noexcept { return m_starPowerNote; }
+	[[nodiscard]] unsigned char getMultiplierNote() const noexcept { return m_multiplierNote; }
 
 	[[nodiscard]] std::string_view extractTextOrSysEx() const noexcept;
 	[[nodiscard]] MidiNote extractMidiNote() const noexcept;
@@ -108,6 +107,6 @@ private:
 
 	MidiEvent m_event;
 
-	unsigned char m_starPowerNote = 116;
+	const unsigned char m_multiplierNote = 116;
 	const char* m_nextTrack;
 };

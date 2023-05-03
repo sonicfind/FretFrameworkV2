@@ -38,7 +38,7 @@ public:
 		if ((INDEX == 0 && !m_percussion.isEmpty()) || !m_vocals[INDEX].isEmpty())
 			throw std::runtime_error("Track defined multiple times in file");
 
-		Midi_Tracker_Vocal tracker(reader.getStarPowerValue());
+		Midi_Tracker_Vocal tracker(reader.getMultiplierNote());
 		while (auto midiEvent = reader.parseEvent())
 		{
 			if (midiEvent->type == MidiEventType::Note_On)
