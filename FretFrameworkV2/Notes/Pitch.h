@@ -106,6 +106,7 @@ public:
 	[[nodiscard]] constexpr int getOctave() const noexcept { return m_octave; }
 	[[nodiscard]] constexpr std::pair<NoteName, int> getPitch() const noexcept { return { m_note, m_octave }; }
 	[[nodiscard]] constexpr char getBinaryValue() const noexcept { return (m_octave + 1) * OCTAVE_LENGTH + static_cast<char>(m_note); }
+	[[nodiscard]] constexpr bool isActive() const noexcept { return OCTAVE_MIN > -1 || m_note > NoteName::C; }
 
 	[[nodiscard]] constexpr static std::pair<int, int> getRange() { return { OCTAVE_MIN, OCTAVE_MAX }; }
 };

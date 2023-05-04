@@ -42,5 +42,5 @@ public:
 	std::pair<VocalPitch, uint32_t> getPitchAndDuration() const noexcept { return { m_pitch, m_duration }; }
 	VocalPitch getPitch() const noexcept { return m_pitch; }
 	uint32_t getDuration() const noexcept { return m_duration; }
-	bool isPlayable() const noexcept { return m_duration > 0 || m_pitch.getBinaryValue() > 0; }
+	bool isPlayable() const noexcept { return m_duration > 0 || m_pitch.isActive(); }
 };
