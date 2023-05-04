@@ -2,11 +2,11 @@
 #include "DifficultyTrack.h"
 #include "Serialization/MidiFileReader.h"
 
-template <class T>
+template <class T, bool EXTENDED>
 class InstrumentalTrack : public Track
 {
 public:
-	DifficultyTrack<T> m_difficulties[5];
+	DifficultyTrack<T, EXTENDED> m_difficulties[5];
 
 public:
 	InstrumentalTrack() = default;
@@ -16,6 +16,50 @@ public:
 	InstrumentalTrack(const InstrumentalTrack&) = delete;
 	InstrumentalTrack& operator=(const InstrumentalTrack&) = delete;
 
+	[[nodiscard]] virtual bool hasNotes() const override
+	{
+		for (const auto& diff : m_difficulties)
+			if (diff.hasNotes())
+				return true;
+		return false;
+	}
+
+	[[nodiscard]] virtual bool isOccupied() const override
+	{
+		for (const auto& diff : m_difficulties)
+			if (diff.isOccupied())
+				return true;
+		return Track::isOccupied();
+	}
+
+	virtual void clear() override
+	{
+		Track::clear();
+		for (auto& diff : m_difficulties)
+			diff.clear();
+	}
+
+	DifficultyTrack<T, EXTENDED>& operator[](size_t i)
+	{
+		return m_difficulties[i];
+	}
+
+	virtual void adjustTicks(float multiplier)
+	{
+		Track::adjustTicks(multiplier);
+		for (auto& diff : m_difficulties)
+			if (diff.isOccupied())
+				diff.adjustTicks(multiplier);
+	}
+
+private:
+	virtual void shrink() override
+	{
+		for (auto& diff : m_difficulties)
+			diff.shrink();
+	}
+
+public:
 	void load_V1(size_t diff, ChtFileReader& reader)
 	{
 		m_difficulties[diff].load_V1(reader);
@@ -128,68 +172,20 @@ public:
 			}
 		}
 
-		m_difficulties[0].save<0>(writer, doPhrases_diff);
-		m_difficulties[1].save<1>(writer, doPhrases_diff);
-		m_difficulties[2].save<2>(writer, doPhrases_diff);
-		m_difficulties[3].save<3>(writer, doPhrases_diff);
-		doPhrases_diff = false;
-		m_difficulties[4].save<5>(writer, doPhrases_diff);
+		m_difficulties[0].save_events_phrases<0>(writer, doPhrases_diff);
+		m_difficulties[1].save_events_phrases<1>(writer, doPhrases_diff);
+		m_difficulties[2].save_events_phrases<2>(writer, doPhrases_diff);
+		m_difficulties[3].save_events_phrases<3>(writer, doPhrases_diff);
+
+		m_difficulties[0].save_notes<0>(writer);
+		m_difficulties[1].save_notes<1>(writer);
+		m_difficulties[2].save_notes<2>(writer);
+		m_difficulties[3].save_notes<3>(writer);
+		m_difficulties[4].save_notes<5>(writer);
 		writer.writeTrack();
 	}
 
-public:
-	[[nodiscard]] virtual bool hasNotes() const override
-	{
-		for (const auto& diff : m_difficulties)
-			if (diff.hasNotes())
-				return true;
-		return false;
-	}
-
-	[[nodiscard]] virtual bool isOccupied() const override
-	{
-		for (const auto& diff : m_difficulties)
-			if (diff.isOccupied())
-				return true;
-		return Track::isOccupied();
-	}
-
-	virtual void clear() override
-	{
-		Track::clear();
-		for (auto& diff : m_difficulties)
-			diff.clear();
-	}
-
-	virtual void shrink() override
-	{
-		for (auto& diff : m_difficulties)
-			diff.shrink();
-	}
-
-	DifficultyTrack<T>& operator[](size_t i)
-	{
-		return m_difficulties[i];
-	}
-
-	virtual void adjustTicks(float multiplier)
-	{
-		Track::adjustTicks(multiplier);
-		for (auto& diff : m_difficulties)
-			if (diff.isOccupied())
-				diff.adjustTicks(multiplier);
-	}
-
 private:
-	static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-	static constexpr int s_diffValues[48] =
-	{
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-	};
-
 	template <bool NoteOn>
 	void parseNote(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 	{
@@ -303,17 +299,26 @@ private:
 		}
 	}
 
-private:
 	void writeMidiToggleEvent(MidiFileWriter& writer) const {}
+
+private:
+	static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
+	static constexpr int s_diffValues[48] =
+	{
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+	};
 };
 
 template <class T>
-class InstrumentalTrack_Extended : public InstrumentalTrack<T>, public BCH_CHT_Extensions
+class InstrumentalTrack_Extended : public InstrumentalTrack<T, true>, public BCH_CHT_Extensions
 {
 public:
-	using InstrumentalTrack<T>::InstrumentalTrack;
-	using InstrumentalTrack<T>::load;
-	using InstrumentalTrack<T>::save;
+	using InstrumentalTrack<T, true>::InstrumentalTrack;
+	using InstrumentalTrack<T, true>::load;
+	using InstrumentalTrack<T, true>::save;
 	virtual void load(CommonChartParser& parser) override
 	{
 		while (parser.isStillCurrentTrack())

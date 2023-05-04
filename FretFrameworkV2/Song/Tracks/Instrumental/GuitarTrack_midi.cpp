@@ -1,7 +1,7 @@
 #include "GuitarTrack_midi.h"
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position)
+void InstrumentalTrack<GuitarNote<5>, true>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position)
 {
 	if (str.compare(0, 2, "PS") == 0)
 	{
@@ -49,7 +49,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseSysEx(Midi_Tracker& tracker, std::st
 }
 
 template <>
-void InstrumentalTrack<GuitarNote<6>>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position)
+void InstrumentalTrack<GuitarNote<6>, true>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position)
 {
 	if (str.compare(0, 2, "PS") == 0 && str[5] == 4)
 	{
@@ -77,7 +77,7 @@ void InstrumentalTrack<GuitarNote<6>>::parseSysEx(Midi_Tracker& tracker, std::st
 }
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position)
+void InstrumentalTrack<GuitarNote<5>, true>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position)
 {
 	if (str == "[ENHANCED_OPENS]" || str == "ENHANCED_OPENS")
 	{
@@ -89,7 +89,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::str
 }
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::writeMidiToggleEvent(MidiFileWriter& writer) const
+void InstrumentalTrack<GuitarNote<5>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const
 {
 	writer.addText(0, "[ENHANCED_OPENS]");
 }

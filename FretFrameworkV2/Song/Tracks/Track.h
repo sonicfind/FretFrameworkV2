@@ -19,8 +19,6 @@ public:
 		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();
 	}
 
-	virtual void shrink() = 0;
-
 	virtual void clear()
 	{
 		m_specialPhrases.clear();
@@ -39,6 +37,9 @@ public:
 		for (auto& ev : m_events)
 			ev.key = uint32_t(ev.key * multiplier);
 	}
+
+protected:
+	virtual void shrink() = 0;
 };
 
 class BCH_CHT_Extensions

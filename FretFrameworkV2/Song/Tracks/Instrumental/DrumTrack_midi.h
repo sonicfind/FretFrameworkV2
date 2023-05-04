@@ -3,38 +3,38 @@
 #include "Notes/DrumNote.h"
 
 template <>
-struct InstrumentalTrack<DrumNote<4, true>>::Midi_Tracker_Diff
+struct InstrumentalTrack<DrumNote<4, true>, true>::Midi_Tracker_Diff
 {
 	bool flam = false;
 	uint32_t notes[5] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
 };
 
 template <>
-struct InstrumentalTrack<DrumNote<5, false>>::Midi_Tracker_Diff
+struct InstrumentalTrack<DrumNote<5, false>, true>::Midi_Tracker_Diff
 {
 	bool flam = false;
 	uint32_t notes[6] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
 };
 
 template <>
-struct InstrumentalTrack<DrumNote<4, true>>::Midi_Tracker_Extensions
+struct InstrumentalTrack<DrumNote<4, true>, true>::Midi_Tracker_Extensions
 {
 	bool enableDynamics = false;
 	bool toms[3] = { false, false, false };
 };
 
 template <>
-struct InstrumentalTrack<DrumNote<5, false>>::Midi_Tracker_Extensions
+struct InstrumentalTrack<DrumNote<5, false>, true>::Midi_Tracker_Extensions
 {
 	bool enableDynamics = false;
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<DrumNote<5, false>>::s_noteRange{ 60, 102 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<DrumNote<5, false>, true>::s_noteRange{ 60, 102 };
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote<4, true>>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote<4, true>, true>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
@@ -92,7 +92,7 @@ void InstrumentalTrack<DrumNote<4, true>>::parseLaneColor(Midi_Tracker& tracker,
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote<5, false>>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote<5, false>, true>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
@@ -147,7 +147,7 @@ void InstrumentalTrack<DrumNote<5, false>>::parseLaneColor(Midi_Tracker& tracker
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote<4, true>>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote<4, true>, true>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	if (note.value == 109)
 	{
@@ -165,7 +165,7 @@ void InstrumentalTrack<DrumNote<4, true>>::toggleExtraValues(Midi_Tracker& track
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote<5, false>>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote<5, false>, true>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	if (note.value == 109)
 	{
@@ -180,13 +180,13 @@ void InstrumentalTrack<DrumNote<5, false>>::toggleExtraValues(Midi_Tracker& trac
 }
 
 template <>
-void InstrumentalTrack<DrumNote<4, true>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<DrumNote<4, true>, true>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
 template <>
-void InstrumentalTrack<DrumNote<5, false>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<DrumNote<5, false>, true>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
 template <>
-void InstrumentalTrack<DrumNote<4, true>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+void InstrumentalTrack<DrumNote<4, true>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const;
 
 template <>
-void InstrumentalTrack<DrumNote<5, false>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+void InstrumentalTrack<DrumNote<5, false>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const;

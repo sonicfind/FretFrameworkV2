@@ -17,14 +17,14 @@ void FixForcing(SimpleFlatMap<GuitarNote<numFrets>>& notes, const uint32_t force
 }
 
 template<>
-void InstrumentalTrack<GuitarNote<5>>::load_V1(size_t diff, ChtFileReader& reader)
+void InstrumentalTrack<GuitarNote<5>, true>::load_V1(size_t diff, ChtFileReader& reader)
 {
 	m_difficulties[diff].load_V1(reader);
 	FixForcing(m_difficulties[diff].m_notes, reader.getHopoThreshold());
 }
 
 template<>
-void InstrumentalTrack<GuitarNote<6>>::load_V1(size_t diff, ChtFileReader& reader)
+void InstrumentalTrack<GuitarNote<6>, true>::load_V1(size_t diff, ChtFileReader& reader)
 {
 	m_difficulties[diff].load_V1(reader);
 	FixForcing(m_difficulties[diff].m_notes, reader.getHopoThreshold());

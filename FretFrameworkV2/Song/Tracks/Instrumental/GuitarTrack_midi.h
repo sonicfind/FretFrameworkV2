@@ -3,7 +3,7 @@
 #include "Notes/GuitarNote.h"
 
 template <>
-struct InstrumentalTrack<GuitarNote<5>>::Midi_Tracker_Diff
+struct InstrumentalTrack<GuitarNote<5>, true>::Midi_Tracker_Diff
 {
 	bool sliderNotes = false;
 	bool hopoOn = false;
@@ -14,7 +14,7 @@ struct InstrumentalTrack<GuitarNote<5>>::Midi_Tracker_Diff
 };
 
 template <>
-struct InstrumentalTrack<GuitarNote<6>>::Midi_Tracker_Diff
+struct InstrumentalTrack<GuitarNote<6>, true>::Midi_Tracker_Diff
 {
 	bool sliderNotes = false;
 	bool hopoOn = false;
@@ -23,13 +23,13 @@ struct InstrumentalTrack<GuitarNote<6>>::Midi_Tracker_Diff
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<GuitarNote<5>>::s_noteRange{ 59, 107 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<GuitarNote<5>, true>::s_noteRange{ 59, 107 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<GuitarNote<6>>::s_noteRange{ 58, 103 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<GuitarNote<6>, true>::s_noteRange{ 58, 103 };
 
 template <>
-constexpr int InstrumentalTrack<GuitarNote<5>>::Midi_Tracker::s_defaultLanes[48] =
+constexpr int InstrumentalTrack<GuitarNote<5>, true>::Midi_Tracker::s_defaultLanes[48] =
 {
 	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -38,7 +38,7 @@ constexpr int InstrumentalTrack<GuitarNote<5>>::Midi_Tracker::s_defaultLanes[48]
 };
 
 template <>
-constexpr int InstrumentalTrack<GuitarNote<6>>::Midi_Tracker::s_defaultLanes[48] =
+constexpr int InstrumentalTrack<GuitarNote<6>, true>::Midi_Tracker::s_defaultLanes[48] =
 {
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
@@ -48,7 +48,7 @@ constexpr int InstrumentalTrack<GuitarNote<6>>::Midi_Tracker::s_defaultLanes[48]
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<GuitarNote<5>, true>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	auto replaceSoloesWithStarPower = [&]
 	{
@@ -152,7 +152,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<GuitarNote<6>, true>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
@@ -210,34 +210,35 @@ void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, Mid
 }
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<GuitarNote<5>, true>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
 template <>
-void InstrumentalTrack<GuitarNote<6>>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<GuitarNote<6>, true>::parseSysEx(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<GuitarNote<5>, true>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
 template <>
-void InstrumentalTrack<GuitarNote<5>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+void InstrumentalTrack<GuitarNote<5>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const;
 
 namespace MidiDrums
 {
+	struct Hold
+	{
+		uint32_t start = UINT32_MAX;
+		uint32_t end = UINT32_MAX;
+	};
+
+	struct ForceHold : public Hold
+	{
+		ForceStatus status = ForceStatus::UNFORCED;
+	};
+
 	template <unsigned char INDEX, size_t numFrets>
 	void WriteModifiers(MidiFileWriter& writer, const SimpleFlatMap<GuitarNote<numFrets>>& notes)
 	{
 		static constexpr unsigned char FORCE_OFFSET = 65 + 12 * INDEX;
 		static constexpr unsigned char TAP_VALUE = 68 + 12 * INDEX;
-		struct Hold
-		{
-			uint32_t start = UINT32_MAX;
-			uint32_t end = UINT32_MAX;
-		};
-
-		struct ForceHold : public Hold
-		{
-			ForceStatus status = ForceStatus::UNFORCED;
-		};
 
 		Hold tap;
 		ForceHold forcing;
@@ -296,14 +297,14 @@ namespace MidiDrums
 
 template <>
 template <unsigned char INDEX>
-void DifficultyTrack<GuitarNote<5>>::write_details(MidiFileWriter& writer) const
+void DifficultyTrack<GuitarNote<5>, false>::write_details(MidiFileWriter& writer) const
 {
 	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
 }
 
 template <>
 template <unsigned char INDEX>
-void DifficultyTrack<GuitarNote<6>>::write_details(MidiFileWriter& writer) const
+void DifficultyTrack<GuitarNote<6>, false>::write_details(MidiFileWriter& writer) const
 {
 	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
 }

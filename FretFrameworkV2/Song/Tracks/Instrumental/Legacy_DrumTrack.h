@@ -2,10 +2,10 @@
 #include "InstrumentalTrack.h"
 #include "Notes/DrumNote_Legacy.h"
 
-class Legacy_DrumTrack : public InstrumentalTrack<DrumNote_Legacy>
+class Legacy_DrumTrack : public InstrumentalTrack<DrumNote_Legacy, false>
 {
 private:
-	using InstrumentalTrack<DrumNote_Legacy>::load;
+	using InstrumentalTrack<DrumNote_Legacy, false>::load;
 
 public:
 	Legacy_DrumTrack(DrumType_Enum type);
@@ -40,25 +40,25 @@ private:
 };
 
 template <>
-struct InstrumentalTrack<DrumNote_Legacy>::Midi_Tracker_Diff
+struct InstrumentalTrack<DrumNote_Legacy, false>::Midi_Tracker_Diff
 {
 	bool flam = false;
 	uint32_t notes[6] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
 };
 
 template <>
-struct InstrumentalTrack<DrumNote_Legacy>::Midi_Tracker_Extensions
+struct InstrumentalTrack<DrumNote_Legacy, false>::Midi_Tracker_Extensions
 {
 	bool enableDynamics = false;
 	bool toms[3] = { false, false, false };
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<DrumNote_Legacy>::s_noteRange{ 60, 102 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<DrumNote_Legacy, false>::s_noteRange{ 60, 102 };
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote_Legacy>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote_Legacy, false>::parseLaneColor(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int lane = tracker.laneValues[noteValue];
@@ -116,11 +116,11 @@ void InstrumentalTrack<DrumNote_Legacy>::parseLaneColor(Midi_Tracker& tracker, M
 
 template <>
 template <bool NoteOn>
-void InstrumentalTrack<DrumNote_Legacy>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+void InstrumentalTrack<DrumNote_Legacy, false>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
 	if (110 <= note.value && note.value <= 112)
 		tracker.ext.toms[note.value - 110] = NoteOn;
 }
 
 template <>
-void InstrumentalTrack<DrumNote_Legacy>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+void InstrumentalTrack<DrumNote_Legacy, false>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);

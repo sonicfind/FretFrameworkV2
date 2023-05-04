@@ -3,7 +3,7 @@
 Legacy_DrumTrack::Legacy_DrumTrack(DrumType_Enum type) : m_type(type) {}
 Legacy_DrumTrack::Legacy_DrumTrack(MidiFileReader& reader)
 {
-	InstrumentalTrack<DrumNote_Legacy>::load(reader);
+	InstrumentalTrack<DrumNote_Legacy, false>::load(reader);
 	for (size_t i = 0; i < 4; ++i)
 	{
 		m_type = evaluateDrumType(i);
@@ -14,7 +14,7 @@ Legacy_DrumTrack::Legacy_DrumTrack(MidiFileReader& reader)
 
 void Legacy_DrumTrack::load_V1(size_t diff, ChtFileReader& reader)
 {
-	InstrumentalTrack<DrumNote_Legacy>::load_V1(diff, reader);
+	InstrumentalTrack<DrumNote_Legacy, false>::load_V1(diff, reader);
 	m_type = evaluateDrumType(diff);
 }
 
@@ -30,7 +30,7 @@ void Legacy_DrumTrack::load_V1(size_t diff, ChtFileReader& reader)
 }
 
 template <>
-void InstrumentalTrack<DrumNote_Legacy>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position)
+void InstrumentalTrack<DrumNote_Legacy, false>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		tracker.ext.enableDynamics = true;
