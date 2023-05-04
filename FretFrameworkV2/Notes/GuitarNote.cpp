@@ -9,7 +9,7 @@ bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain)
 		m_special = REPLACEMENTS[0];
 	}
 	else if (lane == 5)
-		setForcing(ForceStatus::FORCED);
+		m_forcing = ForceStatus::FORCED;
 	else if (lane == 6)
 		toggleTap();
 	else if (lane == 7)
@@ -32,7 +32,7 @@ bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain)
 		m_special = REPLACEMENTS[0];
 	}
 	else if (lane == 5)
-		setForcing(ForceStatus::FORCED);
+		m_forcing = ForceStatus::FORCED;
 	else if (lane == 6)
 		toggleTap();
 	else if (lane == 7)

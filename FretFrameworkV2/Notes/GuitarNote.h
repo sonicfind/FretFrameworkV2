@@ -1,6 +1,7 @@
 #pragma once
 #include "Notes_Special.h"
 #include <assert.h>
+#include <stdexcept>
 
 enum class ForceStatus
 {
@@ -46,14 +47,8 @@ public:
 			toggleTap();
 			return true;
 		case 'F':
-			switch (m_forcing)
-			{
-			case ForceStatus::UNFORCED:
-				setForcing(ForceStatus::FORCED);
-				break;
-			default:
-				setForcing(ForceStatus::UNFORCED);
-			}
+			if (m_forcing == ForceStatus::UNFORCED)
+				m_forcing = ForceStatus::FORCED;
 			return true;
 		case '<':
 			setForcing(ForceStatus::HOPO_ON);
@@ -78,9 +73,6 @@ public:
 		std::vector<std::pair<char, size_t>> modifiers;
 		switch (m_forcing)
 		{
-		case ForceStatus::FORCED:
-			modifiers.push_back({ 'F', SIZE_MAX });
-			break;
 		case ForceStatus::HOPO_ON:
 			modifiers.push_back({ '<', SIZE_MAX });
 			break;
@@ -99,9 +91,6 @@ public:
 		std::vector<char> modifiers;
 		switch (m_forcing)
 		{
-		case ForceStatus::FORCED:
-			modifiers.push_back('F');
-			break;
 		case ForceStatus::HOPO_ON:
 			modifiers.push_back('<');
 			break;
@@ -146,6 +135,8 @@ public:
 
 	void setForcing(ForceStatus status)
 	{
+		if (status == ForceStatus::FORCED)
+			throw std::runtime_error("Don't you dare fucking try setting this to FORCED");
 		m_forcing = status;
 	}
 
