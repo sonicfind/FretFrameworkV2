@@ -50,10 +50,10 @@ public:
 			if (m_forcing == ForceStatus::UNFORCED)
 				m_forcing = ForceStatus::FORCED;
 			return true;
-		case '<':
+		case 'H':
 			setForcing(ForceStatus::HOPO_ON);
 			return true;
-		case '>':
+		case 'S':
 			setForcing(ForceStatus::HOPO_OFF);
 			return true;
 		}
@@ -74,10 +74,10 @@ public:
 		switch (m_forcing)
 		{
 		case ForceStatus::HOPO_ON:
-			modifiers.push_back({ '<', SIZE_MAX });
+			modifiers.push_back({ 'H', SIZE_MAX });
 			break;
 		case ForceStatus::HOPO_OFF:
-			modifiers.push_back({ '>', SIZE_MAX });
+			modifiers.push_back({ 'S', SIZE_MAX });
 			break;
 		}
 
@@ -92,10 +92,10 @@ public:
 		switch (m_forcing)
 		{
 		case ForceStatus::HOPO_ON:
-			modifiers.push_back('<');
+			modifiers.push_back('H');
 			break;
 		case ForceStatus::HOPO_OFF:
-			modifiers.push_back('>');
+			modifiers.push_back('S');
 			break;
 		}
 
