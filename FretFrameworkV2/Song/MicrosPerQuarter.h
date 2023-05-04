@@ -9,6 +9,8 @@ class MicrosPerQuarter
 	uint32_t m_micros = MICROS_AT_120BPM;
 
 public:
+	MicrosPerQuarter() = default;
+	MicrosPerQuarter(uint32_t micros) : m_micros(micros) {}
 	operator uint32_t() const noexcept { return m_micros; }
 	MicrosPerQuarter& operator=(uint32_t micros)
 	{
