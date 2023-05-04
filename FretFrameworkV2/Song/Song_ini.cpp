@@ -224,6 +224,9 @@ void Song::saveIni() const
 	std::vector<Modifiers::Modifier> modifiers;
 	if (!m_name.empty())
 		modifiers.push_back({ "name", m_name });
+	else
+		modifiers.push_back({ "name", std::u32string(U"Unknown Title") });
+
 	if (!m_artist.empty())
 		modifiers.push_back({ "artist", m_artist });
 	if (!m_album.empty())
