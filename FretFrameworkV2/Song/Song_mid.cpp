@@ -56,11 +56,11 @@ void Song::load_mid(const std::filesystem::path& path)
 			}
 			else if (name == "PART VOCALS")
 				m_noteTracks.vocals.load(reader);
-			else if (name == "HARM1")
+			else if (name == "HARM1" || name == "PART HARM1")
 				m_noteTracks.harmonies.load<0>(reader);
-			else if (name == "HARM2")
+			else if (name == "HARM2" || name == "PART HARM2")
 				m_noteTracks.harmonies.load<1>(reader);
-			else if (name == "HARM3")
+			else if (name == "HARM3" || name == "PART HARM3")
 				m_noteTracks.harmonies.load<2>(reader);
 		}
 	}
