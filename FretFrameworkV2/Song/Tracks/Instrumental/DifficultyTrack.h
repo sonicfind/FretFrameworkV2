@@ -158,7 +158,7 @@ public:
 	}
 
 public:
-	T* construct_note_midi(uint32_t position)
+	PointerWrapper<T> construct_note_midi(uint32_t position)
 	{
 		if (m_notes.capacity() == 0)
 			m_notes.reserve(5000);

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <stdexcept>
+#include "PtrWrapper/PtrWrapper.h"
 
 template <typename T, typename Key = uint32_t>
 class SimpleFlatMap
@@ -70,12 +71,12 @@ public:
 		return m_list.emplace_back(key, obj).object;
 	}
 
-	T* try_emplace_back(Key key, const T& obj = BASE)
+	PointerWrapper<T> try_emplace_back(Key key, const T& obj = BASE)
 	{
 		if (!m_list.empty() && m_list.back().key >= key)
-			return nullptr;
+			return {};
 
-		return &emplace_back(key, obj);
+		return emplace_back(key, obj);
 	}
 
 	[[nodiscard]] T& get_or_emplace_back(Key key)
@@ -130,19 +131,25 @@ public:
 		throw std::runtime_error("Object at key does not exist");
 	}
 
-	[[nodiscard]] T* try_at(Key key) noexcept
+	[[nodiscard]] bool contains(Key key) const noexcept
+	{
+		auto iter = std::lower_bound(begin(), end(), key);
+		return iter != end() && key == iter->key;
+	}
+
+	[[nodiscard]] PointerWrapper<T> try_at(Key key) noexcept
 	{
 		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
-			return &iter->object;
+			return iter->object;
 		return nullptr;
 	}
 
-	[[nodiscard]] const T* try_at(Key key) const noexcept
+	[[nodiscard]] PointerWrapper<const T> try_at(Key key) const noexcept
 	{
 		auto iter = std::lower_bound(begin(), end(), key);
 		if (iter != end() && key == iter->key)
-			return &iter->object;
+			return iter->object;
 		return nullptr;
 	}
 
@@ -172,23 +179,23 @@ public:
 		return *m_list.back();
 	}
 
-	[[nodiscard]] T* try_back(Key keytoValidate)
+	[[nodiscard]] PointerWrapper<T> try_back(Key keytoValidate)
 	{
 		if (m_list.empty() || m_list.back().key != keytoValidate)
-			return nullptr;
-		return &m_list.back().object;
+			return {};
+		return m_list.back().object;
 	}
 
-	[[nodiscard]] T* try_back(Key keytoValidate) const
+	[[nodiscard]] PointerWrapper<const T> try_back(Key keytoValidate) const
 	{
 		if (m_list.empty() || m_list.back().key != keytoValidate)
-			return nullptr;
-		return &m_list.back().object;
+			return {};
+		return m_list.back().object;
 	}
 
 	[[nodiscard]] T& back(Key keytoValidate)
 	{
-		if (T* obj = try_back(keytoValidate))
+		if (auto obj = try_back(keytoValidate))
 			return *obj;
 		throw std::runtime_error("Object at key does not exist");
 	}

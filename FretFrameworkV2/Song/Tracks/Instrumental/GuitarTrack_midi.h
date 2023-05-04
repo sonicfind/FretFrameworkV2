@@ -88,15 +88,15 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		{
 			tracker.difficulties[diff].notes[lane] = position;
 
-			if (GuitarNote<5>*guitar = m_difficulties[diff].construct_note_midi(position))
+			if (auto note = m_difficulties[diff].construct_note_midi(position))
 			{
 				if (tracker.difficulties[diff].sliderNotes)
-					guitar->setTap(true);
+					note->setTap(true);
 
 				if (tracker.difficulties[diff].hopoOn)
-					guitar->setForcing(ForceStatus::HOPO_ON);
+					note->setForcing(ForceStatus::HOPO_ON);
 				else if (tracker.difficulties[diff].hopoOff)
-					guitar->setForcing(ForceStatus::HOPO_OFF);
+					note->setForcing(ForceStatus::HOPO_OFF);
 			}
 		}
 		else
@@ -115,7 +115,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		tracker.difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (GuitarNote<5>*note = m_difficulties[diff].m_notes.try_back(position))
+			if (auto note = m_difficulties[diff].m_notes.try_back(position))
 				note->setForcing(ForceStatus::HOPO_ON);
 		}
 	}
@@ -125,7 +125,7 @@ void InstrumentalTrack<GuitarNote<5>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		tracker.difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (GuitarNote<5>*note = m_difficulties[diff].m_notes.try_back(position))
+			if (auto note = m_difficulties[diff].m_notes.try_back(position))
 				note->setForcing(ForceStatus::HOPO_OFF);
 		}
 	}
@@ -164,15 +164,15 @@ void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		{
 			tracker.difficulties[diff].notes[lane] = position;
 
-			if (GuitarNote<6>*guitar = m_difficulties[diff].construct_note_midi(position))
+			if (auto note = m_difficulties[diff].construct_note_midi(position))
 			{
 				if (tracker.difficulties[diff].sliderNotes)
-					guitar->setTap(true);
+					note->setTap(true);
 
 				if (tracker.difficulties[diff].hopoOn)
-					guitar->setForcing(ForceStatus::HOPO_ON);
+					note->setForcing(ForceStatus::HOPO_ON);
 				else if (tracker.difficulties[diff].hopoOff)
-					guitar->setForcing(ForceStatus::HOPO_OFF);
+					note->setForcing(ForceStatus::HOPO_OFF);
 			}
 		}
 		else
@@ -191,7 +191,7 @@ void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		tracker.difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (GuitarNote<6>*note = m_difficulties[diff].m_notes.try_back(position))
+			if (auto note = m_difficulties[diff].m_notes.try_back(position))
 				note->setForcing(ForceStatus::HOPO_ON);
 		}
 	}
@@ -201,7 +201,7 @@ void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, Mid
 		tracker.difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (GuitarNote<6>*note = m_difficulties[diff].m_notes.try_back(position))
+			if (auto note = m_difficulties[diff].m_notes.try_back(position))
 				note->setForcing(ForceStatus::HOPO_OFF);
 		}
 	}
