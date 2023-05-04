@@ -1,6 +1,5 @@
 #pragma once
 #include "Notes_Special.h"
-#include <assert.h>
 #include <stdexcept>
 
 enum class ForceStatus
@@ -154,8 +153,7 @@ public:
 					lanes[i + 2] = true;
 			}
 		} arr;
-		assert(lane < 256);
-		return arr.lanes[lane];
+		return lane < 256 && arr.lanes[lane];
 	}
 };
 
