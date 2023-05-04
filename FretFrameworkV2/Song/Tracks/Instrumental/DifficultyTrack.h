@@ -61,8 +61,10 @@ public:
 	}
 
 public:
-	void save(MidiFileWriter& writer, unsigned char diffIndex, bool& doPhrases) const
+	template <unsigned char INDEX>
+	void save(MidiFileWriter& writer, bool& doPhrases) const
 	{
+		static constexpr char OFFSET = 60 + 12 * INDEX;
 		if (doPhrases)
 		{
 			for (const auto& vec : m_specialPhrases)
@@ -96,24 +98,25 @@ public:
 						doPhrases = false;
 						break;
 					case SpecialPhraseType::StarPower_Diff:
-						writer.addMidiNote(vec.key, 67 + 12 * diffIndex, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, OFFSET + 7, 100, phrase.getDuration());
 						break;
 					case SpecialPhraseType::FaceOff_Player1:
-						writer.addMidiNote(vec.key, 69 + 12 * diffIndex, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, OFFSET + 9, 100, phrase.getDuration());
 						break;
 					case SpecialPhraseType::FaceOff_Player2:
-						writer.addMidiNote(vec.key, 70 + 12 * diffIndex, 100, phrase.getDuration());
+						writer.addMidiNote(vec.key, OFFSET + 10, 100, phrase.getDuration());
 						break;
 					}
 				}
 			}
 		}
 
-		write_details(writer, diffIndex);
-		const char offset = 60 + 12 * diffIndex;
+		if constexpr (INDEX < 5)
+			write_details<INDEX>(writer);
+
 		for (const auto& note : m_notes)
 			for (const auto& col : note->getMidiNotes())
-				writer.addMidiNote(note.key, offset + std::get<0>(col), std::get<1>(col), std::get<2>(col));
+				writer.addMidiNote(note.key, OFFSET + std::get<0>(col), std::get<1>(col), std::get<2>(col));
 	}
 
 	virtual void adjustTicks(float multiplier) override
@@ -294,6 +297,7 @@ public:
 	}
 
 private:
-	void write_details(MidiFileWriter& writer, unsigned char diffIndex) const {}
+	template <unsigned char INDEX>
+	void write_details(MidiFileWriter& writer) const {}
 };
 

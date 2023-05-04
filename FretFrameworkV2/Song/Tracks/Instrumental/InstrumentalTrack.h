@@ -128,11 +128,12 @@ public:
 			}
 		}
 
-		for (unsigned char i = 0; i < 4; i++)
-			m_difficulties[i].save(writer, i, doPhrases_diff);
-
+		m_difficulties[0].save<0>(writer, doPhrases_diff);
+		m_difficulties[1].save<1>(writer, doPhrases_diff);
+		m_difficulties[2].save<2>(writer, doPhrases_diff);
+		m_difficulties[3].save<3>(writer, doPhrases_diff);
 		doPhrases_diff = false;
-		m_difficulties[4].save(writer, 5, doPhrases_diff);
+		m_difficulties[4].save<5>(writer, doPhrases_diff);
 		writer.writeTrack();
 	}
 

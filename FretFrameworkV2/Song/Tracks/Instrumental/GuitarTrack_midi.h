@@ -221,8 +221,89 @@ void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::str
 template <>
 void InstrumentalTrack<GuitarNote<5>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
 
-template <>
-void DifficultyTrack<GuitarNote<5>>::write_details(MidiFileWriter& writer, unsigned char diffIndex) const;
+namespace MidiDrums
+{
+	template <unsigned char INDEX, size_t numFrets>
+	void WriteModifiers(MidiFileWriter& writer, const SimpleFlatMap<GuitarNote<numFrets>>& notes)
+	{
+		static constexpr unsigned char FORCE_OFFSET = 65 + 12 * INDEX;
+		static constexpr unsigned char TAP_VALUE = 68 + 12 * INDEX;
+		struct Hold
+		{
+			uint32_t start = UINT32_MAX;
+			uint32_t end = UINT32_MAX;
+		};
+
+		struct ForceHold : public Hold
+		{
+			ForceStatus status = ForceStatus::UNFORCED;
+		};
+
+		Hold tap;
+		ForceHold forcing;
+		for (const auto& node : notes)
+		{
+			if (node->isTapped())
+			{
+				if (tap.start != UINT32_MAX)
+					tap.start = node.key;
+				tap.end = node.key + node->getLongestSustain();
+			}
+			else if (tap.start != UINT32_MAX)
+			{
+				if (tap.end > node.key)
+					tap.end = node.key;
+
+				writer.addMidiNote(tap.start, TAP_VALUE, 100, tap.end - tap.start);
+				tap.start = UINT32_MAX;
+			}
+
+			ForceStatus forceStatus = node->getForcing();
+			if (forcing.status != forceStatus)
+			{
+				if (forcing.status == ForceStatus::UNFORCED)
+				{
+					forcing.status = forceStatus;
+					forcing.start = node.key;
+					forcing.end = node.key + node->getLongestSustain();
+				}
+				else
+				{
+					if (forcing.end > node.key)
+						forcing.end = node.key;
+
+					writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.end - forcing.start);
+
+					forcing.status = forceStatus;
+					if (forceStatus != ForceStatus::UNFORCED)
+					{
+						forcing.start = node.key;
+						forcing.end = node.key + node->getLongestSustain();
+					}
+				}
+			}
+			else if (forcing.status != ForceStatus::UNFORCED)
+				forcing.end = node.key + node->getLongestSustain();
+		}
+
+		if (tap.start != UINT32_MAX)
+			writer.addMidiNote(tap.start, TAP_VALUE, 100, tap.end - tap.start);
+
+		if (forcing.status != ForceStatus::UNFORCED)
+			writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.end - forcing.start);
+	}
+}
 
 template <>
-void DifficultyTrack<GuitarNote<6>>::write_details(MidiFileWriter& writer, unsigned char diffIndex) const;
+template <unsigned char INDEX>
+void DifficultyTrack<GuitarNote<5>>::write_details(MidiFileWriter& writer) const
+{
+	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
+}
+
+template <>
+template <unsigned char INDEX>
+void DifficultyTrack<GuitarNote<6>>::write_details(MidiFileWriter& writer) const
+{
+	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
+}
