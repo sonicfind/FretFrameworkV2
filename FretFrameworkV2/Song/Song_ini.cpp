@@ -22,11 +22,14 @@ void Song::setMetaData()
 	m_vocalStream.clear();
 	m_harmonyStream.clear();
 	m_crowdStream.clear();
+
 	m_hopo_frequency = 0;
-	m_multiplier_note = 116;
 	m_sustain_cutoff_threshold = 0;
+	m_hopofreq_old = UINT16_MAX;
 	m_eighthnote_hopo = false;
+	m_multiplier_note = 116;
 	m_baseDrumType = DrumType_Enum::LEGACY;
+
 	m_modifiers.clear();
 
 	const std::filesystem::path iniFile(m_directory / U"song.ini");
@@ -38,6 +41,7 @@ void Song::setMetaData()
 	bool multiplier_noteSet = false;
 	bool eighthnote_hopoSet = false;
 	bool sustain_thresholdSet = false;
+	bool hopofreqSet = false;
 	auto modifiers = Ini::ReadSongIniFile(iniFile);
 	for (const auto& mod : modifiers)
 	{
@@ -106,6 +110,12 @@ void Song::setMetaData()
 				m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
 			sustain_thresholdSet = true;
 		}
+		else if (mod.getName() == "hopofreq")
+		{
+			if (!hopofreqSet)
+				m_hopofreq_old = mod.getValue<uint16_t>();
+			hopofreqSet = true;
+		}
 		else if (!getModifier(mod.getName()))
 			m_modifiers.push_back(mod);
 	}
@@ -122,6 +132,7 @@ bool Song::loadIni()
 	bool multiplier_noteTested = false;
 	bool eighthnote_hopoTested = false;
 	bool sustain_thresholdTested = false;
+	bool hopofreqTested = false;
 	auto modifiers = Ini::ReadSongIniFile(iniFile);
 	for (const auto& mod : modifiers)
 	{
@@ -197,6 +208,12 @@ bool Song::loadIni()
 			if (!sustain_thresholdTested && m_sustain_cutoff_threshold != mod.getValue<uint32_t>())
 				return false;
 			sustain_thresholdTested = true;
+		}
+		else if (mod.getName() == "hopofreq")
+		{
+			if (!hopofreqTested && m_hopofreq_old != mod.getValue<uint16_t>())
+				return false;
+			hopofreqTested = true;
 		}
 	}
 	return true;

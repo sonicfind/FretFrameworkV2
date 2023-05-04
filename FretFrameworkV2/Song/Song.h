@@ -24,6 +24,7 @@ private:
 	void setMetaData(const LibraryEntry& entry);
 	void setMetaData();
 	void setSustainThreshold() const;
+	void setHopoThreshold(ChtFileReader& reader) const;
 
 	bool loadIni();
 	void saveIni() const;
@@ -76,9 +77,10 @@ private:
 	std::u32string m_playlist;
 
 	uint32_t m_hopo_frequency = 0;
-	unsigned char m_multiplier_note = 116;
 	uint32_t m_sustain_cutoff_threshold = 0;
+	uint16_t m_hopofreq_old = UINT16_MAX;
 	bool m_eighthnote_hopo = false;
+	unsigned char m_multiplier_note = 116;
 	DrumType_Enum m_baseDrumType = DrumType_Enum::LEGACY;
 
 	std::vector<Modifiers::Modifier> m_modifiers;

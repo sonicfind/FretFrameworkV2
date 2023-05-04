@@ -54,6 +54,7 @@ public:
 	const UnicodeString& getCharter() const noexcept { return *m_charter; }
 	const UnicodeString& getPlaylist() const noexcept { return *m_playlist; }
 	uint32_t getSongLength() const noexcept { return m_song_length; }
+	uint32_t getHopofreq_Old() const noexcept { return m_hopofreq_Old; }
 	uint32_t getHopoFrequency() const noexcept { return m_hopo_frequency; }
 	uint32_t getMultiplierNote() const noexcept { return m_multiplier_note; }
 	uint32_t getSustainCutoffThreshold() const noexcept { return m_sustain_cutoff_threshold; }
@@ -172,10 +173,12 @@ private:
 	uint16_t m_playlist_track = UINT16_MAX;
 	std::u32string m_icon;
 	std::u32string m_source;
+	
 	uint32_t m_hopo_frequency = 0;
-	unsigned char m_multiplier_note = 116;
 	uint32_t m_sustain_cutoff_threshold = 0;
+	uint16_t m_hopofreq_Old = UINT16_MAX;
 	bool m_eighthnote_hopo = false;
+	unsigned char m_multiplier_note = 116;
 
 	UnicodeString m_directory_playlist;
 

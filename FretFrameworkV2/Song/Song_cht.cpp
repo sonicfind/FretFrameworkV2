@@ -9,6 +9,7 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 
 	const int16_t version = isFull ? load_header_cht(reader) : load_header_cht_basic(reader);
 	setSustainThreshold();
+	setHopoThreshold(reader);
 	if (version > 1)
 		traverse(reader);
 	else

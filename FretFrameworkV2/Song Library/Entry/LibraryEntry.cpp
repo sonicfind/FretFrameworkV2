@@ -85,12 +85,15 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 	reader.extract(m_album_track);
 	reader.extract(m_playlist_track);
 	reader.extract(m_song_length);
-	reader.extract(m_multiplier_note);
-	reader.extract(m_hopo_frequency);
-	reader.extract(m_eighthnote_hopo);
-	reader.extract(m_sustain_cutoff_threshold);
 	m_icon = UnicodeString::strToU32(reader.extractString());
 	m_source = UnicodeString::strToU32(reader.extractString());
+
+	reader.extract(m_hopo_frequency);
+	reader.extract(m_sustain_cutoff_threshold);
+	
+	reader.extract(m_hopofreq_Old);
+	reader.extract(m_eighthnote_hopo);
+	reader.extract(m_multiplier_note);
 }
 
 void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcept
@@ -127,12 +130,15 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	writer.append(m_album_track);
 	writer.append(m_playlist_track);
 	writer.append(m_song_length);
-	writer.append(m_multiplier_note);
-	writer.append(m_hopo_frequency);
-	writer.append(m_eighthnote_hopo);
-	writer.append(m_sustain_cutoff_threshold);
 	writer.appendString(UnicodeString::U32ToStr(m_icon));
 	writer.appendString(UnicodeString::U32ToStr(m_source));
+
+	writer.append(m_hopo_frequency);
+	writer.append(m_sustain_cutoff_threshold);
+
+	writer.append(m_hopofreq_Old);
+	writer.append(m_eighthnote_hopo);
+	writer.append(m_multiplier_note);
 }
 
 DrumType_Enum LibraryEntry::getDrumType() const noexcept
@@ -315,6 +321,12 @@ void LibraryEntry::mapModifierVariables()
 
 	if (auto modifier = getModifier("hopo_frequency"))
 		m_hopo_frequency = modifier->getValue<uint32_t>();
+
+	if (auto modifier = getModifier("eighthnote_hopo"))
+		m_eighthnote_hopo = modifier->getValue<bool>();
+
+	if (auto modifier = getModifier("hopofreq"))
+		m_hopofreq_Old = modifier->getValue<uint16_t>();
 
 	if (auto starPower = getModifier("multiplier_note"))
 		if (starPower->getValue<uint16_t>() == 103)

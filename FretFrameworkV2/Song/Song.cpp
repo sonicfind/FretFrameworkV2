@@ -24,6 +24,7 @@ void Song::setMetaData(const LibraryEntry& entry)
 	m_charter = entry.getName().get();
 	m_playlist = entry.getName().get();
 	m_hopo_frequency = entry.getHopoFrequency();
+	m_hopofreq_old = entry.getHopofreq_Old();
 	m_multiplier_note = entry.getMultiplierNote();
 	m_eighthnote_hopo = entry.getEightNoteHopo();
 	m_sustain_cutoff_threshold = entry.getSustainCutoffThreshold();
@@ -34,6 +35,40 @@ void Song::setMetaData(const LibraryEntry& entry)
 void Song::setSustainThreshold() const
 {
 	NoteColor::s_sustainMinimum = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
+}
+
+void Song::setHopoThreshold(ChtFileReader& reader) const
+{
+	if (m_eighthnote_hopo)
+		reader.setHopoThreshold(m_tickrate / 2);
+	else if (m_hopo_frequency > 0)
+		reader.setHopoThreshold(m_hopo_frequency);
+	else if (m_hopofreq_old != UINT16_MAX)
+	{
+		switch (m_hopofreq_old)
+		{
+		case 0:
+			reader.setHopoThreshold(m_tickrate / 24);
+			break;
+		case 1:
+			reader.setHopoThreshold(m_tickrate / 16);
+			break;
+		case 2:
+			reader.setHopoThreshold(m_tickrate / 12);
+			break;
+		case 3:
+			reader.setHopoThreshold(m_tickrate / 8);
+			break;
+		case 4:
+			reader.setHopoThreshold(m_tickrate / 6);
+			break;
+		default:
+			reader.setHopoThreshold(m_tickrate / 4);
+		}
+	}
+	else
+		reader.setHopoThreshold(m_tickrate / 3);
+
 }
 
 EntryStatus Song::load(const LibraryEntry& entry)
