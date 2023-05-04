@@ -49,6 +49,6 @@ private:
 		uint16_t tickRate;
 	} m_header;
 
-	std::string_view m_trackname;
+	std::string m_trackname;
 	SimpleFlatMap<MidiWriteNode> m_nodes;
 };
