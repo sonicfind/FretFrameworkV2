@@ -109,12 +109,11 @@ public:
 			}
 		}
 
+		write_details(writer, diffIndex);
 		const char offset = 60 + 12 * diffIndex;
 		for (const auto& note : m_notes)
 			for (const auto& col : note->getMidiNotes())
 				writer.addMidiNote(note.key, offset + std::get<0>(col), std::get<1>(col), std::get<2>(col));
-
-		save_instrument_specific_details(writer, diffIndex);
 	}
 
 	virtual void adjustTicks(float multiplier) override
@@ -295,6 +294,6 @@ public:
 	}
 
 private:
-	void save_instrument_specific_details(MidiFileWriter& writer, unsigned char diffIndex) const {}
+	void write_details(MidiFileWriter& writer, unsigned char diffIndex) const {}
 };
 
