@@ -17,7 +17,7 @@ public:
 	EntryStatus load(const LibraryEntry& entry);
 	bool load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept;
 	bool save(ChartType type) const noexcept;
-	void resetTempoMap();
+	void checkStartOfTempoMap();
 	void clear();
 
 private:

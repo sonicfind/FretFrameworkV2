@@ -69,6 +69,7 @@ EntryStatus Song::load(const LibraryEntry& entry)
 		std::cout << err.what() << std::endl;
 		return EntryStatus::ERROR;
 	}
+	checkStartOfTempoMap();
 	return EntryStatus::UNCHANGED;
 }
 
@@ -99,16 +100,17 @@ bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) no
 		std::cout << err.what() << std::endl;
 		return false;
 	}
+	checkStartOfTempoMap();
 	return true;
 }
 
-void Song::resetTempoMap()
+void Song::checkStartOfTempoMap()
 {
-	m_tempoMarkers.clear();
-	m_tempoMarkers.emplace_back(0);
+	if (m_tempoMarkers.isEmpty() || m_tempoMarkers.begin()->key != 0)
+		m_tempoMarkers.emplace(m_tempoMarkers.begin(), 0);
 
-	m_timeSigs.clear();
-	m_timeSigs.emplace_back(0) = { 4, 2, 24, 8 };
+	if (m_timeSigs.isEmpty() || m_timeSigs.begin()->key != 0)
+		m_timeSigs.emplace(m_timeSigs.begin(), 0, { 4, 2, 24, 8 });
 }
 
 bool Song::save(ChartType type) const noexcept
@@ -141,7 +143,8 @@ bool Song::save(ChartType type) const noexcept
 
 void Song::clear()
 {
-	resetTempoMap();
+	m_tempoMarkers.clear();
+	m_timeSigs.clear();
 	m_sectionMarkers.clear();
 	m_globalEvents.clear();
 	m_noteTracks.lead_5.clear();
