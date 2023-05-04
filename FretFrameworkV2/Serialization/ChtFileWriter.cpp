@@ -150,7 +150,7 @@ void ChtFileWriter::writeLeftHand(size_t position)
 
 void ChtFileWriter::writeMicrosPerQuarter(uint32_t micros)
 {
-	write(g_TEMPO_FACTOR / micros);
+	write((uint32_t)round(g_TEMPO_FACTOR / (long double)micros));
 }
 
 void ChtFileWriter::writeTimeSig(TimeSig timeSig)

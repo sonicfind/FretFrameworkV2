@@ -365,8 +365,8 @@ size_t ChtFileReader::extractLeftHand()
 
 uint32_t ChtFileReader::extractMicrosPerQuarter()
 {
-	uint32_t bpm1000 = extract<uint32_t>();
-	return uint32_t(g_TEMPO_FACTOR / bpm1000);
+	long double bpm1000 = extract<uint32_t>();
+	return (uint32_t)round(g_TEMPO_FACTOR / bpm1000);
 }
 
 TimeSig ChtFileReader::extractTimeSig()
