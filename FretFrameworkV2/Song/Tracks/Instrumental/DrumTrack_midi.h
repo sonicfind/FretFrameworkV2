@@ -149,8 +149,34 @@ template <>
 template <bool NoteOn>
 void InstrumentalTrack<DrumNote<4, true>>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
 {
-	if (110 <= note.value && note.value <= 112)
+	if (note.value == 109)
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			tracker.difficulties[i].flam = NoteOn;
+			if constexpr (NoteOn)
+				if (auto drum = m_difficulties[i].m_notes.try_back(position))
+					drum->setFlam(true);
+		}
+	}
+	else if (110 <= note.value && note.value <= 112)
 		tracker.ext.toms[note.value - 110] = NoteOn;
+}
+
+template <>
+template <bool NoteOn>
+void InstrumentalTrack<DrumNote<5, false>>::toggleExtraValues(Midi_Tracker& tracker, MidiNote note, uint32_t position)
+{
+	if (note.value == 109)
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			tracker.difficulties[i].flam = NoteOn;
+			if constexpr (NoteOn)
+				if (auto drum = m_difficulties[i].m_notes.try_back(position))
+					drum->setFlam(true);
+		}
+	}
 }
 
 template <>
