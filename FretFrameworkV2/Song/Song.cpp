@@ -70,7 +70,7 @@ EntryStatus Song::load(const LibraryEntry& entry)
 		return EntryStatus::ERROR;
 	}
 	checkStartOfTempoMap();
-	return EntryStatus::UNCHANGED;
+	return EntryStatus::VALID;
 }
 
 bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept

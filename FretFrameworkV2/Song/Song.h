@@ -6,7 +6,7 @@
 
 enum class EntryStatus
 {
-	UNCHANGED,
+	VALID,
 	NEEDS_RESCAN,
 	ERROR
 };
