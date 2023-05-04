@@ -128,6 +128,9 @@ void Song::save_mid(const std::filesystem::path& path) const
 
 void Song::save_tempoMap(MidiFileWriter& writer) const
 {
+	if (!m_midiSequenceName.empty())
+		writer.setTrackName(UnicodeString::U32ToStr(m_midiSequenceName));
+
 	for (const auto& timeSig : m_timeSigs)
 		writer.addTimeSig(timeSig.key, *timeSig);
 
