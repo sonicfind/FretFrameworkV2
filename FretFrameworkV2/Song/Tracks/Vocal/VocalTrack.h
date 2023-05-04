@@ -468,10 +468,13 @@ private:
 	void addSpecialPhrase_midi(std::pair<SpecialPhraseType, uint32_t>& combo, uint32_t position)
 	{
 		if constexpr (NoteOn)
+		{
+			m_specialPhrases.try_emplace_back(position);
 			combo.second = position;
+		}
 		else if (combo.second != UINT32_MAX)
 		{
-			m_specialPhrases.get_or_emplaceNodeFromBack(combo.second).push_back({ combo.first, position - combo.second });
+			m_specialPhrases.getNodeFromBack(combo.second).push_back({ combo.first, position - combo.second });
 			combo.second = UINT32_MAX;
 		}
 	}
