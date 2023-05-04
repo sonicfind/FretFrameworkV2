@@ -2,7 +2,7 @@
 #include "ChtConstants.h"
 #include <assert.h>
 
-void ChtFileWriter::setPitchMode(PitchWriteMode mode) { m_pitchMode = mode; }
+void ChtFileWriter::setPitchMode(PitchType mode) { m_pitchMode = mode; }
 
 void ChtFileWriter::writeHeaderTrack(uint32_t tickRate)
 {
@@ -108,6 +108,7 @@ void ChtFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 
 void ChtFileWriter::writePitch(Pitch<-1, 9> pitch)
 {
+	writeNoteName(pitch.getNote(), m_pitchMode);
 	static constexpr std::string_view STRINGS[2][12] =
 	{
 		{ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", },
@@ -133,35 +134,13 @@ void ChtFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint32_t
 
 void ChtFileWriter::writeNoteName(NoteName note, PitchType type)
 {
-	switch (note)
+	static constexpr std::string_view STRINGS[2][12] =
 	{
-	case NoteName::C_Sharp_Db:
-	case NoteName::D_Sharp_Eb:
-	case NoteName::F_Sharp_Gb:
-	case NoteName::G_Sharp_Ab:
-	case NoteName::A_Sharp_Bb:
-		if (type == PitchType::Flat)
-		{
-			static constexpr std::string_view FLATS[] = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
-			write(FLATS[static_cast<size_t>(note)]);
-			break;
-		}
-		__fallthrough;
-	case NoteName::C:
-	case NoteName::D:
-	case NoteName::E:
-	case NoteName::F:
-	case NoteName::G:
-	case NoteName::A:
-	case NoteName::B:
-	{
-		static constexpr std::string_view SHARPS[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-		write(SHARPS[static_cast<size_t>(note)]);
-		break;
-	}
-	default:
-		assert(false);
-	}
+		{ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", },
+		{ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", }
+	};
+
+	write(STRINGS[static_cast<size_t>(type)][static_cast<size_t>(note)]);
 }
 
 void ChtFileWriter::writeLeftHand(size_t position)

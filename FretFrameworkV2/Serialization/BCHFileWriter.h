@@ -8,7 +8,7 @@ public:
 	using BufferedBinaryWriter::BufferedBinaryWriter;
 
 public:
-	virtual void setPitchMode(PitchWriteMode mode) override {}
+	virtual void setPitchMode(PitchType mode) override {}
 
 	virtual void writeHeaderTrack(uint32_t tickRate) override;
 	virtual void writeSyncTrack() override;

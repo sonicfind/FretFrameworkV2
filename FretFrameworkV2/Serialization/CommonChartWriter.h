@@ -1,15 +1,9 @@
 #pragma once
 #include "CommonChartTypes.h"
-enum class PitchWriteMode
-{
-	Sharp,
-	Flat
-};
-
 class CommonChartWriter
 {
 public:
-	virtual void setPitchMode(PitchWriteMode mode) = 0;
+	virtual void setPitchMode(PitchType mode) = 0;
 
 	virtual void writeHeaderTrack(uint32_t tickRate) = 0;
 	virtual void writeSyncTrack() = 0;

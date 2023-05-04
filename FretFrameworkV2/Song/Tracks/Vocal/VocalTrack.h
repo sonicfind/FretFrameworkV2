@@ -353,7 +353,7 @@ public:
 
 	virtual void save(CommonChartWriter& writer) const override
 	{
-		writer.setPitchMode(PitchWriteMode::Sharp);
+		writer.setPitchMode(PitchType::Sharp);
 
 		SimpleFlatMap<VocalWriteNode> nodes;
 		size_t vocalSize = 0;
