@@ -86,8 +86,14 @@ public:
 		}
 	}
 
-	void save(MidiFileWriter& writer) const
+	void save(MidiFileWriter& writer, std::string_view name) const
 	{
+		if (!isOccupied())
+			return;
+
+		writer.setTrackName(name);
+		writeMidiToggleEvent(writer);
+
 		for (const auto& vec : m_events)
 			for (const auto& ev : *vec)
 				writer.addText(vec.key, UnicodeString::U32ToStr(ev));
@@ -127,6 +133,7 @@ public:
 
 		doPhrases_diff = false;
 		m_difficulties[4].save(writer, 5, doPhrases_diff);
+		writer.writeTrack();
 	}
 
 public:
@@ -294,6 +301,9 @@ private:
 			combo.second = UINT32_MAX;
 		}
 	}
+
+private:
+	void writeMidiToggleEvent(MidiFileWriter& writer) const {}
 };
 
 template <class T>

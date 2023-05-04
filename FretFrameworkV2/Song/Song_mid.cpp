@@ -114,63 +114,16 @@ void Song::save_mid(const std::filesystem::path& path) const
 	MidiFileWriter writer(path, m_tickrate);
 	save_tempoMap(writer);
 	save_events(writer);
-	if (m_noteTracks.lead_5.isOccupied())
-	{
-		writer.setTrackName("PART GUITAR");
-		writer.addText(0, "[ENHANCED_OPENS]");
-		m_noteTracks.lead_5.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.lead_6.isOccupied())
-	{
-		writer.setTrackName("PART GUITAR GHL");
-		m_noteTracks.lead_6.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.bass_5.isOccupied())
-	{
-		writer.setTrackName("PART BASS");
-		m_noteTracks.bass_5.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.bass_6.isOccupied())
-	{
-		writer.setTrackName("PART BASS GHL");
-		m_noteTracks.bass_6.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.rhythm.isOccupied())
-	{
-		writer.setTrackName("PART RHYTHM");
-		m_noteTracks.rhythm.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.coop.isOccupied())
-	{
-		writer.setTrackName("PART GUITAR COOP");
-		m_noteTracks.coop.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.keys.isOccupied())
-	{
-		writer.setTrackName("PART KEYS");
-		m_noteTracks.keys.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.drums4_pro.isOccupied())
-	{
-		writer.setTrackName("PART DRUMS");
-		writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
-		m_noteTracks.drums4_pro.save(writer);
-		writer.writeTrack();
-	}
-	if (m_noteTracks.drums5.isOccupied())
-	{
-		writer.setTrackName("PART DRUMS");
-		writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
-		m_noteTracks.drums5.save(writer);
-		writer.writeTrack();
-	}
+
+	m_noteTracks.lead_5    .save(writer, "PART GUITAR");
+	m_noteTracks.lead_6    .save(writer, "PART GUITAR GHL");
+	m_noteTracks.bass_5    .save(writer, "PART BASS");
+	m_noteTracks.bass_6    .save(writer, "PART BASS GHL");
+	m_noteTracks.rhythm    .save(writer, "PART RHYTHM");
+	m_noteTracks.coop      .save(writer, "PART GUITAR COOP");
+	m_noteTracks.keys      .save(writer, "PART KEYS");
+	m_noteTracks.drums4_pro.save(writer, "PART DRUMS");
+	m_noteTracks.drums5    .save(writer, "PART DRUMS");
 }
 
 void Song::save_tempoMap(MidiFileWriter& writer) const

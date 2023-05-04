@@ -215,3 +215,6 @@ void InstrumentalTrack<GuitarNote<6>>::parseSysEx(Midi_Tracker& tracker, std::st
 
 template <>
 void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+
+template <>
+void InstrumentalTrack<GuitarNote<5>>::writeMidiToggleEvent(MidiFileWriter& writer) const;

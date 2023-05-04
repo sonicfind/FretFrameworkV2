@@ -158,3 +158,9 @@ void InstrumentalTrack<DrumNote<4, true>>::parseText(Midi_Tracker& tracker, std:
 
 template <>
 void InstrumentalTrack<DrumNote<5, false>>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
+
+template <>
+void InstrumentalTrack<DrumNote<4, true>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+
+template <>
+void InstrumentalTrack<DrumNote<5, false>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
