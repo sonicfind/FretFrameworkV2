@@ -17,7 +17,6 @@ public:
 	EntryStatus load(const LibraryEntry& entry);
 	bool load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept;
 	bool save(ChartType type) const noexcept;
-	void checkStartOfTempoMap();
 	void clear();
 
 private:
@@ -25,6 +24,7 @@ private:
 	void setMetaData();
 	void setSustainThreshold() const;
 	void setHopoThreshold(ChtFileReader& reader) const;
+	void checkStartOfTempoMap();
 
 	bool loadIni();
 	void saveIni() const;
