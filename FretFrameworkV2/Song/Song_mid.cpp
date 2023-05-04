@@ -131,7 +131,34 @@ void Song::save_tempoMap(MidiFileWriter& writer) const
 	if (!m_midiSequenceName.empty())
 		writer.setTrackName(UnicodeString::U32ToStr(m_midiSequenceName));
 
-	for (const auto& timeSig : m_timeSigs)
+	const SimpleFlatMap<TimeSig> timeSigs = [sigs = m_timeSigs]() mutable -> SimpleFlatMap<TimeSig>{
+		TimeSig currSig = { 4, 2, 24, 8 };
+		for (auto& timeSig : sigs)
+		{
+			if (timeSig->numerator == 0)
+				timeSig->numerator = currSig.numerator;
+			else
+				currSig.numerator = timeSig->numerator;
+
+			if (timeSig->denominator <= 6)
+				currSig.denominator = timeSig->denominator;
+			else
+				timeSig->denominator = currSig.denominator;
+
+			if (timeSig->metronome == 0)
+				timeSig->metronome = currSig.metronome;
+			else
+				currSig.metronome = timeSig->metronome;
+
+			if (timeSig->num32nds == 0)
+				timeSig->num32nds = currSig.num32nds;
+			else
+				currSig.num32nds = timeSig->num32nds;
+		}
+		return sigs;
+	}();
+
+	for (const auto& timeSig : timeSigs)
 		writer.addTimeSig(timeSig.key, *timeSig);
 
 	for (const auto& tempo : m_tempoMarkers)
