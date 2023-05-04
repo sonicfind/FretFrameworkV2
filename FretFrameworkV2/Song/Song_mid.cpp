@@ -9,7 +9,7 @@ void Song::load_mid(const std::filesystem::path& path)
 	m_tickrate = reader.getTickRate();
 	setSustainThreshold();
 
-	while (reader.startNextTrack())
+	while (reader.startTrack())
 	{
 		if (reader.getTrackNumber() == 1)
 		{

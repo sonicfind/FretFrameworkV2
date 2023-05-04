@@ -17,7 +17,7 @@ public:
 	MidiFileReader(const std::filesystem::path& path, unsigned char multiplierNote);
 	MidiFileReader(const LoadedFile& file);
 
-	[[nodiscard]] bool startNextTrack();
+	[[nodiscard]] bool startTrack();
 	[[nodiscard]] std::optional<MidiEvent> parseEvent();
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }

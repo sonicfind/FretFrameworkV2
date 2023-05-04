@@ -11,7 +11,7 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 
 	MidiFileReader reader(file);
 	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;
-	while (reader.startNextTrack())
+	while (reader.startTrack())
 	{
 		if (reader.getTrackNumber() > 1)
 		{

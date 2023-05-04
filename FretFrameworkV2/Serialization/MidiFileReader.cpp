@@ -47,7 +47,7 @@ MidiFileReader::MidiFileReader(const LoadedFile& file) : BinaryFileReader(file)
 	processHeaderChunk();
 }
 
-bool MidiFileReader::startNextTrack()
+bool MidiFileReader::startTrack()
 {
 	if (m_trackCount == m_header.numTracks)
 		return false;
