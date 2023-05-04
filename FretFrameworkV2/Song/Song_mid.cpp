@@ -124,6 +124,10 @@ void Song::save_mid(const std::filesystem::path& path) const
 	m_noteTracks.keys      .save(writer, "PART KEYS");
 	m_noteTracks.drums4_pro.save(writer, "PART DRUMS");
 	m_noteTracks.drums5    .save(writer, "PART DRUMS");
+	m_noteTracks.vocals    .save(writer, "PART VOCALS");
+	m_noteTracks.harmonies .save<0>(writer, "HARM1");
+	m_noteTracks.harmonies .save<1>(writer, "HARM2");
+	m_noteTracks.harmonies .save<2>(writer, "HARM3");
 }
 
 void Song::save_tempoMap(MidiFileWriter& writer) const

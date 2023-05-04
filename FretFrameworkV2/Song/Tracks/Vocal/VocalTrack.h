@@ -3,6 +3,7 @@
 #include "Notes/VocalNote.h"
 #include "Notes/VocalPercussion.h"
 #include "Serialization/MidiFileReader.h"
+#include "Serialization/MidiFileWriter.h"
 #include <assert.h>
 
 template <size_t numTracks>
@@ -61,6 +62,67 @@ public:
 			getVocal_midi<INDEX>(tracker.lyric.first).setLyric(tracker.lyric.second);
 	}
 
+	template <size_t INDEX = 0>
+	void save(MidiFileWriter& writer, std::string_view name) const
+	{
+		if (!isOccupied<INDEX>())
+			return;
+
+		writer.setTrackName(name);
+
+		if constexpr (INDEX == 0)
+		{
+			for (const auto& vec : m_events)
+				for (const auto& ev : *vec)
+					writer.addText(vec.key, UnicodeString::U32ToStr(ev));
+		}
+
+		if constexpr (INDEX < 2)
+		{
+			for (const auto& vec : m_specialPhrases)
+			{
+				for (const auto& phrase : *vec)
+				{
+					if constexpr (INDEX == 0)
+					{
+						switch (phrase.getType())
+						{
+						case SpecialPhraseType::StarPower:
+							writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+							break;
+						case SpecialPhraseType::LyricLine:
+							writer.addMidiNote(vec.key, 105, 100, phrase.getDuration());
+							break;
+						case SpecialPhraseType::RangeShift:
+							writer.addMidiNote(vec.key, 0, 100, phrase.getDuration());
+							break;
+						case SpecialPhraseType::LyricShift:
+							writer.addMidiNote(vec.key, 1, 100, phrase.getDuration());
+							break;
+						}
+					}
+					else if (phrase.getType() == SpecialPhraseType::HarmonyLine)
+						writer.addMidiNote(vec.key, 106, 100, phrase.getDuration());
+				}
+			}
+		}
+
+		for (const auto& note : m_vocals[INDEX])
+		{
+			writer.addText(note.key, UnicodeString::U32ToStr(note->getLyric()));
+			if (note->isPlayable())
+			{
+				const VocalPitch& pitch = note->getPitch();
+				writer.addMidiNote(note.key, pitch.getBinaryValue(), 100, note->getDuration());
+			}
+		}
+
+		if constexpr (INDEX == 0)
+			for (const auto& note : m_percussion)
+				writer.addMidiNote(note.key, note->isPlayable() ? 96 : 97, 100, 1);
+		writer.writeTrack();
+	}
+
 	[[nodiscard]] virtual bool hasNotes() const override
 	{
 		for (const auto& track : m_vocals)
@@ -73,6 +135,53 @@ public:
 	[[nodiscard]] virtual bool isOccupied() const override
 	{
 		return hasNotes() || !m_specialPhrases.isEmpty() || !m_events.isEmpty();
+	}
+
+	template <size_t INDEX>
+	[[nodiscard]] bool hasNotes() const
+	{
+		if constexpr (INDEX == 0)
+			return !m_vocals[INDEX].isEmpty() || !m_percussion.isEmpty();
+		else
+			return !m_vocals[INDEX].isEmpty();
+	}
+
+	template <size_t INDEX>
+	[[nodiscard]] bool isOccupied() const
+	{
+		static_assert(INDEX < numTracks);
+		if (hasNotes<INDEX>())
+			return true;
+
+		if constexpr (INDEX == 0)
+		{
+			if (!m_events.isEmpty())
+				return true;
+		}
+
+		if constexpr (INDEX < 2)
+		{
+			for (const auto& vec : m_specialPhrases)
+			{
+				for (const auto& phrase : *vec)
+				{
+					if constexpr (INDEX == 0)
+					{
+						switch (phrase.getType())
+						{
+						case SpecialPhraseType::StarPower:
+						case SpecialPhraseType::LyricLine:
+						case SpecialPhraseType::RangeShift:
+						case SpecialPhraseType::LyricShift:
+							return true;
+						}
+					}
+					else if (phrase.getType() == SpecialPhraseType::HarmonyLine)
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	virtual void shrink() override
