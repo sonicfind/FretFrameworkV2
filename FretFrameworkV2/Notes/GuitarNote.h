@@ -109,9 +109,9 @@ public:
 		return Note_withSpecial<NoteColor, numColors, NoteColor>::getMidiNotes();
 	}
 
-	uint32_t getLongestSustain() const
+	uint32_t getLongestSustain() const noexcept
 	{
-		if (m_special)
+		if (m_special.isActive())
 			return m_special.getSustain();
 		else
 		{
