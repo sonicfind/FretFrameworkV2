@@ -221,7 +221,7 @@ void Song::load_tempoMap(CommonChartParser& parser)
 			m_tempoMarkers.get_or_emplace_back(trackEvent.first) = parser.extractMicrosPerQuarter();
 			break;
 		case ChartEvent::TIME_SIG:
-			m_timeSigs.get_or_emplace_back(trackEvent.first).combine(parser.extractTimeSig());
+			m_timeSigs.get_or_emplace_back(trackEvent.first) = parser.extractTimeSig();
 			break;
 		}
 		parser.nextEvent();
