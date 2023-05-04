@@ -12,11 +12,7 @@ void Song::load_mid(const std::filesystem::path& path)
 	while (reader.startTrack())
 	{
 		if (reader.getTrackNumber() == 1)
-		{
-			if (reader.getEventType() == MidiEventType::Text_TrackName)
-				m_midiSequenceName = UnicodeString::strToU32(reader.extractTextOrSysEx());
 			load_tempoMap_midi(reader);
-		}
 		else if (reader.getEventType() == MidiEventType::Text_TrackName)
 		{
 			const std::string_view name = reader.extractTextOrSysEx();
@@ -65,6 +61,9 @@ void Song::load_mid(const std::filesystem::path& path)
 
 void Song::load_tempoMap_midi(MidiFileReader& reader)
 {
+	if (reader.getEventType() == MidiEventType::Text_TrackName)
+		m_midiSequenceName = UnicodeString::strToU32(reader.extractTextOrSysEx());
+
 	while (const auto midiEvent = reader.parseEvent())
 	{
 		switch (midiEvent->type)
