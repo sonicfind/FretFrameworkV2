@@ -117,15 +117,7 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note_withSpecial<NoteColor, numColors, NoteColor>::getMidiNotes();
-		for (auto& color : colors)
-		{
-			if constexpr (numColors == 5)
-				std::get<0>(color)--;
-			else if constexpr (numColors == 6)
-				std::get<0>(color) -= 2;
-		}
-		return colors;
+		return Note_withSpecial<NoteColor, numColors, NoteColor>::getMidiNotes();
 	}
 
 	uint32_t getLongestSustain() const
@@ -181,3 +173,9 @@ bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain);
 
 template<>
 bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain);
+
+template<>
+std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept;
+
+template<>
+std::vector<std::tuple<char, char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept;

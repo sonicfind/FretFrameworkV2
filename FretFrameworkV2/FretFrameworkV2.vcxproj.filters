@@ -178,7 +178,7 @@
     <ClCompile Include="Song\Song_ini.cpp">
       <Filter>Song</Filter>
     </ClCompile>
-    <ClCompile Include="Notes\GuitarNote_chartV1.cpp">
+    <ClCompile Include="Notes\GuitarNote.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
     <ClCompile Include="Serialization\MidiFileWriter.cpp">

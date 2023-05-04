@@ -46,3 +46,22 @@ bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain)
 		return false;
 	return true;
 }
+
+template<>
+std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept
+{
+	auto colors = Note_withSpecial<NoteColor, 5, NoteColor>::getMidiNotes();
+	for (auto& color : colors)
+		std::get<0>(color)--;
+	return colors;
+}
+
+template<>
+std::vector<std::tuple<char, char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept
+{
+	static constexpr char lanes[7] = { -2, 2, 3, 4, -1, 0, 1 };
+	auto colors = Note_withSpecial<NoteColor, 6, NoteColor>::getMidiNotes();
+	for (auto& color : colors)
+		std::get<0>(color) = lanes[std::get<0>(color)];
+	return colors;
+}

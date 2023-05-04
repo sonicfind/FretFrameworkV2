@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ini\Ini.cpp" />
-    <ClCompile Include="Notes\GuitarNote_chartV1.cpp" />
+    <ClCompile Include="Notes\GuitarNote.cpp" />
     <ClCompile Include="Notes\NoteColor.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
     <ClCompile Include="Serialization\BCHFileWriter.cpp" />
