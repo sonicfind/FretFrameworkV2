@@ -205,6 +205,8 @@ void InstrumentalTrack<GuitarNote<6>>::parseLaneColor(Midi_Tracker& tracker, Mid
 				note->setForcing(ForceStatus::HOPO_OFF);
 		}
 	}
+	else if (lane == 10)
+		tracker.difficulties[diff].sliderNotes = NoteOn;
 }
 
 template <>
