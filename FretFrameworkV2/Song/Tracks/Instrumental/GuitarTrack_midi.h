@@ -220,3 +220,9 @@ void InstrumentalTrack<GuitarNote<5>>::parseText(Midi_Tracker& tracker, std::str
 
 template <>
 void InstrumentalTrack<GuitarNote<5>>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+
+template <>
+void DifficultyTrack<GuitarNote<5>>::write_details(MidiFileWriter& writer, unsigned char diffIndex) const;
+
+template <>
+void DifficultyTrack<GuitarNote<6>>::write_details(MidiFileWriter& writer, unsigned char diffIndex) const;
