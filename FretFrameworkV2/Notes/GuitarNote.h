@@ -142,6 +142,37 @@ public:
 	[[nodiscard]] bool isTapped() const noexcept { return m_isTap; }
 	[[nodiscard]] ForceStatus getForcing() const noexcept { return m_forcing; }
 
+	bool hasSameFretting(const GuitarNote& note) const noexcept
+	{
+		if (m_special.isActive())
+			return note.m_special.isActive();
+
+		for (size_t i = 0; i < numColors; ++i)
+			if (m_colors[i].isActive() != note.m_colors[i].isActive())
+				return false;
+		return true;
+	}
+
+	bool isChorded() const noexcept
+	{
+		if (m_special.isActive())
+			return false;
+
+		size_t num = 0;
+		for (const auto& col : m_colors)
+			num += col.isActive();
+		return num > 1;
+	}
+
+	// Assumes current note is a single fret
+	bool isContainedIn(const GuitarNote& note) const noexcept
+	{
+		for (size_t i = 0; i < numColors; ++i)
+			if (m_colors[i].isActive())
+				return note.m_colors[i].isActive();
+		return false;
+	}
+
 	static bool TestIndex_V1(const size_t lane)
 	{
 		struct ValidArray

@@ -181,6 +181,7 @@
     <ClCompile Include="Song\Song_ini.cpp" />
     <ClCompile Include="Song\Song_mid.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\DrumTrack_midi.cpp" />
+    <ClCompile Include="Song\Tracks\Instrumental\GuitarForcing.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\GuitarTrack_midi.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Legacy_DrumTrack.cpp" />
     <ClCompile Include="Song\Tracks\SpecialPhrase.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
     <ClInclude Include="Song Library\LibraryCategory.h" />
     <ClInclude Include="Song Library\SongLibrary.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h" />
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
     <ClInclude Include="Song Library\Entry\LibraryEntry.h" />
     <ClInclude Include="Song Library\Entry\DrumScan_midi.h" />

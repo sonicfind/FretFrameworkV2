@@ -187,6 +187,9 @@
     <ClCompile Include="Notes\NoteColor.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
+    <ClCompile Include="Song\Tracks\Instrumental\GuitarForcing.cpp">
+      <Filter>Song\Tracks\InstrumentalTrack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -300,9 +303,6 @@
     <ClInclude Include="Song\MicrosPerQuarter.h">
       <Filter>TempoMap</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
-      <Filter>Song\Tracks\InstrumentalTrack</Filter>
-    </ClInclude>
     <ClInclude Include="Types\MD5.h">
       <Filter>MD5</Filter>
     </ClInclude>
@@ -365,6 +365,12 @@
     </ClInclude>
     <ClInclude Include="Serialization\MidiStructs.h">
       <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
+      <Filter>Song\Tracks\InstrumentalTrack</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h">
+      <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

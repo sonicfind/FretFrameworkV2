@@ -1,4 +1,5 @@
 #include "Song.h"
+#include "Tracks/Instrumental/GuitarForcing.h"
 #include "Tracks/Instrumental/Legacy_DrumTrack.h"
 
 void Song::traverse_cht_V1(ChtFileReader& reader)
