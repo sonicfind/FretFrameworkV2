@@ -13,11 +13,8 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;
 	while (reader.startTrack())
 	{
-		if (reader.getTrackNumber() > 1)
+		if (reader.getTrackNumber() > 1 && reader.getEventType() == MidiEventType::Text_TrackName)
 		{
-			if (reader.getEventType() != MidiEventType::Text_TrackName)
-				continue;
-
 			const std::string_view name = reader.extractTextOrSysEx();
 			if (name == "PART GUITAR" || name == "T1 GEMS")
 				m_scanTracks.lead_5.scan(reader);

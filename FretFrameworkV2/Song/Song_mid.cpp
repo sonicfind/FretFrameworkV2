@@ -17,11 +17,8 @@ void Song::load_mid(const std::filesystem::path& path)
 				m_midiSequenceName = UnicodeString::strToU32(reader.extractTextOrSysEx());
 			load_tempoMap_midi(reader);
 		}
-		else
+		else if (reader.getEventType() == MidiEventType::Text_TrackName)
 		{
-			if (reader.getEventType() != MidiEventType::Text_TrackName)
-				continue;
-
 			const std::string_view name = reader.extractTextOrSysEx();
 			if (name == "EVENTS")
 				load_events_midi(reader);
