@@ -241,7 +241,7 @@ namespace MidiDrums
 		{
 			if (node->isTapped())
 			{
-				if (tap.start != UINT32_MAX)
+				if (tap.start == UINT32_MAX)
 					tap.start = node.key;
 				tap.end = node.key + node->getLongestSustain();
 			}
