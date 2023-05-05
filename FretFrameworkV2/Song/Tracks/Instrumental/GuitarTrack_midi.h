@@ -297,14 +297,14 @@ namespace MidiDrums
 
 template <>
 template <unsigned char INDEX>
-void DifficultyTrack<GuitarNote<5>, false>::write_details(MidiFileWriter& writer) const
+void DifficultyTrack<GuitarNote<5>, false>::write_details(MidiFileWriter& writer, bool& doDetails) const
 {
 	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
 }
 
 template <>
 template <unsigned char INDEX>
-void DifficultyTrack<GuitarNote<6>, false>::write_details(MidiFileWriter& writer) const
+void DifficultyTrack<GuitarNote<6>, false>::write_details(MidiFileWriter& writer, bool& doDetails) const
 {
 	MidiDrums::WriteModifiers<INDEX>(writer, m_notes);
 }

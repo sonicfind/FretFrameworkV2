@@ -172,10 +172,11 @@ public:
 			}
 		}
 
-		m_difficulties[0].save_events_phrases<0>(writer, doPhrases_diff);
-		m_difficulties[1].save_events_phrases<1>(writer, doPhrases_diff);
-		m_difficulties[2].save_events_phrases<2>(writer, doPhrases_diff);
-		m_difficulties[3].save_events_phrases<3>(writer, doPhrases_diff);
+		bool doDetails = true;
+		m_difficulties[0].save_events_phrases<0>(writer, doPhrases_diff, doDetails);
+		m_difficulties[1].save_events_phrases<1>(writer, doPhrases_diff, doDetails);
+		m_difficulties[2].save_events_phrases<2>(writer, doPhrases_diff, doDetails);
+		m_difficulties[3].save_events_phrases<3>(writer, doPhrases_diff, doDetails);
 
 		m_difficulties[0].save_notes<0>(writer);
 		m_difficulties[1].save_notes<1>(writer);

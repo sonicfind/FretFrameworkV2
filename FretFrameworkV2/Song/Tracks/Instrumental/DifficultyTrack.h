@@ -125,7 +125,7 @@ private:
 	}
 
 	template <unsigned char INDEX>
-	void save_events_phrases(MidiFileWriter& writer, bool& doPhrases) const
+	void save_events_phrases(MidiFileWriter& writer, bool& doPhrases, bool& doDetails) const
 	{
 		static constexpr char OFFSET = 60 + 12 * INDEX;
 		if (doPhrases)
@@ -173,7 +173,7 @@ private:
 				}
 			}
 		}
-		write_details<INDEX>(writer);
+		write_details<INDEX>(writer, doDetails);
 	}
 
 	template <unsigned char INDEX>
@@ -186,7 +186,7 @@ private:
 	}
 
 	template <unsigned char INDEX>
-	void write_details(MidiFileWriter& writer) const {}
+	void write_details(MidiFileWriter& writer, bool& doDetails) const {}
 };
 
 template <typename T>
