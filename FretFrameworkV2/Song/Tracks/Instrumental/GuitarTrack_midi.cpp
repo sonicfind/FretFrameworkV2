@@ -87,9 +87,3 @@ void InstrumentalTrack<GuitarNote<5>, true>::parseText(Midi_Tracker& tracker, st
 	else
 		m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
 }
-
-template <>
-void InstrumentalTrack<GuitarNote<5>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const
-{
-	writer.addText(0, "[ENHANCED_OPENS]");
-}

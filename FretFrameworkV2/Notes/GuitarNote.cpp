@@ -50,10 +50,10 @@ bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain)
 template<>
 std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept
 {
-	auto colors = Note_withSpecial<NoteColor, 5, NoteColor>::getMidiNotes();
-	for (auto& color : colors)
-		std::get<0>(color)--;
-	return colors;
+	if (m_special.isActive())
+		return { {0, 100, m_special.getSustain()} };
+	else
+		return Note<NoteColor, 5>::getMidiNotes();
 }
 
 template<>

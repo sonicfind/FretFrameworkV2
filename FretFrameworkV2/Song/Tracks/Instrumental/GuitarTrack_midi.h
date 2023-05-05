@@ -219,9 +219,6 @@ void InstrumentalTrack<GuitarNote<6>, true>::parseSysEx(Midi_Tracker& tracker, s
 template <>
 void InstrumentalTrack<GuitarNote<5>, true>::parseText(Midi_Tracker& tracker, std::string_view str, uint32_t position);
 
-template <>
-void InstrumentalTrack<GuitarNote<5>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const;
-
 namespace MidiDrums
 {
 	struct ForceHold : public Midi_Details::Hold
@@ -233,10 +230,10 @@ namespace MidiDrums
 	void WriteModifiers(MidiFileWriter& writer, const SimpleFlatMap<GuitarNote<numFrets>>& notes)
 	{
 		static constexpr unsigned char FORCE_OFFSET = 65 + 12 * INDEX;
-		static constexpr unsigned char TAP_VALUE = 68 + 12 * INDEX;
 
 		Midi_Details::Hold tap;
 		ForceHold forcing;
+		Midi_Details::Hold open;
 		for (const auto& node : notes)
 		{
 			if (node->isTapped())
@@ -250,7 +247,7 @@ namespace MidiDrums
 				if (tap.end > node.key)
 					tap.end = node.key;
 
-				writer.addMidiNote(tap.start, TAP_VALUE, 100, tap.end - tap.start);
+				writer.addSysex(tap.start, INDEX, 4, tap.end - tap.start);
 				tap.start = UINT32_MAX;
 			}
 
@@ -280,13 +277,36 @@ namespace MidiDrums
 			}
 			else if (forcing.status != ForceStatus::UNFORCED)
 				forcing.end = node.key + node->getLongestSustain();
+
+			if constexpr (numFrets == 5)
+			{
+				const NoteColor& spec = node->getSpecial();
+				if (spec.isActive())
+				{
+					if (open.start == UINT32_MAX)
+						open.start = node.key;
+					open.end = node.key + spec.getSustain();
+				}
+				else if (open.start != UINT32_MAX)
+				{
+					if (open.end > node.key)
+						open.end = node.key;
+
+					writer.addSysex(open.start, INDEX, 1, open.end - open.start);
+					open.start = UINT32_MAX;
+				}
+			}
 		}
 
 		if (tap.start != UINT32_MAX)
-			writer.addMidiNote(tap.start, TAP_VALUE, 100, tap.end - tap.start);
+			writer.addSysex(tap.start, INDEX, 4, tap.end - tap.start);
 
 		if (forcing.status != ForceStatus::UNFORCED)
 			writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.end - forcing.start);
+
+		if constexpr (numFrets == 5)
+			if (open.start != UINT32_MAX)
+				writer.addSysex(open.start, INDEX, 1, open.end - open.start);
 	}
 }
 
