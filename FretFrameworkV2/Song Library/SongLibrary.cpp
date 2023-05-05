@@ -1,4 +1,5 @@
 #include "SongLibrary.h"
+#include "TaskQueue/TaskQueue.h"
 #include <iostream>
 const std::filesystem::path ININAME = U"song.ini";
 
@@ -17,9 +18,9 @@ void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories
 
 	if (auto reader = loadCachefile())
 	{
-		const auto validate = [&]() -> std::optional<LibraryEntry>
+		const auto validate = [&baseDirectories](BufferedBinaryReader& reader) -> std::optional<LibraryEntry>
 		{
-			const std::u32string directory = UnicodeString::strToU32(reader->extractString());
+			const std::u32string directory = UnicodeString::strToU32(reader.extractString());
 			const auto checkBase = [&baseDirectories, &directory]
 			{
 				for (const auto& base : baseDirectories)
@@ -31,15 +32,15 @@ void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories
 			if (!checkBase())
 				return {};
 
-			const std::filesystem::path filename = UnicodeString::strToU32(reader->extractString());
+			const std::filesystem::path filename = UnicodeString::strToU32(reader.extractString());
 			const std::filesystem::directory_entry chartFile(directory / filename);
 			const std::filesystem::directory_entry iniFile(directory / ININAME);
 
 			if (!chartFile.exists() || !iniFile.exists())
 				return {};
 
-			const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader->extract<std::filesystem::file_time_type::duration>();
-			const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader->extract<std::filesystem::file_time_type::duration>();
+			const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+			const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
 			if (chartFile.last_write_time() != chartWriteTime || iniFile.last_write_time() != iniWriteTime)
 				return {};
 
@@ -54,8 +55,9 @@ void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories
 	}
 
 	for (const auto& directory : baseDirectories)
-		scanDirectory(directory);
+		TaskQueue::getInstance().addTask([this, &directory] { scanDirectory(directory); });
 
+	TaskQueue::getInstance().waitForCompletedTasks();
 	finalize();
 	writeToCacheFile();
 }
@@ -64,13 +66,13 @@ bool SongLibrary::runPartialScan()
 {
 	if (auto reader = loadCachefile())
 	{
-		const auto validate = [&reader]()  -> std::optional<LibraryEntry>
+		static constexpr auto validate = [](BufferedBinaryReader& reader)  -> std::optional<LibraryEntry>
 		{
-			const std::filesystem::path directory = UnicodeString::strToU32(reader->extractString());
-			const std::filesystem::path filename = UnicodeString::strToU32(reader->extractString());
+			const std::filesystem::path directory = UnicodeString::strToU32(reader.extractString());
+			const std::filesystem::path filename = UnicodeString::strToU32(reader.extractString());
 
-			const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader->extract<std::filesystem::file_time_type::duration>();
-			const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader->extract<std::filesystem::file_time_type::duration>();
+			const std::filesystem::file_time_type chartWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
+			const std::filesystem::file_time_type iniWriteTime = (std::filesystem::file_time_type)reader.extract<std::filesystem::file_time_type::duration>();
 
 			for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
 				if (filename == CHARTTYPES[i].first)
@@ -189,8 +191,9 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 		}
 	}
 
-	for (const auto& subDirectory : directories)
-		scanDirectory(subDirectory);
+	for (auto& subDirectory : directories)
+		TaskQueue::getInstance().addTask([this, dir = std::move(subDirectory)] { scanDirectory(dir); });
+		
 }
 
 std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
@@ -198,10 +201,14 @@ std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
 	if (!std::filesystem::exists("songcache.bin"))
 		return {};
 
-	BufferedBinaryReader reader("songcache.bin");
-	if (s_CACHE_VERSION != reader.extract<uint32_t, false>())
-		return {};
-	return reader;
+	try
+	{
+		BufferedBinaryReader reader("songcache.bin");
+		if (s_CACHE_VERSION == reader.extract<uint32_t, false>())
+			return std::move(reader);
+	}
+	catch (...) {}
+	return {};
 }
 
 void SongLibrary::readStrings(BufferedBinaryReader& reader)
@@ -233,23 +240,27 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 	for (uint32_t i = 0; i < numNodes; ++i)
 	{
 		reader.setNextSectionBounds();
-		if (std::optional<LibraryEntry> entry = validationFunc())
-		{
-			const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
-			const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
-			const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
-			const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
-			const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
-			const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
-			const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
-			entry->mapStrings(name, artist, album, genre, year, charter, playlist);
-			entry->extractSongInfo(reader);
+		TaskQueue::getInstance().addTask([this, reader, validationFunc]() mutable {
+				if (std::optional<LibraryEntry> entry = validationFunc(reader))
+				{
+					const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
+					const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
+					const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
+					const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
+					const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
+					const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
+					const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
+					entry->mapStrings(name, artist, album, genre, year, charter, playlist);
+					entry->extractSongInfo(reader);
 
-			markScannedDirectory(entry->getDirectory());
-			addEntry(reader.extract<MD5>(), std::move(*entry));
-		}
+					markScannedDirectory(entry->getDirectory());
+					addEntry(reader.extract<MD5>(), std::move(*entry));
+				}
+			});
 		reader.gotoEndOfBuffer();
 	}
+
+	TaskQueue::getInstance().waitForCompletedTasks();
 }
 
 void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
