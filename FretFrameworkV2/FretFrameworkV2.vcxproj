@@ -229,6 +229,7 @@
     <ClInclude Include="Song Library\LibraryCategory.h" />
     <ClInclude Include="Song Library\SongLibrary.h" />
     <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h" />
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
     <ClInclude Include="Song Library\Entry\LibraryEntry.h" />
     <ClInclude Include="Song Library\Entry\DrumScan_midi.h" />

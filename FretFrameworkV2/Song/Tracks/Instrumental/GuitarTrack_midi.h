@@ -1,6 +1,7 @@
 #pragma once
 #include "InstrumentalTrack.h"
 #include "Notes/GuitarNote.h"
+#include "Midi_Hold.h"
 
 template <>
 struct InstrumentalTrack<GuitarNote<5>, true>::Midi_Tracker_Diff
@@ -223,13 +224,7 @@ void InstrumentalTrack<GuitarNote<5>, true>::writeMidiToggleEvent(MidiFileWriter
 
 namespace MidiDrums
 {
-	struct Hold
-	{
-		uint32_t start = UINT32_MAX;
-		uint32_t end = UINT32_MAX;
-	};
-
-	struct ForceHold : public Hold
+	struct ForceHold : public Midi_Details::Hold
 	{
 		ForceStatus status = ForceStatus::UNFORCED;
 	};
@@ -240,7 +235,7 @@ namespace MidiDrums
 		static constexpr unsigned char FORCE_OFFSET = 65 + 12 * INDEX;
 		static constexpr unsigned char TAP_VALUE = 68 + 12 * INDEX;
 
-		Hold tap;
+		Midi_Details::Hold tap;
 		ForceHold forcing;
 		for (const auto& node : notes)
 		{
