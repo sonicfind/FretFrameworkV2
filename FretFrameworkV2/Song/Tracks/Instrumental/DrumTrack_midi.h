@@ -1,6 +1,7 @@
 #pragma once
 #include "InstrumentalTrack.h"
 #include "Notes/DrumNote.h"
+#include "Midi_Hold.h"
 
 template <>
 struct InstrumentalTrack<DrumNote<4, true>, true>::Midi_Tracker_Diff
@@ -190,3 +191,78 @@ void InstrumentalTrack<DrumNote<4, true>, true>::writeMidiToggleEvent(MidiFileWr
 
 template <>
 void InstrumentalTrack<DrumNote<5, false>, true>::writeMidiToggleEvent(MidiFileWriter& writer) const;
+
+template <>
+template <unsigned char INDEX>
+void DifficultyTrack<DrumNote<4, true>, false>::write_details(MidiFileWriter& writer, bool& doDetails) const
+{
+	if (!doDetails || m_notes.isEmpty())
+		return;
+
+	Midi_Details::Hold flam;
+	Midi_Details::Hold toms[3];
+	for (const auto& node : m_notes)
+	{
+		if (node->isFlammed())
+		{
+			if (flam.start == UINT32_MAX)
+				flam.start = node.key;
+			flam.end = node.key + node->getLongestSustain();
+		}
+		else if (flam.start != UINT32_MAX)
+		{
+			if (flam.end > node.key)
+				flam.end = node.key;
+
+			writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
+			flam.start = UINT32_MAX;
+		}
+
+		for (char i = 0; i < 3; ++i)
+		{
+			if (auto& pad = node->get(i + 2); !pad.isCymbal())
+			{
+				if (toms[i].start == UINT32_MAX)
+					toms[i].start = node.key;
+				toms[i].end = node.key + pad.getSustain();
+			}
+			else if (toms[i].start != UINT32_MAX)
+			{
+				if (toms[i].end > node.key)
+					toms[i].end = node.key;
+
+				writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].end - toms[i].start);
+				toms[i].start = UINT32_MAX;
+			}
+		}
+	}
+	doDetails = false;
+}
+
+template <>
+template <unsigned char INDEX>
+void DifficultyTrack<DrumNote<5, false>, false>::write_details(MidiFileWriter& writer, bool& doDetails) const
+{
+	if (!doDetails || m_notes.isEmpty())
+		return;
+
+	Midi_Details::Hold flam;
+	for (const auto& node : m_notes)
+	{
+		if (node->isFlammed())
+		{
+			if (flam.start == UINT32_MAX)
+				flam.start = node.key;
+			flam.end = node.key + node->getLongestSustain();
+		}
+		else if (flam.start != UINT32_MAX)
+		{
+			if (flam.end > node.key)
+				flam.end = node.key;
+
+			writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
+			flam.start = UINT32_MAX;
+		}
+	}
+	doDetails = false;
+}
