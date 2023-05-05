@@ -15,7 +15,17 @@ public:
 			m_special.set(sustain);
 			return true;
 		}
-		return Note<NoteType, numColors>::set(lane, sustain);
+		return Note<NoteType, numColors>::set(lane - 1, sustain);
+	}
+
+	NoteType& get(const size_t lane) noexcept
+	{
+		return Note<NoteType, numColors>::get(lane - 1);
+	}
+
+	const NoteType& get(const size_t lane) const noexcept
+	{
+		return Note<NoteType, numColors>::get(lane - 1);
 	}
 
 	SpecialType& getSpecial() noexcept
@@ -31,6 +41,9 @@ public:
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors = Note<NoteType, numColors>::getActiveColors();
+		for (auto& col : activeColors)
+			col.first++;
+
 		if (m_special.isActive())
 			activeColors.insert(activeColors.begin(), { 0, m_special.getSustain() });
 		return activeColors;
@@ -45,6 +58,8 @@ public:
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
 		auto colors = Note<NoteType, numColors>::getMidiNotes();
+		for (auto& col : colors)
+			std::get<0>(col)++;
 		if (m_special.isActive())
 			colors.insert(colors.begin(), { 0, 100, m_special.getSustain() });
 		return colors;

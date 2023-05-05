@@ -59,14 +59,6 @@ public:
 		return false;
 	}
 
-	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
-	{
-		if (m_special.isActive())
-			return { { 0, m_special.getSustain() } };
-		else
-			return Note<NoteColor, numColors>::getActiveColors();
-	}
-
 	std::vector<std::pair<char, size_t>> getActiveModifiers() const
 	{
 		std::vector<std::pair<char, size_t>> modifiers;

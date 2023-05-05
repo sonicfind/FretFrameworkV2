@@ -15,23 +15,23 @@ enum class DrumDynamics
 	Ghost
 };
 
+template <bool PRO_DRUMS>
 class DrumPad : public NoteColor
 {
+protected:
 	DrumDynamics dynamics = DrumDynamics::None;
-	bool m_isCymbal = false;
 
 public:
-	template <bool PRO_DRUMS>
+	void disable()
+	{
+		NoteColor::disable();
+		dynamics = DrumDynamics::None;
+	}
+
 	bool modify(char modifier)
 	{
 		switch (modifier)
 		{
-		case 'C':
-			if constexpr (!PRO_DRUMS)
-				return false;
-
-			toggleCymbal();
-			return true;
 		case 'A':
 			dynamics = DrumDynamics::Accent;
 			return true;
@@ -42,10 +42,6 @@ public:
 			return false;
 		}
 	}
-
-	bool isCymbal() const noexcept { return m_isCymbal; }
-	void toggleCymbal() { m_isCymbal = !m_isCymbal; }
-	void setCymbal(bool enable) { m_isCymbal = enable; }
 
 	DrumDynamics getDynamics() const noexcept { return dynamics; }
 	void wheelDynamics()
@@ -58,12 +54,62 @@ public:
 			dynamics = DrumDynamics::None;
 	}
 	void setDynamics(DrumDynamics dyn) { dynamics = dyn; }
+
+	std::vector<char> getActiveModifiers() const noexcept
+	{
+		switch (dynamics)
+		{
+		case DrumDynamics::Accent:
+			return { 'A' };
+		case DrumDynamics::Ghost:
+			return { 'G' };
+		};
+		return {};
+	}
+};
+
+template<>
+class DrumPad<true> : public DrumPad<false>
+{
+	bool m_isCymbal = false;
+public:
+	void disable()
+	{
+		DrumPad<false>::disable();
+		m_isCymbal = false;
+	}
+
+	bool modify(char modifier)
+	{
+		if (modifier == 'C')
+		{
+			m_isCymbal = true;
+			return true;
+		}
+		return DrumPad<false>::modify(modifier);
+	}
+
+	bool isCymbal() const noexcept { return m_isCymbal; }
+	void toggleCymbal() { m_isCymbal = !m_isCymbal; }
+	void setCymbal(bool enable) { m_isCymbal = enable; }
+
+	std::vector<char> getActiveModifiers() const noexcept
+	{
+		auto modifiers = DrumPad<false>::getActiveModifiers();
+		if (m_isCymbal)
+			modifiers.push_back('C');
+		return modifiers;
+	}
 };
 
 
 template <size_t numPads, bool PRO_DRUMS>
-class DrumNote : public Note_withSpecial<DrumPad, numPads, NoteColor>
+class DrumNote : public Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>
 {
+protected:
+	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_colors;
+	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_special;
+
 	bool m_isDoubleBass = false;
 	bool m_isFlammed = false;
 
@@ -71,9 +117,9 @@ public:
 	bool set_V1(const size_t lane, uint32_t sustain)
 	{
 		if (lane == 0)
-			this->m_special.set(sustain);
+			m_special.set(sustain);
 		else if (lane <= numPads && lane < 32)
-			this->m_colors[lane - 1].set(sustain);
+			m_colors[lane - 1].set(sustain);
 		else if (lane == 32)
 			toggleDoubleBass();
 		else if constexpr (PRO_DRUMS)
@@ -81,7 +127,7 @@ public:
 			if (lane < 66 || lane > 68)
 				return false;
 
-			this->m_colors[lane - 65].toggleCymbal();
+			m_colors[lane - 65].toggleCymbal();
 		}
 		else
 			return false;
@@ -100,7 +146,7 @@ public:
 			return true;
 		default:
 			if (0 < lane && lane <= numPads)
-				return this->m_colors[lane - 1].modify<PRO_DRUMS>(modifier);
+				return m_colors[lane - 1].modify(modifier);
 			return false;
 		}
 	}
@@ -115,21 +161,8 @@ public:
 			modifiers.push_back({ 'F', SIZE_MAX });
 
 		for (size_t i = 0; i < numPads; ++i)
-		{
-			if constexpr (PRO_DRUMS)
-				if (this->m_colors[i].isCymbal())
-					modifiers.push_back({ 'C', i + 1 });
-
-			switch (this->m_colors[i].getDynamics())
-			{
-			case DrumDynamics::Accent:
-				modifiers.push_back({ 'A', i + 1 });
-				break;
-			case DrumDynamics::Ghost:
-				modifiers.push_back({ 'G', i + 1 });
-				break;
-			};
-		}
+			for (const char mod : m_colors[i].getActiveModifiers())
+				modifiers.push_back({ mod, i + 1 });
 		return modifiers;
 	}
 
@@ -142,31 +175,32 @@ public:
 		if (m_isFlammed)
 			modifiers.push_back('F');
 
-		if constexpr (PRO_DRUMS)
-			if (this->m_colors[index].isCymbal())
-				modifiers.push_back('C');
-
-		switch (this->m_colors[index].getDynamics())
-		{
-		case DrumDynamics::Accent:
-			modifiers.push_back('A');
-			break;
-		case DrumDynamics::Ghost:
-			modifiers.push_back('G');
-			break;
-		};
+		for (const char mod : m_colors[index].getActiveModifiers())
+			modifiers.push_back(mod);
 		return modifiers;
 	}
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note_withSpecial<DrumPad, numPads, NoteColor>::getMidiNotes();
+		auto colors = Note<DrumPad<PRO_DRUMS>, numPads>::getMidiNotes();
+		if (m_special.isActive() && !m_isDoubleBass)
+			colors.insert(colors.begin(), { 0, 100, m_special.getSustain() });
+
 		for (std::tuple<char, char, uint32_t>& col : colors)
 		{
-			if (isAccented(std::get<0>(col)))
-				std::get<1>(col) = 101;
-			else if (isGhosted(std::get<0>(col)))
-				std::get<1>(col) = 1;
+			size_t index = std::get<0>(col);
+			if (index != 0)
+			{
+				switch (this->get(index).getDynamics())
+				{
+				case DrumDynamics::Accent:
+					std::get<1>(col) = 101;
+					break;
+				case DrumDynamics::Ghost:
+					std::get<1>(col) = 1;
+					break;
+				}
+			}
 		}
 		return colors;
 	}
@@ -194,21 +228,6 @@ public:
 	[[nodiscard]] bool isDoubleBass() const noexcept { return m_isDoubleBass; }
 	[[nodiscard]] bool isFlammed() const noexcept { return m_isFlammed; }
 
-public:
-	[[nodiscard]] bool isAccented(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDynamics() == DrumDynamics::Accent; }
-	[[nodiscard]] bool isGhosted(size_t lane) const noexcept { return lane > 0 && this->m_colors[lane - 1].getDynamics() == DrumDynamics::Ghost; }
-	void setDynamics(size_t lane, DrumDynamics dyn) { if (lane > 0) this->m_colors[lane - 1].setDynamics(dyn); }
-
-	template <typename = std::enable_if<PRO_DRUMS>>
-	[[nodiscard]] bool isCymbal(size_t lane) const noexcept { return lane > 1 && this->m_colors[lane - 1].isCymbal(); }
-
-	template <typename = std::enable_if<PRO_DRUMS>>
-	void toggleCymbal(size_t lane) { if (lane > 1) this->m_colors[lane - 1].toggleCymbal(); }
-
-	template <typename = std::enable_if<PRO_DRUMS>>
-	void setCymbal(size_t lane, bool enable) { if (lane > 1) this->m_colors[lane - 1].setCymbal(enable); }
-
-public:
 	static bool TestIndex_V1(const size_t lane)
 	{
 		return lane <= numPads;

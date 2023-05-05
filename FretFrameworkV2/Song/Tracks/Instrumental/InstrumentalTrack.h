@@ -225,7 +225,7 @@ private:
 				uint32_t colorPosition = tracker.difficulties[diff].notes[lane];
 				if (colorPosition != UINT32_MAX)
 				{
-					m_difficulties[diff].m_notes.getNodeFromBack(colorPosition).set(lane + 1, position - colorPosition);
+					m_difficulties[diff].m_notes.getNodeFromBack(colorPosition).set(lane, position - colorPosition);
 					tracker.difficulties[diff].notes[lane] = UINT32_MAX;
 				}
 			}
@@ -255,7 +255,7 @@ private:
 			uint32_t colorPosition = tracker.notes_BRE[lane];
 			if (colorPosition != UINT32_MAX)
 			{
-				m_difficulties[4].m_notes[colorPosition].set(lane + 1, position - colorPosition);
+				m_difficulties[4].m_notes[colorPosition].set(lane, position - colorPosition);
 				tracker.notes_BRE[lane] = UINT32_MAX;
 			}
 		}

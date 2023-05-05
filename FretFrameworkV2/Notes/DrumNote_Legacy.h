@@ -17,10 +17,11 @@ public:
 		for (size_t i = 0; i < numPads; ++i)
 			if (m_colors[i].isActive())
 			{
-				note.set(i + 1, m_colors[i].getSustain());
-				note.setDynamics(i + 1, m_colors[i].getDynamics());
+				auto& col = note.get(i + 1);
+				col.set(m_colors[i].getSustain());
+				col.setDynamics(m_colors[i].getDynamics());
 				if constexpr (PRO_DRUMS)
-					note.setCymbal(i + 1, m_colors[i].isCymbal());
+					col.setCymbal(m_colors[i].isCymbal());
 			}
 
 		note.setDoubleBass(isDoubleBass());
@@ -32,7 +33,7 @@ public:
 	{
 		if (m_colors[4].isActive())
 			return DrumType_Enum::FIVELANE;
-		else if (isCymbal(2) || isCymbal(3) || isCymbal(4))
+		else if (m_colors[1].isCymbal() || m_colors[2].isCymbal() || m_colors[3].isCymbal())
 			return DrumType_Enum::FOURLANE_PRO;
 		else
 			return DrumType_Enum::LEGACY;

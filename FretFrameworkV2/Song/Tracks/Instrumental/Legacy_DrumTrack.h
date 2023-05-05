@@ -73,14 +73,14 @@ void InstrumentalTrack<DrumNote_Legacy, false>::parseLaneColor(Midi_Tracker& tra
 				drums.setFlam(true);
 
 			if (2 <= lane && lane < 5)
-				drums.setCymbal(lane, !tracker.ext.toms[lane - 2]);
+				drums.get(lane).setCymbal(!tracker.ext.toms[lane - 2]);
 
 			if (tracker.ext.enableDynamics)
 			{
 				if (note.velocity > 100)
-					drums.setDynamics(lane, DrumDynamics::Accent);
+					drums.get(lane).setDynamics(DrumDynamics::Accent);
 				else if (note.velocity < 100)
-					drums.setDynamics(lane, DrumDynamics::Ghost);
+					drums.get(lane).setDynamics(DrumDynamics::Ghost);
 			}
 
 			tracker.difficulties[diff].notes[lane] = position;

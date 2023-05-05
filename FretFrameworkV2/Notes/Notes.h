@@ -13,24 +13,20 @@ public:
 
 	bool set(const size_t lane, uint32_t sustain)
 	{
-		if (lane == 0 || lane > numColors)
+		if (lane > numColors)
 			return false;
 
-		m_colors[lane - 1].set(sustain);
+		m_colors[lane].set(sustain);
 		return true;
 	}
 
-	NoteType& getColor(const size_t lane)
+	NoteType& get(const size_t lane)
 	{
-		if (lane >= numColors)
-			throw std::runtime_error("Invalid index");
 		return m_colors[lane];
 	}
 
-	const NoteType& getColor(const size_t lane) const
+	const NoteType& get(const size_t lane) const
 	{
-		if (lane >= numColors)
-			throw std::runtime_error("Invalid index");
 		return m_colors[lane];
 	}
 
@@ -39,7 +35,7 @@ public:
 		std::vector<std::pair<size_t, uint32_t>> activeColors;
 		for (size_t i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
-				activeColors.push_back({ i + 1, m_colors[i].getSustain() });
+				activeColors.push_back({ i, m_colors[i].getSustain() });
 		return activeColors;
 	}
 
@@ -64,10 +60,10 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto base = getActiveColors();
 		std::vector<std::tuple<char, char, uint32_t>>  colors;
-		for (const auto& col : base)
-			colors.push_back({ char(col.first), 100, col.second });
+		for (char i = 0; i < numColors; ++i)
+			if (m_colors[i].isActive())
+				colors.push_back({ i, 100, m_colors[i].getSustain() });
 		return colors;
 	}
 
@@ -97,6 +93,6 @@ public:
 
 	static bool TestIndex(size_t lane)
 	{
-		return lane != 0 && lane <= numColors;
+		return lane < numColors;
 	}
 };
