@@ -1,5 +1,6 @@
 #include "Song/Song.h"
 #include "Song Library/SongLibrary.h"
+#include "TaskQueue/TaskQueue.h"
 #include <iostream>
 
 std::string parseInput();
@@ -14,6 +15,7 @@ long long g_count;
 
 int main()
 {
+	TaskQueue::getInstance();
 	SongLibrary library;
 	
 	startClock();
