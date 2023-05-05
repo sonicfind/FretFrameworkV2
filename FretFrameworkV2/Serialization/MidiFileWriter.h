@@ -8,7 +8,7 @@ class MidiFileWriter : private BinaryFileWriter<true>
 {
 	struct Sysex
 	{
-		static char BUFFER[10];
+		static char BUFFER[8];
 
 		unsigned char diff;
 		unsigned char type;

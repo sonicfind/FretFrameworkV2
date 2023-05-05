@@ -31,10 +31,32 @@ void MidiFileWriter::addMidiNote(uint32_t position, unsigned char value, unsigne
 
 void MidiFileWriter::addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length)
 {
-	m_nodes[position].sysexOns.push_back({ diff, type, 1 });
+	const auto downSize = [type](std::vector<Sysex>& sysexs, bool isON)
+	{
+		bool test[4]{};
+		for (const Sysex& syx : sysexs)
+			if (syx.type == type)
+				test[syx.diff] = true;
+
+		if (test[0] && test[1] && test[2] && test[3])
+		{
+			for (auto iter = sysexs.begin(); iter < sysexs.end();)
+			{
+				if (iter->type == type)
+					iter = sysexs.erase(iter);
+				else
+					++iter;
+			}
+			sysexs.push_back({ 0xFF, type, isON });
+		}
+	};
+	auto& sysexOns = m_nodes[position].sysexOns;
+	sysexOns.push_back({ diff, type, 1 });
+	downSize(sysexOns, true);
 
 	auto& sysexOffs = m_nodes[position + length].sysexOffs;
 	sysexOffs.insert(sysexOffs.begin(), { diff, type, 0 });
+	downSize(sysexOffs, false);
 }
 
 void MidiFileWriter::addText(uint32_t position, std::string&& str, MidiEventType type)
@@ -60,7 +82,7 @@ void MidiFileWriter::addTimeSig(uint32_t position, TimeSig sig)
 	m_nodes[position].events.push_back({ MidiEventType::Time_Sig, { BUFFER, 4 } });
 }
 
-char MidiFileWriter::Sysex::BUFFER[10] = { (char)0xF0, 8, 'P', 'S', 0, 0, 0, 0, 0, (char)0xF7 };
+char MidiFileWriter::Sysex::BUFFER[8] = { 'P', 'S', 0, 0, 0, 0, 0, (char)0xF7 };
 void MidiFileWriter::writeTrack()
 {
 	writeTag("MTrk");
@@ -95,7 +117,7 @@ void MidiFileWriter::writeTrack()
 		{
 			writeVLQ(delta);
 			sysex.set();
-			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 10 });
+			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 8 });
 
 			delta = 0;
 			currEvent = MidiEventType::SysEx;
@@ -114,7 +136,7 @@ void MidiFileWriter::writeTrack()
 		{
 			writeVLQ(delta);
 			sysex.set();
-			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 10 });
+			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 8 });
 
 			delta = 0;
 			currEvent = MidiEventType::SysEx;
@@ -185,7 +207,7 @@ void MidiFileWriter::writeString(MidiEventType type, std::string_view str)
 
 void MidiFileWriter::Sysex::set() const
 {
-	Sysex::BUFFER[6] = (char)diff;
-	Sysex::BUFFER[7] = (char)type;
-	Sysex::BUFFER[8] = (char)status;
+	Sysex::BUFFER[4] = (char)diff;
+	Sysex::BUFFER[5] = (char)type;
+	Sysex::BUFFER[6] = (char)status;
 }
