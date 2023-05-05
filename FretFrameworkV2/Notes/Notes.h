@@ -39,6 +39,15 @@ public:
 		return {};
 	}
 
+	uint32_t getLongestSustain() const noexcept
+	{
+		uint32_t sustain = 0;
+		for (const auto& color : m_colors)
+			if (color.isActive() && color.getSustain() > sustain)
+				sustain = color.getSustain();
+		return sustain;
+	}
+
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
 		auto base = getActiveColors();

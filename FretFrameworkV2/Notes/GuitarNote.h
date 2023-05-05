@@ -113,13 +113,7 @@ public:
 		if (m_special.isActive())
 			return m_special.getSustain();
 		else
-		{
-			uint32_t sustain = 0;
-			for (const auto& color : m_colors)
-				if (color.isActive() && color.getSustain() > sustain)
-					sustain = color.getSustain();
-			return sustain;
-		}
+			return Note<NoteColor, numColors>::getLongestSustain();
 	}
 
 	void toggleTap()
