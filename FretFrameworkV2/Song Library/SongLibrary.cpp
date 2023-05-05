@@ -134,10 +134,9 @@ size_t SongLibrary::getNumSongs() const noexcept
 
 void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 {
-	if (m_preScannedDirectories.contains(directory))
+	if (findOrMarkDirectory(directory))
 		return;
 
-	markScannedDirectory(directory);
 	std::optional<std::filesystem::directory_entry> charts[5]{};
 	std::optional<std::filesystem::directory_entry> ini;
 	std::vector<std::filesystem::path> directories;
@@ -262,6 +261,15 @@ void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
 void SongLibrary::markScannedDirectory(const std::filesystem::path& directory)
 {
 	m_preScannedDirectories.insert(directory);
+}
+
+bool SongLibrary::findOrMarkDirectory(const std::filesystem::path& directory)
+{
+	if (m_preScannedDirectories.contains(directory))
+		return true;
+
+	m_preScannedDirectories.insert(directory);
+	return false;
 }
 
 void SongLibrary::writeToCacheFile() const

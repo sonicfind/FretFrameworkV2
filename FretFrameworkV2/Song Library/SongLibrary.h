@@ -24,6 +24,7 @@ private:
 	void scanDirectory(const std::filesystem::path& directory);
 	void addEntry(MD5 hash, LibraryEntry&& entry);
 	void markScannedDirectory(const std::filesystem::path& directory);
+	bool findOrMarkDirectory(const std::filesystem::path& directory);
 
 private:
 	SimpleFlatMap<std::vector<LibraryEntry>, MD5> m_songlist;
