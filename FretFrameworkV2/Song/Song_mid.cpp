@@ -57,6 +57,9 @@ void Song::load_mid(const std::filesystem::path& path)
 				m_noteTracks.harmonies.load<2>(reader);
 		}
 	}
+
+	if (m_noteTracks.drums4_pro.isOccupied() && !getModifier("pro_drums"))
+		m_modifiers.push_back({ "pro_drums", false });
 }
 
 void Song::load_tempoMap_midi(MidiFileReader& reader)
