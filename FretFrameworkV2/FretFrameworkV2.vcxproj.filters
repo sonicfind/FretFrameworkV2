@@ -372,6 +372,9 @@
     <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h">
+      <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">
