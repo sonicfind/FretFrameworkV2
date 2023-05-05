@@ -158,7 +158,7 @@ void Song::save_tempoMap(MidiFileWriter& writer) const
 			else
 				currSig.num32nds = timeSig->num32nds;
 		}
-		return sigs;
+		return std::move(sigs);
 	}();
 
 	for (const auto& timeSig : timeSigs)
