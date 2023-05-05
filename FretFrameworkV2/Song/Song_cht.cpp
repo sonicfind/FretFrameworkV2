@@ -14,6 +14,9 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 		traverse(reader);
 	else
 		traverse_cht_V1(reader);
+
+	if (m_noteTracks.drums4_pro.isOccupied() && !getModifier("pro_drums"))
+		m_modifiers.push_back({ "pro_drums", true });
 }
 
 void Song::save_cht(const std::filesystem::path& path) const
