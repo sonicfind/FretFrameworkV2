@@ -122,6 +122,10 @@ public:
 			m_colors[lane - 1].set(sustain);
 		else if (lane == 32)
 			toggleDoubleBass();
+		else if (34 <= lane && lane < 34 + numPads)
+			m_colors[lane - 34].setDynamics(DrumDynamics::Accent);
+		else if (40 <= lane && lane < 40 + numPads)
+			m_colors[lane - 40].setDynamics(DrumDynamics::Accent);
 		else if constexpr (PRO_DRUMS)
 		{
 			if (lane < 66 || lane > 68)
