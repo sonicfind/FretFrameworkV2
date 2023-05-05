@@ -185,6 +185,7 @@
     <ClCompile Include="Song\Tracks\Instrumental\GuitarTrack_midi.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Legacy_DrumTrack.cpp" />
     <ClCompile Include="Song\Tracks\SpecialPhrase.cpp" />
+    <ClCompile Include="TaskQueue\TaskQueue.cpp" />
     <ClCompile Include="Types\MD5.cpp" />
     <ClCompile Include="Types\UnicodeString.cpp" />
     <ClCompile Include="Types\utf_utils.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Song\Tracks\Instrumental\Legacy_DrumTrack.h" />
     <ClInclude Include="Song\Tracks\SpecialPhrase.h" />
     <ClInclude Include="Song\Tracks\Track.h" />
+    <ClInclude Include="TaskQueue\TaskQueue.h" />
     <ClInclude Include="Types\MD5.h" />
     <ClInclude Include="Types\UnicodeString.h" />
     <ClInclude Include="Types\utf_utils.h" />

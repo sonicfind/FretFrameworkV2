@@ -61,6 +61,9 @@
     <Filter Include="PtrWrapper">
       <UniqueIdentifier>{0f91efa1-e2d3-40c7-b9a0-0768d261bf96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TaskQueue">
+      <UniqueIdentifier>{61f77ab5-7f6e-4ddd-81c5-372a7dcea9ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -189,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="Song\Tracks\Instrumental\GuitarForcing.cpp">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskQueue\TaskQueue.cpp">
+      <Filter>TaskQueue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +380,9 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h">
       <Filter>Song\Tracks\InstrumentalTrack\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskQueue\TaskQueue.h">
+      <Filter>TaskQueue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
