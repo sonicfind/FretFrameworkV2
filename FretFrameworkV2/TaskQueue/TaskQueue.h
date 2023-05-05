@@ -30,7 +30,6 @@ public:
 	void waitForCompletedTasks();
 
 private:
-	static TaskQueue s_queue;
 	TaskQueue();
 	~TaskQueue();
 };
