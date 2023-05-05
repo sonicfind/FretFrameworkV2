@@ -18,6 +18,16 @@ public:
 		return Note<NoteType, numColors>::set(lane, sustain);
 	}
 
+	SpecialType& getSpecial() noexcept
+	{
+		return m_special;
+	}
+
+	const SpecialType& getSpecial() const noexcept
+	{
+		return m_special;
+	}
+
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors = Note<NoteType, numColors>::getActiveColors();

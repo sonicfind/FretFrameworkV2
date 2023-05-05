@@ -20,6 +20,20 @@ public:
 		return true;
 	}
 
+	NoteType& getColor(const size_t lane)
+	{
+		if (lane >= numColors)
+			throw std::runtime_error("Invalid index");
+		return m_colors[lane];
+	}
+
+	const NoteType& getColor(const size_t lane) const
+	{
+		if (lane >= numColors)
+			throw std::runtime_error("Invalid index");
+		return m_colors[lane];
+	}
+
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors;
