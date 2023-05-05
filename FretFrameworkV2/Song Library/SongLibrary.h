@@ -2,6 +2,7 @@
 #include "SimpleFlatMap/SimpleFlatMap.h"
 #include <unordered_set>
 #include "LibraryCategory.h"
+#include <mutex>
 
 class SongLibrary
 {
@@ -53,5 +54,7 @@ private:
 	} m_categories;
 
 	std::unordered_set<std::filesystem::path> m_preScannedDirectories;
+	std::mutex m_directoryMutex;
+	std::mutex m_entryMutex;
 };
 

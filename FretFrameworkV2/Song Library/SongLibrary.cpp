@@ -248,23 +248,25 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 			markScannedDirectory(entry->getDirectory());
 			addEntry(reader.extract<MD5>(), std::move(*entry));
 		}
-		else
-			reader.gotoEndOfBuffer();
+		reader.gotoEndOfBuffer();
 	}
 }
 
 void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
 {
+	std::scoped_lock lock(m_entryMutex);
 	m_songlist[hash].push_back(std::move(entry));
 }
 
 void SongLibrary::markScannedDirectory(const std::filesystem::path& directory)
 {
+	std::scoped_lock lock(m_directoryMutex);
 	m_preScannedDirectories.insert(directory);
 }
 
 bool SongLibrary::findOrMarkDirectory(const std::filesystem::path& directory)
 {
+	std::scoped_lock lock(m_directoryMutex);
 	if (m_preScannedDirectories.contains(directory))
 		return true;
 
