@@ -3,6 +3,7 @@
 #include "SimpleFlatMap/SimpleFlatMap.h"
 #include "Serialization/BufferedBinaryWriter.h"
 #include <unordered_map>
+#include <mutex>
 
 struct CacheIndices
 {
@@ -120,3 +121,18 @@ public:
 		m_elements.clear();
 	}
 };
+
+template <SongAttribute Attribute, class Element = CategoryNode<Attribute>>
+class Threaded_Category : public LibraryCategory<Attribute, Element>
+{
+	std::mutex m_mutex;
+
+public:
+	void add(PointerWrapper<LibraryEntry> song)
+	{
+		std::scoped_lock lck(m_mutex);
+		LibraryCategory<Attribute, Element>::add(song);
+	}
+};
+
+

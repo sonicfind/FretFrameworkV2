@@ -43,14 +43,14 @@ private:
 
 	struct
 	{
-		LibraryCategory<SongAttribute::TITLE>    title;
-		LibraryCategory<SongAttribute::ARTIST>   artist;
-		LibraryCategory<SongAttribute::ALBUM>    album;
-		LibraryCategory<SongAttribute::GENRE>    genre;
-		LibraryCategory<SongAttribute::YEAR>     year;
-		LibraryCategory<SongAttribute::CHARTER>  charter;
-		LibraryCategory<SongAttribute::PLAYLIST> playlist;
-		LibraryCategory<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> artistAlbum;
+		Threaded_Category<SongAttribute::TITLE>    title;
+		Threaded_Category<SongAttribute::ARTIST>   artist;
+		Threaded_Category<SongAttribute::ALBUM>    album;
+		Threaded_Category<SongAttribute::GENRE>    genre;
+		Threaded_Category<SongAttribute::YEAR>     year;
+		Threaded_Category<SongAttribute::CHARTER>  charter;
+		Threaded_Category<SongAttribute::PLAYLIST> playlist;
+		Threaded_Category<SongAttribute::ARTIST, LibraryCategory<SongAttribute::ALBUM>> artistAlbum;
 	} m_categories;
 
 	std::unordered_set<std::filesystem::path> m_preScannedDirectories;

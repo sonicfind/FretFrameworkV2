@@ -54,10 +54,11 @@ void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories
 		readNodes(*reader, validate);
 	}
 
+	auto& tasks = TaskQueue::getInstance();
 	for (const auto& directory : baseDirectories)
-		TaskQueue::getInstance().addTask([this, &directory] { scanDirectory(directory); });
+		tasks.addTask([this, &directory] { scanDirectory(directory); });
 
-	TaskQueue::getInstance().waitForCompletedTasks();
+	tasks.waitForCompletedTasks();
 	finalize();
 	writeToCacheFile();
 }
@@ -91,18 +92,22 @@ bool SongLibrary::runPartialScan()
 void SongLibrary::finalize()
 {
 	m_preScannedDirectories.clear();
+
+	auto& tasks = TaskQueue::getInstance();
 	for (auto& node : m_songlist)
 		for (auto& entry : *node)
 		{
-			entry.finalize();
-			m_categories.title.add(entry);
-			m_categories.artist.add(entry);
-			m_categories.genre.add(entry);
-			m_categories.year.add(entry);
-			m_categories.charter.add(entry);
-			m_categories.album.add(entry);
-			m_categories.artistAlbum.add(entry);
-			m_categories.playlist.add(entry);
+			tasks.addTask([this, &entry] {
+				entry.finalize();
+				m_categories.title.add(entry);
+				m_categories.artist.add(entry);
+				m_categories.genre.add(entry);
+				m_categories.year.add(entry);
+				m_categories.charter.add(entry);
+				m_categories.album.add(entry);
+				m_categories.artistAlbum.add(entry);
+				m_categories.playlist.add(entry);
+			});
 		}
 }
 
@@ -191,8 +196,9 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 		}
 	}
 
+	auto& tasks = TaskQueue::getInstance();
 	for (auto& subDirectory : directories)
-		TaskQueue::getInstance().addTask([this, dir = std::move(subDirectory)] { scanDirectory(dir); });
+		tasks.addTask([this, dir = std::move(subDirectory)] { scanDirectory(dir); });
 		
 }
 
@@ -236,11 +242,12 @@ void SongLibrary::readStrings(BufferedBinaryReader& reader)
 
 void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 {
+	auto& tasks = TaskQueue::getInstance();
 	const uint32_t numNodes = reader.extract<uint32_t, false>();
 	for (uint32_t i = 0; i < numNodes; ++i)
 	{
 		reader.setNextSectionBounds();
-		TaskQueue::getInstance().addTask([this, reader, validationFunc]() mutable {
+		tasks.addTask([this, reader, &validationFunc]() mutable {
 				if (std::optional<LibraryEntry> entry = validationFunc(reader))
 				{
 					const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
@@ -260,7 +267,7 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 		reader.gotoEndOfBuffer();
 	}
 
-	TaskQueue::getInstance().waitForCompletedTasks();
+	tasks.waitForCompletedTasks();
 }
 
 void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
