@@ -32,10 +32,10 @@ constexpr std::pair<unsigned char, unsigned char> InstrumentalTrack<GuitarNote<6
 template <>
 constexpr int InstrumentalTrack<GuitarNote<5>, true>::Midi_Tracker::s_defaultLanes[48] =
 {
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 };
 
 template <>
@@ -77,12 +77,8 @@ void InstrumentalTrack<GuitarNote<5>, true>::parseLaneColor(Midi_Tracker& tracke
 	};
 
 	const int noteValue = note.value - s_noteRange.first;
-	const int lane = tracker.laneValues[noteValue];
-
-	if (lane == -1)
-		return;
-
 	const int diff = s_diffValues[noteValue];
+	const int lane = tracker.laneValues[noteValue];
 	if (lane < 6)
 	{
 		if constexpr (NoteOn)

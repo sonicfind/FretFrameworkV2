@@ -11,10 +11,10 @@ constexpr std::pair<unsigned char, unsigned char> InstrumentalScan<GuitarNote<6>
 template <>
 constexpr int InstrumentalScan<GuitarNote<5>>::Midi_Scanner::s_defaultLanes[48] =
 {
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 };
 
 template <>
@@ -27,7 +27,7 @@ void InstrumentalScan<GuitarNote<5>>::parseLaneColor(Midi_Scanner& scanner, Midi
 	if (!scanner.difficulties[diff].active)
 	{
 		const int lane = scanner.laneValues[noteValue];
-		if (0 <= lane && lane < 6)
+		if (lane < 6)
 		{
 			if constexpr (!NoteOn)
 			{
