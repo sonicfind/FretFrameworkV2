@@ -16,7 +16,7 @@ void LibraryEntry::writeIni()
 
 std::u32string LibraryEntry::grabLoadingPhrase() const noexcept
 {
-	auto mods = Ini::ReadSongIniFile(m_chartFile.first.parent_path() / "song.ini");
+	auto mods = Ini::GrabLoadingPhrase(m_chartFile.first.parent_path() / "song.ini");
 	if (mods.empty())
 		return {};
 	return mods.front().getValue<std::u32string>();
