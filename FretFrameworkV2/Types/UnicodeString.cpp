@@ -32,16 +32,23 @@ UnicodeString& UnicodeString::operator=(std::string_view str)
 
 constexpr void UnicodeString::setCasedStrings() noexcept
 {
-	m_string_lowercase = m_string_uppercase = m_string;
-	for (size_t i = 0; i < m_string_uppercase.size(); ++i)
-	{
-		const char32_t character = m_string_uppercase[i];
-		if (character < 128)
+	const size_t size = m_string.size();
+	const char32_t* const arr = m_string.c_str();
+	m_string_lowercase.resize_and_overwrite(size,
+		[size, arr](char32_t* buf, std::size_t)
 		{
-			m_string_lowercase[i] = s_LOWER[character];
-			m_string_uppercase[i] = s_UPPER[character];
-		}
-	}
+			for (size_t i = 0; i < size; ++i)
+			buf[i] = std::tolower(arr[i]);
+			return size;
+		});
+
+	m_string_uppercase.resize_and_overwrite(size,
+		[size, arr](char32_t* buf, std::size_t)
+		{
+			for (size_t i = 0; i < size; ++i)
+			buf[i] = std::toupper(arr[i]);
+			return size;
+		});
 }
 
 std::string UnicodeString::toString() const
@@ -61,12 +68,12 @@ int UnicodeString::compare(const UnicodeString& str) const
 
 std::u32string UnicodeString::bufferToU32(const unsigned char* dataPtr, size_t length)
 {
-	std::u32string str(length, 0);
-	if (length > 0)
-	{
-		size_t finalLength = uu::UtfUtils::SseBigTableConvert(dataPtr, dataPtr + length, str.data());
-		str.resize(finalLength);
-	}
+	std::u32string str;
+	str.resize_and_overwrite(length,
+		[dataPtr, endPtr = dataPtr + length](char32_t* buf, std::size_t)
+		{
+			return uu::UtfUtils::SseBigTableConvert(dataPtr, endPtr, buf);
+		});
 	return str;
 }
 
@@ -77,11 +84,20 @@ std::u32string UnicodeString::strToU32(const std::string_view str)
 
 std::string UnicodeString::U32ToStr(const std::u32string& u32)
 {
-	std::string str(u32.size() * 4, 0);
-	unsigned char* current = (unsigned char*)str.data();
-	for (const char32_t cpt : u32)
-		if (uu::UtfUtils::GetCodeUnits(cpt, current) == 0)
-			*current++ = '_';
-	str.resize((char*)current - str.data());
+	std::string str;
+	str.resize_and_overwrite(u32.size() * 4,
+		[u32Data = u32.data(), u32Size = u32.size()](char* buf, std::size_t)
+		{
+			size_t size = 0;
+			for (size_t i = 0; i < u32Size; ++i)
+			{
+				uint32_t movement = uu::UtfUtils::GetCodeUnits(u32Data[i], (unsigned char*)buf + size);
+				size += movement;
+				if (movement == 0)
+					buf[size++] = '_';
+			}
+
+			return size;
+		});
 	return str;
 }

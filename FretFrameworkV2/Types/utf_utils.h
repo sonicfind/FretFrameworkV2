@@ -96,7 +96,7 @@ class UtfUtils
   public:
     static  bool        GetCodePoint(unsigned char const* pSrc, unsigned char const* pSrcEnd, char32_t& cdpt) noexcept;
 
-    static  uint32_t    GetCodeUnits(char32_t cdpt, unsigned char*& pDst) noexcept;
+    static  uint32_t    GetCodeUnits(char32_t cdpt, unsigned char* pDst) noexcept;
 
     //- Conversion to UTF-32/UTF-16 using fastest typical (lookup/computation on first code unit).
     //  These member functions are wrappers to the '*BigTableConvert' and '*SmallTableConvert'
@@ -570,32 +570,32 @@ UtfUtils::GetCodePoint(unsigned char const* pSrc, unsigned char const* const pSr
 //--------------------------------------------------------------------------------------------------
 //
 KEWB_FORCE_INLINE std::uint32_t
-UtfUtils::GetCodeUnits(char32_t cdpt, unsigned char*& pDst) noexcept
+UtfUtils::GetCodeUnits(char32_t cdpt, unsigned char* pDst) noexcept
 {
     if (cdpt <= 0x7F)
     {
-        *pDst++ = (unsigned char) (cdpt);
+        pDst[0] = (unsigned char)(cdpt);
         return 1;
     }
     else if (cdpt <= 0x7FF)
     {
-        *pDst++ = (unsigned char) (0xC0 | ((cdpt >> 6) & 0x1F));
-        *pDst++ = (unsigned char) (0x80 | (cdpt        & 0x3F));
+        pDst[0] = (unsigned char)(0xC0 | ((cdpt >> 6) & 0x1F));
+        pDst[1] = (unsigned char)(0x80 | (cdpt & 0x3F));
         return 2;
     }
     else if (cdpt <= 0xFFFF)
     {
-        *pDst++ = (unsigned char) (0xE0 | ((cdpt >> 12) & 0x0F));
-        *pDst++ = (unsigned char) (0x80 | ((cdpt >> 6)  & 0x3F));
-        *pDst++ = (unsigned char) (0x80 | (cdpt         & 0x3F));
+        pDst[0] = (unsigned char)(0xE0 | ((cdpt >> 12) & 0x0F));
+        pDst[1] = (unsigned char)(0x80 | ((cdpt >> 6) & 0x3F));
+        pDst[2] = (unsigned char)(0x80 | (cdpt & 0x3F));
         return 3;
     }
     else if (cdpt <= 0x10FFFF)
     {
-        *pDst++ = (unsigned char) (0xF0 | ((cdpt >> 18) & 0x07));
-        *pDst++ = (unsigned char) (0x80 | ((cdpt >> 12) & 0x3F));
-        *pDst++ = (unsigned char) (0x80 | ((cdpt >> 6)  & 0x3F));
-        *pDst++ = (unsigned char) (0x80 | (cdpt         & 0x3F));
+        pDst[0] = (unsigned char)(0xF0 | ((cdpt >> 18) & 0x07));
+        pDst[1] = (unsigned char)(0x80 | ((cdpt >> 12) & 0x3F));
+        pDst[2] = (unsigned char)(0x80 | ((cdpt >> 6) & 0x3F));
+        pDst[3] = (unsigned char)(0x80 | (cdpt & 0x3F));
         return 4;
     }
     return 0;
