@@ -39,10 +39,10 @@ void Song::setSustainThreshold() const
 
 void Song::setHopoThreshold(ChtFileReader& reader) const
 {
-	if (m_eighthnote_hopo)
-		reader.setHopoThreshold(m_tickrate / 2);
-	else if (m_hopo_frequency > 0)
+	if (m_hopo_frequency > 0)
 		reader.setHopoThreshold(m_hopo_frequency);
+	else if (m_eighthnote_hopo)
+		reader.setHopoThreshold(m_tickrate / 2);
 	else if (m_hopofreq_old != UINT16_MAX)
 	{
 		switch (m_hopofreq_old)
