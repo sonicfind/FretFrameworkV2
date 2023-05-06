@@ -15,7 +15,7 @@ void TxtFileReader::setNextPointer()
 
 void TxtFileReader::startRead()
 {
-	static const char BOM[4] = { (char)0xEF, (char)0xBB, (char)0xBF };
+	static const char BOM[4] = { (char)0xEF, (char)0xBB, (char)0xBF, 0 };
 	if (strncmp(m_currentPosition, BOM, 3) == 0)
 		m_currentPosition += 3;
 

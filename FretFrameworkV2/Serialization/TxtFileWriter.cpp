@@ -6,6 +6,8 @@ TxtFileWriter::TxtFileWriter(const std::filesystem::path& path) : m_file(path, s
 		throw std::runtime_error("Error: " + path.string() + " could not be opened for writing");
 
 	m_file.setf(std::ios_base::boolalpha);
+	static const char BOM[4] = { (char)0xEF, (char)0xBB, (char)0xBF, 0 };
+	m_file.write(BOM, 3);
 }
 
 TxtFileWriter::~TxtFileWriter() { m_file.close(); }
