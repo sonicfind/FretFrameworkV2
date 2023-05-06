@@ -184,15 +184,20 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 	{
 		if (charts[i])
 		{
-			LibraryEntry entry({ charts[i]->path(), CHARTTYPES[i].second }, charts[i]->last_write_time());
-			if (ini)
-				entry.readIni(*ini);
+			try
+			{
+				LibraryEntry entry({ charts[i]->path(), CHARTTYPES[i].second }, charts[i]->last_write_time());
+				if (ini)
+					entry.readIni(ini->path(), ini->last_write_time());
 
-			LoadedFile file(charts[i]->path());
-			if (entry.scan(file))
-				addEntry(file.calculateMD5(), std::move(entry));
-			else
-				std::cout << "Failed: " << UnicodeString::U32ToStr(charts[i]->path().u32string()) << '\n';
+				LoadedFile file(charts[i]->path());
+				if (entry.scan(file))
+					addEntry(file.calculateMD5(), std::move(entry));
+			}
+			catch (std::runtime_error err)
+			{
+
+			}
 			return;
 		}
 	}
