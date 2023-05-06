@@ -39,7 +39,7 @@ public:
 	LibraryEntry(const std::pair<std::filesystem::path, ChartType>& chartpath, const std::filesystem::file_time_type& chartLastWrite, const std::filesystem::file_time_type& iniLastWrite = {});
 
 	void mapStrings(UnicodeWrapper name, UnicodeWrapper artist, UnicodeWrapper album, UnicodeWrapper genre, UnicodeWrapper year, UnicodeWrapper charter, UnicodeWrapper playlist);
-	void readIni(const std::filesystem::directory_entry& iniFile);
+	void readIni(const std::filesystem::path& iniPath, const std::filesystem::file_time_type& iniLastWrite);
 	bool scan(const LoadedFile& file) noexcept;
 	void finalize();
 	void extractSongInfo(BufferedBinaryReader& reader);

@@ -1,10 +1,10 @@
 #include "LibraryEntry.h"
 #include "Ini/Ini.h"
 
-void LibraryEntry::readIni(const std::filesystem::directory_entry& iniFile)
+void LibraryEntry::readIni(const std::filesystem::path& iniPath, const std::filesystem::file_time_type& iniLastWrite)
 {
-	m_modifiers = Ini::ReadSongIniFile(iniFile.path());
-	m_iniWriteTime = iniFile.last_write_time();
+	m_modifiers = Ini::ReadSongIniFile(iniPath);
+	m_iniWriteTime = iniLastWrite;
 }
 
 void LibraryEntry::writeIni()
