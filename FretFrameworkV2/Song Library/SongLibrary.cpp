@@ -220,7 +220,7 @@ std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
 
 void SongLibrary::readStrings(BufferedBinaryReader& reader)
 {
-	const auto getStrings = [&reader]()
+	static constexpr auto getStrings = [](BufferedBinaryReader& reader)
 	{
 		reader.setNextSectionBounds();
 
@@ -232,13 +232,13 @@ void SongLibrary::readStrings(BufferedBinaryReader& reader)
 		return strings;
 	};
 
-	m_stringBuffers.titles = getStrings();
-	m_stringBuffers.artists = getStrings();
-	m_stringBuffers.albums = getStrings();
-	m_stringBuffers.genres = getStrings();
-	m_stringBuffers.years = getStrings();
-	m_stringBuffers.charters = getStrings();
-	m_stringBuffers.playlists = getStrings();
+	m_stringBuffers.titles = getStrings(reader);
+	m_stringBuffers.artists = getStrings(reader);
+	m_stringBuffers.albums = getStrings(reader);
+	m_stringBuffers.genres = getStrings(reader);
+	m_stringBuffers.years = getStrings(reader);
+	m_stringBuffers.charters = getStrings(reader);
+	m_stringBuffers.playlists = getStrings(reader);
 }
 
 void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
