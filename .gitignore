@@ -47,3 +47,4 @@
 FretFrameworkV2/x64/Debug/_IsIncrementalBuild
 *.iobj
 *.ipdb
+FretFrameworkV2/songcache.bin
