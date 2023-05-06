@@ -101,14 +101,15 @@ void SongLibrary::finalize()
 				entry.finalize();
 				m_categories.title.add(entry);
 				m_categories.artist.add(entry);
+				m_categories.album.add(entry);
 				m_categories.genre.add(entry);
 				m_categories.year.add(entry);
 				m_categories.charter.add(entry);
-				m_categories.album.add(entry);
 				m_categories.artistAlbum.add(entry);
 				m_categories.playlist.add(entry);
 			});
 		}
+	tasks.waitForCompletedTasks();
 }
 
 void SongLibrary::clear()
