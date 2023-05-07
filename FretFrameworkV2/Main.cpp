@@ -133,7 +133,8 @@ void loadSong()
 			if (file.ends_with(CHARTTYPES[i].first))
 			{
 				startClock();
-				song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second });
+				if (!song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second }))
+					break;
 				stopClock("Song load");
 
 				while (true)
