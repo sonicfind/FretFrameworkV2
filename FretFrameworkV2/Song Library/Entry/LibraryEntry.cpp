@@ -1,4 +1,5 @@
 #include "LibraryEntry.h"
+#include "DrumScan.h"
 #include <iostream>
 
 const UnicodeString LibraryEntry::s_DEFAULT_NAME{ U"Unknown Title" };
@@ -37,7 +38,9 @@ bool LibraryEntry::scan(const LoadedFile& file) noexcept
 		else if (m_chartFile.second == ChartType::BCH)
 			scan_bch(file);
 
-		return validateForNotes();
+		if (validateForNotes())
+			return true;
+		return false;
 	}
 	catch (std::runtime_error err)
 	{
@@ -61,7 +64,7 @@ void LibraryEntry::finalize()
 
 void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 {
-	ScanTrack* const arr[11] =
+	ScanValues* const arr[11] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -81,6 +84,7 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 		reader.extract(track->m_subTracks);
 		reader.extract(track->m_intensity);
 	}
+
 	reader.extract(m_previewRange);
 	reader.extract(m_album_track);
 	reader.extract(m_playlist_track);
@@ -106,7 +110,7 @@ void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcep
 
 void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
 {
-	const ScanTrack* const arr[11] =
+	const ScanValues* const arr[11] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -126,6 +130,7 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 		writer.append(track->m_subTracks);
 		writer.append(track->m_intensity);
 	}
+
 	writer.append(m_previewRange);
 	writer.append(m_album_track);
 	writer.append(m_playlist_track);
@@ -166,44 +171,9 @@ PointerWrapper<Modifiers::Modifier> LibraryEntry::getModifier(std::string_view n
 	return {};
 }
 
-void LibraryEntry::traverse(CommonChartParser& parser)
-{
-	while (parser.isStartOfTrack())
-	{
-		if (parser.validateNoteTrack())
-			scan_noteTrack(parser);
-		else
-			parser.skipTrack();
-	}
-}
-
-void LibraryEntry::scan_noteTrack(CommonChartParser& parser)
-{
-	BCH_CHT_Scannable* const arr[11] =
-	{
-		&m_scanTracks.lead_5,
-		&m_scanTracks.lead_6,
-		&m_scanTracks.bass_5,
-		&m_scanTracks.bass_6,
-		&m_scanTracks.rhythm,
-		&m_scanTracks.coop,
-		&m_scanTracks.keys,
-		&m_scanTracks.drums4_pro,
-		&m_scanTracks.drums5,
-		&m_scanTracks.vocals,
-		&m_scanTracks.harmonies
-	};
-
-	const size_t index = parser.geNoteTrackID();
-	if (index < std::size(arr))
-		arr[parser.geNoteTrackID()]->scan(parser);
-	else //BCH only
-		parser.skipTrack();
-}
-
 bool LibraryEntry::validateForNotes() const noexcept
 {
-	const ScanTrack* const arr[11] =
+	const ScanValues* const arr[11] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -218,7 +188,7 @@ bool LibraryEntry::validateForNotes() const noexcept
 		&m_scanTracks.harmonies
 	};
 
-	for (const ScanTrack* track : arr)
+	for (const ScanValues* track : arr)
 		if (track->m_subTracks > 0)
 			return true;
 	return false;
@@ -332,7 +302,7 @@ void LibraryEntry::mapModifierVariables()
 		if (starPower->getValue<uint16_t>() == 103)
 			m_multiplier_note = 103;
 
-	const std::pair<std::string_view, ScanTrack*> intensities[]
+	const std::pair<std::string_view, ScanValues*> intensities[]
 	{
 		{ "diff_guitar",      &m_scanTracks.lead_5 },
 		{ "diff_guitarghl",	  &m_scanTracks.lead_6 },

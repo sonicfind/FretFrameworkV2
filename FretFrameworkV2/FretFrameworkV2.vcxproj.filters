@@ -64,6 +64,12 @@
     <Filter Include="TaskQueue">
       <UniqueIdentifier>{61f77ab5-7f6e-4ddd-81c5-372a7dcea9ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song Library\Entry\Track\Instrumental\Drums">
+      <UniqueIdentifier>{40fc1e98-b72c-469d-8885-1b2661009b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Song Library\Entry\Track\Instrumental\Base">
+      <UniqueIdentifier>{9c18f766-46df-43d5-983a-381148cf20d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -145,9 +151,6 @@
     <ClCompile Include="Song Library\Entry\GuitarScan_midi.cpp">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\Legacy_DrumScan.cpp">
-      <Filter>Song Library\Entry\Track\Instrumental</Filter>
-    </ClCompile>
     <ClCompile Include="Serialization\ChtFileReader.cpp">
       <Filter>Serialization\FileReader</Filter>
     </ClCompile>
@@ -195,6 +198,27 @@
     </ClCompile>
     <ClCompile Include="TaskQueue\TaskQueue.cpp">
       <Filter>TaskQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan_ChartV1.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan_Extended.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan_Legacy_ChartV1.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\DrumScan_Legacy_Midi.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\LibraryEntry_common.cpp">
+      <Filter>Song Library\Entry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -312,26 +336,14 @@
     <ClInclude Include="Types\MD5.h">
       <Filter>MD5</Filter>
     </ClInclude>
-    <ClInclude Include="Song Library\Entry\ScanTrack.h">
+    <ClInclude Include="Song Library\Entry\ScanValues.h">
       <Filter>Song Library\Entry\Track</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\LibraryEntry.h">
       <Filter>Song Library\Entry</Filter>
     </ClInclude>
-    <ClInclude Include="Song Library\Entry\DrumScan_midi.h">
-      <Filter>Song Library\Entry\Track\Instrumental</Filter>
-    </ClInclude>
     <ClInclude Include="Song Library\Entry\GuitarScan_midi.h">
       <Filter>Song Library\Entry\Track\Instrumental</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\InstrumentalScan.h">
-      <Filter>Song Library\Entry\Track\Instrumental</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\Legacy_DrumScan.h">
-      <Filter>Song Library\Entry\Track\Instrumental</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\VocalScan.h">
-      <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\ChtFileReader.h">
       <Filter>Serialization\FileReader</Filter>
@@ -383,6 +395,48 @@
     </ClInclude>
     <ClInclude Include="TaskQueue\TaskQueue.h">
       <Filter>TaskQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\InstrumentalScan_ChartV1.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\InstrumentalScan_Midi.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\InstrumentalScan_Extended.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\InstrumentalScan.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Legacy.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_ChartV1.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Extended.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Midi.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Legacy_ChartV1.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Legacy_Midi.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\VocalScan_Extended.h">
+      <Filter>Song Library\Entry\Track\Vocal</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\VocalScan_Midi.h">
+      <Filter>Song Library\Entry\Track\Vocal</Filter>
+    </ClInclude>
+    <ClInclude Include="Notes\DrumType.h">
+      <Filter>Notes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

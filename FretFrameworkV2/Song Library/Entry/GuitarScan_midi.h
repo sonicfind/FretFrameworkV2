@@ -1,15 +1,15 @@
 #pragma once
-#include "InstrumentalScan.h"
+#include "InstrumentalScan_Midi.h"
 #include "Notes/GuitarNote.h"
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalScan<GuitarNote<5>>::s_noteRange{ 59, 107 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalScan_Midi::Midi_Scanner<GuitarNote<5>>::s_noteRange{ 59, 107 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalScan<GuitarNote<6>>::s_noteRange{ 58, 103 };
+constexpr std::pair<unsigned char, unsigned char> InstrumentalScan_Midi::Midi_Scanner<GuitarNote<6>>::s_noteRange{ 58, 103 };
 
 template <>
-constexpr int InstrumentalScan<GuitarNote<5>>::Midi_Scanner::s_defaultLanes[48] =
+constexpr int InstrumentalScan_Midi::Midi_Scanner<GuitarNote<5>>::s_defaultLanes[48] =
 {
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -17,30 +17,32 @@ constexpr int InstrumentalScan<GuitarNote<5>>::Midi_Scanner::s_defaultLanes[48] 
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 };
 
-template <>
+template<>
 template <bool NoteOn>
-void InstrumentalScan<GuitarNote<5>>::parseLaneColor(Midi_Scanner& scanner, MidiNote note)
+bool InstrumentalScan_Midi::Midi_Scanner<GuitarNote<5>>::parseLaneColor(ScanValues& values, MidiNote note)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const int diff = s_diffValues[noteValue];
 
-	if (!scanner.difficulties[diff].active)
+	if (m_difficulties[diff].active)
+		return false;
+
+	const int lane = m_laneValues[noteValue];
+	if (lane < 6)
 	{
-		const int lane = scanner.laneValues[noteValue];
-		if (lane < 6)
+		if constexpr (!NoteOn)
 		{
-			if constexpr (!NoteOn)
+			if (m_difficulties[diff].notes[lane])
 			{
-				if (scanner.difficulties[diff].notes[lane])
-				{
-					m_subTracks |= 1 << diff;
-					scanner.difficulties[diff].active = true;
-				}
+				values.addSubTrack(diff);
+				m_difficulties[diff].active = true;
+				return values.m_subTracks == 15;
 			}
-			scanner.difficulties[diff].notes[lane] = true;
 		}
+		m_difficulties[diff].notes[lane] = true;
 	}
+	return false;
 }
 
 template <>
-void InstrumentalScan<GuitarNote<5>>::parseText(Midi_Scanner& scanner, std::string_view str);
+void InstrumentalScan_Midi::Midi_Scanner<GuitarNote<5>>::parseText(std::string_view str);

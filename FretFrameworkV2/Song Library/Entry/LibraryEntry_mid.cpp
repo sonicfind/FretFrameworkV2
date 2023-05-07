@@ -1,7 +1,9 @@
 #include "LibraryEntry.h"
+#include "Notes/Keys.h"
 #include "GuitarScan_midi.h"
 #include "DrumScan_midi.h"
-#include "Legacy_DrumScan.h"
+#include "DrumScan_Legacy_Midi.h"
+#include "VocalScan_Midi.h"
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
@@ -9,53 +11,53 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 	if (auto fivelane = getModifier("five_lane_drums"))
 		type = fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
 
+	VocalScan_Midi::Midi_Scanner_Vocal<3> harmonyTracker;
 	MidiFileReader reader(file);
-	std::vector<std::pair<uint32_t, uint32_t>> lyriclines;
 	while (reader.startTrack())
 	{
 		if (reader.getTrackNumber() > 1 && reader.getEventType() == MidiEventType::Text_TrackName)
 		{
 			const std::string_view name = reader.extractTextOrSysEx();
 			if (name == "PART GUITAR" || name == "T1 GEMS")
-				m_scanTracks.lead_5.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<5>>(m_scanTracks.lead_5, reader);
 			else if (name == "PART GUITAR GHL")
-				m_scanTracks.lead_6.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<6>>(m_scanTracks.lead_6, reader);
 			else if (name == "PART BASS")
-				m_scanTracks.bass_5.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<5>>(m_scanTracks.bass_5, reader);
 			else if (name == "PART BASS GHL")
-				m_scanTracks.bass_6.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<6>>(m_scanTracks.bass_6, reader);
 			else if (name == "PART RHYTHM")
-				m_scanTracks.rhythm.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<5>>(m_scanTracks.rhythm, reader);
 			else if (name == "PART GUITAR COOP")
-				m_scanTracks.coop.scan(reader);
+				InstrumentalScan_Midi::Scan<GuitarNote<5>>(m_scanTracks.coop, reader);
 			else if (name == "PART KEYS")
-				m_scanTracks.keys.scan(reader);
+				InstrumentalScan_Midi::Scan<Keys<5>>(m_scanTracks.keys, reader);
 			else if (name == "PART DRUMS")
 			{
 				if (type == DrumType_Enum::LEGACY)
 				{
-					Legacy_DrumScan drumsLegacy(reader);
+					DrumScan_Legacy_Midi drumsLegacy(reader);
 					if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
 						drumsLegacy.transfer(m_scanTracks.drums4_pro);
 					else
 						drumsLegacy.transfer(m_scanTracks.drums5);
 				}
 				else if (type == DrumType_Enum::FOURLANE_PRO)
-					m_scanTracks.drums4_pro.scan(reader);
+					InstrumentalScan_Midi::Scan<DrumNote<4, true>>(m_scanTracks.drums4_pro, reader);
 				else
-					m_scanTracks.drums5.scan(reader);
+					InstrumentalScan_Midi::Scan<DrumNote<5, false>>(m_scanTracks.drums5, reader);
 			}
 			else if (name == "PART VOCALS")
 			{
-				static std::vector<std::pair<uint32_t, uint32_t>> dummy;
-				m_scanTracks.vocals.scan(reader, dummy);
+				VocalScan_Midi::Midi_Scanner_Vocal<1> tracker;
+				VocalScan_Midi::Scan<0>(m_scanTracks.vocals, tracker, reader);
 			}
 			else if (name == "HARM1")
-				m_scanTracks.harmonies.scan<0>(reader, lyriclines);
+				VocalScan_Midi::Scan<0>(m_scanTracks.harmonies, harmonyTracker, reader);
 			else if (name == "HARM2")
-				m_scanTracks.harmonies.scan<1>(reader, lyriclines);
+				VocalScan_Midi::Scan<1>(m_scanTracks.harmonies, harmonyTracker, reader);
 			else if (name == "HARM3")
-				m_scanTracks.harmonies.scan<2>(reader, lyriclines);
+				VocalScan_Midi::Scan<2>(m_scanTracks.harmonies, harmonyTracker, reader);
 		}
 	}
 }

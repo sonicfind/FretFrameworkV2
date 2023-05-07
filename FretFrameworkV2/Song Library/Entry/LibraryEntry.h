@@ -1,11 +1,9 @@
 #pragma once
-#include "InstrumentalScan.h"
-#include "VocalScan.h"
-#include "Notes/GuitarNote.h"
-#include "Notes/Keys.h"
-#include "Notes/DrumNote.h"
+#include "ScanValues.h"
+#include "Notes/DrumType.h"
 #include "Types/UnicodeString.h"
 #include "PtrWrapper/PtrWrapper.h"
+#include "Serialization/ChtFileReader.h"
 #include "Serialization/BufferedBinaryReader.h"
 #include "Serialization/BufferedBinaryWriter.h"
 
@@ -146,17 +144,17 @@ private:
 
 	struct
 	{
-		InstrumentalScan_Extended<GuitarNote<5>>      lead_5;
-		InstrumentalScan_Extended<GuitarNote<6>>      lead_6;
-		InstrumentalScan_Extended<GuitarNote<5>>      bass_5;
-		InstrumentalScan_Extended<GuitarNote<6>>      bass_6;
-		InstrumentalScan_Extended<GuitarNote<5>>      rhythm;
-		InstrumentalScan_Extended<GuitarNote<5>>      coop;
-		InstrumentalScan_Extended<Keys<5>>            keys;
-		InstrumentalScan_Extended<DrumNote<4, true>>  drums4_pro;
-		InstrumentalScan_Extended<DrumNote<5, false>> drums5;
-		VocalScan<1>                                  vocals;
-		VocalScan<3>                                  harmonies;
+		ScanValues lead_5;
+		ScanValues lead_6;
+		ScanValues bass_5;
+		ScanValues bass_6;
+		ScanValues rhythm;
+		ScanValues coop;
+		ScanValues keys;
+		ScanValues drums4_pro;
+		ScanValues drums5;
+		ScanValues vocals;
+		ScanValues harmonies;
 	} m_scanTracks;
 
 	UnicodeWrapper m_name;

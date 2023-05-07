@@ -1,6 +1,9 @@
 #pragma once
 #include "Tracks/Instrumental/InstrumentalTrack.h"
 #include "Tracks/Vocal/VocalTrack.h"
+#include "Notes/GuitarNote.h"
+#include "Notes/Keys.h"
+#include "Notes/DrumNote.h"
 #include "Song Library/Entry/LibraryEntry.h"
 #include "MicrosPerQuarter.h"
 
