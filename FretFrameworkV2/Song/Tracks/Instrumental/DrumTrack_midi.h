@@ -244,6 +244,14 @@ void DifficultyTrack<DrumNote<4, true>, false>::write_details(MidiFileWriter& wr
 			}
 		}
 	}
+
+	if (flam.start != UINT32_MAX)
+		writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
+
+	for (char i = 0; i < 3; ++i)
+		if (toms[i].start != UINT32_MAX)
+			writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].end - toms[i].start);
+
 	doDetails = false;
 }
 
