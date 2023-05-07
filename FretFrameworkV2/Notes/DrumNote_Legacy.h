@@ -12,15 +12,14 @@ public:
 		DrumNote<numPads, PRO_DRUMS> note;
 
 		if (m_special.isActive())
-			note.set(0, m_special.getSustain());
-
-		if (m_doubleBass.isActive())
-			note.set(1, m_doubleBass.getSustain());
+			note.getSpecial() = std::move(m_special);
+		else if (m_doubleBass.isActive())
+			note.getDoubleBass() = std::move(m_doubleBass);
 
 		for (size_t i = 0; i < numPads; ++i)
 			if (m_colors[i].isActive())
 			{
-				auto& col = note.get(i + 1);
+				auto& col = note.get(i);
 				col.set(m_colors[i].getSustain());
 				col.setDynamics(m_colors[i].getDynamics());
 				if constexpr (PRO_DRUMS)

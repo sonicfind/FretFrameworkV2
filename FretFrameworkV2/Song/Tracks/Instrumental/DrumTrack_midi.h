@@ -49,17 +49,20 @@ void InstrumentalTrack<DrumNote<4, true>, true>::parseLaneColor(Midi_Tracker& tr
 			if (tracker.difficulties[diff].flam)
 				drums.setFlam(true);
 
-			if (2 <= lane && lane < 5)
-				drums.get(lane - 1).setCymbal(!tracker.ext.toms[lane - 2]);
-
-			if (tracker.ext.enableDynamics)
+			if (lane > 0)
 			{
-				if (note.velocity > 100)
-					drums.get(lane).setDynamics(DrumDynamics::Accent);
-				else if (note.velocity < 100)
-					drums.get(lane).setDynamics(DrumDynamics::Ghost);
-			}
+				auto& pad = drums.get(lane - 1);
+				if (2 <= lane && lane < 5)
+					pad.setCymbal(!tracker.ext.toms[lane - 2]);
 
+				if (tracker.ext.enableDynamics)
+				{
+					if (note.velocity > 100)
+						pad.setDynamics(DrumDynamics::Accent);
+					else if (note.velocity < 100)
+						pad.setDynamics(DrumDynamics::Ghost);
+				}
+			}
 			tracker.difficulties[diff].notes[lane] = position;
 		}
 		else
@@ -107,12 +110,13 @@ void InstrumentalTrack<DrumNote<5, false>, true>::parseLaneColor(Midi_Tracker& t
 			if (tracker.difficulties[diff].flam)
 				drums.setFlam(true);
 
-			if (tracker.ext.enableDynamics)
+			if (tracker.ext.enableDynamics && lane > 0)
 			{
+				auto& pad = drums.get(lane - 1);
 				if (note.velocity > 100)
-					drums.get(lane).setDynamics(DrumDynamics::Accent);
+					pad.setDynamics(DrumDynamics::Accent);
 				else if (note.velocity < 100)
-					drums.get(lane).setDynamics(DrumDynamics::Ghost);
+					pad.setDynamics(DrumDynamics::Ghost);
 			}
 
 			tracker.difficulties[diff].notes[lane] = position;
@@ -220,7 +224,11 @@ void DifficultyTrack<DrumNote<4, true>, false>::write_details(MidiFileWriter& wr
 
 		for (char i = 0; i < 3; ++i)
 		{
-			if (auto& pad = node->get(i + 2); !pad.isCymbal())
+			auto& pad = node->get(i + 1);
+			if (!pad.isActive())
+				continue;
+
+			if (!pad.isCymbal())
 			{
 				if (toms[i].start == UINT32_MAX)
 					toms[i].start = node.key;

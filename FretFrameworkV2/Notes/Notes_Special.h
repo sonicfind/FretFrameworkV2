@@ -18,16 +18,6 @@ public:
 		return Note<NoteType, numColors>::set(lane - 1, sustain);
 	}
 
-	NoteType& get(const size_t lane) noexcept
-	{
-		return Note<NoteType, numColors>::get(lane - 1);
-	}
-
-	const NoteType& get(const size_t lane) const noexcept
-	{
-		return Note<NoteType, numColors>::get(lane - 1);
-	}
-
 	SpecialType& getSpecial() noexcept
 	{
 		return m_special;

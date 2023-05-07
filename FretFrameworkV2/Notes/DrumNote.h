@@ -131,13 +131,13 @@ public:
 		else if (34 <= lane && lane < 34 + numPads)
 			m_colors[lane - 34].setDynamics(DrumDynamics::Accent);
 		else if (40 <= lane && lane < 40 + numPads)
-			m_colors[lane - 40].setDynamics(DrumDynamics::Accent);
+			m_colors[lane - 40].setDynamics(DrumDynamics::Ghost);
 		else if constexpr (PRO_DRUMS)
 		{
 			if (lane < 66 || lane > 68)
 				return false;
 
-			m_colors[lane - 65].toggleCymbal();
+			m_colors[lane - 65].setCymbal(true);
 		}
 		else
 			return false;
@@ -163,6 +163,16 @@ public:
 		}
 	}
 
+	NoteColor& getDoubleBass() noexcept
+	{
+		return m_doubleBass;
+	}
+
+	const NoteColor& getDoubleBass() const noexcept
+	{
+		return m_doubleBass;
+	}
+
 	bool modify(char modifier, size_t lane = 0)
 	{
 		switch (modifier)
@@ -175,6 +185,18 @@ public:
 				return m_colors[lane - 1].modify(modifier);
 			return false;
 		}
+	}
+
+	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
+	{
+		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getActiveColors();
+		for (auto& col : activeColors)
+			if (col.first > 0)
+				col.first++;
+
+		if (m_doubleBass.isActive())
+			activeColors.insert(activeColors.begin(), { 1, m_doubleBass.getSustain() });
+		return activeColors;
 	}
 
 	std::vector<std::pair<char, size_t>> getActiveModifiers() const
@@ -205,10 +227,10 @@ public:
 		auto colors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getMidiNotes();
 		for (std::tuple<char, char, uint32_t>& col : colors)
 		{
-			size_t index = std::get<0>(col)++;
+			size_t index = std::get<0>(col);
 			if (index > 0)
 			{
-				switch (this->get(index).getDynamics())
+				switch (this->get(index - 1).getDynamics())
 				{
 				case DrumDynamics::Accent:
 					std::get<1>(col) = 101;

@@ -13,7 +13,7 @@ public:
 
 	bool set(const size_t lane, uint32_t sustain)
 	{
-		if (lane > numColors)
+		if (lane >= numColors)
 			return false;
 
 		m_colors[lane].set(sustain);
