@@ -109,19 +109,25 @@ class DrumNote : public Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>
 protected:
 	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_colors;
 	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_special;
+	NoteColor m_doubleBass;
 
-	bool m_isDoubleBass = false;
 	bool m_isFlammed = false;
 
 public:
 	bool set_V1(const size_t lane, uint32_t sustain)
 	{
 		if (lane == 0)
+		{
 			m_special.set(sustain);
+			m_doubleBass.disable();
+		}
 		else if (lane <= numPads && lane < 32)
 			m_colors[lane - 1].set(sustain);
 		else if (lane == 32)
-			toggleDoubleBass();
+		{
+			if (m_special.isActive())
+				m_doubleBass = std::move(m_special);
+		}
 		else if (34 <= lane && lane < 34 + numPads)
 			m_colors[lane - 34].setDynamics(DrumDynamics::Accent);
 		else if (40 <= lane && lane < 40 + numPads)
@@ -138,15 +144,31 @@ public:
 		return true;
 	}
 
+	bool set(size_t lane, uint32_t sustain)
+	{
+		if (lane == 1)
+		{
+			m_doubleBass.set(sustain);
+			this->m_special.disable();
+			return true;
+		}
+		else
+		{
+			if (lane == 0)
+				m_doubleBass.disable();
+			else if (lane > 1)
+				lane--;
+
+			return Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::set(lane, sustain);
+		}
+	}
+
 	bool modify(char modifier, size_t lane = 0)
 	{
 		switch (modifier)
 		{
-		case '+':
-			toggleDoubleBass();
-			return true;
 		case 'F':
-			toggleFlam();
+			m_isFlammed = true;
 			return true;
 		default:
 			if (0 < lane && lane <= numPads)
@@ -158,24 +180,18 @@ public:
 	std::vector<std::pair<char, size_t>> getActiveModifiers() const
 	{
 		std::vector<std::pair<char, size_t>> modifiers;
-		if (m_isDoubleBass)
-			modifiers.push_back({ '+', SIZE_MAX });
-
 		if (m_isFlammed)
 			modifiers.push_back({ 'F', SIZE_MAX });
 
 		for (size_t i = 0; i < numPads; ++i)
 			for (const char mod : m_colors[i].getActiveModifiers())
-				modifiers.push_back({ mod, i + 1 });
+				modifiers.push_back({ mod, i + 2 });
 		return modifiers;
 	}
 
 	std::vector<char> getActiveModifiers(size_t index) const
 	{
 		std::vector<char> modifiers;
-		if (m_isDoubleBass)
-			modifiers.push_back('+');
-
 		if (m_isFlammed)
 			modifiers.push_back('F');
 
@@ -186,14 +202,11 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note<DrumPad<PRO_DRUMS>, numPads>::getMidiNotes();
-		if (m_special.isActive() && !m_isDoubleBass)
-			colors.insert(colors.begin(), { 0, 100, m_special.getSustain() });
-
+		auto colors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getMidiNotes();
 		for (std::tuple<char, char, uint32_t>& col : colors)
 		{
-			size_t index = std::get<0>(col);
-			if (index != 0)
+			size_t index = std::get<0>(col)++;
+			if (index > 0)
 			{
 				switch (this->get(index).getDynamics())
 				{
@@ -206,17 +219,18 @@ public:
 				}
 			}
 		}
+
+		if (m_doubleBass.isActive())
+			colors.push_back({ 95, 100, m_doubleBass.getSustain() });
 		return colors;
 	}
 
 	void toggleDoubleBass()
 	{
-		m_isDoubleBass = !m_isDoubleBass;
-	}
-
-	void setDoubleBass(bool enable)
-	{
-		m_isDoubleBass = enable;
+		if (m_special.isActive())
+			m_doubleBass = std::move(m_special);
+		else if (m_doubleBass.isActive())
+			m_special = std::move(m_doubleBass);
 	}
 
 	void toggleFlam()
@@ -229,11 +243,15 @@ public:
 		m_isFlammed = enable;
 	}
 
-	[[nodiscard]] bool isDoubleBass() const noexcept { return m_isDoubleBass; }
 	[[nodiscard]] bool isFlammed() const noexcept { return m_isFlammed; }
 
 	static bool TestIndex_V1(const size_t lane)
 	{
 		return lane <= numPads;
+	}
+
+	static bool TestIndex(const size_t lane)
+	{
+		return lane <= numPads + 1;
 	}
 };

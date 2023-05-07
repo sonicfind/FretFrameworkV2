@@ -14,6 +14,9 @@ public:
 		if (m_special.isActive())
 			note.set(0, m_special.getSustain());
 
+		if (m_doubleBass.isActive())
+			note.set(1, m_doubleBass.getSustain());
+
 		for (size_t i = 0; i < numPads; ++i)
 			if (m_colors[i].isActive())
 			{
@@ -24,7 +27,6 @@ public:
 					col.setCymbal(m_colors[i].isCymbal());
 			}
 
-		note.setDoubleBass(isDoubleBass());
 		note.setFlam(isFlammed());
 		return note;
 	}
