@@ -1,12 +1,6 @@
 #pragma once
 #include "Notes_Special.h"
-
-enum class DrumType_Enum
-{
-	LEGACY,
-	FOURLANE_PRO,
-	FIVELANE,
-};
+#include "DrumType.h"
 
 enum class DrumDynamics
 {
