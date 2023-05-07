@@ -129,13 +129,13 @@ bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) no
 		default:
 			break;
 		}
+		checkStartOfTempoMap();
 	}
 	catch (std::runtime_error err)
 	{
 		std::cout << err.what() << std::endl;
 		return false;
 	}
-	checkStartOfTempoMap();
 	return true;
 }
 
