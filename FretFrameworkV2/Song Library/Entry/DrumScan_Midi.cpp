@@ -28,5 +28,3 @@ bool Midi_Scanner<DrumNote_Legacy>::processExtraValues(MidiNote note)
 	}
 	return false;
 }
-
-DrumScan_Legacy_Midi::DrumScan_Legacy_Midi(ScanValues& values, MidiFileReader& reader) : DrumScan_Legacy(Midi_Scanner<DrumNote_Legacy>(values, reader).m_ext.type) {}

@@ -1,5 +1,6 @@
 #pragma once
-#include "DrumScan_Legacy.h"
+#include "DrumScan.h"
+#include "Notes/DrumNote_Legacy.h"
 #include "InstrumentalScan_Midi.h"
 
 template<size_t numPads, bool PRO_DRUMS>
@@ -104,9 +105,3 @@ bool Midi_Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
 
 template <>
 bool Midi_Scanner<DrumNote_Legacy>::processExtraValues(MidiNote note);
-
-class DrumScan_Legacy_Midi : public DrumScan_Legacy
-{
-public:
-	DrumScan_Legacy_Midi(ScanValues& values, MidiFileReader& reader);
-};

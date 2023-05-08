@@ -36,8 +36,8 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 				if (type == DrumType_Enum::LEGACY)
 				{
 					ScanValues legacyScans;
-					DrumScan_Legacy_Midi drumsLegacy(legacyScans, reader);
-					if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
+					Midi_Scanner<DrumNote_Legacy> scanner(legacyScans, reader);
+					if (scanner.m_ext.type != DrumType_Enum::FIVELANE)
 						m_scanTracks.drums4_pro.m_subTracks |= legacyScans.m_subTracks;
 					else
 						m_scanTracks.drums5.m_subTracks |= legacyScans.m_subTracks;

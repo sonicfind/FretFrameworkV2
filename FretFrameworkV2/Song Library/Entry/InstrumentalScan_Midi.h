@@ -6,36 +6,9 @@ template <class T>
 struct Midi_Scanner_Extensions {};
 
 template <class T>
-struct Midi_Scanner
+class Midi_Scanner
 {
-	static constexpr int s_defaultLanes[48] =
-	{
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	};
-
-	static constexpr int s_diffValues[48] =
-	{
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-	};
-
-	static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-
-	int m_laneValues[48];
-
-	struct
-	{
-		bool notes[T::GetLaneCount()]{};
-		bool active = false;
-	} m_difficulties[4];
-
-	Midi_Scanner_Extensions<T> m_ext;
-	ScanValues& m_values;
+public:
 	Midi_Scanner(ScanValues& values, MidiFileReader& reader) : m_values(values)
 	{
 		memcpy(m_laneValues, s_defaultLanes, sizeof(s_defaultLanes));
@@ -60,6 +33,10 @@ struct Midi_Scanner
 		}
 	}
 
+public:
+	Midi_Scanner_Extensions<T> m_ext;
+
+private:
 	bool isFinished() const noexcept
 	{
 		return m_values.m_subTracks == 15;
@@ -109,4 +86,32 @@ struct Midi_Scanner
 
 	bool processExtraValues(MidiNote note) { return false; }
 	void parseText(std::string_view str) {}
+
+private:
+	static constexpr int s_defaultLanes[48] =
+	{
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	};
+
+	static constexpr int s_diffValues[48] =
+	{
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+	};
+
+	static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
+
+	int m_laneValues[48];
+
+	struct
+	{
+		bool notes[T::GetLaneCount()]{};
+		bool active = false;
+	} m_difficulties[4];
+	ScanValues& m_values;
 };

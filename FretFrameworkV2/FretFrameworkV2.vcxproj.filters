@@ -202,9 +202,6 @@
     <ClCompile Include="Song Library\Entry\DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClCompile>
     <ClCompile Include="Song Library\Entry\DrumScan_ChartV1.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
@@ -403,9 +400,6 @@
       <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\DrumScan.h">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\DrumScan_Legacy.h">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\DrumScan_ChartV1.h">
