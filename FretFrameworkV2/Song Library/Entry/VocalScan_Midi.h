@@ -46,7 +46,7 @@ struct Midi_Scanner_Vocal
 		if (PITCHRANGE.first <= midiValue && midiValue < PITCHRANGE.second)
 		{
 			if (!m_values.wasTrackValidated(INDEX))
-				return parseVocal<INDEX, NoteOn>(values, midiValue, position);
+				return parseVocal<INDEX, NoteOn>(midiValue, position);
 		}
 		else if constexpr (INDEX == 0)
 		{

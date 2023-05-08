@@ -14,49 +14,55 @@ template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template <>
-template <bool NoteOn>
-bool Midi_Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
-{
-	if (note.value == 95)
-	{
-		if (m_ext.expertPlus)
-			return false;
+bool Midi_Scanner<DrumNote_Legacy>::isFinished() const noexcept;
 
+template <>
+template <bool NoteOn>
+bool Midi_Scanner<DrumNote_Legacy>::processSpecialNote(MidiNote note)
+{
+	if (note.value != 95)
+		return false;
+
+	if (!m_ext.expertPlus)
+	{
 		if constexpr (!NoteOn)
 		{
 			if (m_ext.doubleBass)
-			{
-				m_values.addSubTrack(4);
 				m_ext.expertPlus = true;
-			}
 		}
-		m_ext.doubleBass = true;
+		else
+			m_ext.doubleBass = true;
 	}
-	else
-	{
-		const int noteValue = note.value - Midi_Scanner::s_noteRange.first;
-		const int diff = Midi_Scanner::s_diffValues[noteValue];
-		const int lane = m_laneValues[noteValue];
-		if (lane == 5 && m_ext.type == DrumType_Enum::LEGACY)
-			m_ext.type = DrumType_Enum::FIVELANE;
+	return true;
+}
 
-		if (!m_difficulties[diff].active)
+template <>
+template <bool NoteOn>
+bool Midi_Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
+{
+	const int noteValue = note.value - Midi_Scanner::s_noteRange.first;
+	const int lane = m_laneValues[noteValue];
+
+	if (lane >= 6)
+		return false;
+
+	if (lane == 5 && m_ext.type == DrumType_Enum::LEGACY)
+		m_ext.type = DrumType_Enum::FIVELANE;
+
+	const int diff = Midi_Scanner::s_diffValues[noteValue];
+	if (!m_difficulties[diff].active)
+	{
+		if constexpr (!NoteOn)
 		{
-			if (lane < 6)
+			if (m_difficulties[diff].notes[lane])
 			{
-				if constexpr (!NoteOn)
-				{
-					if (m_difficulties[diff].notes[lane])
-					{
-						m_values.addSubTrack(diff);
-						m_difficulties[diff].active = true;
-					}
-				}
-				m_difficulties[diff].notes[lane] = true;
+				m_values.addSubTrack(diff);
+				m_difficulties[diff].active = true;
 			}
 		}
+		m_difficulties[diff].notes[lane] = true;
 	}
-	return m_values.m_subTracks == 31 && m_ext.type != DrumType_Enum::LEGACY;
+	return true;
 }
 
 template <>

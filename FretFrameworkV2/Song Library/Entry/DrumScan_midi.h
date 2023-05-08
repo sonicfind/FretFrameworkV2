@@ -12,64 +12,47 @@ struct Midi_Scanner_Extensions<DrumNote<numPads, PRO_DRUMS>>
 template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote<5, false>>::s_noteRange{ 60, 102 };
 
-namespace DrumMidi
+template <>
+bool Midi_Scanner<DrumNote<4, true>>::isFinished() const noexcept
 {
-	template <bool NoteOn, class T>
-	unsigned char ParseLaneColor(Midi_Scanner<T>& scanner, MidiNote note)
-	{
-		if (note.value == 95)
-		{
-			if (scanner.m_ext.expertPlus)
-				return 0;
+	return m_values.m_subTracks == 31;
+}
 
-			if constexpr (!NoteOn)
-			{
-				if (scanner.m_ext.doubleBass)
-				{
-					scanner.m_ext.expertPlus = true;
-					return 16;
-				}
-			}
-			scanner.m_ext.doubleBass = true;
+template <>
+bool Midi_Scanner<DrumNote<5, false>>::isFinished() const noexcept
+{
+	return m_values.m_subTracks == 31;
+}
+
+template <bool NoteOn, size_t numPads, bool PRO_DRUMS>
+bool ParseSpec(Midi_Scanner<DrumNote<numPads, PRO_DRUMS>>& scanner, MidiNote note)
+{
+	if (note.value != 95)
+		return false;
+
+	if (!scanner.m_ext.expertPlus)
+	{
+		if constexpr (!NoteOn)
+		{
+			if (scanner.m_ext.doubleBass)
+				scanner.m_ext.expertPlus = true;
 		}
 		else
-		{
-			const int noteValue = note.value - Midi_Scanner<T>::s_noteRange.first;
-			const int diff = Midi_Scanner<T>::s_diffValues[noteValue];
-			if (scanner.m_difficulties[diff].active)
-				return 0;
-
-			const int lane = scanner.m_laneValues[noteValue];
-			if (lane < T::GetLaneCount())
-			{
-				if constexpr (!NoteOn)
-				{
-					if (scanner.m_difficulties[diff].notes[lane])
-					{
-						scanner.m_difficulties[diff].active = true;
-						return 1 << diff;
-					}
-				}
-				scanner.m_difficulties[diff].notes[lane] = true;
-			}
-		}
-		return 0;
+			scanner.m_ext.doubleBass = true;
 	}
-}
-
-
-template <>
-template <bool NoteOn>
-bool Midi_Scanner<DrumNote<4, true>>::parseLaneColor(MidiNote note)
-{
-	m_values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
-	return values.m_subTracks == 31;
+	return true;
 }
 
 template <>
 template <bool NoteOn>
-bool Midi_Scanner<DrumNote<5, false>>::parseLaneColor(MidiNote note)
+bool Midi_Scanner<DrumNote<4, true>>::processSpecialNote(MidiNote note)
 {
-	m_values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
-	return values.m_subTracks == 31;
+	return ParseSpec<NoteOn>(*this, note);
+}
+
+template <>
+template <bool NoteOn>
+bool Midi_Scanner<DrumNote<5, false>>::processSpecialNote(MidiNote note)
+{
+	return ParseSpec<NoteOn>(*this, note);
 }

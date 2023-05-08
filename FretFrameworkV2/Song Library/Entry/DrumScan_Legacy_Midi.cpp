@@ -1,6 +1,12 @@
 #include "DrumScan_Legacy_Midi.h"
 
 template <>
+bool Midi_Scanner<DrumNote_Legacy>::isFinished() const noexcept
+{
+	return m_values.m_subTracks == 31 && m_ext.type != DrumType_Enum::LEGACY;
+}
+
+template <>
 bool Midi_Scanner<DrumNote_Legacy>::processExtraValues(MidiNote note)
 {
 	if (110 <= note.value && note.value <= 112)

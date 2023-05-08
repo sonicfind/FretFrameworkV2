@@ -41,23 +41,44 @@ struct Midi_Scanner
 		memcpy(m_laneValues, s_defaultLanes, sizeof(s_defaultLanes));
 		while (const auto midiEvent = reader.parseEvent())
 		{
-			if (midiEvent->type == MidiEventType::Note_On || midiEvent->type == MidiEventType::Note_Off)
+			bool found = false;
+			if (midiEvent->type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
-				if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
-				{
-					if (midiEvent->type == MidiEventType::Note_On && note.velocity > 0)
-						parseLaneColor<true>(note);
-					else if (parseLaneColor<false>(note))
-						break;
-				}
-				else if (processExtraValues(note))
-					break;
+				if (note.velocity > 0)
+					found = parseNote<true>(note);
+				else
+					found = parseNote<false>(note);
 			}
+			else if (midiEvent->type == MidiEventType::Note_Off)
+				found = parseNote<false>(reader.extractMidiNote());
 			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
 				parseText(reader.extractTextOrSysEx());
+
+			if (found && isFinished())
+				break;
 		}
 	}
+
+	bool isFinished() const noexcept
+	{
+		return m_values.m_subTracks == 15;
+	}
+
+	template <bool NoteOn>
+	bool parseNote(MidiNote note)
+	{
+		if (processSpecialNote<NoteOn>(note))
+			return true;
+
+		if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
+			return parseLaneColor<NoteOn>(note);
+		else
+			return processExtraValues(note);
+	}
+
+	template <bool NoteOn>
+	bool processSpecialNote(MidiNote note) { return false; }
 
 	template <bool NoteOn>
 	bool parseLaneColor(MidiNote note)
@@ -65,23 +86,23 @@ struct Midi_Scanner
 		const int noteValue = note.value - s_noteRange.first;
 		const int diff = s_diffValues[noteValue];
 
-		if (!m_difficulties[diff].active)
+		if (m_difficulties[diff].active)
+			return false;
+		
+		const int lane = m_laneValues[noteValue];
+		if (lane < T::GetLaneCount())
 		{
-			const int lane = m_laneValues[noteValue];
-			if (lane < T::GetLaneCount())
+			if constexpr (!NoteOn)
 			{
-				if constexpr (!NoteOn)
+				if (m_difficulties[diff].notes[lane])
 				{
-					if (m_difficulties[diff].notes[lane])
-					{
-						m_values.addSubTrack(diff);
-						m_difficulties[diff].active = true;
-						return m_values.m_subTracks == 15;
-					}
+					m_values.addSubTrack(diff);
+					m_difficulties[diff].active = true;
+					return true;
 				}
-				else
-					m_difficulties[diff].notes[lane] = true;
 			}
+			else
+				m_difficulties[diff].notes[lane] = true;
 		}
 		return false;
 	}
