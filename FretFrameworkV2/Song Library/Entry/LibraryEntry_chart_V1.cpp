@@ -2,7 +2,6 @@
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
 #include "DrumScan_ChartV1.h"
-#include "DrumScan_Legacy_ChartV1.h"
 
 void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 {

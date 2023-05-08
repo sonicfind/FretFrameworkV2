@@ -2,7 +2,6 @@
 #include "Notes/Keys.h"
 #include "GuitarScan_midi.h"
 #include "DrumScan_midi.h"
-#include "DrumScan_Legacy_Midi.h"
 #include "VocalScan_Midi.h"
 
 void LibraryEntry::scan_mid(const LoadedFile& file)

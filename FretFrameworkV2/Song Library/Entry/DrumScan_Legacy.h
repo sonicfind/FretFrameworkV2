@@ -1,5 +1,5 @@
 #pragma once
-#include "InstrumentalScan.h"
+#include "DrumScan.h"
 #include "Notes/DrumNote_Legacy.h"
 
 class DrumScan_Legacy

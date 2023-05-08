@@ -1,5 +1,7 @@
 #include "DrumScan_Legacy.h"
 
+DrumScan_Legacy::DrumScan_Legacy(DrumType_Enum type) : m_type(type) {}
+
 template <>
 bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& values, size_t diff)
 {
@@ -8,5 +10,3 @@ bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& valu
 	else
 		return values.m_subTracks >= 24;
 }
-
-DrumScan_Legacy::DrumScan_Legacy(DrumType_Enum type) : m_type(type) {}

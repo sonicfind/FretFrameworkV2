@@ -211,12 +211,6 @@
     <ClCompile Include="Song Library\Entry\DrumScan_Extended.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\DrumScan_Legacy_ChartV1.cpp">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClCompile>
-    <ClCompile Include="Song Library\Entry\DrumScan_Legacy_Midi.cpp">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClCompile>
     <ClCompile Include="Song Library\Entry\LibraryEntry_common.cpp">
       <Filter>Song Library\Entry</Filter>
     </ClCompile>
@@ -421,12 +415,6 @@
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\DrumScan_Midi.h">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\DrumScan_Legacy_ChartV1.h">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClInclude>
-    <ClInclude Include="Song Library\Entry\DrumScan_Legacy_Midi.h">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\VocalScan_Extended.h">

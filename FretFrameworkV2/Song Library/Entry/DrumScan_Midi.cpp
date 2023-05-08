@@ -1,4 +1,16 @@
-#include "DrumScan_Legacy_Midi.h"
+#include "DrumScan_Midi.h"
+
+template <>
+bool Midi_Scanner<DrumNote<4, true>>::isFinished() const noexcept
+{
+	return m_values.m_subTracks == 31;
+}
+
+template <>
+bool Midi_Scanner<DrumNote<5, false>>::isFinished() const noexcept
+{
+	return m_values.m_subTracks == 31;
+}
 
 template <>
 bool Midi_Scanner<DrumNote_Legacy>::isFinished() const noexcept
