@@ -1,8 +1,6 @@
 #include "DrumScan_Legacy_ChartV1.h"
-InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::V1Tracker(DrumType_Enum type)
-{
-	m_type = type;
-}
+
+InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::V1Tracker(DrumType_Enum type) : DrumScan_Legacy(type) {}
 
 bool InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::setDifficulty(ScanValues& values, size_t diff)
 {

@@ -1,7 +1,7 @@
 #include "GuitarScan_midi.h"
 
 template <>
-void InstrumentalScan_Midi::Midi_Scanner<GuitarNote<5>>::parseText(std::string_view str)
+void Midi_Scanner<GuitarNote<5>>::parseText(std::string_view str)
 {
 	if (str == "[ENHANCED_OPENS]" || str == "ENHANCED_OPENS")
 	{

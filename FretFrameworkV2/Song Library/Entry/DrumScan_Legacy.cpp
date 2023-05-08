@@ -9,6 +9,8 @@ bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& valu
 		return values.m_subTracks >= 24;
 }
 
+DrumScan_Legacy::DrumScan_Legacy(DrumType_Enum type) : m_type(type) {}
+
 void DrumScan_Legacy::transfer(ScanValues& values) const noexcept
 {
 	values.m_subTracks |= m_values.m_subTracks;

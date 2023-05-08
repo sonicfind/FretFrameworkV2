@@ -2,27 +2,20 @@
 #include "DrumScan.h"
 #include "InstrumentalScan_Midi.h"
 
-template<>
-struct InstrumentalScan_Midi::Midi_Scanner_Extensions<DrumNote<5, false>>
+template<size_t numPads, bool PRO_DRUMS>
+struct Midi_Scanner_Extensions<DrumNote<numPads, PRO_DRUMS>>
 {
 	bool expertPlus = false;
 	bool doubleBass = false;
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalScan_Midi::Midi_Scanner<DrumNote<5, false>>::s_noteRange{ 60, 102 };
-
-template<>
-struct InstrumentalScan_Midi::Midi_Scanner_Extensions<DrumNote<4, true>>
-{
-	bool expertPlus = false;
-	bool doubleBass = false;
-};
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote<5, false>>::s_noteRange{ 60, 102 };
 
 namespace DrumMidi
 {
 	template <bool NoteOn, class T>
-	unsigned char ParseLaneColor(InstrumentalScan_Midi::Midi_Scanner<T>& scanner, MidiNote note)
+	unsigned char ParseLaneColor(Midi_Scanner<T>& scanner, MidiNote note)
 	{
 		if (note.value == 95)
 		{
@@ -41,8 +34,8 @@ namespace DrumMidi
 		}
 		else
 		{
-			const int noteValue = note.value - InstrumentalScan_Midi::Midi_Scanner<T>::s_noteRange.first;
-			const int diff = InstrumentalScan_Midi::Midi_Scanner<T>::s_diffValues[noteValue];
+			const int noteValue = note.value - Midi_Scanner<T>::s_noteRange.first;
+			const int diff = Midi_Scanner<T>::s_diffValues[noteValue];
 			if (scanner.m_difficulties[diff].active)
 				return 0;
 
@@ -67,16 +60,16 @@ namespace DrumMidi
 
 template <>
 template <bool NoteOn>
-bool InstrumentalScan_Midi::Midi_Scanner<DrumNote<4, true>>::parseLaneColor(ScanValues& values, MidiNote note)
+bool Midi_Scanner<DrumNote<4, true>>::parseLaneColor(MidiNote note)
 {
-	values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
+	m_values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
 	return values.m_subTracks == 31;
 }
 
 template <>
 template <bool NoteOn>
-bool InstrumentalScan_Midi::Midi_Scanner<DrumNote<5, false>>::parseLaneColor(ScanValues& values, MidiNote note)
+bool Midi_Scanner<DrumNote<5, false>>::parseLaneColor(MidiNote note)
 {
-	values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
+	m_values.m_subTracks |= DrumMidi::ParseLaneColor<NoteOn>(*this, note);
 	return values.m_subTracks == 31;
 }

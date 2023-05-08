@@ -3,7 +3,7 @@
 #include "InstrumentalScan_Midi.h"
 
 template<>
-struct InstrumentalScan_Midi::Midi_Scanner_Extensions<DrumNote_Legacy>
+struct Midi_Scanner_Extensions<DrumNote_Legacy>
 {
 	bool expertPlus = false;
 	bool doubleBass = false;
@@ -11,11 +11,11 @@ struct InstrumentalScan_Midi::Midi_Scanner_Extensions<DrumNote_Legacy>
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::s_noteRange{ 60, 102 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template <>
 template <bool NoteOn>
-bool InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::parseLaneColor(ScanValues& values, MidiNote note)
+bool Midi_Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
 {
 	if (note.value == 95)
 	{
@@ -26,7 +26,7 @@ bool InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::parseLaneColor(ScanVa
 		{
 			if (m_ext.doubleBass)
 			{
-				values.addSubTrack(4);
+				m_values.addSubTrack(4);
 				m_ext.expertPlus = true;
 			}
 		}
@@ -48,7 +48,7 @@ bool InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::parseLaneColor(ScanVa
 				{
 					if (m_difficulties[diff].notes[lane])
 					{
-						values.addSubTrack(diff);
+						m_values.addSubTrack(diff);
 						m_difficulties[diff].active = true;
 					}
 				}
@@ -56,11 +56,11 @@ bool InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::parseLaneColor(ScanVa
 			}
 		}
 	}
-	return values.m_subTracks == 31 && m_ext.type != DrumType_Enum::LEGACY;
+	return m_values.m_subTracks == 31 && m_ext.type != DrumType_Enum::LEGACY;
 }
 
 template <>
-bool InstrumentalScan_Midi::Midi_Scanner<DrumNote_Legacy>::processExtraValues(ScanValues& values, MidiNote note);
+bool Midi_Scanner<DrumNote_Legacy>::processExtraValues(MidiNote note);
 
 class DrumScan_Legacy_Midi : public DrumScan_Legacy
 {
