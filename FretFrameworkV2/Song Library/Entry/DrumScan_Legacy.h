@@ -4,16 +4,12 @@
 
 class DrumScan_Legacy
 {
-public:
-	ScanValues m_values;
-
 protected:
 	DrumType_Enum m_type;
 
 public:
 	DrumScan_Legacy(DrumType_Enum type);
 	[[nodiscard]] DrumType_Enum getDrumType() const noexcept { return m_type; }
-	void transfer(ScanValues& values) const noexcept;
 };
 
 template <>

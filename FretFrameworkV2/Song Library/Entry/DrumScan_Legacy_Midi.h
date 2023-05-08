@@ -71,5 +71,5 @@ bool Midi_Scanner<DrumNote_Legacy>::processExtraValues(MidiNote note);
 class DrumScan_Legacy_Midi : public DrumScan_Legacy
 {
 public:
-	DrumScan_Legacy_Midi(MidiFileReader& reader);
+	DrumScan_Legacy_Midi(ScanValues& values, MidiFileReader& reader);
 };

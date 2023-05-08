@@ -6,7 +6,8 @@
 
 void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 {
-	InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy> drums_legacy(getDrumTypeFromModifier());
+	InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy> legacy_tracker(getDrumTypeFromModifier());
+	ScanValues legacy_scanValues;
 	while (reader.isStartOfTrack())
 	{
 		const auto ScanTrack = [&](ChtFileReader::NoteTracks_V1 track) {
@@ -17,9 +18,9 @@ void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 			case ChtFileReader::DoubleBass:   return InstrumentalScan_ChartV1::Scan<GuitarNote<5>>(m_scanTracks.bass_5, reader);
 			case ChtFileReader::DoubleRhythm: return InstrumentalScan_ChartV1::Scan<GuitarNote<5>>(m_scanTracks.rhythm, reader);
 			case ChtFileReader::Drums:
-				switch (drums_legacy.getDrumType())
+				switch (legacy_tracker.getDrumType())
 				{
-				case DrumType_Enum::LEGACY:       return InstrumentalScan_ChartV1::Scan(drums_legacy, drums_legacy.m_values, reader);
+				case DrumType_Enum::LEGACY:       return InstrumentalScan_ChartV1::Scan(legacy_tracker, legacy_scanValues, reader);
 				case DrumType_Enum::FOURLANE_PRO: return InstrumentalScan_ChartV1::Scan<DrumNote<4, true>>(m_scanTracks.drums4_pro, reader);
 				case DrumType_Enum::FIVELANE:     return InstrumentalScan_ChartV1::Scan<DrumNote<5, false>>(m_scanTracks.drums5, reader);
 				}
@@ -36,8 +37,8 @@ void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 			reader.skipTrack();
 	}
 
-	if (drums_legacy.getDrumType() != DrumType_Enum::FIVELANE)
-		drums_legacy.transfer(m_scanTracks.drums4_pro);
+	if (legacy_tracker.getDrumType() != DrumType_Enum::FIVELANE)
+		m_scanTracks.drums4_pro.m_subTracks |= legacy_scanValues.m_subTracks;
 	else
-		drums_legacy.transfer(m_scanTracks.drums5);
+		m_scanTracks.drums5.m_subTracks |= legacy_scanValues.m_subTracks;
 }
