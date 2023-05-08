@@ -26,11 +26,13 @@ void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 			case ChtFileReader::Keys:      return InstrumentalScan_ChartV1::Scan<Keys<5>>(m_scanTracks.keys, reader);
 			case ChtFileReader::GHLGuitar: return InstrumentalScan_ChartV1::Scan<GuitarNote<6>>(m_scanTracks.lead_6, reader);
 			case ChtFileReader::GHLBass:   return InstrumentalScan_ChartV1::Scan<GuitarNote<6>>(m_scanTracks.bass_6, reader);
+			default:
+				return false;
 			}
 		};
 
 		auto track = reader.extractTrack_V1();
-		if (track == ChtFileReader::Invalid || !ScanTrack(track))
+		if (!ScanTrack(track))
 			reader.skipTrack();
 	}
 

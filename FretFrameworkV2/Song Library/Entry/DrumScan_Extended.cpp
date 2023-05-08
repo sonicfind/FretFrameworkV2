@@ -18,7 +18,7 @@ bool TestDrumIndex(ScanValues& values, size_t diff, size_t lane)
 }
 
 template<>
-bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<4, true>>::testSingleNote(ScanValues & values, size_t lane) noexcept
+bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<4, true>>::testSingleNote(ScanValues& values, size_t lane) noexcept
 {
 	return TestDrumIndex<4, true>(values, m_difficulty, lane);
 }
