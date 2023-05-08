@@ -117,6 +117,7 @@ public:
 	PointerWrapper<const Modifiers::Modifier> getModifier(std::string_view name) const noexcept;
 private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
+	DrumType_Enum getDrumTypeFromModifier() const noexcept;
 
 private:
 	void scan_cht(const LoadedFile& file);

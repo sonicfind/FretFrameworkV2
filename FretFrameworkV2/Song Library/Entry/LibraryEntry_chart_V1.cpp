@@ -6,12 +6,7 @@
 
 void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 {
-	InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>    drums_legacy([&]{
-		if (auto fivelane = getModifier("five_lane_drums"))
-			return fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
-		return DrumType_Enum::LEGACY;
-	}());
-
+	InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy> drums_legacy(getDrumTypeFromModifier());
 	while (reader.isStartOfTrack())
 	{
 		auto track = reader.extractTrack_V1();

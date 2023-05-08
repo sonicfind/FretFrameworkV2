@@ -7,9 +7,7 @@
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
-	DrumType_Enum type = DrumType_Enum::LEGACY;
-	if (auto fivelane = getModifier("five_lane_drums"))
-		type = fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
+	DrumType_Enum type = getDrumTypeFromModifier();
 
 	Midi_Scanner_Vocal<1> vocalTracker(m_scanTracks.vocals);
 	Midi_Scanner_Vocal<3> harmonyTracker(m_scanTracks.harmonies);

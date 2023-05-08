@@ -171,6 +171,13 @@ PointerWrapper<Modifiers::Modifier> LibraryEntry::getModifier(std::string_view n
 	return {};
 }
 
+DrumType_Enum LibraryEntry::getDrumTypeFromModifier() const noexcept
+{
+	if (auto fivelane = getModifier("five_lane_drums"))
+		return fivelane->getValue<bool>() ? DrumType_Enum::FIVELANE : DrumType_Enum::FOURLANE_PRO;
+	return DrumType_Enum::LEGACY;
+}
+
 bool LibraryEntry::validateForNotes() const noexcept
 {
 	const ScanValues* const arr[11] =
