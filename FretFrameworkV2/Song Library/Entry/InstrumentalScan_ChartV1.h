@@ -29,17 +29,17 @@ namespace InstrumentalScan_ChartV1
 	};
 
 	template <class T>
-	void Scan(ScanValues& values, ChtFileReader& reader)
+	bool Scan(ScanValues& values, ChtFileReader& reader)
 	{
 		V1Tracker<T> tracker;
-		Scan(tracker, values, reader);
+		return Scan(tracker, values, reader);
 	}
 
 	template <class T>
-	void Scan(V1Tracker<T>& tracker, ScanValues& values, ChtFileReader& reader)
+	bool Scan(V1Tracker<T>& tracker, ScanValues& values, ChtFileReader& reader)
 	{
 		if (!tracker.setDifficulty(values, reader.getDifficulty()))
-			return;
+			return false;
 
 		while (reader.isStillCurrentTrack())
 		{
@@ -48,12 +48,10 @@ namespace InstrumentalScan_ChartV1
 			{
 				auto note = reader.extractColorAndSustain_V1();
 				if (tracker.test(values, note.first))
-				{
-					reader.skipTrack();
-					return;
-				}
+					return false;
 			}
 			reader.nextEvent();
 		}
+		return true;
 	}
 };
