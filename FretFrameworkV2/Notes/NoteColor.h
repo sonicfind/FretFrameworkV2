@@ -7,7 +7,7 @@ public:
 	static uint32_t s_sustainMinimum;
 
 protected:
-	uint16_t m_sustain = 0;
+	uint32_t m_sustain = 0;
 
 public:
 	uint32_t getSustain() const { return m_sustain; }
