@@ -102,8 +102,8 @@ void ChtFileWriter::writeText(std::string_view str)
 
 void ChtFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 {
-	write(static_cast<uint32_t>(phrase.getType()));
-	write(phrase.getDuration());
+	write(static_cast<uint32_t>(phrase.type));
+	write(phrase.getLength());
 }
 
 void ChtFileWriter::writePitch(Pitch<-1, 9> pitch)

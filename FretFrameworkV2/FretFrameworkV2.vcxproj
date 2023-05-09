@@ -194,7 +194,6 @@
     <ClCompile Include="Song\Tracks\Instrumental\ChartV1_LegacyDrums.cpp" />
     <ClCompile Include="TaskQueue\TaskQueue.cpp" />
     <ClCompile Include="Types\MD5.cpp" />
-    <ClCompile Include="Types\SpecialPhrase.cpp" />
     <ClCompile Include="Types\UnicodeString.cpp" />
     <ClCompile Include="Types\utf_utils.cpp" />
   </ItemGroup>
@@ -210,6 +209,7 @@
     <ClInclude Include="Notes\Notes.h" />
     <ClInclude Include="Notes\Notes_Special.h" />
     <ClInclude Include="Notes\Pitch.h" />
+    <ClInclude Include="Notes\SpecialPhrase.h" />
     <ClInclude Include="Notes\VocalNote.h" />
     <ClInclude Include="Notes\VocalPercussion.h" />
     <ClInclude Include="PtrWrapper\PtrWrapper.h" />
@@ -281,7 +281,6 @@
     <ClInclude Include="Song\Tracks\Vocal\Midi_Saver_Vocals.h" />
     <ClInclude Include="TaskQueue\TaskQueue.h" />
     <ClInclude Include="Types\MD5.h" />
-    <ClInclude Include="Types\SpecialPhrase.h" />
     <ClInclude Include="Types\UnicodeString.h" />
     <ClInclude Include="Types\utf_utils.h" />
   </ItemGroup>

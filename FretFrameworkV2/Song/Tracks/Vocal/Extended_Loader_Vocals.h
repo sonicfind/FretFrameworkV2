@@ -48,10 +48,10 @@ namespace Extended_Load_Vocals
 			case ChartEvent::SPECIAL:
 			{
 				auto phrase = parser.extractSpecialPhrase();
-				switch (phrase.getType())
+				switch (phrase.type)
 				{
 				case SpecialPhraseType::LyricShift:
-					phrase.setDuration(1);
+					phrase.setLength(1);
 					__fallthrough;
 				case SpecialPhraseType::StarPower:
 				case SpecialPhraseType::LyricLine:

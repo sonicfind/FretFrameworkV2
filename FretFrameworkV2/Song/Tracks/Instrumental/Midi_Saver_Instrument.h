@@ -18,40 +18,40 @@ public:
 		{
 			for (const auto& phrase : *vec)
 			{
-				switch (phrase.getType())
+				switch (phrase.type)
 				{
 				case SpecialPhraseType::StarPower:
-					writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 116, 100, phrase.getLength());
 					m_phrases = false;
 					break;
 				case SpecialPhraseType::StarPowerActivation:
-					writer.addMidiNote(vec.key, 120, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 121, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 122, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 123, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 124, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 120, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 121, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 122, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 123, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 124, 100, phrase.getLength());
 					m_phrases = false;
 					break;
 				case SpecialPhraseType::Solo:
-					writer.addMidiNote(vec.key, 103, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 103, 100, phrase.getLength());
 					m_phrases = false;
 					break;
 				case SpecialPhraseType::Tremolo:
-					writer.addMidiNote(vec.key, 126, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 126, 100, phrase.getLength());
 					m_phrases = false;
 					break;
 				case SpecialPhraseType::Trill:
-					writer.addMidiNote(vec.key, 127, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 127, 100, phrase.getLength());
 					m_phrases = false;
 					break;
 				case SpecialPhraseType::StarPower_Diff:
-					writer.addMidiNote(vec.key, OFFSET + 7, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, OFFSET + 7, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::FaceOff_Player1:
-					writer.addMidiNote(vec.key, OFFSET + 9, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, OFFSET + 9, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::FaceOff_Player2:
-					writer.addMidiNote(vec.key, OFFSET + 10, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, OFFSET + 10, 100, phrase.getLength());
 					break;
 				}
 			}
@@ -98,26 +98,26 @@ namespace Midi_Saver_Instrument
 		{
 			for (const auto& phrase : *vec)
 			{
-				switch (phrase.getType())
+				switch (phrase.type)
 				{
 				case SpecialPhraseType::StarPower:
-					writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 116, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::StarPowerActivation:
-					writer.addMidiNote(vec.key, 120, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 121, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 122, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 123, 100, phrase.getDuration());
-					writer.addMidiNote(vec.key, 124, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 120, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 121, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 122, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 123, 100, phrase.getLength());
+					writer.addMidiNote(vec.key, 124, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::Solo:
-					writer.addMidiNote(vec.key, 103, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 103, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::Tremolo:
-					writer.addMidiNote(vec.key, 126, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 126, 100, phrase.getLength());
 					break;
 				case SpecialPhraseType::Trill:
-					writer.addMidiNote(vec.key, 127, 100, phrase.getDuration());
+					writer.addMidiNote(vec.key, 127, 100, phrase.getLength());
 					break;
 				}
 			}

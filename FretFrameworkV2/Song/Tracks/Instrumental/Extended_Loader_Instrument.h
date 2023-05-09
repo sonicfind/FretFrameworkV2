@@ -59,7 +59,7 @@ namespace Extended_Load_Instrument
 			case ChartEvent::SPECIAL:
 			{
 				auto phrase = parser.extractSpecialPhrase();
-				switch (phrase.getType())
+				switch (phrase.type)
 				{
 				case SpecialPhraseType::StarPower:
 				case SpecialPhraseType::Solo:
@@ -93,7 +93,7 @@ namespace Extended_Load_Instrument
 		{
 			auto& phrases = track.m_specialPhrases.get_or_emplace_back(trackEvent.first);
 			auto phrase = parser.extractSpecialPhrase();
-			switch (phrase.getType())
+			switch (phrase.type)
 			{
 			case SpecialPhraseType::StarPower:
 			case SpecialPhraseType::Solo:

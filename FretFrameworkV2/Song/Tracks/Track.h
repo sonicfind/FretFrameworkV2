@@ -1,7 +1,7 @@
 #pragma once
 #include "SimpleFlatMap/SimpleFlatMap.h"
 #include "Types/UnicodeString.h"
-#include "Types/SpecialPhrase.h"
+#include "Notes/SpecialPhrase.h"
 
 class Track
 {

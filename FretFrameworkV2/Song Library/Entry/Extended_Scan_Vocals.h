@@ -39,8 +39,8 @@ namespace Extended_Scan_Vocals
 			else if (trackEvent.second == ChartEvent::SPECIAL)
 			{
 				auto phrase = parser.extractSpecialPhrase();
-				if (phrase.getType() == SpecialPhraseType::LyricLine)
-					endOfPhrase = trackEvent.first + phrase.getDuration();
+				if (phrase.type == SpecialPhraseType::LyricLine)
+					endOfPhrase = trackEvent.first + phrase.getLength();
 				break;
 			}
 			parser.nextEvent();

@@ -70,9 +70,6 @@
     <Filter Include="Song\Tracks\InstrumentalTrack\Drums">
       <UniqueIdentifier>{a0e8c926-fa59-4de3-b7b0-834f4a9d2ffb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SpecialPhrase">
-      <UniqueIdentifier>{6ad26af3-6ad8-4690-a44b-9beb88c58701}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Song\Load">
       <UniqueIdentifier>{da9ec181-8ed0-40c4-b8d2-0de1ab68984e}</UniqueIdentifier>
     </Filter>
@@ -222,9 +219,6 @@
     </ClCompile>
     <ClCompile Include="Song\Tracks\Extended_Save.cpp">
       <Filter>Song\Tracks</Filter>
-    </ClCompile>
-    <ClCompile Include="Types\SpecialPhrase.cpp">
-      <Filter>SpecialPhrase</Filter>
     </ClCompile>
     <ClCompile Include="Song\Song_chart_V1.cpp">
       <Filter>Song\Load</Filter>
@@ -483,9 +477,6 @@
     <ClInclude Include="Song\Tracks\Extended_Save.h">
       <Filter>Song\Tracks</Filter>
     </ClInclude>
-    <ClInclude Include="Types\SpecialPhrase.h">
-      <Filter>SpecialPhrase</Filter>
-    </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h">
       <Filter>Song\Tracks\InstrumentalTrack\Base</Filter>
     </ClInclude>
@@ -497,6 +488,9 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\MidiNodeGetter.h">
       <Filter>Song\Tracks</Filter>
+    </ClInclude>
+    <ClInclude Include="Notes\SpecialPhrase.h">
+      <Filter>Notes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

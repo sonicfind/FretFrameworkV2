@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <vector>
 #include "Song/TimeSig.h"
-#include "Types/SpecialPhrase.h"
+#include "Notes/SpecialPhrase.h"
 #include "Notes/Pitch.h"
 
 enum class ChartEvent : unsigned char

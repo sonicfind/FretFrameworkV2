@@ -22,24 +22,24 @@ namespace Midi_Saver_Vocals
 				{
 					if constexpr (INDEX == 0)
 					{
-						switch (phrase.getType())
+						switch (phrase.type)
 						{
 						case SpecialPhraseType::StarPower:
-							writer.addMidiNote(vec.key, 116, 100, phrase.getDuration());
+							writer.addMidiNote(vec.key, 116, 100, phrase.getLength());
 							break;
 						case SpecialPhraseType::LyricLine:
-							writer.addMidiNote(vec.key, 105, 100, phrase.getDuration());
+							writer.addMidiNote(vec.key, 105, 100, phrase.getLength());
 							break;
 						case SpecialPhraseType::RangeShift:
-							writer.addMidiNote(vec.key, 0, 100, phrase.getDuration());
+							writer.addMidiNote(vec.key, 0, 100, phrase.getLength());
 							break;
 						case SpecialPhraseType::LyricShift:
-							writer.addMidiNote(vec.key, 1, 100, phrase.getDuration());
+							writer.addMidiNote(vec.key, 1, 100, phrase.getLength());
 							break;
 						}
 					}
-					else if (phrase.getType() == SpecialPhraseType::HarmonyLine)
-						writer.addMidiNote(vec.key, 106, 100, phrase.getDuration());
+					else if (phrase.type == SpecialPhraseType::HarmonyLine)
+						writer.addMidiNote(vec.key, 106, 100, phrase.getLength());
 				}
 			}
 		}
@@ -50,7 +50,7 @@ namespace Midi_Saver_Vocals
 			if (note->isPlayable())
 			{
 				const VocalPitch& pitch = note->getPitch();
-				writer.addMidiNote(note.key, pitch.getBinaryValue(), 100, note->getDuration());
+				writer.addMidiNote(note.key, pitch.getBinaryValue(), 100, note->getLength());
 			}
 		}
 

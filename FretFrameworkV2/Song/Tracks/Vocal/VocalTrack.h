@@ -83,7 +83,7 @@ public:
 			{
 				if (index == 0)
 				{
-					switch (phrase.getType())
+					switch (phrase.type)
 					{
 					case SpecialPhraseType::StarPower:
 					case SpecialPhraseType::LyricLine:
@@ -92,7 +92,7 @@ public:
 						return true;
 					}
 				}
-				else if (phrase.getType() == SpecialPhraseType::HarmonyLine)
+				else if (phrase.type == SpecialPhraseType::HarmonyLine)
 					return true;
 			}
 		}

@@ -44,7 +44,7 @@ namespace ChartV1
 			case ChartEvent::SPECIAL:
 			{
 				auto phrase = reader.extractSpecialPhrase();
-				switch (phrase.getType())
+				switch (phrase.type)
 				{
 				case SpecialPhraseType::StarPower:
 				case SpecialPhraseType::StarPowerActivation:

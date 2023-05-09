@@ -110,8 +110,8 @@ void BCHFileWriter::writeText(std::string_view str)
 
 void BCHFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 {
-	append((unsigned char)phrase.getType());
-	appendWebType(phrase.getDuration());
+	append((unsigned char)phrase.type);
+	appendWebType(phrase.getLength());
 }
 
 void BCHFileWriter::writePitch(Pitch<-1, 9> pitch)

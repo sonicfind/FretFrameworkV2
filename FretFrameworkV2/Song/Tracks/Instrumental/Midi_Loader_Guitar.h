@@ -91,9 +91,9 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uin
 		{
 			for (auto phraseIter = (*iter)->begin(); phraseIter < (*iter)->end();)
 			{
-				if (phraseIter->getType() == SpecialPhraseType::Solo)
+				if (phraseIter->type == SpecialPhraseType::Solo)
 				{
-					m_track[3].m_specialPhrases[iter->key].push_back({ SpecialPhraseType::StarPower_Diff, phraseIter->getDuration() });
+					m_track[3].m_specialPhrases[iter->key].push_back({ SpecialPhraseType::StarPower_Diff, phraseIter->getLength() });
 					phraseIter = (*iter)->erase(phraseIter);
 				}
 				else
