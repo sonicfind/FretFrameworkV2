@@ -1,8 +1,8 @@
 #pragma once
-#include "InstrumentalScan.h"
+#include "InstrumentScan.h"
 #include "Serialization/CommonChartParser.h"
 
-namespace InstrumentalScan_Extended
+namespace Extended_Scan
 {
 	template <class T>
 	struct DifficultyTracker
@@ -11,25 +11,24 @@ namespace InstrumentalScan_Extended
 		bool scanDifficulty(ScanValues& values, CommonChartParser& parser)
 		{
 			if (m_difficulty >= 5 && InstrumentalScan::WasTrackValidated<T>(values, m_difficulty))
-				return true;
+				return false;
 
 			while (parser.isStillCurrentTrack())
 			{
 				const auto trackEvent = parser.parseEvent();
-				bool add = false;
 				if (trackEvent.second == ChartEvent::NOTE)
 				{
 					if (testSingleNote(values, parser.extractSingleNote().first))
-						return true;
+						return false;
 				}
 				else if (trackEvent.second == ChartEvent::MULTI_NOTE)
 				{
 					if (testMultiNote(values, parser.extractMultiNote()))
-						return true;
+						return false;
 				}
 				parser.nextEvent();
 			}
-			return false;
+			return true;
 		}
 
 		[[nodiscard]] bool testSingleNote(ScanValues& values, size_t lane) noexcept
@@ -66,7 +65,7 @@ namespace InstrumentalScan_Extended
 			else if (parser.validateDifficultyTrack())
 			{
 				DifficultyTracker<T> tracker(parser.getDifficulty());
-				if (tracker.scanDifficulty(values, parser))
+				if (!tracker.scanDifficulty(values, parser))
 					parser.skipTrack();
 			}
 			else

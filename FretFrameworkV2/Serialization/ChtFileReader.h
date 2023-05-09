@@ -61,8 +61,6 @@ public:
 
 public:
 	NoteTracks_V1 extractTrack_V1();
-	void setHopoThreshold(uint32_t threshold) { m_hopoThreshold = threshold; }
-	uint32_t getHopoThreshold() const noexcept { return m_hopoThreshold; }
 
 private:
 	std::vector<const std::vector<EventCombo>*> m_eventSets;

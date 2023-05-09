@@ -1,4 +1,4 @@
-#include "DrumScan_ChartV1.h"
+#include "ChartV1_Scan_Drums.h"
 
 template <>
 bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& values, size_t diff)
@@ -9,9 +9,9 @@ bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& valu
 		return values.m_subTracks >= 24;
 }
 
-InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::V1Tracker(DrumType_Enum type) : m_type(type) {}
+ChartV1_Scan::V1Tracker<DrumNote_Legacy>::V1Tracker(DrumType_Enum type) : m_type(type) {}
 
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::setDifficulty(ScanValues& values, size_t diff)
+bool ChartV1_Scan::V1Tracker<DrumNote_Legacy>::setDifficulty(ScanValues& values, size_t diff)
 {
 	if (InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(values, diff))
 		return false;
@@ -20,7 +20,7 @@ bool InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::setDifficulty(ScanVal
 	return true;
 }
 
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>::test(ScanValues& values, size_t note)
+bool ChartV1_Scan::V1Tracker<DrumNote_Legacy>::test(ScanValues& values, size_t note)
 {
 	if (DrumNote_Legacy::TestIndex_V1(note))
 		values.addSubTrack(m_difficulty);
@@ -55,13 +55,13 @@ bool Test_(ScanValues& values, size_t diff, size_t note)
 }
 
 template <>
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote<4, true>>::test(ScanValues& values, size_t note) const noexcept
+bool ChartV1_Scan::V1Tracker<DrumNote<4, true>>::test(ScanValues& values, size_t note) const noexcept
 {
 	return Test_<4, true>(values, m_difficulty, note);
 }
 
 template <>
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote<5, false>>::test(ScanValues& values, size_t note) const noexcept
+bool ChartV1_Scan::V1Tracker<DrumNote<5, false>>::test(ScanValues& values, size_t note) const noexcept
 {
 	return Test_<5, false>(values, m_difficulty, note);
 }

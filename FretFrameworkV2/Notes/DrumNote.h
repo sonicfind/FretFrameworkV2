@@ -181,6 +181,11 @@ public:
 		}
 	}
 
+	bool validate() const noexcept
+	{
+		return m_doubleBass.isActive() || Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::validate();
+	}
+
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getActiveColors();

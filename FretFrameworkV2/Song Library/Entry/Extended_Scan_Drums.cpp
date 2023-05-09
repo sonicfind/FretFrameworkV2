@@ -1,4 +1,4 @@
-#include "DrumScan_Extended.h"
+#include "Extended_Scan_Drums.h"
 
 template<size_t numPads, bool PRO_DRUMS>
 bool TestDrumIndex(ScanValues& values, size_t diff, size_t lane)
@@ -18,13 +18,13 @@ bool TestDrumIndex(ScanValues& values, size_t diff, size_t lane)
 }
 
 template<>
-bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<4, true>>::testSingleNote(ScanValues& values, size_t lane) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<4, true>>::testSingleNote(ScanValues& values, size_t lane) noexcept
 {
 	return TestDrumIndex<4, true>(values, m_difficulty, lane);
 }
 
 template<>
-bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<5, false>>::testSingleNote(ScanValues& values, size_t lane) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<5, false>>::testSingleNote(ScanValues& values, size_t lane) noexcept
 {
 	return TestDrumIndex<5, false>(values, m_difficulty, lane);
 }
@@ -48,13 +48,13 @@ bool TestDrumIndices(ScanValues& values, size_t diff, const std::vector<std::pai
 }
 
 template<>
-bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<4, true>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<4, true>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
 {
 	return TestDrumIndices<4, true>(values, m_difficulty, colors);
 }
 
 template<>
-bool InstrumentalScan_Extended::DifficultyTracker<DrumNote<5, false>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<5, false>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
 {
 	return TestDrumIndices<5, false>(values, m_difficulty, colors);
 }

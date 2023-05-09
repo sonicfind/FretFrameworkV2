@@ -1,4 +1,4 @@
-#include "GuitarScan_midi.h"
+#include "Midi_Scan_Guitar.h"
 
 template <>
 void Midi_Scanner<GuitarNote<5>>::parseText(std::string_view str)

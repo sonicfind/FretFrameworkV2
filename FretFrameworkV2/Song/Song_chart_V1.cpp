@@ -1,49 +1,82 @@
 #include "Song.h"
+#include "Tracks/Instrumental/ChartV1_LegacyDrums.h"
 #include "Tracks/Instrumental/GuitarForcing.h"
-#include "Tracks/Instrumental/Legacy_DrumTrack.h"
+#include "Tracks/Instrumental/DrumTrack_Transfer.h"
 
 void Song::traverse_cht_V1(ChtFileReader& reader)
 {
-	Legacy_DrumTrack drumsLegacy(m_baseDrumType);
+	ChartV1::V1Loader<DrumNote_Legacy> legacy_loader(m_baseDrumType);
+	InstrumentalTrack<DrumNote_Legacy> legacy_track;
 	while (reader.isStartOfTrack())
 	{
 		if (reader.validateSyncTrack())
 			load_tempoMap(reader);
 		else if (reader.validateEventTrack())
-			load_events_V1(reader);
+		{
+			uint32_t phrase = UINT32_MAX;
+			while (reader.isStillCurrentTrack())
+			{
+				const auto trackEvent = reader.parseEvent();
+				if (trackEvent.second == ChartEvent::EVENT)
+				{
+					std::string_view str = reader.extractText();
+					if (str.starts_with("section "))
+						m_events.sections.get_or_emplace_back(trackEvent.first) = str.substr(8);
+					else if (str.starts_with("lyric "))
+						m_noteTracks.vocals[0][trackEvent.first].setLyric(str.substr(6));
+					else if (str.starts_with("phrase_start"))
+					{
+						if (phrase < UINT32_MAX)
+							m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
+						phrase = trackEvent.first;
+					}
+					else if (str.starts_with("phrase_end"))
+					{
+						if (phrase < UINT32_MAX)
+						{
+							m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
+							phrase = UINT32_MAX;
+						}
+					}
+					else
+						m_events.globals.get_or_emplace_back(trackEvent.first).push_back(UnicodeString::strToU32(str));
+				}
+				reader.nextEvent();
+			}
+		}
 		else
 		{
 			auto track = reader.extractTrack_V1();
 			switch (track)
 			{
 			case ChtFileReader::Single:
-				m_noteTracks.lead_5.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.lead_5, reader);
 				break;
 			case ChtFileReader::DoubleGuitar:
-				m_noteTracks.coop.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.coop, reader);
 				break;
 			case ChtFileReader::DoubleBass:
-				m_noteTracks.bass_5.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.bass_5, reader);
 				break;
 			case ChtFileReader::DoubleRhythm:
-				m_noteTracks.rhythm.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.rhythm, reader);
 				break;
 			case ChtFileReader::Drums:
-				switch (drumsLegacy.getDrumType())
+				switch (legacy_loader.getDrumType())
 				{
-				case DrumType_Enum::LEGACY:       drumsLegacy.load_V1(reader.getDifficulty(), reader); break;
-				case DrumType_Enum::FOURLANE_PRO: m_noteTracks.drums4_pro.load_V1(reader.getDifficulty(), reader); break;
-				case DrumType_Enum::FIVELANE:     m_noteTracks.drums5.load_V1(reader.getDifficulty(), reader); break;
+				case DrumType_Enum::LEGACY:       ChartV1::Load(legacy_loader, legacy_track, reader); break;
+				case DrumType_Enum::FOURLANE_PRO: ChartV1::Load(m_noteTracks.drums4_pro, reader); break;
+				case DrumType_Enum::FIVELANE:     ChartV1::Load(m_noteTracks.drums5, reader); break;
 				}
 				break;
 			case ChtFileReader::Keys:
-				m_noteTracks.keys.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.keys, reader);
 				break;
 			case ChtFileReader::GHLGuitar:
-				m_noteTracks.lead_6.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.lead_6, reader);
 				break;
 			case ChtFileReader::GHLBass:
-				m_noteTracks.bass_6.load_V1(reader.getDifficulty(), reader);
+				ChartV1::Load(m_noteTracks.bass_6, reader);
 				break;
 			default:
 				reader.skipTrack();
@@ -51,45 +84,19 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 		}
 	}
 
-	if (drumsLegacy.isOccupied())
+	if (legacy_track.isOccupied())
 	{
-		if (drumsLegacy.getDrumType() != DrumType_Enum::FIVELANE)
-			drumsLegacy.transfer(m_noteTracks.drums4_pro);
+		if (legacy_loader.getDrumType() != DrumType_Enum::FIVELANE)
+			LegacyDrums::Transfer(legacy_track, m_noteTracks.drums4_pro);
 		else
-			drumsLegacy.transfer(m_noteTracks.drums5);
+			LegacyDrums::Transfer(legacy_track, m_noteTracks.drums5);
 	}
-}
 
-void Song::load_events_V1(ChtFileReader& reader)
-{
-	uint32_t phrase = UINT32_MAX;
-	while (reader.isStillCurrentTrack())
-	{
-		const auto trackEvent = reader.parseEvent();
-		if (trackEvent.second == ChartEvent::EVENT)
-		{
-			std::string_view str = reader.extractText();
-			if (str.starts_with("section "))
-				m_sectionMarkers.get_or_emplace_back(trackEvent.first) = str.substr(8);
-			else if (str.starts_with("lyric "))
-				m_noteTracks.vocals[0][trackEvent.first].setLyric(str.substr(6));
-			else if (str.starts_with("phrase_start"))
-			{
-				if (phrase < UINT32_MAX)
-					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
-				phrase = trackEvent.first;
-			}
-			else if (str.starts_with("phrase_end"))
-			{
-				if (phrase < UINT32_MAX)
-				{
-					m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
-					phrase = UINT32_MAX;
-				}
-			}
-			else
-				m_globalEvents.get_or_emplace_back(trackEvent.first).push_back(UnicodeString::strToU32(str));
-		}
-		reader.nextEvent();
-	}
+	const uint32_t hopoThreshold = getHopoThreshold();
+	ForcingFix::Fix(m_noteTracks.lead_5, hopoThreshold);
+	ForcingFix::Fix(m_noteTracks.lead_6, hopoThreshold);
+	ForcingFix::Fix(m_noteTracks.bass_5, hopoThreshold);
+	ForcingFix::Fix(m_noteTracks.bass_6, hopoThreshold);
+	ForcingFix::Fix(m_noteTracks.rhythm, hopoThreshold);
+	ForcingFix::Fix(m_noteTracks.coop, hopoThreshold);
 }

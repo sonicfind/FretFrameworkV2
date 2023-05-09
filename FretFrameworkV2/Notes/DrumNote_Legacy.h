@@ -30,16 +30,6 @@ public:
 		return note;
 	}
 
-	DrumType_Enum evaluateDrumType() const noexcept
-	{
-		if (m_colors[4].isActive())
-			return DrumType_Enum::FIVELANE;
-		else if (m_colors[1].isCymbal() || m_colors[2].isCymbal() || m_colors[3].isCymbal())
-			return DrumType_Enum::FOURLANE_PRO;
-		else
-			return DrumType_Enum::LEGACY;
-	}
-
 	static DrumType_Enum EvaluateDrumType(size_t index)
 	{
 		if (index == 5)

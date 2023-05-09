@@ -1,8 +1,8 @@
 #include "LibraryEntry.h"
 #include "Notes/Keys.h"
-#include "GuitarScan_midi.h"
-#include "DrumScan_midi.h"
-#include "VocalScan_Midi.h"
+#include "Midi_Scan_Guitar.h"
+#include "Midi_Scan_Drums.h"
+#include "Midi_Scan_Vocals.h"
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
@@ -48,7 +48,7 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 					Midi_Scanner<DrumNote<5, false>>(m_scanTracks.drums5, reader);
 			}
 			else if (name == "PART VOCALS")
-				vocalTracker.scan<0>(reader);
+				vocalTracker.scan(reader);
 			else if (name == "HARM1")
 				harmonyTracker.scan<0>(reader);
 			else if (name == "HARM2")

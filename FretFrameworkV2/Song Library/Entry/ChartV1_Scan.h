@@ -1,13 +1,13 @@
 #pragma once
-#include "InstrumentalScan.h"
+#include "InstrumentScan.h"
 #include "Serialization/ChtFileReader.h"
 
-namespace InstrumentalScan_ChartV1
+namespace ChartV1_Scan
 {
 	template <class T>
-	struct V1Tracker
+	class V1Tracker
 	{
-		size_t m_difficulty = 0;
+	public:
 		[[nodiscard]] bool setDifficulty(ScanValues& values, size_t diff)
 		{
 			if (InstrumentalScan::WasTrackValidated<T>(values, diff))
@@ -26,6 +26,9 @@ namespace InstrumentalScan_ChartV1
 			}
 			return false;
 		}
+
+	private:
+		size_t m_difficulty = 0;
 	};
 
 	template <class T>

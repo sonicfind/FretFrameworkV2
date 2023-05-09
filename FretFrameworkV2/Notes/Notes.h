@@ -30,6 +30,14 @@ public:
 		return m_colors[lane];
 	}
 
+	bool validate() const noexcept
+	{
+		for (size_t i = 0; i < numColors; ++i)
+			if (m_colors[i].isActive())
+				return true;
+		return false;
+	}
+
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors;

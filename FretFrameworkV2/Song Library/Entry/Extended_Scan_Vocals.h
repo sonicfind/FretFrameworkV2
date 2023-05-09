@@ -4,7 +4,7 @@
 #include "Notes/VocalPercussion.h"
 #include "Serialization/CommonChartParser.h"
 
-namespace VocalScan_Extended
+namespace Extended_Scan_Vocals
 {
 	template<size_t numTracks>
 	bool Scan(ScanValues& values, CommonChartParser& parser)

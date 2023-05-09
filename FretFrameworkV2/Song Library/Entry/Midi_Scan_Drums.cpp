@@ -1,4 +1,4 @@
-#include "DrumScan_Midi.h"
+#include "Midi_Scan_Drums.h"
 
 template <>
 bool Midi_Scanner<DrumNote<4, true>>::isFinished() const noexcept

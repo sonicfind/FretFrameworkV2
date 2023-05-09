@@ -86,15 +86,9 @@ public:
 		return *m_list.back();
 	}
 
-	T& get_or_emplaceNodeFromBack(uint32_t position)
+	void pop_back()
 	{
-		if (isEmpty())
-			return emplace_back(position);
-
-		auto iter = iterFromBack(position);
-		if (iter == end() || iter->key > position)
-			iter = emplace(iter, position);
-		return **iter;
+		m_list.pop_back();
 	}
 
 	auto emplace(typename std::vector<Node>::iterator _Where, uint32_t position, const T& obj = BASE)
@@ -163,12 +157,6 @@ public:
 		return m_list[index];
 	}
 
-	// Assumes key exists
-	T& getNodeFromBack(uint32_t position)
-	{
-		return **iterFromBack(position);
-	}
-
 	[[nodiscard]] T& back()
 	{
 		return *m_list.back();
@@ -221,18 +209,5 @@ public:
 	[[nodiscard]] auto begin() const noexcept { return m_list.begin(); }
 	[[nodiscard]] auto end() noexcept { return m_list.end(); }
 	[[nodiscard]] auto end() const noexcept { return m_list.end(); }
-
-private:
-	auto iterFromBack(uint32_t position)
-	{
-		auto iter = end();
-		while (iter != begin())
-		{
-			--iter;
-			if (iter->key <= position)
-				break;
-		}
-		return iter;
-	}
 };
 

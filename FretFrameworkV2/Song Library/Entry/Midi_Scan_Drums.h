@@ -1,7 +1,7 @@
 #pragma once
 #include "DrumScan.h"
 #include "Notes/DrumNote_Legacy.h"
-#include "InstrumentalScan_Midi.h"
+#include "Midi_Scan.h"
 
 template<size_t numPads, bool PRO_DRUMS>
 struct Midi_Scanner_Extensions<DrumNote<numPads, PRO_DRUMS>>

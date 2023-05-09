@@ -1,13 +1,13 @@
 #pragma once
 #include "DrumScan.h"
 #include "Notes/DrumNote_Legacy.h"
-#include "InstrumentalScan_ChartV1.h"
+#include "ChartV1_Scan.h"
 
 template <>
 bool InstrumentalScan::WasTrackValidated<DrumNote_Legacy>(const ScanValues& values, size_t diff);
 
 template<>
-struct InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>
+struct ChartV1_Scan::V1Tracker<DrumNote_Legacy>
 {
 	DrumType_Enum m_type;
 	size_t m_difficulty = 0;
@@ -19,7 +19,7 @@ struct InstrumentalScan_ChartV1::V1Tracker<DrumNote_Legacy>
 };
 
 template <>
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote<4, true>>::test(ScanValues& values, size_t note) const noexcept;
+bool ChartV1_Scan::V1Tracker<DrumNote<4, true>>::test(ScanValues& values, size_t note) const noexcept;
 
 template <>
-bool InstrumentalScan_ChartV1::V1Tracker<DrumNote<5, false>>::test(ScanValues& values, size_t note) const noexcept;
+bool ChartV1_Scan::V1Tracker<DrumNote<5, false>>::test(ScanValues& values, size_t note) const noexcept;

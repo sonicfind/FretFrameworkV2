@@ -5,16 +5,10 @@
 template<size_t numTracks>
 struct Midi_Scanner_Vocal
 {
-	uint32_t m_vocal = UINT32_MAX;
-	uint32_t m_lyric = UINT32_MAX;
-
-	uint32_t m_currLine = UINT32_MAX;
-	std::vector<std::pair<uint32_t, uint32_t>> m_lyriclines;
-
-	ScanValues& m_values;
+public:
 	Midi_Scanner_Vocal(ScanValues& values) : m_values(values) {}
 
-	template <size_t INDEX>
+	template <size_t INDEX = 0>
 	void scan(MidiFileReader& reader)
 	{
 		static_assert(INDEX < numTracks);
@@ -39,6 +33,7 @@ struct Midi_Scanner_Vocal
 		}
 	}
 
+private:
 	template <size_t INDEX, bool NoteOn>
 	bool parseNote(unsigned char midiValue, uint32_t position)
 	{
@@ -101,4 +96,13 @@ struct Midi_Scanner_Vocal
 		if (text[0] != '[')
 			m_lyric = position;
 	}
+
+private:
+	uint32_t m_vocal = UINT32_MAX;
+	uint32_t m_lyric = UINT32_MAX;
+
+	uint32_t m_currLine = UINT32_MAX;
+	std::vector<std::pair<uint32_t, uint32_t>> m_lyriclines;
+
+	ScanValues& m_values;
 };

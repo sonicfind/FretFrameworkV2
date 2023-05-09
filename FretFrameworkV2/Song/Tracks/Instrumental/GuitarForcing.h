@@ -2,8 +2,25 @@
 #include "InstrumentalTrack.h"
 #include "Notes/GuitarNote.h"
 
-template<>
-void InstrumentalTrack<GuitarNote<5>, true>::load_V1(size_t diff, ChtFileReader& reader);
-
-template<>
-void InstrumentalTrack<GuitarNote<6>, true>::load_V1(size_t diff, ChtFileReader& reader);
+namespace ForcingFix
+{
+	template <size_t numFrets>
+	void Fix(InstrumentalTrack<GuitarNote<numFrets>>& track, const uint32_t forceThreshold)
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			auto& notes = track[i].m_notes;
+			for (size_t i = 0; i < notes.size(); ++i)
+			{
+				auto& note = notes.at_index(i);
+				if (note->getForcing() == ForceStatus::FORCED)
+				{
+					if (note->isChorded() || i == 0 || note->hasSameFretting(*notes.at_index(i - 1)) || note.key > notes.at_index(i - 1).key + forceThreshold)
+						note->setForcing(ForceStatus::HOPO_ON);
+					else
+						note->setForcing(ForceStatus::HOPO_OFF);
+				}
+			}
+		}
+	}
+}

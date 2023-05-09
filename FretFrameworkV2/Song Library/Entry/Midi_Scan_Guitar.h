@@ -1,5 +1,5 @@
 #pragma once
-#include "InstrumentalScan_Midi.h"
+#include "Midi_Scan.h"
 #include "Notes/GuitarNote.h"
 
 template <>

@@ -28,6 +28,11 @@ public:
 		return m_special;
 	}
 
+	bool validate() const noexcept
+	{
+		return m_special.isActive() || Note<NoteType, numColors>::validate();
+	}
+
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
 		std::vector<std::pair<size_t, uint32_t>> activeColors = Note<NoteType, numColors>::getActiveColors();

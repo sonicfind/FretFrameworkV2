@@ -13,9 +13,3 @@ void Song::load_bch(const std::filesystem::path& path)
 	reader.nextEvent();
 	traverse(reader);
 }
-
-void Song::save_bch(const std::filesystem::path& path) const
-{
-	BCHFileWriter writer(path);
-	save(writer);
-}

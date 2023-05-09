@@ -1,5 +1,5 @@
 #pragma once
-#include "InstrumentalScan.h"
+#include "InstrumentScan.h"
 #include "Notes/DrumNote.h"
 
 template <>

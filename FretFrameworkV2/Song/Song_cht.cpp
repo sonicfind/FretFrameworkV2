@@ -1,5 +1,4 @@
 #include "Song.h"
-#include "Serialization/ChtFileWriter.h"
 
 void Song::load_cht(const std::filesystem::path& path, bool isFull)
 {
@@ -9,7 +8,7 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 
 	const int16_t version = isFull ? load_header_cht(reader) : load_header_cht_basic(reader);
 	setSustainThreshold();
-	setHopoThreshold(reader);
+
 	if (version > 1)
 		traverse(reader);
 	else
@@ -17,12 +16,6 @@ void Song::load_cht(const std::filesystem::path& path, bool isFull)
 
 	if (m_noteTracks.drums4_pro.isOccupied() && !getModifier("pro_drums"))
 		m_modifiers.push_back({ "pro_drums", true });
-}
-
-void Song::save_cht(const std::filesystem::path& path) const
-{
-	ChtFileWriter writer(path);
-	save(writer);
 }
 
 using ModifierNode = TxtFileReader::ModifierNode;
