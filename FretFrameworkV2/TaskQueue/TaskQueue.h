@@ -26,6 +26,7 @@ public:
 	void startThreads(size_t threadCount);
 	void stopThreads();
 	void addTask(const std::function<void()>& func);
+	size_t getNumThreads() const noexcept;
 	bool peekCompletedTasks();
 	void waitForCompletedTasks();
 

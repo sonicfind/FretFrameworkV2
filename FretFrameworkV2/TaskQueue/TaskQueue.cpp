@@ -78,6 +78,11 @@ void TaskQueue::addTask(const std::function<void()>& func)
 	(this->*m_taskFunction)(func);
 }
 
+size_t TaskQueue::getNumThreads() const noexcept
+{
+	return m_threadCount;
+}
+
 bool TaskQueue::peekCompletedTasks()
 {
 	return m_queue.empty() && m_numActiveThreads == 0;

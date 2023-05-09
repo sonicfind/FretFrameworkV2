@@ -6,6 +6,7 @@
 std::string parseInput();
 std::vector<std::u32string> getDirectories();
 void loadSong();
+void setThreads();
 void startClock();
 void stopClock(std::string_view str);
 
@@ -29,6 +30,7 @@ int main()
 	{
 		std::cout << "S - Full Scan\n";
 		std::cout << "L - Load Song\n";
+		std::cout << "T - Set Max Threads\n";
 		std::cout << "(Leave empty to go to exit)\n";
 		std::cout << "Input: ";
 		std::string input = parseInput();
@@ -58,6 +60,10 @@ int main()
 		case 'L':
 			std::cout << '\n';
 			loadSong();
+			break;
+		case 'T':
+			std::cout << '\n';
+			setThreads();
 			break;
 		default:
 			std::cout << "Invalid option\n";
@@ -180,6 +186,35 @@ void loadSong()
 				break;
 			}
 		}
+		std::cout << '\n';
+	}
+}
+
+void setThreads()
+{
+	TaskQueue& queue = TaskQueue::getInstance();
+	while (true)
+	{
+		std::cout << "Current # of threads: " << queue.getNumThreads() << "\n";
+		std::cout << "Provide number of threads (Max: " << std::thread::hardware_concurrency() << "): ";
+		std::string input = parseInput();
+		if (input.empty())
+			break;
+
+		char* end;
+		unsigned long num = std::strtoul(input.data(), &end, 0);
+		if (end == input.data())
+		{
+			std::cout << "Invalid input\n\n";
+			continue;
+		}
+		else if (num > std::thread::hardware_concurrency())
+		{
+			std::cout << "Max exceeded\n\n";
+			continue;
+		}
+
+		queue.startThreads(num);
 		std::cout << '\n';
 	}
 }
