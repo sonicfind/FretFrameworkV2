@@ -18,11 +18,6 @@
 //	outFile.write(buffer, 2ULL + buffer[1]);
 //}
 
-char SpecialPhrase::getMidiNote() const
-{
-	static constexpr char MIDI_VALUES[] = { 116, -1, 103, 126, 127, 105, 0, 106, 1, 105, 106 };
-	return MIDI_VALUES[static_cast<size_t>(m_type)];
-}
 
 void SpecialPhrase::operator*=(float multiplier)
 {
