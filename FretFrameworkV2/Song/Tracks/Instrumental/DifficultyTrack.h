@@ -33,24 +33,4 @@ public:
 		if ((m_notes.size() < 500 || 10000 <= m_notes.size()) && m_notes.size() < m_notes.capacity())
 			m_notes.shrink_to_fit();
 	}
-
-	[[nodiscard]] T& at(uint32_t position)
-	{
-		return m_notes.at(position);
-	}
-
-	[[nodiscard]] const T& at(uint32_t position) const
-	{
-		return m_notes.at(position);
-	}
-
-	T& operator[](size_t position)
-	{
-		return m_notes[position];
-	}
-
-	const T& operator[](size_t position) const noexcept
-	{
-		return m_notes[position];
-	}
 };
