@@ -16,14 +16,6 @@ public:
 	InstrumentalTrack(const InstrumentalTrack&) = delete;
 	InstrumentalTrack& operator=(const InstrumentalTrack&) = delete;
 
-	[[nodiscard]] virtual bool hasNotes() const override
-	{
-		for (const auto& diff : m_difficulties)
-			if (diff.hasNotes())
-				return true;
-		return false;
-	}
-
 	[[nodiscard]] virtual bool isOccupied() const override
 	{
 		for (const auto& diff : m_difficulties)

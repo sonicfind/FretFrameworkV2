@@ -11,7 +11,6 @@ public:
 
 public:
 	virtual ~Track() {}
-	[[nodiscard]] virtual bool hasNotes() const { return false; };
 	[[nodiscard]] virtual bool isOccupied() const
 	{
 		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();

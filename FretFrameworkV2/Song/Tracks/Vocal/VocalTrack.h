@@ -14,18 +14,13 @@ public:
 	SimpleFlatMap<VocalPercussion> m_percussion;
 
 public:
-	[[nodiscard]] virtual bool hasNotes() const override
+	[[nodiscard]] virtual bool isOccupied() const override
 	{
 		for (const auto& track : m_vocals)
 			if (!track.isEmpty())
 				return true;
 
-		return !m_percussion.isEmpty();
-	}
-
-	[[nodiscard]] virtual bool isOccupied() const override
-	{
-		return hasNotes() || !m_specialPhrases.isEmpty() || !m_events.isEmpty();
+		return !m_percussion.isEmpty() || !m_specialPhrases.isEmpty() || !m_events.isEmpty();
 	}
 
 	virtual void shrink() override
@@ -76,13 +71,11 @@ public:
 		if (hasNotes(index))
 			return true;
 
-		if (index == 0)
-		{
-			if (!m_events.isEmpty())
-				return true;
-		}
-		else if (index == 2)
+		if (index == 2)
 			return false;
+
+		if (index == 0 && !m_events.isEmpty())
+			return true;
 
 		for (const auto& vec : m_specialPhrases)
 		{

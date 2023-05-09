@@ -26,7 +26,6 @@ public:
 		m_notes.clear();
 	}
 
-	[[nodiscard]] virtual bool hasNotes() const override { return m_notes.size(); }
 	[[nodiscard]] virtual bool isOccupied() const override { return !m_notes.isEmpty() || Track::isOccupied(); }
 
 	virtual void shrink() override
