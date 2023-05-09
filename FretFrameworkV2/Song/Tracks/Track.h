@@ -16,8 +16,6 @@ public:
 		return !m_specialPhrases.isEmpty() || !m_events.isEmpty();
 	}
 
-	virtual void shrink() = 0;
-
 	virtual void clear()
 	{
 		m_specialPhrases.clear();

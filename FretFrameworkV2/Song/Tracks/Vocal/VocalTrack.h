@@ -23,16 +23,6 @@ public:
 		return !m_percussion.isEmpty() || !m_specialPhrases.isEmpty() || !m_events.isEmpty();
 	}
 
-	virtual void shrink() override
-	{
-		for (auto& track : m_vocals)
-			if ((track.size() < 100 || 2000 <= track.size()) && track.size() < track.capacity())
-				track.shrink_to_fit();
-
-		if ((m_percussion.size() < 20 || 400 <= m_percussion.size()) && m_percussion.size() < m_percussion.capacity())
-			m_percussion.shrink_to_fit();
-	}
-
 	virtual void clear() override
 	{
 		for (auto& track : m_vocals)
@@ -56,6 +46,16 @@ public:
 
 		for (auto& perc : m_percussion)
 			perc.key = uint32_t(perc.key * multiplier);
+	}
+
+	void shrink()
+	{
+		for (auto& track : m_vocals)
+			if ((track.size() < 100 || 2000 <= track.size()) && track.size() < track.capacity())
+				track.shrink_to_fit();
+
+		if ((m_percussion.size() < 20 || 400 <= m_percussion.size()) && m_percussion.size() < m_percussion.capacity())
+			m_percussion.shrink_to_fit();
 	}
 
 	[[nodiscard]] bool hasNotes(size_t index) const

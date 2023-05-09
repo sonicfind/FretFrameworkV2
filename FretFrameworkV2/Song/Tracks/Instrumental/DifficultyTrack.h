@@ -28,7 +28,7 @@ public:
 
 	[[nodiscard]] virtual bool isOccupied() const override { return !m_notes.isEmpty() || Track::isOccupied(); }
 
-	virtual void shrink() override
+	void shrink()
 	{
 		if ((m_notes.size() < 500 || 10000 <= m_notes.size()) && m_notes.size() < m_notes.capacity())
 			m_notes.shrink_to_fit();

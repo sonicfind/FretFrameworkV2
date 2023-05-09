@@ -24,12 +24,6 @@ public:
 		return Track::isOccupied();
 	}
 
-	virtual void shrink() override
-	{
-		for (auto& diff : m_difficulties)
-			diff.shrink();
-	}
-
 	virtual void clear() override
 	{
 		Track::clear();
@@ -43,6 +37,12 @@ public:
 		for (auto& diff : m_difficulties)
 			if (diff.isOccupied())
 				diff.adjustTicks(multiplier);
+	}
+
+	void shrink()
+	{
+		for (auto& diff : m_difficulties)
+			diff.shrink();
 	}
 
 	DifficultyTrack<T>& operator[](size_t i)
