@@ -14,8 +14,6 @@ const std::pair<std::filesystem::path, ChartType> CHARTTYPES[] =
 
 void SongLibrary::runFullScan(const std::vector<std::u32string>& baseDirectories)
 {
-	clear();
-
 	if (auto reader = loadCachefile())
 	{
 		const auto validate = [&baseDirectories](BufferedBinaryReader& reader) -> std::optional<LibraryEntry>

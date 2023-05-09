@@ -48,6 +48,7 @@ int main()
 		{
 			std::cout << '\n';
 			const std::vector<std::u32string> directories = getDirectories();
+			library.clear();
 			startClock();
 			library.runFullScan(directories);
 			stopClock("Full scan");
