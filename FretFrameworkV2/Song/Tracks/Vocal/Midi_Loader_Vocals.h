@@ -121,7 +121,7 @@ private:
 	{
 		if constexpr (NoteOn)
 		{
-			m_track.m_specialPhrases.try_emplace_back(position);
+			m_track.m_specialPhrases.get_or_emplace_back(position);
 			combo.second = position;
 		}
 		else if (combo.second != UINT32_MAX)

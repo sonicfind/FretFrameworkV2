@@ -71,15 +71,7 @@ public:
 		return m_list.emplace_back(key, obj).object;
 	}
 
-	PointerWrapper<T> try_emplace_back(Key key, const T& obj = BASE)
-	{
-		if (!m_list.empty() && m_list.back().key >= key)
-			return {};
-
-		return emplace_back(key, obj);
-	}
-
-	[[nodiscard]] T& get_or_emplace_back(Key key)
+	T& get_or_emplace_back(Key key)
 	{
 		if (m_list.empty() || m_list.back().key < key)
 			return *m_list.emplace_back(key, BASE);

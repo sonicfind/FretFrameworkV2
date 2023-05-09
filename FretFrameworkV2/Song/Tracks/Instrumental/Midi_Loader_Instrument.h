@@ -166,7 +166,7 @@ private:
 	{
 		if constexpr (NoteOn)
 		{
-			phrases.try_emplace_back(position);
+			phrases.get_or_emplace_back(position);
 			combo.second = position;
 		}
 		else if (combo.second != UINT32_MAX)
