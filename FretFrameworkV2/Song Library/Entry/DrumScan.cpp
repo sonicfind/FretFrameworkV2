@@ -1,7 +1,7 @@
 #include "DrumScan.h"
 
 template <>
-bool InstrumentalScan::WasTrackValidated<DrumNote<4, true>>(const ScanValues& values, size_t diff)
+bool InstrumentalScan::WasTrackValidated<DrumNote<DrumPad_Pro, 4>>(const ScanValues& values, size_t diff)
 {
 	if (diff < 3)
 		return values.wasTrackValidated(diff);
@@ -10,7 +10,7 @@ bool InstrumentalScan::WasTrackValidated<DrumNote<4, true>>(const ScanValues& va
 }
 
 template <>
-bool InstrumentalScan::WasTrackValidated<DrumNote<5, false>>(const ScanValues& values, size_t diff)
+bool InstrumentalScan::WasTrackValidated<DrumNote<DrumPad, 5>>(const ScanValues& values, size_t diff)
 {
 	if (diff < 3)
 		return values.wasTrackValidated(diff);

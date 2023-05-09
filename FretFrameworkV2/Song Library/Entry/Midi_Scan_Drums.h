@@ -3,8 +3,8 @@
 #include "Notes/DrumNote_Legacy.h"
 #include "Midi_Scan.h"
 
-template<size_t numPads, bool PRO_DRUMS>
-struct Midi_Scanner_Extensions<DrumNote<numPads, PRO_DRUMS>>
+template<class DrumType, size_t numPads>
+struct Midi_Scanner_Extensions<DrumNote<DrumType, numPads>>
 {
 	bool expertPlus = false;
 	bool doubleBass = false;
@@ -19,17 +19,17 @@ struct Midi_Scanner_Extensions<DrumNote_Legacy>
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote<5, false>>::s_noteRange{ 60, 102 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote<DrumPad, 5>>::s_noteRange{ 60, 102 };
 
 
 template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Scanner<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template <>
-bool Midi_Scanner<DrumNote<4, true>>::isFinished() const noexcept;
+bool Midi_Scanner<DrumNote<DrumPad_Pro, 4>>::isFinished() const noexcept;
 
 template <>
-bool Midi_Scanner<DrumNote<5, false>>::isFinished() const noexcept;
+bool Midi_Scanner<DrumNote<DrumPad, 5>>::isFinished() const noexcept;
 
 template <>
 bool Midi_Scanner<DrumNote_Legacy>::isFinished() const noexcept;
@@ -55,14 +55,14 @@ bool ParseSpec(Midi_Scanner<T>& scanner, MidiNote note)
 
 template <>
 template <bool NoteOn>
-bool Midi_Scanner<DrumNote<4, true>>::processSpecialNote(MidiNote note)
+bool Midi_Scanner<DrumNote<DrumPad_Pro, 4>>::processSpecialNote(MidiNote note)
 {
 	return ParseSpec<NoteOn>(*this, note);
 }
 
 template <>
 template <bool NoteOn>
-bool Midi_Scanner<DrumNote<5, false>>::processSpecialNote(MidiNote note)
+bool Midi_Scanner<DrumNote<DrumPad, 5>>::processSpecialNote(MidiNote note)
 {
 	return ParseSpec<NoteOn>(*this, note);
 }

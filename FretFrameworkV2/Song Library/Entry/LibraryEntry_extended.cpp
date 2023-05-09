@@ -21,8 +21,8 @@ void LibraryEntry::traverse(CommonChartParser& parser)
 				case 4:  return Extended_Scan::Scan<GuitarNote<5>>(m_scanTracks.rhythm, parser);
 				case 5:  return Extended_Scan::Scan<GuitarNote<5>>(m_scanTracks.coop, parser);
 				case 6:  return Extended_Scan::Scan<Keys<5>>(m_scanTracks.keys, parser);
-				case 7:  return Extended_Scan::Scan<DrumNote<4, true>>(m_scanTracks.drums4_pro, parser);
-				case 8:  return Extended_Scan::Scan<DrumNote<5, false>>(m_scanTracks.drums5, parser);
+				case 7:  return Extended_Scan::Scan<DrumNote<DrumPad_Pro, 4>>(m_scanTracks.drums4_pro, parser);
+				case 8:  return Extended_Scan::Scan<DrumNote<DrumPad, 5>>(m_scanTracks.drums5, parser);
 				case 9:  return Extended_Scan_Vocals::Scan<1>(m_scanTracks.vocals, parser);
 				case 10: return Extended_Scan_Vocals::Scan<3>(m_scanTracks.harmonies, parser);
 				default:

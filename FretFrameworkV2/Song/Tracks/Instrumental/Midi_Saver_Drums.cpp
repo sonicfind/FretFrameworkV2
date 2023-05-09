@@ -1,19 +1,19 @@
 #include "Midi_Saver_Drums.h"
 
 template <>
-void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<4, true>>(MidiFileWriter& writer)
+void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<DrumPad_Pro, 4>>(MidiFileWriter& writer)
 {
 	writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
 }
 
 template <>
-void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<5, false>>(MidiFileWriter& writer)
+void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<DrumPad, 5>>(MidiFileWriter& writer)
 {
 	writer.addText(0, "[ENABLE_CHART_DYNAMICS]");
 }
 
 template <>
-void Difficulty_Saver_Midi<DrumNote<4, true>>::write_details(const DifficultyTrack<DrumNote<4, true>>& track, const unsigned char index, MidiFileWriter& writer)
+void Difficulty_Saver_Midi<DrumNote<DrumPad_Pro, 4>>::write_details(const DifficultyTrack<DrumNote<DrumPad_Pro, 4>>& track, const unsigned char index, MidiFileWriter& writer)
 {
 	if (!m_details || track.m_notes.isEmpty())
 		return;
@@ -71,7 +71,7 @@ void Difficulty_Saver_Midi<DrumNote<4, true>>::write_details(const DifficultyTra
 }
 
 template <>
-void Difficulty_Saver_Midi<DrumNote<5, false>>::write_details(const DifficultyTrack<DrumNote<5, false>>& track, const unsigned char index, MidiFileWriter& writer)
+void Difficulty_Saver_Midi<DrumNote<DrumPad, 5>>::write_details(const DifficultyTrack<DrumNote<DrumPad, 5>>& track, const unsigned char index, MidiFileWriter& writer)
 {
 	if (!m_details || track.m_notes.isEmpty())
 		return;

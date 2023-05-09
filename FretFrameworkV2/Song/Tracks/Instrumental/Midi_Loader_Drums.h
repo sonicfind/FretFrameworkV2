@@ -2,39 +2,40 @@
 #include "Midi_Loader_Instrument.h"
 #include "Notes/DrumNote_Legacy.h"
 
-template <size_t numPads, bool PRO_DRUMS>
-struct Midi_Loader_Diff<DrumNote<numPads, PRO_DRUMS>>
+template <class DrumType, size_t numPads>
+struct Midi_Loader_Diff<DrumNote<DrumType, numPads>>
 {
 	bool flam = false;
 	uint32_t notes[numPads + 1]{ UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
 	Midi_Loader_Diff() { if constexpr (numPads == 5) notes[5] = UINT32_MAX; }
 };
 
-template <size_t numPads, bool PRO_DRUMS>
-struct Midi_Loader_Extensions<DrumNote<numPads, PRO_DRUMS>>
+template <class DrumType, size_t numPads>
+struct Midi_Loader_Extensions<DrumNote<DrumType, numPads>>
 {
+	using PRO_DRUMS = std::is_same<DrumType, DrumPad_Pro>;
 	bool enableDynamics = false;
-	bool toms[3] = { !PRO_DRUMS, !PRO_DRUMS, !PRO_DRUMS };
+	bool toms[3] = { !PRO_DRUMS::value, !PRO_DRUMS::value, !PRO_DRUMS::value };
 };
 
 template <>
-struct Midi_Loader_Diff<DrumNote_Legacy> : public Midi_Loader_Diff<DrumNote<5, true>> {};
+struct Midi_Loader_Diff<DrumNote_Legacy> : public Midi_Loader_Diff<DrumNote<DrumPad_Pro, 5>> {};
 
 template <>
-struct Midi_Loader_Extensions<DrumNote_Legacy> : public Midi_Loader_Extensions<DrumNote<5, true>>
+struct Midi_Loader_Extensions<DrumNote_Legacy> : public Midi_Loader_Extensions<DrumNote<DrumPad_Pro, 5>>
 {
 	DrumType_Enum type;
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader<DrumNote<5, false>>::s_noteRange{ 60, 102 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Loader<DrumNote<DrumPad, 5>>::s_noteRange{ 60, 102 };
 
 template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Loader<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template<>
 template <bool NoteOn>
-bool Midi_Loader<DrumNote<4, true>>::processSpecialNote(MidiNote note, uint32_t position)
+bool Midi_Loader<DrumNote<DrumPad_Pro, 4>>::processSpecialNote(MidiNote note, uint32_t position)
 {
 	if (note.value != 95)
 		return false;
@@ -51,7 +52,7 @@ bool Midi_Loader<DrumNote<4, true>>::processSpecialNote(MidiNote note, uint32_t 
 
 template<>
 template <bool NoteOn>
-bool Midi_Loader<DrumNote<5, false>>::processSpecialNote(MidiNote note, uint32_t position)
+bool Midi_Loader<DrumNote<DrumPad, 5>>::processSpecialNote(MidiNote note, uint32_t position)
 {
 	if (note.value != 95)
 		return false;
@@ -84,17 +85,17 @@ bool Midi_Loader<DrumNote_Legacy>::processSpecialNote(MidiNote note, uint32_t po
 }
 
 template <>
-void Midi_Loader<DrumNote<4, true>>::modNote(DrumNote<4, true>& note, size_t diff, size_t lane, unsigned char velocity);
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::modNote(DrumNote<DrumPad_Pro, 4>& note, size_t diff, size_t lane, unsigned char velocity);
 
 template <>
-void Midi_Loader<DrumNote<5, false>>::modNote(DrumNote<5, false>& note, size_t diff, size_t lane, unsigned char velocity);
+void Midi_Loader<DrumNote<DrumPad, 5>>::modNote(DrumNote<DrumPad, 5>& note, size_t diff, size_t lane, unsigned char velocity);
 
 template <>
 void Midi_Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, size_t lane, unsigned char velocity);
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<DrumNote<4, true>>::toggleExtraValues(MidiNote note, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note, uint32_t position)
 {
 	if (note.value == 109)
 	{
@@ -112,7 +113,7 @@ void Midi_Loader<DrumNote<4, true>>::toggleExtraValues(MidiNote note, uint32_t p
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<DrumNote<5, false>>::toggleExtraValues(MidiNote note, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note, uint32_t position)
 {
 	if (note.value == 109)
 	{
@@ -148,10 +149,10 @@ void  Midi_Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note, uint32_t po
 }
 
 template <>
-void Midi_Loader<DrumNote<4, true>>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str, uint32_t position);
 
 template <>
-void Midi_Loader<DrumNote<5, false>>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str, uint32_t position);
 
 template <>
 void Midi_Loader<DrumNote_Legacy>::parseText(std::string_view str, uint32_t position);

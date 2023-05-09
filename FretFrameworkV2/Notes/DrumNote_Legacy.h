@@ -1,15 +1,15 @@
 #pragma once
 #include "DrumNote.h"
 
-class DrumNote_Legacy : public DrumNote<5, true>
+class DrumNote_Legacy : public DrumNote<DrumPad_Pro, 5>
 {
 public:
-	template <size_t numPads, bool PRO_DRUMS>
-	DrumNote<numPads, PRO_DRUMS> transformNote() const
+	template <class DrumType, size_t numPads>
+	DrumNote<DrumType, numPads> transformNote() const
 	{
 		static_assert(numPads <= 5);
 
-		DrumNote<numPads, PRO_DRUMS> note;
+		DrumNote<DrumType, numPads> note;
 
 		if (m_special.isActive())
 			note.getSpecial() = std::move(m_special);
@@ -22,7 +22,7 @@ public:
 				auto& col = note.get(i);
 				col.set(m_colors[i].getSustain());
 				col.setDynamics(m_colors[i].getDynamics());
-				if constexpr (PRO_DRUMS)
+				if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
 					col.setCymbal(m_colors[i].isCymbal());
 			}
 

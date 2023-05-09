@@ -86,8 +86,8 @@ private:
 		InstrumentalTrack<GuitarNote<5>>      rhythm;
 		InstrumentalTrack<GuitarNote<5>>      coop;
 		InstrumentalTrack<Keys<5>>            keys;
-		InstrumentalTrack<DrumNote<4, true>>  drums4_pro;
-		InstrumentalTrack<DrumNote<5, false>> drums5;
+		InstrumentalTrack<DrumNote<DrumPad_Pro, 4>>  drums4_pro;
+		InstrumentalTrack<DrumNote<DrumPad, 5>> drums5;
 		VocalTrack<1>                         vocals;
 		VocalTrack<3>                         harmonies;
 	} m_noteTracks;

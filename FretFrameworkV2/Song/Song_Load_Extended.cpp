@@ -19,8 +19,8 @@ void Song::traverse(CommonChartParser& parser)
 				case 4:  return Extended_Load_Instrument::Load<GuitarNote<5>>(m_noteTracks.rhythm, parser);
 				case 5:  return Extended_Load_Instrument::Load<GuitarNote<5>>(m_noteTracks.coop, parser);
 				case 6:  return Extended_Load_Instrument::Load<Keys<5>>(m_noteTracks.keys, parser);
-				case 7:  return Extended_Load_Instrument::Load<DrumNote<4, true>>(m_noteTracks.drums4_pro, parser);
-				case 8:  return Extended_Load_Instrument::Load<DrumNote<5, false>>(m_noteTracks.drums5, parser);
+				case 7:  return Extended_Load_Instrument::Load<DrumNote<DrumPad_Pro, 4>>(m_noteTracks.drums4_pro, parser);
+				case 8:  return Extended_Load_Instrument::Load<DrumNote<DrumPad, 5>>(m_noteTracks.drums5, parser);
 				case 9:  return Extended_Load_Vocals::Load<1>(m_noteTracks.vocals, parser);
 				case 10: return Extended_Load_Vocals::Load<3>(m_noteTracks.harmonies, parser);
 				default:

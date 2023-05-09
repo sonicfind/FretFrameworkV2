@@ -9,7 +9,6 @@ enum class DrumDynamics
 	Ghost
 };
 
-template <bool PRO_DRUMS>
 class DrumPad : public NoteColor
 {
 protected:
@@ -62,14 +61,13 @@ public:
 	}
 };
 
-template<>
-class DrumPad<true> : public DrumPad<false>
+class DrumPad_Pro : public DrumPad
 {
 	bool m_isCymbal = false;
 public:
 	void disable()
 	{
-		DrumPad<false>::disable();
+		DrumPad::disable();
 		m_isCymbal = false;
 	}
 
@@ -80,7 +78,7 @@ public:
 			m_isCymbal = true;
 			return true;
 		}
-		return DrumPad<false>::modify(modifier);
+		return DrumPad::modify(modifier);
 	}
 
 	bool isCymbal() const noexcept { return m_isCymbal; }
@@ -89,7 +87,7 @@ public:
 
 	std::vector<char> getActiveModifiers() const noexcept
 	{
-		auto modifiers = DrumPad<false>::getActiveModifiers();
+		auto modifiers = DrumPad::getActiveModifiers();
 		if (m_isCymbal)
 			modifiers.push_back('C');
 		return modifiers;
@@ -97,12 +95,12 @@ public:
 };
 
 
-template <size_t numPads, bool PRO_DRUMS>
-class DrumNote : public Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>
+template <class DrumType, size_t numPads>
+class DrumNote : public Note_withSpecial<DrumType, numPads, NoteColor>
 {
 protected:
-	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_colors;
-	using Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::m_special;
+	using Note_withSpecial<DrumType, numPads, NoteColor>::m_colors;
+	using Note_withSpecial<DrumType, numPads, NoteColor>::m_special;
 	NoteColor m_doubleBass;
 
 	bool m_isFlammed = false;
@@ -126,7 +124,7 @@ public:
 			m_colors[lane - 34].setDynamics(DrumDynamics::Accent);
 		else if (40 <= lane && lane < 40 + numPads)
 			m_colors[lane - 40].setDynamics(DrumDynamics::Ghost);
-		else if constexpr (PRO_DRUMS)
+		else if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
 		{
 			if (lane < 66 || lane > 68)
 				return false;
@@ -153,7 +151,7 @@ public:
 			else if (lane > 1)
 				lane--;
 
-			return Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::set(lane, sustain);
+			return Note_withSpecial<DrumType, numPads, NoteColor>::set(lane, sustain);
 		}
 	}
 
@@ -175,20 +173,20 @@ public:
 			m_isFlammed = true;
 			return true;
 		default:
-			if (0 < lane && lane <= numPads)
-				return m_colors[lane - 1].modify(modifier);
+			if (2 <= lane && lane < numPads + 1)
+				return m_colors[lane - 2].modify(modifier);
 			return false;
 		}
 	}
 
 	bool validate() const noexcept
 	{
-		return m_doubleBass.isActive() || Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::validate();
+		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, NoteColor>::validate();
 	}
 
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getActiveColors();
+		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumType, numPads, NoteColor>::getActiveColors();
 		for (auto& col : activeColors)
 			if (col.first > 0)
 				col.first++;
@@ -223,7 +221,7 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note_withSpecial<DrumPad<PRO_DRUMS>, numPads, NoteColor>::getMidiNotes();
+		auto colors = Note_withSpecial<DrumType, numPads, NoteColor>::getMidiNotes();
 		for (std::tuple<char, char, uint32_t>& col : colors)
 		{
 			size_t index = std::get<0>(col);

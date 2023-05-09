@@ -1,13 +1,13 @@
 #include "Midi_Scan_Drums.h"
 
 template <>
-bool Midi_Scanner<DrumNote<4, true>>::isFinished() const noexcept
+bool Midi_Scanner<DrumNote<DrumPad_Pro, 4>>::isFinished() const noexcept
 {
 	return m_values.m_subTracks == 31;
 }
 
 template <>
-bool Midi_Scanner<DrumNote<5, false>>::isFinished() const noexcept
+bool Midi_Scanner<DrumNote<DrumPad, 5>>::isFinished() const noexcept
 {
 	return m_values.m_subTracks == 31;
 }

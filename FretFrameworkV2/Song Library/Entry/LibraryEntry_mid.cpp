@@ -43,9 +43,9 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 						m_scanTracks.drums5.m_subTracks |= legacyScans.m_subTracks;
 				}
 				else if (type == DrumType_Enum::FOURLANE_PRO)
-					Midi_Scanner<DrumNote<4, true>>(m_scanTracks.drums4_pro, reader);
+					Midi_Scanner<DrumNote<DrumPad_Pro, 4>>(m_scanTracks.drums4_pro, reader);
 				else
-					Midi_Scanner<DrumNote<5, false>>(m_scanTracks.drums5, reader);
+					Midi_Scanner<DrumNote<DrumPad, 5>>(m_scanTracks.drums5, reader);
 			}
 			else if (name == "PART VOCALS")
 				vocalTracker.scan(reader);

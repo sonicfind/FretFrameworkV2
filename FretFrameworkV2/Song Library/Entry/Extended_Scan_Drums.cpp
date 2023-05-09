@@ -1,9 +1,9 @@
 #include "Extended_Scan_Drums.h"
 
-template<size_t numPads, bool PRO_DRUMS>
+template<class DrumType, size_t numPads>
 bool TestDrumIndex(ScanValues& values, size_t diff, size_t lane)
 {
-	if (!DrumNote<numPads, PRO_DRUMS>::TestIndex(lane))
+	if (!DrumNote<DrumType, numPads>::TestIndex(lane))
 		return false;
 
 	values.addSubTrack(diff);
@@ -18,24 +18,24 @@ bool TestDrumIndex(ScanValues& values, size_t diff, size_t lane)
 }
 
 template<>
-bool Extended_Scan::DifficultyTracker<DrumNote<4, true>>::testSingleNote(ScanValues& values, size_t lane) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<DrumPad_Pro, 4>>::testSingleNote(ScanValues& values, size_t lane) noexcept
 {
-	return TestDrumIndex<4, true>(values, m_difficulty, lane);
+	return TestDrumIndex<DrumPad_Pro, 4>(values, m_difficulty, lane);
 }
 
 template<>
-bool Extended_Scan::DifficultyTracker<DrumNote<5, false>>::testSingleNote(ScanValues& values, size_t lane) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<DrumPad, 5>>::testSingleNote(ScanValues& values, size_t lane) noexcept
 {
-	return TestDrumIndex<5, false>(values, m_difficulty, lane);
+	return TestDrumIndex<DrumPad, 5>(values, m_difficulty, lane);
 }
 
-template<size_t numPads, bool PRO_DRUMS>
+template<class DrumType, size_t numPads>
 bool TestDrumIndices(ScanValues& values, size_t diff, const std::vector<std::pair<size_t, uint32_t>>& colors)
 {
 	unsigned char scanValue = 0;
 	for (const auto& color : colors)
 	{
-		if (!DrumNote<numPads, PRO_DRUMS>::TestIndex(color.first))
+		if (!DrumNote<DrumType, numPads>::TestIndex(color.first))
 			return false;
 
 		unsigned char result = diff == 3 && color.first == 1 ? 24 : 1 << diff;
@@ -44,17 +44,17 @@ bool TestDrumIndices(ScanValues& values, size_t diff, const std::vector<std::pai
 	}
 
 	values.m_subTracks |= scanValue;
-	return InstrumentalScan::WasTrackValidated<DrumNote<numPads, PRO_DRUMS>>(values, diff);
+	return InstrumentalScan::WasTrackValidated<DrumNote<DrumType, numPads>>(values, diff);
 }
 
 template<>
-bool Extended_Scan::DifficultyTracker<DrumNote<4, true>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<DrumPad_Pro, 4>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
 {
-	return TestDrumIndices<4, true>(values, m_difficulty, colors);
+	return TestDrumIndices<DrumPad_Pro, 4>(values, m_difficulty, colors);
 }
 
 template<>
-bool Extended_Scan::DifficultyTracker<DrumNote<5, false>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
+bool Extended_Scan::DifficultyTracker<DrumNote<DrumPad, 5>>::testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
 {
-	return TestDrumIndices<5, false>(values, m_difficulty, colors);
+	return TestDrumIndices<DrumPad, 5>(values, m_difficulty, colors);
 }

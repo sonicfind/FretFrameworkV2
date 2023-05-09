@@ -19,7 +19,7 @@ struct ChartV1_Scan::V1Tracker<DrumNote_Legacy>
 };
 
 template <>
-bool ChartV1_Scan::V1Tracker<DrumNote<4, true>>::test(ScanValues& values, size_t note) const noexcept;
+bool ChartV1_Scan::V1Tracker<DrumNote<DrumPad_Pro, 4>>::test(ScanValues& values, size_t note) const noexcept;
 
 template <>
-bool ChartV1_Scan::V1Tracker<DrumNote<5, false>>::test(ScanValues& values, size_t note) const noexcept;
+bool ChartV1_Scan::V1Tracker<DrumNote<DrumPad, 5>>::test(ScanValues& values, size_t note) const noexcept;

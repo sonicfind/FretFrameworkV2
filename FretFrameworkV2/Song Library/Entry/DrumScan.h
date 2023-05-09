@@ -3,7 +3,7 @@
 #include "Notes/DrumNote.h"
 
 template <>
-bool InstrumentalScan::WasTrackValidated<DrumNote<4, true>>(const ScanValues& values, size_t diff);
+bool InstrumentalScan::WasTrackValidated<DrumNote<DrumPad_Pro, 4>>(const ScanValues& values, size_t diff);
 
 template <>
-bool InstrumentalScan::WasTrackValidated<DrumNote<5, false>>(const ScanValues& values, size_t diff);
+bool InstrumentalScan::WasTrackValidated<DrumNote<DrumPad, 5>>(const ScanValues& values, size_t diff);

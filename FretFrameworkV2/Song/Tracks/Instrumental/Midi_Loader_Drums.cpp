@@ -1,7 +1,7 @@
 #include "Midi_Loader_Drums.h"
 
 template <>
-void Midi_Loader<DrumNote<4, true>>::modNote(DrumNote<4, true>& note, size_t diff, size_t lane, unsigned char velocity)
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::modNote(DrumNote<DrumPad_Pro, 4>& note, size_t diff, size_t lane, unsigned char velocity)
 {
 	if (m_difficulties[diff].flam)
 		note.setFlam(true);
@@ -23,7 +23,7 @@ void Midi_Loader<DrumNote<4, true>>::modNote(DrumNote<4, true>& note, size_t dif
 }
 
 template <>
-void Midi_Loader<DrumNote<5, false>>::modNote(DrumNote<5, false>& note, size_t diff, size_t lane, unsigned char velocity)
+void Midi_Loader<DrumNote<DrumPad, 5>>::modNote(DrumNote<DrumPad, 5>& note, size_t diff, size_t lane, unsigned char velocity)
 {
 	if (m_ext.enableDynamics && lane > 0)
 	{
@@ -62,7 +62,7 @@ void Midi_Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, s
 }
 
 template <>
-void Midi_Loader<DrumNote<4, true>>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str, uint32_t position)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		m_ext.enableDynamics = true;
@@ -71,7 +71,7 @@ void Midi_Loader<DrumNote<4, true>>::parseText(std::string_view str, uint32_t po
 }
 
 template <>
-void Midi_Loader<DrumNote<5, false>>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str, uint32_t position)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		m_ext.enableDynamics = true;
