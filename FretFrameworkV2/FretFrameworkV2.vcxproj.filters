@@ -190,7 +190,7 @@
     <ClCompile Include="Serialization\MidiFileWriter.cpp">
       <Filter>Serialization\FileWriter</Filter>
     </ClCompile>
-    <ClCompile Include="Notes\NoteColor.cpp">
+    <ClCompile Include="Notes\Sustained.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
     <ClCompile Include="TaskQueue\TaskQueue.cpp">
@@ -285,7 +285,7 @@
     <ClInclude Include="Notes\Keys.h">
       <Filter>Notes</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\NoteColor.h">
+    <ClInclude Include="Notes\Sustained.h">
       <Filter>Notes</Filter>
     </ClInclude>
     <ClInclude Include="Notes\DrumNote_Legacy.h">

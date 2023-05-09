@@ -8,14 +8,14 @@ protected:
 	SpecialType m_special;
 
 public:
-	bool set(const size_t lane, uint32_t sustain)
+	bool set(const size_t lane, uint32_t length)
 	{
 		if (lane == 0)
 		{
-			m_special.set(sustain);
+			m_special.setLength(length);
 			return true;
 		}
-		return Note<NoteType, numColors>::set(lane - 1, sustain);
+		return Note<NoteType, numColors>::set(lane - 1, length);
 	}
 
 	SpecialType& getSpecial() noexcept
@@ -40,14 +40,14 @@ public:
 			col.first++;
 
 		if (m_special.isActive())
-			activeColors.insert(activeColors.begin(), { 0, m_special.getSustain() });
+			activeColors.insert(activeColors.begin(), { 0, m_special.getLength() });
 		return activeColors;
 	}
 
 	uint32_t getLongestSustain() const noexcept
 	{
 		const uint32_t sustain = Note<NoteType, numColors>::getLongestSustain();
-		return m_special.isActive() && m_special.getSustain() > sustain ? m_special.getSustain() : sustain;;
+		return m_special.isActive() && m_special.getLength() > sustain ? m_special.getLength() : sustain;;
 	}
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
@@ -56,7 +56,7 @@ public:
 		for (auto& col : colors)
 			std::get<0>(col)++;
 		if (m_special.isActive())
-			colors.insert(colors.begin(), { 0, 100, m_special.getSustain() });
+			colors.insert(colors.begin(), { 0, 100, m_special.getLength() });
 		return colors;
 	}
 

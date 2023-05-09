@@ -34,7 +34,7 @@ void Song::setMetaData(const LibraryEntry& entry)
 
 void Song::setSustainThreshold() const
 {
-	NoteColor::s_sustainMinimum = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
+	Sustained::s_minLength = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
 }
 
 uint32_t Song::getHopoThreshold() const noexcept

@@ -64,12 +64,12 @@ namespace MidiGuitar
 
 			if constexpr (numFrets == 5)
 			{
-				const NoteColor& spec = node->getSpecial();
+				const Sustained& spec = node->getSpecial();
 				if (spec.isActive())
 				{
 					if (open.start == UINT32_MAX)
 						open.start = node.key;
-					open.end = node.key + spec.getSustain();
+					open.end = node.key + spec.getLength();
 				}
 				else if (open.start != UINT32_MAX)
 				{

@@ -11,19 +11,19 @@ enum class ForceStatus
 };
 
 template <size_t numColors>
-class GuitarNote : public Note_withSpecial<NoteColor, numColors, NoteColor>
+class GuitarNote : public Note_withSpecial<Sustained, numColors, Sustained>
 {
-	using Note_withSpecial<NoteColor, numColors, NoteColor>::m_colors;
-	using Note_withSpecial<NoteColor, numColors, NoteColor>::m_special;
+	using Note_withSpecial<Sustained, numColors, Sustained>::m_colors;
+	using Note_withSpecial<Sustained, numColors, Sustained>::m_special;
 
 	ForceStatus m_forcing = ForceStatus::UNFORCED;
 	bool m_isTap = false;
-	static constexpr NoteColor REPLACEMENTS[numColors]{};
+	static constexpr Sustained REPLACEMENTS[numColors]{};
 
 public:
-	bool set(const size_t lane, uint32_t sustain)
+	bool set(const size_t lane, uint32_t length)
 	{
-		if (!Note_withSpecial<NoteColor, numColors, NoteColor>::set(lane, sustain))
+		if (!Note_withSpecial<Sustained, numColors, Sustained>::set(lane, length))
 			return false;
 
 		if (lane == 0)
@@ -33,7 +33,7 @@ public:
 		return true;
 	}
 
-	bool set_V1(const size_t lane, uint32_t sustain)
+	bool set_V1(const size_t lane, uint32_t length)
 	{
 		return false;
 	}
@@ -97,15 +97,15 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		return Note_withSpecial<NoteColor, numColors, NoteColor>::getMidiNotes();
+		return Note_withSpecial<Sustained, numColors, Sustained>::getMidiNotes();
 	}
 
 	uint32_t getLongestSustain() const noexcept
 	{
 		if (m_special.isActive())
-			return m_special.getSustain();
+			return m_special.getLength();
 		else
-			return Note<NoteColor, numColors>::getLongestSustain();
+			return Note<Sustained, numColors>::getLongestSustain();
 	}
 
 	void toggleTap()

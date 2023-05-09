@@ -9,7 +9,7 @@ enum class DrumDynamics
 	Ghost
 };
 
-class DrumPad : public NoteColor
+class DrumPad : public Sustained
 {
 protected:
 	DrumDynamics dynamics = DrumDynamics::None;
@@ -17,7 +17,7 @@ protected:
 public:
 	void disable()
 	{
-		NoteColor::disable();
+		Sustained::disable();
 		dynamics = DrumDynamics::None;
 	}
 
@@ -96,12 +96,12 @@ public:
 
 
 template <class DrumType, size_t numPads>
-class DrumNote : public Note_withSpecial<DrumType, numPads, NoteColor>
+class DrumNote : public Note_withSpecial<DrumType, numPads, Sustained>
 {
 protected:
-	using Note_withSpecial<DrumType, numPads, NoteColor>::m_colors;
-	using Note_withSpecial<DrumType, numPads, NoteColor>::m_special;
-	NoteColor m_doubleBass;
+	using Note_withSpecial<DrumType, numPads, Sustained>::m_colors;
+	using Note_withSpecial<DrumType, numPads, Sustained>::m_special;
+	Sustained m_doubleBass;
 
 	bool m_isFlammed = false;
 
@@ -110,11 +110,11 @@ public:
 	{
 		if (lane == 0)
 		{
-			m_special.set(sustain);
+			m_special.setLength(sustain);
 			m_doubleBass.disable();
 		}
 		else if (lane <= numPads && lane < 32)
-			m_colors[lane - 1].set(sustain);
+			m_colors[lane - 1].setLength(sustain);
 		else if (lane == 32)
 		{
 			if (m_special.isActive())
@@ -136,11 +136,11 @@ public:
 		return true;
 	}
 
-	bool set(size_t lane, uint32_t sustain)
+	bool setLength(size_t lane, uint32_t sustain)
 	{
 		if (lane == 1)
 		{
-			m_doubleBass.set(sustain);
+			m_doubleBass.setLength(sustain);
 			this->m_special.disable();
 			return true;
 		}
@@ -151,16 +151,16 @@ public:
 			else if (lane > 1)
 				lane--;
 
-			return Note_withSpecial<DrumType, numPads, NoteColor>::set(lane, sustain);
+			return Note_withSpecial<DrumType, numPads, Sustained>::setLength(lane, sustain);
 		}
 	}
 
-	NoteColor& getDoubleBass() noexcept
+	Sustained& getDoubleBass() noexcept
 	{
 		return m_doubleBass;
 	}
 
-	const NoteColor& getDoubleBass() const noexcept
+	const Sustained& getDoubleBass() const noexcept
 	{
 		return m_doubleBass;
 	}
@@ -181,18 +181,18 @@ public:
 
 	bool validate() const noexcept
 	{
-		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, NoteColor>::validate();
+		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, Sustained>::validate();
 	}
 
 	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumType, numPads, NoteColor>::getActiveColors();
+		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumType, numPads, Sustained>::getActiveColors();
 		for (auto& col : activeColors)
 			if (col.first > 0)
 				col.first++;
 
 		if (m_doubleBass.isActive())
-			activeColors.insert(activeColors.begin(), { 1, m_doubleBass.getSustain() });
+			activeColors.insert(activeColors.begin(), { 1, m_doubleBass.getLength() });
 		return activeColors;
 	}
 
@@ -221,7 +221,7 @@ public:
 
 	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note_withSpecial<DrumType, numPads, NoteColor>::getMidiNotes();
+		auto colors = Note_withSpecial<DrumType, numPads, Sustained>::getMidiNotes();
 		for (std::tuple<char, char, uint32_t>& col : colors)
 		{
 			size_t index = std::get<0>(col);
@@ -240,7 +240,7 @@ public:
 		}
 
 		if (m_doubleBass.isActive())
-			colors.push_back({ 95, 100, m_doubleBass.getSustain() });
+			colors.push_back({ 95, 100, m_doubleBass.getLength() });
 		return colors;
 	}
 

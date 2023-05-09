@@ -6,11 +6,6 @@ bool Vocal::set(unsigned char pitch, uint32_t duration) noexcept
 	return set(Pitch<-1, 9>(pitch), duration);
 }
 
-void Vocal::setDuration(uint32_t duration) noexcept
-{
-	m_duration = duration;
-}
-
 void Vocal::setLyric(std::string_view lyric)
 {
 	m_lyric = UnicodeString::strToU32(lyric);

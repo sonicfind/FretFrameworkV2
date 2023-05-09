@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "NoteColor.h"
+#include "Sustained.h"
 
 template <class NoteType, size_t numColors>
 class Note
@@ -11,12 +11,12 @@ protected:
 public:
 	bool modify(char modifier, size_t lane) { return false; }
 
-	bool set(const size_t lane, uint32_t sustain)
+	bool set(const size_t lane, uint32_t length)
 	{
 		if (lane >= numColors)
 			return false;
 
-		m_colors[lane].set(sustain);
+		m_colors[lane].setLength(length);
 		return true;
 	}
 
@@ -43,7 +43,7 @@ public:
 		std::vector<std::pair<size_t, uint32_t>> activeColors;
 		for (size_t i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
-				activeColors.push_back({ i, m_colors[i].getSustain() });
+				activeColors.push_back({ i, m_colors[i].getLength() });
 		return activeColors;
 	}
 
@@ -61,8 +61,8 @@ public:
 	{
 		uint32_t sustain = 0;
 		for (const auto& color : m_colors)
-			if (color.isActive() && color.getSustain() > sustain)
-				sustain = color.getSustain();
+			if (color.isActive() && color.getLength() > sustain)
+				sustain = color.getLength();
 		return sustain;
 	}
 
@@ -71,7 +71,7 @@ public:
 		std::vector<std::tuple<char, char, uint32_t>>  colors;
 		for (char i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
-				colors.push_back({ i, 100, m_colors[i].getSustain() });
+				colors.push_back({ i, 100, m_colors[i].getLength() });
 		return colors;
 	}
 

@@ -48,7 +48,7 @@ void Difficulty_Saver_Midi<DrumNote<DrumPad_Pro, 4>>::write_details(const Diffic
 			{
 				if (toms[i].start == UINT32_MAX)
 					toms[i].start = node.key;
-				toms[i].end = node.key + pad.getSustain();
+				toms[i].end = node.key + pad.getLength();
 			}
 			else if (toms[i].start != UINT32_MAX)
 			{

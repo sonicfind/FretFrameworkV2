@@ -147,7 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Ini\Ini.cpp" />
     <ClCompile Include="Notes\GuitarNote.cpp" />
-    <ClCompile Include="Notes\NoteColor.cpp" />
+    <ClCompile Include="Notes\Sustained.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
     <ClCompile Include="Serialization\BCHFileWriter.cpp" />
     <ClCompile Include="Serialization\BufferedBinaryReader.cpp" />
@@ -205,7 +205,7 @@
     <ClInclude Include="Notes\DrumType.h" />
     <ClInclude Include="Notes\GuitarNote.h" />
     <ClInclude Include="Notes\Keys.h" />
-    <ClInclude Include="Notes\NoteColor.h" />
+    <ClInclude Include="Notes\Sustained.h" />
     <ClInclude Include="Notes\NoteName.h" />
     <ClInclude Include="Notes\Notes.h" />
     <ClInclude Include="Notes\Notes_Special.h" />

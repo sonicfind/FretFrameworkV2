@@ -20,7 +20,7 @@ public:
 			if (m_colors[i].isActive())
 			{
 				auto& col = note.get(i);
-				col.set(m_colors[i].getSustain());
+				col.setLength(m_colors[i].getLength());
 				col.setDynamics(m_colors[i].getDynamics());
 				if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
 					col.setCymbal(m_colors[i].isCymbal());
