@@ -149,6 +149,11 @@ void BCHFileWriter::writeMicrosPerQuarter(uint32_t micros)
 	append(micros);
 }
 
+void BCHFileWriter::writeAnchor(uint64_t anchor)
+{
+	appendWebType(anchor);
+}
+
 void BCHFileWriter::writeTimeSig(TimeSig timeSig)
 {
 	append(timeSig);

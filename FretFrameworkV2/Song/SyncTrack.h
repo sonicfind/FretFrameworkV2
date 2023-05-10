@@ -5,6 +5,6 @@
 
 struct SyncTrack
 {
-	SimpleFlatMap<MicrosPerQuarter> tempoMarkers;
+	SimpleFlatMap<std::pair<MicrosPerQuarter, uint64_t>> tempoMarkers;
 	SimpleFlatMap<TimeSig> timeSigs;
 };

@@ -29,5 +29,6 @@ public:
 	virtual void writeLeftHand(size_t position) = 0;
 
 	virtual void writeMicrosPerQuarter(uint32_t micros) = 0;
+	virtual void writeAnchor(uint64_t anchor) = 0;
 	virtual void writeTimeSig(TimeSig timeSig) = 0;
 };

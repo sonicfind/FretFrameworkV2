@@ -101,7 +101,7 @@ void Song::load_mid(const std::filesystem::path& path)
 				switch (midiEvent->type)
 				{
 				case MidiEventType::Tempo:
-					m_sync.tempoMarkers.get_or_emplace_back(midiEvent->position) = reader.extractMicrosPerQuarter();
+					m_sync.tempoMarkers.get_or_emplace_back(midiEvent->position).first = reader.extractMicrosPerQuarter();
 					break;
 				case MidiEventType::Time_Sig:
 					m_sync.timeSigs.get_or_emplace_back(midiEvent->position) = reader.extractTimeSig();

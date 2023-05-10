@@ -153,6 +153,11 @@ void ChtFileWriter::writeMicrosPerQuarter(uint32_t micros)
 	write((uint32_t)round(g_TEMPO_FACTOR / (long double)micros));
 }
 
+void ChtFileWriter::writeAnchor(uint64_t anchor)
+{
+	write(anchor);
+}
+
 void ChtFileWriter::writeTimeSig(TimeSig timeSig)
 {
 	write<uint32_t>(timeSig.numerator);

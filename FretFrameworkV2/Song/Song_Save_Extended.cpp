@@ -71,10 +71,12 @@ public:
 	void write(const uint32_t position, CommonChartWriter& writer)  const noexcept
 	{
 		writeMicros(position, writer);
+		writeAnchor(position, writer);
 		writeTimeSig(position, writer);
 	}
 
 	void set(const MicrosPerQuarter& micros) { m_micros = &micros; }
+	void set(const uint64_t& anchor) { m_anchor = &anchor; }
 	void set(const TimeSig& timeSig) { m_timeSig = &timeSig; }
 
 	static SimpleFlatMap<WriteNode> GetNodes(const SyncTrack& track)
@@ -83,8 +85,15 @@ public:
 		for (const auto& timeSig : track.timeSigs)
 			nodes.emplace_back(timeSig.key).set(*timeSig);
 
+		bool isFirst = true;
 		for (const auto& micros : track.tempoMarkers)
-			nodes[micros.key].set(*micros);
+		{
+			auto& node = nodes[micros.key];
+			node.set(micros->first);
+			if (isFirst || micros->second > 0)
+				node.set(micros->second);
+			isFirst = false;
+		}
 		return nodes;
 	}
 
@@ -95,6 +104,16 @@ protected:
 		{
 			writer.startEvent(position, ChartEvent::BPM);
 			writer.writeMicrosPerQuarter(*m_micros);
+			writer.finishEvent();
+		}
+	}
+
+	void writeAnchor(const uint32_t position, CommonChartWriter& writer) const noexcept
+	{
+		if (m_anchor)
+		{
+			writer.startEvent(position, ChartEvent::BPM);
+			writer.writeAnchor(*m_anchor);
 			writer.finishEvent();
 		}
 	}
@@ -111,6 +130,7 @@ protected:
 
 private:
 	const MicrosPerQuarter* m_micros = nullptr;
+	const uint64_t* m_anchor = nullptr;
 	const TimeSig* m_timeSig = nullptr;
 };
 

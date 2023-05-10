@@ -61,7 +61,7 @@ void Song::save_mid(const std::filesystem::path& path) const
 	}
 
 	for (const auto& tempo : m_sync.tempoMarkers)
-		writer.addMicros(tempo.key, *tempo);
+		writer.addMicros(tempo.key, tempo->first);
 	writer.writeTrack();
 	
 

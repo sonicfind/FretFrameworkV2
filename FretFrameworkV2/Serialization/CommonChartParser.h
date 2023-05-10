@@ -38,6 +38,7 @@ public:
 	[[nodiscard]] virtual size_t extractLeftHand() = 0;
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() = 0;
+	[[nodiscard]] virtual uint64_t extractAnchor() = 0;
 	[[nodiscard]] virtual TimeSig extractTimeSig() = 0;
 
 	[[nodiscard]] size_t geNoteTrackID() const noexcept { return m_noteTrackID; }

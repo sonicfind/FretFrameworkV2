@@ -217,6 +217,11 @@ uint32_t BCHFileReader::extractMicrosPerQuarter()
 	return extract<uint32_t>();
 }
 
+uint64_t BCHFileReader::extractAnchor()
+{
+	return extractWebType();
+}
+
 TimeSig BCHFileReader::extractTimeSig()
 {
 	return extract<TimeSig>();

@@ -55,6 +55,7 @@ public:
 	[[nodiscard]] virtual size_t extractLeftHand() override;
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() override;
+	[[nodiscard]] virtual uint64_t extractAnchor() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;
 
 	[[nodiscard]] std::pair<size_t, uint32_t> extractColorAndSustain_V1();

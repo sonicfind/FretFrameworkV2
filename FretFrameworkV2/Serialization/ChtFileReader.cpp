@@ -369,6 +369,11 @@ uint32_t ChtFileReader::extractMicrosPerQuarter()
 	return (uint32_t)round(g_TEMPO_FACTOR / bpm1000);
 }
 
+uint64_t ChtFileReader::extractAnchor()
+{
+	return extract<uint64_t>();
+}
+
 TimeSig ChtFileReader::extractTimeSig()
 {
 	uint32_t numerator = extract<uint32_t>();

@@ -36,6 +36,7 @@ public:
 	[[nodiscard]] virtual size_t extractLeftHand() override;
 
 	[[nodiscard]] virtual uint32_t extractMicrosPerQuarter() override;
+	[[nodiscard]] virtual uint64_t extractAnchor() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;
 
 private:

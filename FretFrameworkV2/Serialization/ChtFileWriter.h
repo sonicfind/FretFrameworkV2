@@ -34,6 +34,7 @@ public:
 	virtual void writeLeftHand(size_t position) override;
 
 	virtual void writeMicrosPerQuarter(uint32_t micros) override;
+	virtual void writeAnchor(uint64_t anchor) override;
 	virtual void writeTimeSig(TimeSig timeSig) override;
 
 private:
