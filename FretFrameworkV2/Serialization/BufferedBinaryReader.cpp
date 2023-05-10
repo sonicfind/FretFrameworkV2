@@ -2,7 +2,7 @@
 
 std::string_view BufferedBinaryReader::extractString()
 {
-	const uint32_t length = extractWebType();
+	const uint64_t length = extractWebType();
 	return extractString(length);
 }
 

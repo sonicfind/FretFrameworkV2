@@ -29,8 +29,8 @@ protected:
 		append(&value, size);
 	}
 
-	void writeWebType(uint32_t value);
-	void appendWebType(uint32_t value);
+	void writeWebType(uint64_t value);
+	void appendWebType(uint64_t value);
 
 private:
 	std::string m_buffer;

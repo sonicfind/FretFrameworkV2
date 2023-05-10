@@ -4,13 +4,13 @@
 class Sustained
 {
 public:
-	static uint32_t s_minLength;
+	static uint64_t s_minLength;
 
 protected:
-	uint32_t m_length = 0;
+	uint64_t m_length = 0;
 
 public:
-	constexpr void setLength(uint32_t length)
+	constexpr void setLength(uint64_t length)
 	{
 		if (length < s_minLength)
 			length = 1;
@@ -18,7 +18,7 @@ public:
 	}
 	void disable() { m_length = 0; }
 
-	uint32_t getLength() const { return m_length; }
+	uint64_t getLength() const { return m_length; }
 	bool isActive() const { return m_length > 0; }
 
 	void operator*=(float multiplier)
@@ -28,7 +28,7 @@ public:
 			float sustain = m_length * multiplier;
 			if (sustain < 1)
 				sustain = 1;
-			m_length = uint32_t(sustain);
+			m_length = uint64_t(sustain);
 		}
 	}
 };

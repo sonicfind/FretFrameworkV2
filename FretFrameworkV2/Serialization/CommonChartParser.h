@@ -4,7 +4,7 @@
 class CommonChartParser
 {
 protected:
-	uint32_t m_tickPosition = 0;
+	uint64_t m_tickPosition = 0;
 	size_t m_noteTrackID = 0;
 	size_t m_difficulty = 0;
 
@@ -19,11 +19,11 @@ public:
 	virtual void skipTrack() = 0;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() = 0;
-	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() = 0;
+	[[nodiscard]] virtual std::pair<uint64_t, ChartEvent> parseEvent() = 0;
 	virtual void nextEvent() = 0;
 
-	[[nodiscard]] virtual std::pair<size_t, uint32_t> extractSingleNote() = 0;
-	[[nodiscard]] virtual std::vector<std::pair<size_t, uint32_t>> extractMultiNote() = 0;
+	[[nodiscard]] virtual std::pair<size_t, uint64_t> extractSingleNote() = 0;
+	[[nodiscard]] virtual std::vector<std::pair<size_t, uint64_t>> extractMultiNote() = 0;
 	[[nodiscard]] virtual std::vector<char> extractSingleNoteMods() = 0;
 	[[nodiscard]] virtual std::vector<std::pair<char, size_t>> extractMultiNoteMods() = 0;
 	[[nodiscard]] virtual std::string_view extractText() = 0;
@@ -33,7 +33,7 @@ public:
 	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() = 0;
 
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() = 0;
-	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint32_t> extractPitchAndDuration() = 0;
+	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint64_t> extractPitchAndDuration() = 0;
 
 	[[nodiscard]] virtual size_t extractLeftHand() = 0;
 

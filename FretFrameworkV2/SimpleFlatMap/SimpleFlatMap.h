@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "PtrWrapper/PtrWrapper.h"
 
-template <typename T, typename Key = uint32_t>
+template <typename T, typename Key = uint64_t>
 class SimpleFlatMap
 {
 	static constexpr T BASE;

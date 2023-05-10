@@ -35,7 +35,7 @@ public:
 	void resetPitch() noexcept;
 
 	const std::u32string& getLyric() const noexcept { return m_lyric; }
-	std::pair<VocalPitch, uint32_t> getPitchAndDuration() const noexcept { return { m_pitch, m_length }; }
+	std::pair<VocalPitch, uint64_t> getPitchAndDuration() const noexcept { return { m_pitch, m_length }; }
 	VocalPitch getPitch() const noexcept { return m_pitch; }
 	bool isPlayable() const noexcept { return isActive() && m_pitch.isActive(); }
 };

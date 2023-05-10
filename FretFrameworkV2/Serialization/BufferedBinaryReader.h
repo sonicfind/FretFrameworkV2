@@ -10,24 +10,23 @@ public:
 	void gotoEndOfBuffer();
 
 protected:
-	virtual bool move(size_t amount) override;
+	virtual bool move(uint64_t amount) override;
 
-	[[nodiscard]] std::string_view extractString(size_t length);
+	[[nodiscard]] std::string_view extractString(uint64_t length);
 
 	template <bool useVirtual = true>
-	bool extractWebType(uint32_t& value)
+	bool extractWebType(uint64_t& value)
 	{
 		value = 0;
-		if (!extract<uint32_t, useVirtual>(value, 1))
+		if (!extract<uint64_t, useVirtual>(value, 1))
 			return false;
-
-		return value < 254 || extract<uint32_t, useVirtual>(value, 2 + 2ULL * (value == 255));
+		return value < 253 || extract<uint64_t, useVirtual>(value, 2 + 2 * ((value > 253) + 2 * (value > 254)));
 	}
 
 	template <bool useVirtual = true>
-	[[nodiscard]] uint32_t extractWebType()
+	[[nodiscard]] uint64_t extractWebType()
 	{
-		uint32_t value;
+		uint64_t value;
 		if (!extractWebType<useVirtual>(value))
 			throw std::runtime_error("can not parse this data");
 		return value;

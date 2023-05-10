@@ -100,7 +100,7 @@ void MidiFileWriter::writeTrack()
 	char currChannel = 0;
 	for (const auto& node : m_nodes)
 	{
-		uint32_t delta = node.key - position;
+		uint32_t delta = (uint32_t)node.key - position;
 		for (const auto& off : node->noteOffs)
 		{
 			writeVLQ(delta);
@@ -153,7 +153,7 @@ void MidiFileWriter::writeTrack()
 			currEvent = MidiEventType::Note_On;
 			currChannel = on.first;
 		}
-		position = node.key;
+		position = (uint32_t)node.key;
 	}
 	m_nodes.clear();
 

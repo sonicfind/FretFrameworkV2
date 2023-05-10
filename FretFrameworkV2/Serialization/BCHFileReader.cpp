@@ -87,7 +87,7 @@ bool BCHFileReader::isStillCurrentTrack()
 	return false;
 }
 
-std::pair<uint32_t, ChartEvent>  BCHFileReader::parseEvent()
+std::pair<uint64_t, ChartEvent>  BCHFileReader::parseEvent()
 {
 	m_tickPosition += extractWebType<false>();
 
@@ -95,7 +95,7 @@ std::pair<uint32_t, ChartEvent>  BCHFileReader::parseEvent()
 	if (type > ChartEvent::VOCAL_PERCUSSION)
 		type = ChartEvent::UNKNOWN;
 
-	const uint32_t length = extractWebType<false>();
+	const uint64_t length = extractWebType<false>();
 	m_next = m_currentPosition + length;
 
 	if (m_next > m_nextTracks.back())
@@ -109,10 +109,10 @@ void BCHFileReader::nextEvent()
 	gotoEndOfBuffer();
 }
 
-std::pair<size_t, uint32_t> BCHFileReader::extractSingleNote()
+std::pair<size_t, uint64_t> BCHFileReader::extractSingleNote()
 {
 	size_t color = extract<unsigned char>();
-	uint32_t sustain = 0;
+	uint64_t sustain = 0;
 	if (color >= 128)
 	{
 		color &= 127;
@@ -121,9 +121,9 @@ std::pair<size_t, uint32_t> BCHFileReader::extractSingleNote()
 	return { color, sustain };
 }
 
-std::vector<std::pair<size_t, uint32_t>> BCHFileReader::extractMultiNote()
+std::vector<std::pair<size_t, uint64_t>> BCHFileReader::extractMultiNote()
 {
-	std::vector<std::pair<size_t, uint32_t>> notes;
+	std::vector<std::pair<size_t, uint64_t>> notes;
 	size_t numNotes = extract<unsigned char>();
 	notes.reserve(numNotes);
 	for (size_t i = 0; i < numNotes; ++i)
@@ -175,7 +175,7 @@ std::string_view BCHFileReader::extractText()
 SpecialPhrase BCHFileReader::extractSpecialPhrase()
 {
 	uint32_t type = extract<unsigned char>();
-	uint32_t duration = extractWebType();
+	uint64_t duration = extractWebType();
 	return { (SpecialPhraseType)type, duration };
 }
 
@@ -199,10 +199,10 @@ std::pair<size_t, std::string_view> BCHFileReader::extractLyric()
 	return { lane, extractString() };
 }
 
-std::pair<Pitch<-1, 9>, uint32_t> BCHFileReader::extractPitchAndDuration()
+std::pair<Pitch<-1, 9>, uint64_t> BCHFileReader::extractPitchAndDuration()
 {
 	Pitch<-1, 9> pitch = extractPitch();
-	uint32_t duration = 0;
+	uint64_t duration = 0;
 	extractWebType(duration);
 	return { pitch, duration };
 }

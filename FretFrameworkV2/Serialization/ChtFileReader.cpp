@@ -180,9 +180,9 @@ bool ChtFileReader::isStillCurrentTrack()
 	return ch != 0;
 }
 
-std::pair<uint32_t, ChartEvent> ChtFileReader::parseEvent()
+std::pair<uint64_t, ChartEvent> ChtFileReader::parseEvent()
 {
-	const uint32_t position = extract<uint32_t>();
+	const uint64_t position = extract<uint64_t>();
 	if (position < m_tickPosition)
 		throw std::runtime_error(".Cht/.Chart position out of order (previous:  " + std::to_string(m_tickPosition) + ')');
 
@@ -214,23 +214,23 @@ void ChtFileReader::nextEvent()
 	gotoNextLine();
 }
 
-std::pair<size_t, uint32_t> ChtFileReader::extractSingleNote()
+std::pair<size_t, uint64_t> ChtFileReader::extractSingleNote()
 {
 	const size_t color = extract<uint32_t>();
-	uint32_t sustain = 0;
+	uint64_t sustain = 0;
 
 	if (*m_currentPosition == '~')
 	{
 		m_currentPosition++;
-		sustain = extract<uint32_t>();
+		sustain = extract<uint64_t>();
 	}
 	return { color, sustain };
 }
 
-std::vector<std::pair<size_t, uint32_t>> ChtFileReader::extractMultiNote()
+std::vector<std::pair<size_t, uint64_t>> ChtFileReader::extractMultiNote()
 {
-	std::vector<std::pair<size_t, uint32_t>> notes;
-	size_t numNotes = extract<uint32_t>();
+	std::vector<std::pair<size_t, uint64_t>> notes;
+	size_t numNotes = extract<uint64_t>();
 	notes.reserve(numNotes);
 	for (size_t i = 0; i < numNotes; ++i)
 		notes.push_back(extractSingleNote());
@@ -350,10 +350,10 @@ std::pair<size_t, std::string_view> ChtFileReader::extractLyric()
 	return { lane, str };
 }
 
-std::pair<Pitch<-1, 9>, uint32_t> ChtFileReader::extractPitchAndDuration()
+std::pair<Pitch<-1, 9>, uint64_t> ChtFileReader::extractPitchAndDuration()
 {
 	Pitch<-1, 9> pitch = extractPitch();
-	uint32_t duration = 0;
+	uint64_t duration = 0;
 	extract(duration);
 	return { pitch, duration };
 }

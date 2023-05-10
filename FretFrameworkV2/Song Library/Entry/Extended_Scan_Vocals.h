@@ -13,7 +13,7 @@ namespace Extended_Scan_Vocals
 			return false;
 
 		VocalPitch pitch;
-		uint32_t endOfPhrase = 0;
+		uint64_t endOfPhrase = 0;
 		parser.nextEvent();
 		while (parser.isStillCurrentTrack())
 		{

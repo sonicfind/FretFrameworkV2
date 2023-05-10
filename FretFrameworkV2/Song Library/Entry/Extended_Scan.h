@@ -39,7 +39,7 @@ namespace Extended_Scan
 			return true;
 		}
 
-		[[nodiscard]] bool testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint32_t>>& colors) noexcept
+		[[nodiscard]] bool testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint64_t>>& colors) noexcept
 		{
 			for (const auto& color : colors)
 				if (!T::TestIndex(color.first))

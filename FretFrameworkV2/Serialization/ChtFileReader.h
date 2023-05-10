@@ -36,11 +36,11 @@ public:
 	virtual void skipTrack() override;
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() override;
-	[[nodiscard]] virtual std::pair<uint32_t, ChartEvent> parseEvent() override;
+	[[nodiscard]] virtual std::pair<uint64_t, ChartEvent> parseEvent() override;
 	virtual void nextEvent() override;
 
-	[[nodiscard]] virtual std::pair<size_t, uint32_t> extractSingleNote() override;
-	[[nodiscard]] virtual std::vector<std::pair<size_t, uint32_t>> extractMultiNote() override;
+	[[nodiscard]] virtual std::pair<size_t, uint64_t> extractSingleNote() override;
+	[[nodiscard]] virtual std::vector<std::pair<size_t, uint64_t>> extractMultiNote() override;
 	[[nodiscard]] virtual std::vector<char> extractSingleNoteMods() override;
 	[[nodiscard]] virtual std::vector<std::pair<char, size_t>> extractMultiNoteMods() override;
 	[[nodiscard]] virtual std::string_view extractText() override;
@@ -50,7 +50,7 @@ public:
 	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() override;
 
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() override;
-	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint32_t> extractPitchAndDuration() override;
+	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint64_t> extractPitchAndDuration() override;
 
 	[[nodiscard]] virtual size_t extractLeftHand() override;
 

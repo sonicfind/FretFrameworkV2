@@ -19,26 +19,28 @@ void BufferedBinaryWriter::writeBuffer()
 	m_buffer.clear();
 }
 
-void BufferedBinaryWriter::writeWebType(uint32_t value)
+void BufferedBinaryWriter::writeWebType(uint64_t value)
 {
-	if (value < 254)
+	if (value < 253)
 		write(value, 1);
 	else
 	{
-		bool is32 = value > UINT16_MAX;
-		write<char>(254 + is32);
-		write(value, 2 + 2ULL * is32);
+		bool exceeds16 = value > UINT16_MAX;
+		bool exceeds32 = value > UINT32_MAX;
+		write<char>(253 + exceeds16 + exceeds32);
+		write(value, 2 + 2ULL * (exceeds16 + 2 * exceeds32));
 	}
 }
 
-void BufferedBinaryWriter::appendWebType(uint32_t value)
+void BufferedBinaryWriter::appendWebType(uint64_t value)
 {
-	if (value < 254)
+	if (value < 253)
 		append(value, 1);
 	else
 	{
-		bool is32 = value > UINT16_MAX;
-		append<char>(254 + is32);
-		append(value, 2 + 2ULL * is32);
+		bool exceeds16 = value > UINT16_MAX;
+		bool exceeds32 = value > UINT32_MAX;
+		append<char>(253 + exceeds16 + exceeds32);
+		append(value, 2 + 2ULL * (exceeds16 + 2 * exceeds32));
 	}
 }

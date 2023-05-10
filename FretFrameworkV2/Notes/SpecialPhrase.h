@@ -23,5 +23,5 @@ enum class SpecialPhraseType
 struct SpecialPhrase : public Sustained
 {
 	SpecialPhraseType type;
-	constexpr SpecialPhrase(SpecialPhraseType _type, uint32_t length) : type(_type) { setLength(length); }
+	constexpr SpecialPhrase(SpecialPhraseType _type, uint64_t length) : type(_type) { setLength(length); }
 };
