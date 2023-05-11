@@ -106,15 +106,15 @@ protected:
 	bool m_isFlammed = false;
 
 public:
-	bool set_V1(const size_t lane, uint64_t sustain)
+	bool set_V1(const size_t lane, uint64_t length)
 	{
 		if (lane == 0)
 		{
-			m_special.setLength(sustain);
+			m_special.setLength(length);
 			m_doubleBass.disable();
 		}
 		else if (lane <= numPads && lane < 32)
-			m_colors[lane - 1].setLength(sustain);
+			m_colors[lane - 1].setLength(length);
 		else if (lane == 32)
 		{
 			if (m_special.isActive())
@@ -136,11 +136,11 @@ public:
 		return true;
 	}
 
-	bool set(size_t lane, uint64_t sustain)
+	bool set(size_t lane, uint64_t length)
 	{
 		if (lane == 1)
 		{
-			m_doubleBass.setLength(sustain);
+			m_doubleBass.setLength(length);
 			this->m_special.disable();
 			return true;
 		}
@@ -151,7 +151,7 @@ public:
 			else if (lane > 1)
 				lane--;
 
-			return Note_withSpecial<DrumType, numPads, Sustained>::set(lane, sustain);
+			return Note_withSpecial<DrumType, numPads, Sustained>::set(lane, length);
 		}
 	}
 
