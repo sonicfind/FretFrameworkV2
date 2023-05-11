@@ -4,7 +4,7 @@
 namespace ChartV1
 {
 	template <class T>
-	bool Load(InstrumentalTrack<T>& track, ChtFileReader& reader)
+	[[nodiscard]] bool Load(InstrumentalTrack<T>& track, ChtFileReader& reader)
 	{
 		DifficultyTrack<T>& diff = track[reader.getDifficulty()];
 		if (diff.isOccupied())

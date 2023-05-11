@@ -5,8 +5,30 @@
 
 void Song::traverse_cht_V1(ChtFileReader& reader)
 {
-	DrumNote_Legacy::ResetType();
 	InstrumentalTrack<DrumNote_Legacy> legacy_track;
+	const auto loadNoteTrack = [&] (ChtFileReader::NoteTracks_V1 track) {
+		switch (track)
+		{
+			case ChtFileReader::Single:       return ChartV1::Load(m_noteTracks.lead_5, reader);
+			case ChtFileReader::DoubleGuitar: return ChartV1::Load(m_noteTracks.coop, reader);
+			case ChtFileReader::DoubleBass:   return ChartV1::Load(m_noteTracks.bass_5, reader);
+			case ChtFileReader::DoubleRhythm: return ChartV1::Load(m_noteTracks.rhythm, reader);
+			case ChtFileReader::Drums:
+				switch (DrumNote_Legacy::GetType())
+				{
+					case DrumType_Enum::LEGACY:       return ChartV1::Load(legacy_track, reader);
+					case DrumType_Enum::FOURLANE_PRO: return ChartV1::Load(m_noteTracks.drums4_pro, reader);
+					case DrumType_Enum::FIVELANE:     return ChartV1::Load(m_noteTracks.drums5, reader);
+				}
+			case ChtFileReader::Keys:      return ChartV1::Load(m_noteTracks.keys, reader);
+			case ChtFileReader::GHLGuitar: return ChartV1::Load(m_noteTracks.lead_6, reader);
+			case ChtFileReader::GHLBass:   return ChartV1::Load(m_noteTracks.bass_6, reader);
+			default:
+				return false;
+		}
+	};
+
+	DrumNote_Legacy::ResetType();
 	while (reader.isStartOfTrack())
 	{
 		if (reader.validateSyncTrack())
@@ -43,44 +65,8 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 				reader.nextEvent();
 			}
 		}
-		else
-		{
-			auto track = reader.extractTrack_V1();
-			switch (track)
-			{
-			case ChtFileReader::Single:
-				ChartV1::Load(m_noteTracks.lead_5, reader);
-				break;
-			case ChtFileReader::DoubleGuitar:
-				ChartV1::Load(m_noteTracks.coop, reader);
-				break;
-			case ChtFileReader::DoubleBass:
-				ChartV1::Load(m_noteTracks.bass_5, reader);
-				break;
-			case ChtFileReader::DoubleRhythm:
-				ChartV1::Load(m_noteTracks.rhythm, reader);
-				break;
-			case ChtFileReader::Drums:
-				switch (DrumNote_Legacy::GetType())
-				{
-				case DrumType_Enum::LEGACY:       ChartV1::Load(legacy_track, reader); break;
-				case DrumType_Enum::FOURLANE_PRO: ChartV1::Load(m_noteTracks.drums4_pro, reader); break;
-				case DrumType_Enum::FIVELANE:     ChartV1::Load(m_noteTracks.drums5, reader); break;
-				}
-				break;
-			case ChtFileReader::Keys:
-				ChartV1::Load(m_noteTracks.keys, reader);
-				break;
-			case ChtFileReader::GHLGuitar:
-				ChartV1::Load(m_noteTracks.lead_6, reader);
-				break;
-			case ChtFileReader::GHLBass:
-				ChartV1::Load(m_noteTracks.bass_6, reader);
-				break;
-			default:
-				reader.skipTrack();
-			}
-		}
+		else if (!loadNoteTrack(reader.extractTrackType_V1()))
+			reader.skipTrack();
 	}
 
 	if (legacy_track.isOccupied())

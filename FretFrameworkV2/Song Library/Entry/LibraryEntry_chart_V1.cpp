@@ -31,7 +31,7 @@ void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 			}
 		};
 
-		auto track = reader.extractTrack_V1();
+		auto track = reader.extractTrackType_V1();
 		if (!ScanTrack(track))
 			reader.skipTrack();
 	}

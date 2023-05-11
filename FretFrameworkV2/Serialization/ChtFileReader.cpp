@@ -424,7 +424,7 @@ ChtFileReader::NoteTracks_V1 ChtFileReader::checkTrack_V1()
 	return Invalid;
 }
 
-ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrack_V1()
+ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrackType_V1()
 {
 	if (!checkDifficulty_V1())
 		return Invalid;

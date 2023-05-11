@@ -61,7 +61,7 @@ public:
 	[[nodiscard]] std::pair<size_t, uint64_t> extractColorAndSustain_V1();
 
 public:
-	NoteTracks_V1 extractTrack_V1();
+	NoteTracks_V1 extractTrackType_V1();
 	[[nodiscard]] std::optional<std::pair<uint64_t, ChartEvent>> extractEvent_V1();
 
 private:
