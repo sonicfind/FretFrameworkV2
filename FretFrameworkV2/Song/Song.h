@@ -30,7 +30,7 @@ public:
 
 	void loadIni();
 	bool compareToIni();
-	bool load(const std::filesystem::path& chartFile, const ChartType type) noexcept;
+	bool load(const std::filesystem::path& chartFile, const ChartType type, bool fullLoad) noexcept;
 	bool save(ChartType type) const noexcept;
 	void clear();
 

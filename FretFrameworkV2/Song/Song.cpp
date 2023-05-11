@@ -60,7 +60,7 @@ uint64_t Song::getHopoThreshold() const noexcept
 
 }
 
-bool Song::load(const std::filesystem::path& chartFile, const ChartType type) noexcept
+bool Song::load(const std::filesystem::path& chartFile, const ChartType type, bool fullLoad) noexcept
 {
 	try
 	{
@@ -70,7 +70,7 @@ bool Song::load(const std::filesystem::path& chartFile, const ChartType type) no
 			load_bch(chartFile);
 			break;
 		case ChartType::CHT:
-			load_cht(chartFile, true);
+			load_cht(chartFile, fullLoad);
 			break;
 		case ChartType::MID:
 			load_mid(chartFile);

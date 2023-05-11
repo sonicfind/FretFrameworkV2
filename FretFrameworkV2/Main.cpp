@@ -142,7 +142,7 @@ void loadSong()
 				startClock();
 				Song song(path.parent_path());
 				song.loadIni();
-				if (!song.load(path, CHARTTYPES[i].second))
+				if (!song.load(path, CHARTTYPES[i].second, true))
 					break;
 				stopClock("Song load");
 
