@@ -64,4 +64,7 @@ public:
             _lhs.m_value[2] == _rhs.m_value[2] &&
             _lhs.m_value[3] == _rhs.m_value[3];
     }
+
+private:
+    void evaluateBlock(const void* _Ptr);
 };
