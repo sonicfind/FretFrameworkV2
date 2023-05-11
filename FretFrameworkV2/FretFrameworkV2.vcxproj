@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ini\Ini.cpp" />
+    <ClCompile Include="Notes\DrumNote_Legacy.cpp" />
     <ClCompile Include="Notes\GuitarNote.cpp" />
     <ClCompile Include="Notes\Sustained.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
@@ -191,7 +192,6 @@
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_Drums.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Saver_Drums.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_Guitar.cpp" />
-    <ClCompile Include="Song\Tracks\Instrumental\ChartV1_LegacyDrums.cpp" />
     <ClCompile Include="TaskQueue\TaskQueue.cpp" />
     <ClCompile Include="Types\MD5.cpp" />
     <ClCompile Include="Types\UnicodeString.cpp" />
@@ -259,7 +259,6 @@
     <ClInclude Include="Song\Tracks\Instrumental\Extended_Saver_Instrument.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_Instrument.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Saver_Instrument.h" />
-    <ClInclude Include="Song\Tracks\Instrumental\ChartV1_LegacyDrums.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h" />
     <ClInclude Include="Song\Tracks\MidiNodeGetter.h" />
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />

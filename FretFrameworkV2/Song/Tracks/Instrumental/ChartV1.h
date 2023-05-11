@@ -4,24 +4,7 @@
 namespace ChartV1
 {
 	template <class T>
-	class V1Loader
-	{
-	public:
-		[[nodiscard]] bool addNote(SimpleFlatMap<T>& notes, uint64_t position, std::pair<size_t, uint64_t> note)
-		{
-			return notes.get_or_emplace_back(position).set_V1(note.first, note.second);
-		}
-	};
-
-	template <class T>
-	void Load(InstrumentalTrack<T>& track, ChtFileReader& reader)
-	{
-		V1Loader<T> loader;
-		Load(loader, track, reader);
-	}
-
-	template <class T>
-	bool Load(V1Loader<T>& loader, InstrumentalTrack<T>& track, ChtFileReader& reader)
+	bool Load(InstrumentalTrack<T>& track, ChtFileReader& reader)
 	{
 		DifficultyTrack<T>& diff = track[reader.getDifficulty()];
 		if (diff.isOccupied())
@@ -35,7 +18,8 @@ namespace ChartV1
 			{
 			case ChartEvent::NOTE:
 			{
-				if (!loader.addNote(diff.m_notes, trackEvent->first, reader.extractColorAndSustain_V1()))
+				const auto note = reader.extractColorAndSustain_V1();
+				if (!diff.m_notes.get_or_emplace_back(trackEvent->first).set_V1(note.first, note.second))
 					if (!diff.m_notes.back().validate())
 						diff.m_notes.pop_back();
 				break;

@@ -3,7 +3,25 @@
 
 class DrumNote_Legacy : public DrumNote<DrumPad_Pro, 5>
 {
+	static DrumType_Enum s_currentType;
 public:
+	bool set_V1(const size_t lane, uint64_t length)
+	{
+		if (!DrumNote<DrumPad_Pro, 5>::set_V1(lane, length))
+			return false;
+
+		if (s_currentType == DrumType_Enum::LEGACY)
+			s_currentType = EvaluateDrumType(lane);
+		return true;
+	}
+
+	DrumPad_Pro& get(const size_t lane)
+	{
+		if (s_currentType == DrumType_Enum::LEGACY && lane == 4)
+			s_currentType = DrumType_Enum::FIVELANE;
+		return m_colors[lane];
+	}
+
 	template <class DrumType, size_t numPads>
 	DrumNote<DrumType, numPads> transformNote() const
 	{
@@ -29,6 +47,15 @@ public:
 		note.setFlam(isFlammed());
 		return note;
 	}
+
+	static void Signal4Pro()
+	{
+		if (s_currentType == DrumType_Enum::LEGACY)
+			s_currentType = DrumType_Enum::FOURLANE_PRO;
+	}
+
+	static void ResetType() { s_currentType = DrumType_Enum::LEGACY; }
+	static DrumType_Enum GetType() { return s_currentType; }
 
 	static DrumType_Enum EvaluateDrumType(size_t index)
 	{

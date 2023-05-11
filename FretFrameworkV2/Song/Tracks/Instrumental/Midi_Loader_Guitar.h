@@ -3,7 +3,7 @@
 #include "Notes/GuitarNote.h"
 
 template <>
-struct Midi_Loader_Diff<GuitarNote<5>>
+struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<5>>
 {
 	bool sliderNotes = false;
 	bool hopoOn = false;
@@ -14,7 +14,7 @@ struct Midi_Loader_Diff<GuitarNote<5>>
 };
 
 template <>
-struct Midi_Loader_Diff<GuitarNote<6>>
+struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<6>>
 {
 	bool sliderNotes = false;
 	bool hopoOn = false;
@@ -23,13 +23,13 @@ struct Midi_Loader_Diff<GuitarNote<6>>
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader<GuitarNote<5>>::s_noteRange{ 59, 107 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_noteRange{ 59, 107 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader<GuitarNote<6>>::s_noteRange{ 58, 103 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_noteRange{ 58, 103 };
 
 template <>
-constexpr size_t Midi_Loader<GuitarNote<5>>::s_defaultLanes[48] =
+constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_defaultLanes[48] =
 {
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -38,7 +38,7 @@ constexpr size_t Midi_Loader<GuitarNote<5>>::s_defaultLanes[48] =
 };
 
 template <>
-constexpr size_t Midi_Loader<GuitarNote<6>>::s_defaultLanes[48] =
+constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_defaultLanes[48] =
 {
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
@@ -47,14 +47,14 @@ constexpr size_t Midi_Loader<GuitarNote<6>>::s_defaultLanes[48] =
 };
 
 template <>
-void Midi_Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity);
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity);
 
 template <>
-void Midi_Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_t lane, unsigned char velocity);
+void Midi_Loader_Instrument::Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_t lane, unsigned char velocity);
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane)
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane)
 {
 	// HopoON marker
 	if (lane == 6)
@@ -120,7 +120,7 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane)
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane)
+void Midi_Loader_Instrument::Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane)
 {
 	// HopoON marker
 	if (lane == 7)
@@ -147,10 +147,10 @@ void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane)
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str);
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseSysEx(std::string_view str);
 
 template <>
-void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str);
+void Midi_Loader_Instrument::Loader<GuitarNote<6>>::parseSysEx(std::string_view str);
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str);
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseText(std::string_view str);

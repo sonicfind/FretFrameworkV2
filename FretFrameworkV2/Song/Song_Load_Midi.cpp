@@ -43,37 +43,37 @@ void Song::load_mid(const std::filesystem::path& path)
 			}
 		}
 		else if (name == "PART GUITAR" || name == "T1 GEMS")
-			return Midi_Loader(m_noteTracks.lead_5, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.lead_5, reader);
 		else if (name == "PART GUITAR GHL")
-			return Midi_Loader(m_noteTracks.lead_6, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.lead_6, reader);
 		else if (name == "PART BASS")
-			return Midi_Loader(m_noteTracks.bass_5, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.bass_5, reader);
 		else if (name == "PART BASS GHL")
-			return Midi_Loader(m_noteTracks.bass_6, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.bass_6, reader);
 		else if (name == "PART RHYTHM")
-			return Midi_Loader(m_noteTracks.rhythm, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.rhythm, reader);
 		else if (name == "PART GUITAR COOP")
-			return Midi_Loader(m_noteTracks.coop, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.coop, reader);
 		else if (name == "PART KEYS")
-			return Midi_Loader(m_noteTracks.keys, reader.getMultiplierNote()).scan(reader);
+			return Midi_Loader_Instrument::Scan(m_noteTracks.keys, reader);
 		else if (name == "PART DRUMS")
 		{
 			if (m_baseDrumType == DrumType_Enum::LEGACY)
 			{
+				DrumNote_Legacy::ResetType();
 				InstrumentalTrack<DrumNote_Legacy> track;
-				Midi_Loader drumsLoader(track, reader.getMultiplierNote());
-				if (!drumsLoader.scan(reader))
+				if (!Midi_Loader_Instrument::Scan(track, reader))
 					return false;
 
-				if (drumsLoader.m_ext.type != DrumType_Enum::FIVELANE)
+				if (DrumNote_Legacy::GetType() != DrumType_Enum::FIVELANE)
 					LegacyDrums::Transfer(track, m_noteTracks.drums4_pro);
 				else
 					LegacyDrums::Transfer(track, m_noteTracks.drums5);
 			}
 			else if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO)
-				return Midi_Loader(m_noteTracks.drums4_pro, reader.getMultiplierNote()).scan(reader);
+				return Midi_Loader_Instrument::Scan(m_noteTracks.drums4_pro, reader);
 			else
-				return Midi_Loader(m_noteTracks.drums5, reader.getMultiplierNote()).scan(reader);
+				return Midi_Loader_Instrument::Scan(m_noteTracks.drums5, reader);
 		}
 		else if (name == "PART VOCALS")
 			return vocalTracker.load(reader);

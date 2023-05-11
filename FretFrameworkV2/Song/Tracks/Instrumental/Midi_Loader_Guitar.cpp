@@ -1,7 +1,7 @@
 #include "Midi_Loader_Guitar.h"
 
 template <>
-void Midi_Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity)
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity)
 {
 	if (m_difficulties[diff].sliderNotes)
 		note.setTap(true);
@@ -13,7 +13,7 @@ void Midi_Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_
 }
 
 template <>
-void Midi_Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_t lane, unsigned char velocity)
+void Midi_Loader_Instrument::Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_t lane, unsigned char velocity)
 {
 	if (m_difficulties[diff].sliderNotes)
 		note.setTap(true);
@@ -25,7 +25,7 @@ void Midi_Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str)
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseSysEx(std::string_view str)
 {
 	if (str.compare(0, 2, "PS") == 0)
 	{
@@ -73,7 +73,7 @@ void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str)
 }
 
 template <>
-void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str)
+void Midi_Loader_Instrument::Loader<GuitarNote<6>>::parseSysEx(std::string_view str)
 {
 	if (str.compare(0, 2, "PS") == 0 && str[5] == 4)
 	{
@@ -101,7 +101,7 @@ void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str)
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str)
+void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseText(std::string_view str)
 {
 	if (str == "[ENHANCED_OPENS]" || str == "ENHANCED_OPENS")
 	{

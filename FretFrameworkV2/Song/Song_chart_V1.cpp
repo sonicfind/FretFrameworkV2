@@ -1,11 +1,11 @@
 #include "Song.h"
-#include "Tracks/Instrumental/ChartV1_LegacyDrums.h"
+#include "Tracks/Instrumental/ChartV1.h"
 #include "Tracks/Instrumental/GuitarForcing.h"
 #include "Tracks/Instrumental/DrumTrack_Transfer.h"
 
 void Song::traverse_cht_V1(ChtFileReader& reader)
 {
-	ChartV1::V1Loader<DrumNote_Legacy> legacy_loader(m_baseDrumType);
+	DrumNote_Legacy::ResetType();
 	InstrumentalTrack<DrumNote_Legacy> legacy_track;
 	while (reader.isStartOfTrack())
 	{
@@ -61,9 +61,9 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 				ChartV1::Load(m_noteTracks.rhythm, reader);
 				break;
 			case ChtFileReader::Drums:
-				switch (legacy_loader.getDrumType())
+				switch (DrumNote_Legacy::GetType())
 				{
-				case DrumType_Enum::LEGACY:       ChartV1::Load(legacy_loader, legacy_track, reader); break;
+				case DrumType_Enum::LEGACY:       ChartV1::Load(legacy_track, reader); break;
 				case DrumType_Enum::FOURLANE_PRO: ChartV1::Load(m_noteTracks.drums4_pro, reader); break;
 				case DrumType_Enum::FIVELANE:     ChartV1::Load(m_noteTracks.drums5, reader); break;
 				}
@@ -85,7 +85,7 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 
 	if (legacy_track.isOccupied())
 	{
-		if (legacy_loader.getDrumType() != DrumType_Enum::FIVELANE)
+		if (DrumNote_Legacy::GetType() != DrumType_Enum::FIVELANE)
 			LegacyDrums::Transfer(legacy_track, m_noteTracks.drums4_pro);
 		else
 			LegacyDrums::Transfer(legacy_track, m_noteTracks.drums5);
