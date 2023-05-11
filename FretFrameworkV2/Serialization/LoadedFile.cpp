@@ -10,14 +10,14 @@ LoadedFile::LoadedFile(const std::filesystem::path& filepath)
 	m_fileSize = _ftell_nolock(file);
 	_fseek_nolock(file, 0, SEEK_SET);
 
-	m_fileData = std::make_shared<char[]>(m_fileSize + 1);
+	m_fileData = std::make_shared_for_overwrite<char[]>(m_fileSize + 1);
 	if (_fread_nolock(m_fileData.get(), m_fileSize, 1, file) != 1)
 		throw std::runtime_error("Uh, shoot");
 	_fclose_nolock(file);
 	m_fileData[m_fileSize] = 0;
 }
 
-LoadedFile::LoadedFile(const char* data, size_t size) : m_fileSize(size), m_fileData(std::make_shared<char[]>(m_fileSize + 1))
+LoadedFile::LoadedFile(const char* data, size_t size) : m_fileSize(size), m_fileData(std::make_shared_for_overwrite<char[]>(m_fileSize + 1))
 {
 	memcpy(m_fileData.get(), data, size);
 	m_fileData[m_fileSize] = 0;
