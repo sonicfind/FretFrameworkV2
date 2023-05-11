@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <stdexcept>
+#include "Sustained.h"
 #include "NoteName.h"
 
 enum class PitchType
@@ -11,7 +12,7 @@ enum class PitchType
 };
 
 template <int OCTAVE_MIN = -1, int OCTAVE_MAX = 6>
-class Pitch
+class Pitch : public Sustained
 {
 	static_assert(OCTAVE_MIN < OCTAVE_MAX && OCTAVE_MIN >= -1 && OCTAVE_MAX <= 9);
 
@@ -30,9 +31,9 @@ public:
 			throw std::runtime_error("Pitch received is out of range");
 	}
 
-	constexpr Pitch(char binaryValue)
+	constexpr Pitch(char binaryValue, uint64_t length)
 	{
-		if (!set(binaryValue))
+		if (!set(binaryValue, length))
 			throw std::runtime_error("Pitch received is out of range");
 	}
 
@@ -65,9 +66,12 @@ public:
 		return setOctave(pitch.getOctave()) && setNote(pitch.getNote());
 	}
 
-	[[nodiscard]] constexpr bool set(char binaryValue) noexcept
+	constexpr bool set(char binaryValue, uint64_t length) noexcept
 	{
-		return binaryValue >= 0 && set(static_cast<NoteName>(binaryValue % OCTAVE_LENGTH), (binaryValue / OCTAVE_LENGTH) - 1);
+		if (binaryValue < 0 || !set(static_cast<NoteName>(binaryValue % OCTAVE_LENGTH), (binaryValue / OCTAVE_LENGTH) - 1))
+			return false;
+		setLength(length);
+		return true;
 	}
 
 	[[nodiscard]] constexpr bool setOctave(int octave) noexcept
@@ -96,7 +100,7 @@ public:
 		return true;
 	}
 
-	constexpr void disable() noexcept
+	constexpr void reset() noexcept
 	{
 		m_note = NoteName::C;
 		m_octave = -1;
@@ -104,9 +108,8 @@ public:
 
 	[[nodiscard]] constexpr NoteName getNote() const noexcept { return m_note; }
 	[[nodiscard]] constexpr int getOctave() const noexcept { return m_octave; }
-	[[nodiscard]] constexpr std::pair<NoteName, int> getPitch() const noexcept { return { m_note, m_octave }; }
 	[[nodiscard]] constexpr char getBinaryValue() const noexcept { return (m_octave + 1) * OCTAVE_LENGTH + static_cast<char>(m_note); }
-	[[nodiscard]] constexpr bool isActive() const noexcept { return OCTAVE_MIN > -1 || m_note > NoteName::C; }
+	[[nodiscard]] constexpr bool isActive() const noexcept { return Sustained::isActive() || m_octave > -1 || m_note > NoteName::C; }
 
 	[[nodiscard]] constexpr static std::pair<int, int> getRange() { return { OCTAVE_MIN, OCTAVE_MAX }; }
 };

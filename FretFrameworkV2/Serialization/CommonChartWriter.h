@@ -20,12 +20,13 @@ public:
 	virtual void writeMultiNoteMods(const std::vector<std::pair<char, size_t>>& mods) = 0;
 	virtual void writeText(std::string_view str) = 0;
 	virtual void writeSpecialPhrase(const SpecialPhrase& phrase) = 0;
-	virtual void writePitch(Pitch<-1, 9> pitch) = 0;
-
-	virtual void writeLyric(std::pair<size_t, std::string_view> lyric) = 0;
-	virtual void writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note) = 0;
 
 	virtual void writeNoteName(NoteName note, PitchType type) = 0;
+	virtual void writePitch(Pitch<-1, 9> pitch) = 0;
+	virtual void writePitchAndDuration(Pitch<-1, 9> pitch) = 0;
+
+	virtual void writeLyric(std::pair<size_t, std::string_view> lyric) = 0;
+	
 	virtual void writeLeftHand(size_t position) = 0;
 
 	virtual void writeMicrosPerQuarter(uint32_t micros) = 0;

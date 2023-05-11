@@ -48,9 +48,9 @@ public:
 
 	[[nodiscard]] virtual NoteName extractNoteName() override;
 	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() override;
+	[[nodiscard]] virtual Pitch<-1, 9> extractPitchAndDuration() override;
 
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() override;
-	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint64_t> extractPitchAndDuration() override;
 
 	[[nodiscard]] virtual size_t extractLeftHand() override;
 

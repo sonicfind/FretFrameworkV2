@@ -26,9 +26,9 @@ public:
 	virtual void writeText(std::string_view str) override;
 	virtual void writeSpecialPhrase(const SpecialPhrase& phrase) override;
 	virtual void writePitch(Pitch<-1, 9> pitch) override;
+	virtual void writePitchAndDuration(Pitch<-1, 9> pitch) override;
 
 	virtual void writeLyric(std::pair<size_t, std::string_view> lyric) override;
-	virtual void writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note) override;
 
 	virtual void writeNoteName(NoteName note, PitchType type) override;
 	virtual void writeLeftHand(size_t position) override;

@@ -40,7 +40,7 @@ public:
 			for (auto& vocal : track)
 			{
 				vocal.key = uint64_t(vocal.key * multiplier);
-				*vocal *= multiplier;
+				vocal->pitch *= multiplier;
 			}
 		}
 

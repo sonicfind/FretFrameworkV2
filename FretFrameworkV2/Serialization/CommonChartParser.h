@@ -31,9 +31,9 @@ public:
 
 	[[nodiscard]] virtual NoteName extractNoteName() = 0;
 	[[nodiscard]] virtual Pitch<-1, 9> extractPitch() = 0;
+	[[nodiscard]] virtual Pitch<-1, 9> extractPitchAndDuration() = 0;
 
 	[[nodiscard]] virtual std::pair<size_t, std::string_view> extractLyric() = 0;
-	[[nodiscard]] virtual std::pair<Pitch<-1, 9>, uint64_t> extractPitchAndDuration() = 0;
 
 	[[nodiscard]] virtual size_t extractLeftHand() = 0;
 

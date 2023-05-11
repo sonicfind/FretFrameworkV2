@@ -23,7 +23,7 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 					if (str.starts_with("section "))
 						m_events.sections.get_or_emplace_back(trackEvent.first) = str.substr(8);
 					else if (str.starts_with("lyric "))
-						m_noteTracks.vocals[0][trackEvent.first].setLyric(str.substr(6));
+						m_noteTracks.vocals[0][trackEvent.first].lyric = UnicodeString::strToU32(str.substr(6));
 					else if (str.starts_with("phrase_start"))
 					{
 						if (phrase < UINT64_MAX)

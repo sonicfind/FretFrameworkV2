@@ -27,8 +27,8 @@ namespace Extended_Scan_Vocals
 				if (lyric.first == 0 || lyric.first > numTracks || values.wasTrackValidated(lyric.first))
 					break;
 
-				auto pitchValues = parser.extractPitchAndDuration();
-				if (pitch.set(pitchValues.first))
+				auto pitch = parser.extractPitchAndDuration();
+				if (pitch.set(pitch))
 				{
 					values.addSubTrack(lyric.first);
 					if (values.m_subTracks == (1 << numTracks) - 1)

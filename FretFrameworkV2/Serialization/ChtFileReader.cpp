@@ -350,12 +350,13 @@ std::pair<size_t, std::string_view> ChtFileReader::extractLyric()
 	return { lane, str };
 }
 
-std::pair<Pitch<-1, 9>, uint64_t> ChtFileReader::extractPitchAndDuration()
+Pitch<-1, 9> ChtFileReader::extractPitchAndDuration()
 {
 	Pitch<-1, 9> pitch = extractPitch();
 	uint64_t duration = 0;
 	extract(duration);
-	return { pitch, duration };
+	pitch.setLength(duration);
+	return pitch;
 }
 
 size_t ChtFileReader::extractLeftHand()

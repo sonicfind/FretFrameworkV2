@@ -27,12 +27,12 @@ namespace Extended_Load_Vocals
 					throw std::runtime_error("Invalid track index");
 
 				Vocal& vocal = track.m_vocals[lyric.first - 1].get_or_emplace_back(trackEvent.first);
-				vocal.setLyric(lyric.second);
+				vocal.lyric = UnicodeString::strToU32(lyric.second);
 
 				if (trackEvent.second == ChartEvent::VOCAL)
 				{
-					auto values = parser.extractPitchAndDuration();
-					if (!vocal.set(values.first, values.second))
+					auto pitch = parser.extractPitchAndDuration();
+					if (!vocal.pitch.set(pitch))
 						throw std::runtime_error("Invalid pitch");
 				}
 				break;

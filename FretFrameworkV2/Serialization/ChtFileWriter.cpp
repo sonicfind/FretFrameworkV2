@@ -119,18 +119,20 @@ void ChtFileWriter::writePitch(Pitch<-1, 9> pitch)
 	m_file << pitch.getOctave();
 }
 
+void ChtFileWriter::writePitchAndDuration(Pitch<-1, 9> pitch)
+{
+	writePitch(pitch);
+	if (pitch.getLength() > 0)
+		write(pitch.getLength());
+}
+
 void ChtFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 {
 	write(lyric.first);
 	writeText(lyric.second);
 }
 
-void ChtFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note)
-{
-	writePitch(note.first);
-	if (note.second > 0)
-		write(note.second);
-}
+
 
 void ChtFileWriter::writeNoteName(NoteName note, PitchType type)
 {

@@ -36,7 +36,7 @@ public:
 		}
 
 		if (m_lyric.first != UINT64_MAX)
-			emplaceVocal<INDEX>(m_lyric.first).setLyric(m_lyric.second);
+			emplaceVocal<INDEX>(m_lyric.first);
 		return true;
 	}
 
@@ -84,8 +84,7 @@ private:
 			}
 
 			Vocal& vocal = emplaceVocal<INDEX>(m_vocalPos);
-			vocal.setLyric(m_lyric.second);
-			vocal.set(pitch, sustain);
+			vocal.pitch.set(pitch, sustain);
 			m_lyric.first = UINT64_MAX;
 		}
 
@@ -101,7 +100,7 @@ private:
 		if (text[0] != '[')
 		{
 			if (m_lyric.first != UINT64_MAX)
-				emplaceVocal<INDEX>(m_lyric.first).setLyric(m_lyric.second);
+				emplaceVocal<INDEX>(m_lyric.first);
 			m_lyric = { m_position, text };
 		}
 		else if constexpr (INDEX == 0)
@@ -109,12 +108,12 @@ private:
 	}
 
 	template <size_t INDEX>
-	Vocal& emplaceVocal(uint64_t m_position)
+	Vocal& emplaceVocal(uint64_t position)
 	{
 		if (m_track[INDEX].capacity() == 0)
 			m_track[INDEX].reserve(500);
 
-		return m_track[INDEX].emplace_back(m_position);
+		return m_track[INDEX].emplace_back(position, { UnicodeString::strToU32(m_lyric.second) });
 	}
 
 	template <bool NoteOn>

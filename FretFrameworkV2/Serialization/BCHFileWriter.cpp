@@ -119,18 +119,18 @@ void BCHFileWriter::writePitch(Pitch<-1, 9> pitch)
 	append(pitch.getBinaryValue());
 }
 
+void BCHFileWriter::writePitchAndDuration(Pitch<-1, 9> pitch)
+{
+	writePitch(pitch);
+	if (pitch.getLength() > 0)
+		appendWebType(pitch.getLength());
+}
+
 void BCHFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 {
 	append((unsigned char)lyric.first);
 	appendWebType(lyric.second.size());
 	append(lyric.second.data(), lyric.second.size());
-}
-
-void BCHFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note)
-{
-	writePitch(note.first);
-	if (note.second > 0)
-		appendWebType(note.second);
 }
 
 void BCHFileWriter::writeNoteName(NoteName note, PitchType type)

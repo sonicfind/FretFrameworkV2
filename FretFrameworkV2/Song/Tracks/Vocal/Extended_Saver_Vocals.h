@@ -52,13 +52,13 @@ protected:
 			if (vocal->isPlayable())
 			{
 				writer.startEvent(position, ChartEvent::VOCAL);
-				writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
-				writer.writePitchAndDuration(vocal->getPitchAndDuration());
+				writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->lyric) });
+				writer.writePitchAndDuration(vocal->pitch);
 			}
 			else
 			{
 				writer.startEvent(position, ChartEvent::LYRIC);
-				writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->getLyric()) });
+				writer.writeLyric({ i + 1, UnicodeString::U32ToStr(vocal->lyric) });
 			}
 			writer.finishEvent();
 		}

@@ -324,9 +324,6 @@
     <ClInclude Include="Serialization\BCHFileWriter.h">
       <Filter>Serialization\FileWriter</Filter>
     </ClInclude>
-    <ClInclude Include="Notes\Pitch.h">
-      <Filter>Serialization</Filter>
-    </ClInclude>
     <ClInclude Include="Notes\NoteName.h">
       <Filter>Serialization</Filter>
     </ClInclude>
@@ -490,6 +487,9 @@
       <Filter>Song\Tracks</Filter>
     </ClInclude>
     <ClInclude Include="Notes\SpecialPhrase.h">
+      <Filter>Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="Notes\Pitch.h">
       <Filter>Notes</Filter>
     </ClInclude>
   </ItemGroup>
