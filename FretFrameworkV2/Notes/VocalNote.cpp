@@ -1,7 +1,7 @@
 #include "VocalNote.h"
 #include "Types/UnicodeString.h"
 
-bool Vocal::set(unsigned char pitch, uint32_t duration) noexcept
+bool Vocal::set(unsigned char pitch, uint64_t duration) noexcept
 {
 	return set(Pitch<-1, 9>(pitch), duration);
 }

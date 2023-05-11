@@ -1,7 +1,7 @@
 #pragma once
 #include "SimpleFlatMap/SimpleFlatMap.h"
 template <class T>
-auto& GetNode(SimpleFlatMap<T>& map, uint32_t position)
+auto& GetNode(SimpleFlatMap<T>& map, uint64_t position)
 {
 	auto iter = map.end();
 	while (iter != map.begin())

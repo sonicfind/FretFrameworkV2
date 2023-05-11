@@ -12,10 +12,10 @@ public:
 	virtual void writeDifficultyTrack(unsigned char index) = 0;
 	virtual void writeAnimationTrack() = 0;
 	virtual void finishTrack() = 0;
-	virtual void startEvent(uint32_t position, ChartEvent ev) = 0;
+	virtual void startEvent(uint64_t position, ChartEvent ev) = 0;
 	virtual void finishEvent() = 0;
-	virtual void writeSingleNote(const std::pair<size_t, uint32_t>& note) = 0;
-	virtual void writeMultiNote(const std::vector<std::pair<size_t, uint32_t>>& notes) = 0;
+	virtual void writeSingleNote(const std::pair<size_t, uint64_t>& note) = 0;
+	virtual void writeMultiNote(const std::vector<std::pair<size_t, uint64_t>>& notes) = 0;
 	virtual void writeSingleNoteMods(const std::vector<char>& mods) = 0;
 	virtual void writeMultiNoteMods(const std::vector<std::pair<char, size_t>>& mods) = 0;
 	virtual void writeText(std::string_view str) = 0;
@@ -23,7 +23,7 @@ public:
 	virtual void writePitch(Pitch<-1, 9> pitch) = 0;
 
 	virtual void writeLyric(std::pair<size_t, std::string_view> lyric) = 0;
-	virtual void writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint32_t>& note) = 0;
+	virtual void writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note) = 0;
 
 	virtual void writeNoteName(NoteName note, PitchType type) = 0;
 	virtual void writeLeftHand(size_t position) = 0;

@@ -62,28 +62,28 @@ void Midi_Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, s
 }
 
 template <>
-void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		m_ext.enableDynamics = true;
 	else
-		m_track.m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));
 }
 
 template <>
-void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		m_ext.enableDynamics = true;
 	else
-		m_track.m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));
 }
 
 template <>
-void Midi_Loader<DrumNote_Legacy>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<DrumNote_Legacy>::parseText(std::string_view str)
 {
 	if (str == "[ENABLE_CHART_DYNAMICS]")
 		m_ext.enableDynamics = true;
 	else
-		m_track.m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));
 }

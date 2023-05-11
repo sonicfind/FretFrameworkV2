@@ -39,13 +39,13 @@ public:
 		{
 			for (auto& vocal : track)
 			{
-				vocal.key = uint32_t(vocal.key * multiplier);
+				vocal.key = uint64_t(vocal.key * multiplier);
 				*vocal *= multiplier;
 			}
 		}
 
 		for (auto& perc : m_percussion)
-			perc.key = uint32_t(perc.key * multiplier);
+			perc.key = uint64_t(perc.key * multiplier);
 	}
 
 	void shrink()

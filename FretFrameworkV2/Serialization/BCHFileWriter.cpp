@@ -45,7 +45,7 @@ void BCHFileWriter::finishTrack()
 	m_trackPositions.pop_back();
 }
 
-void BCHFileWriter::startEvent(uint32_t position, ChartEvent ev)
+void BCHFileWriter::startEvent(uint64_t position, ChartEvent ev)
 {
 	assert(ChartEvent::BPM <= ev && ev <= ChartEvent::VOCAL_PERCUSSION);
 
@@ -59,7 +59,7 @@ void BCHFileWriter::finishEvent()
 	writeBuffer();
 }
 
-void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
+void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint64_t>& note)
 {
 	assert(note.first < 128);
 	if (note.second >= 20)
@@ -71,7 +71,7 @@ void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
 		append((unsigned char)note.first);
 }
 
-void BCHFileWriter::writeMultiNote(const std::vector<std::pair<size_t, uint32_t>>& notes)
+void BCHFileWriter::writeMultiNote(const std::vector<std::pair<size_t, uint64_t>>& notes)
 {
 	append((unsigned char)notes.size());
 	for (const auto& note : notes)
@@ -122,11 +122,11 @@ void BCHFileWriter::writePitch(Pitch<-1, 9> pitch)
 void BCHFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 {
 	append((unsigned char)lyric.first);
-	appendWebType((uint32_t)lyric.second.size());
+	appendWebType(lyric.second.size());
 	append(lyric.second.data(), lyric.second.size());
 }
 
-void BCHFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint32_t>& note)
+void BCHFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note)
 {
 	writePitch(note.first);
 	if (note.second > 0)

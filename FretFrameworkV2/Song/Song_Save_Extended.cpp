@@ -68,7 +68,7 @@ template<>
 class Extended_Save::WriteNode<SyncTrack>
 {
 public:
-	void write(const uint32_t position, CommonChartWriter& writer)  const noexcept
+	void write(const uint64_t position, CommonChartWriter& writer)  const noexcept
 	{
 		writeMicros(position, writer);
 		writeAnchor(position, writer);
@@ -98,7 +98,7 @@ public:
 	}
 
 protected:
-	void writeMicros(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void writeMicros(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		if (m_micros)
 		{
@@ -108,7 +108,7 @@ protected:
 		}
 	}
 
-	void writeAnchor(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void writeAnchor(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		if (m_anchor)
 		{
@@ -118,7 +118,7 @@ protected:
 		}
 	}
 
-	void writeTimeSig(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void writeTimeSig(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		if (m_timeSig)
 		{
@@ -138,7 +138,7 @@ template<>
 class Extended_Save::WriteNode<SongEvents>
 {
 public:
-	void write(const uint32_t position, CommonChartWriter& writer)  const noexcept
+	void write(const uint64_t position, CommonChartWriter& writer)  const noexcept
 	{
 		writeSection(position, writer);
 		writeEvents(position, writer);
@@ -159,7 +159,7 @@ public:
 	}
 
 protected:
-	void writeSection(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void writeSection(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		if (m_section)
 		{
@@ -169,7 +169,7 @@ protected:
 		}
 	}
 
-	void writeEvents(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void writeEvents(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		if (m_events)
 		{

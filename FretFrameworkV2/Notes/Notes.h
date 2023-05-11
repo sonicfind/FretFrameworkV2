@@ -11,7 +11,7 @@ protected:
 public:
 	bool modify(char modifier, size_t lane) { return false; }
 
-	bool set(const size_t lane, uint32_t length)
+	bool set(const size_t lane, uint64_t length)
 	{
 		if (lane >= numColors)
 			return false;
@@ -38,9 +38,9 @@ public:
 		return false;
 	}
 
-	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
+	std::vector<std::pair<size_t, uint64_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint32_t>> activeColors;
+		std::vector<std::pair<size_t, uint64_t>> activeColors;
 		for (size_t i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
 				activeColors.push_back({ i, m_colors[i].getLength() });
@@ -57,9 +57,9 @@ public:
 		return {};
 	}
 
-	uint32_t getLongestSustain() const noexcept
+	uint64_t getLongestSustain() const noexcept
 	{
-		uint32_t sustain = 0;
+		uint64_t sustain = 0;
 		for (const auto& color : m_colors)
 			if (color.isActive() && color.getLength() > sustain)
 				sustain = color.getLength();
@@ -71,7 +71,7 @@ public:
 		std::vector<std::tuple<char, char, uint32_t>>  colors;
 		for (char i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
-				colors.push_back({ i, 100, m_colors[i].getLength() });
+				colors.push_back({ i, 100, (uint32_t)m_colors[i].getLength() });
 		return colors;
 	}
 

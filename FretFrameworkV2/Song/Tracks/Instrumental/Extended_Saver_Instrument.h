@@ -6,7 +6,7 @@ template <class T>
 class Extended_Save::WriteNode<DifficultyTrack<T>> : public Extended_Save::WriteNode<Track>
 {
 public:
-	void write(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void write(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		writePhrases(position, writer);
 		writeNote(position, writer);
@@ -31,12 +31,12 @@ public:
 	}
 
 protected:
-	void writeNote(const uint32_t position, CommonChartWriter& writer)  const noexcept
+	void writeNote(const uint64_t position, CommonChartWriter& writer)  const noexcept
 	{
 		if (m_note == nullptr)
 			return;
 
-		std::vector<std::pair<size_t, uint32_t>> colors = m_note->getActiveColors();
+		std::vector<std::pair<size_t, uint64_t>> colors = m_note->getActiveColors();
 		if (colors.size() == 1)
 		{
 			writer.startEvent(position, ChartEvent::NOTE);

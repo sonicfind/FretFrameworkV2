@@ -13,7 +13,7 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 			load_tempoMap(reader);
 		else if (reader.validateEventTrack())
 		{
-			uint32_t phrase = UINT32_MAX;
+			uint64_t phrase = UINT64_MAX;
 			while (reader.isStillCurrentTrack())
 			{
 				const auto trackEvent = reader.parseEvent();
@@ -26,16 +26,16 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 						m_noteTracks.vocals[0][trackEvent.first].setLyric(str.substr(6));
 					else if (str.starts_with("phrase_start"))
 					{
-						if (phrase < UINT32_MAX)
+						if (phrase < UINT64_MAX)
 							m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
 						phrase = trackEvent.first;
 					}
 					else if (str.starts_with("phrase_end"))
 					{
-						if (phrase < UINT32_MAX)
+						if (phrase < UINT64_MAX)
 						{
 							m_noteTracks.vocals.m_specialPhrases[phrase].push_back({ SpecialPhraseType::LyricLine, trackEvent.first - phrase });
-							phrase = UINT32_MAX;
+							phrase = UINT64_MAX;
 						}
 					}
 					else
@@ -92,7 +92,7 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 			LegacyDrums::Transfer(legacy_track, m_noteTracks.drums5);
 	}
 
-	const uint32_t hopoThreshold = getHopoThreshold();
+	const uint64_t hopoThreshold = getHopoThreshold();
 	ForcingFix::Fix(m_noteTracks.lead_5, hopoThreshold);
 	ForcingFix::Fix(m_noteTracks.lead_6, hopoThreshold);
 	ForcingFix::Fix(m_noteTracks.bass_5, hopoThreshold);

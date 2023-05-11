@@ -1,7 +1,7 @@
 #include "GuitarNote.h"
 
 template<>
-bool GuitarNote<5>::set_V1(const size_t lane, uint32_t length)
+bool GuitarNote<5>::set_V1(const size_t lane, uint64_t length)
 {
 	if (lane < 5)
 	{
@@ -23,7 +23,7 @@ bool GuitarNote<5>::set_V1(const size_t lane, uint32_t length)
 	return true;
 }
 
-bool GuitarNote<6>::set_V1(const size_t lane, uint32_t length)
+bool GuitarNote<6>::set_V1(const size_t lane, uint64_t length)
 {
 	if (lane < 5)
 	{
@@ -51,7 +51,7 @@ template<>
 std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept
 {
 	if (m_special.isActive())
-		return { {0, 100, m_special.getLength()} };
+		return { {0, 100, (uint32_t)m_special.getLength()} };
 	else
 		return Note<Sustained, 5>::getMidiNotes();
 }

@@ -58,14 +58,13 @@ public:
 	[[nodiscard]] virtual uint64_t extractAnchor() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;
 
-	[[nodiscard]] std::pair<size_t, uint32_t> extractColorAndSustain_V1();
+	[[nodiscard]] std::pair<size_t, uint64_t> extractColorAndSustain_V1();
 
 public:
 	NoteTracks_V1 extractTrack_V1();
 
 private:
 	std::vector<const std::vector<EventCombo>*> m_eventSets;
-	uint32_t m_hopoThreshold = 192 / 3;
 
 	[[nodiscard]] bool validateTrack(std::string_view str);
 

@@ -29,11 +29,11 @@ public:
 	~MidiFileWriter();
 	void setTrackName(std::string_view str);
 
-	void addMidiNote(uint32_t position, unsigned char value, unsigned char velocity, uint32_t length, unsigned char channel = 0);
-	void addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length);
-	void addText(uint32_t position, std::string&& str, MidiEventType type = MidiEventType::Text);
-	void addMicros(uint32_t position, uint32_t micros);
-	void addTimeSig(uint32_t position, TimeSig sig);
+	void addMidiNote(uint64_t position, unsigned char value, unsigned char velocity, uint64_t length, unsigned char channel = 0);
+	void addSysex(uint64_t position, unsigned char diff, unsigned char type, uint64_t length);
+	void addText(uint64_t position, std::string&& str, MidiEventType type = MidiEventType::Text);
+	void addMicros(uint64_t position, uint32_t micros);
+	void addTimeSig(uint64_t position, TimeSig sig);
 	void writeTrack();
 
 private:

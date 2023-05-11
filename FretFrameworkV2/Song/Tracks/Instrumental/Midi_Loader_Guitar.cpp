@@ -25,7 +25,7 @@ void Midi_Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str, uint32_t position)
+void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str)
 {
 	if (str.compare(0, 2, "PS") == 0)
 	{
@@ -43,7 +43,7 @@ void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str, uint32_t posit
 					m_difficulties[diff].sliderNotes = str[6];
 					if (str[6])
 					{
-						if (auto note = m_track[diff].m_notes.try_back(position))
+						if (auto note = m_track[diff].m_notes.try_back(m_position))
 							note->setTap(true);
 					}
 				}
@@ -61,7 +61,7 @@ void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str, uint32_t posit
 				if (str[6])
 				{
 					m_difficulties[str[4]].sliderNotes = true;
-					if (auto note = m_track[str[4]].m_notes.try_back(position))
+					if (auto note = m_track[str[4]].m_notes.try_back(m_position))
 						note->setTap(true);
 				}
 				else
@@ -73,7 +73,7 @@ void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str, uint32_t posit
 }
 
 template <>
-void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str, uint32_t position)
+void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str)
 {
 	if (str.compare(0, 2, "PS") == 0 && str[5] == 4)
 	{
@@ -84,7 +84,7 @@ void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str, uint32_t posit
 				m_difficulties[diff].sliderNotes = str[6];
 				if (str[6])
 				{
-					if (auto note = m_track[diff].m_notes.try_back(position))
+					if (auto note = m_track[diff].m_notes.try_back(m_position))
 						note->setTap(true);
 				}
 			}
@@ -92,7 +92,7 @@ void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str, uint32_t posit
 		else if (str[6])
 		{
 			m_difficulties[str[4]].sliderNotes = true;
-			if (auto note = m_track[str[4]].m_notes.try_back(position))
+			if (auto note = m_track[str[4]].m_notes.try_back(m_position))
 				note->setTap(true);
 		}
 		else
@@ -101,7 +101,7 @@ void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str, uint32_t posit
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str, uint32_t position)
+void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str)
 {
 	if (str == "[ENHANCED_OPENS]" || str == "ENHANCED_OPENS")
 	{
@@ -109,5 +109,5 @@ void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str, uint32_t positi
 			m_laneValues[12 * diff] = 0;
 	}
 	else
-		m_track.m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));
 }

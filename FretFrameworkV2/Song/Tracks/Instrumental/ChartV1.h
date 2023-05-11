@@ -7,7 +7,7 @@ namespace ChartV1
 	class V1Loader
 	{
 	public:
-		[[nodiscard]] bool addNote(SimpleFlatMap<T>& notes, uint32_t position, std::pair<size_t, uint32_t> note)
+		[[nodiscard]] bool addNote(SimpleFlatMap<T>& notes, uint64_t position, std::pair<size_t, uint64_t> note)
 		{
 			return notes.get_or_emplace_back(position).set_V1(note.first, note.second);
 		}
@@ -27,7 +27,7 @@ namespace ChartV1
 		if (diff.isOccupied())
 			return false;
 
-		uint32_t solo = 0;
+		uint64_t solo = 0;
 		diff.m_notes.reserve(5000);
 		while (reader.isStillCurrentTrack())
 		{

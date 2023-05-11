@@ -8,9 +8,9 @@ struct Midi_Loader_Diff<GuitarNote<5>>
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
-	std::pair<SpecialPhraseType, uint32_t> starPower = { SpecialPhraseType::StarPower_Diff, UINT32_MAX };
-	std::pair<SpecialPhraseType, uint32_t> faceOff[2] = { { SpecialPhraseType::FaceOff_Player1, UINT32_MAX } , { SpecialPhraseType::FaceOff_Player2, UINT32_MAX } };
-	uint32_t notes[6] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
+	std::pair<SpecialPhraseType, uint64_t> starPower = { SpecialPhraseType::StarPower_Diff, UINT64_MAX };
+	std::pair<SpecialPhraseType, uint64_t> faceOff[2] = { { SpecialPhraseType::FaceOff_Player1, UINT64_MAX } , { SpecialPhraseType::FaceOff_Player2, UINT64_MAX } };
+	uint64_t notes[6] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 };
 
 template <>
@@ -19,7 +19,7 @@ struct Midi_Loader_Diff<GuitarNote<6>>
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
-	uint32_t notes[7] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
+	uint64_t notes[7] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 };
 
 template <>
@@ -54,7 +54,7 @@ void Midi_Loader<GuitarNote<6>>::modNote(GuitarNote<6>& note, size_t diff, size_
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uint32_t position)
+void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane)
 {
 	// HopoON marker
 	if (lane == 6)
@@ -62,7 +62,7 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uin
 		m_difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (auto note = m_track[diff].m_notes.try_back(position))
+			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_ON);
 		}
 	}
@@ -72,7 +72,7 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uin
 		m_difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (auto note = m_track[diff].m_notes.try_back(position))
+			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_OFF);
 		}
 	}
@@ -80,7 +80,7 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uin
 	{
 		if (diff == 3)
 		{
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, position);
+			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo);
 			return;
 		}
 
@@ -106,21 +106,21 @@ void Midi_Loader<GuitarNote<5>>::processExtraLanes(size_t diff, size_t lane, uin
 				++iter;
 		}
 
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, position);
+		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower);
 	}
 	else if (lane == 9)
 		m_difficulties[diff].sliderNotes = NoteOn;
 	else if (lane == 10)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[0], position);
+		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[0]);
 	else if (lane == 11)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[1], position);
+		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[1]);
 	else if (lane == 12)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, position);
+		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower);
 }
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane, uint32_t position)
+void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane)
 {
 	// HopoON marker
 	if (lane == 7)
@@ -128,7 +128,7 @@ void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane, uin
 		m_difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (auto note = m_track[diff].m_notes.try_back(position))
+			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_ON);
 		}
 	}
@@ -138,7 +138,7 @@ void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane, uin
 		m_difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
 		{
-			if (auto note = m_track[diff].m_notes.try_back(position))
+			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_OFF);
 		}
 	}
@@ -147,10 +147,10 @@ void Midi_Loader<GuitarNote<6>>::processExtraLanes(size_t diff, size_t lane, uin
 }
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str, uint32_t position);
+void Midi_Loader<GuitarNote<5>>::parseSysEx(std::string_view str);
 
 template <>
-void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str, uint32_t position);
+void Midi_Loader<GuitarNote<6>>::parseSysEx(std::string_view str);
 
 template <>
-void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<GuitarNote<5>>::parseText(std::string_view str);

@@ -89,7 +89,7 @@ void Song::setMetaData()
 		else if (mod.getName() == "hopo_frequency")
 		{
 			if (!hopo_frequencySet)
-				m_hopo_frequency = mod.getValue<uint32_t>();
+				m_hopo_frequency = mod.getValue<uint64_t>();
 			hopo_frequencySet = true;
 		}
 		else if (mod.getName() == "multiplier_note")
@@ -107,7 +107,7 @@ void Song::setMetaData()
 		else if (mod.getName() == "sustain_cutoff_threshold")
 		{
 			if (!sustain_thresholdSet)
-				m_sustain_cutoff_threshold = mod.getValue<uint32_t>();
+				m_sustain_cutoff_threshold = mod.getValue<uint64_t>();
 			sustain_thresholdSet = true;
 		}
 		else if (mod.getName() == "hopofreq")
@@ -187,7 +187,7 @@ bool Song::loadIni()
 		}
 		else if (mod.getName() == "hopo_frequency")
 		{
-			if (!hopo_frequencyTested && m_hopo_frequency != mod.getValue<uint32_t>())
+			if (!hopo_frequencyTested && m_hopo_frequency != mod.getValue<uint64_t>())
 				return false;
 			hopo_frequencyTested = true;
 		}
@@ -205,7 +205,7 @@ bool Song::loadIni()
 		}
 		else if (mod.getName() == "sustain_cutoff_threshold")
 		{
-			if (!sustain_thresholdTested && m_sustain_cutoff_threshold != mod.getValue<uint32_t>())
+			if (!sustain_thresholdTested && m_sustain_cutoff_threshold != mod.getValue<uint64_t>())
 				return false;
 			sustain_thresholdTested = true;
 		}

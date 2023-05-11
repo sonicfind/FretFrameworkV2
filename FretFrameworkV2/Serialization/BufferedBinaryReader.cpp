@@ -8,7 +8,7 @@ std::string_view BufferedBinaryReader::extractString()
 
 void BufferedBinaryReader::setNextSectionBounds()
 {
-	const uint32_t length = extractWebType<false>();
+	const uint64_t length = extractWebType<false>();
 	m_next = m_currentPosition + length;
 
 	if (m_next > m_file.end())

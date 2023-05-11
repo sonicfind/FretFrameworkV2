@@ -106,7 +106,7 @@ protected:
 	bool m_isFlammed = false;
 
 public:
-	bool set_V1(const size_t lane, uint32_t sustain)
+	bool set_V1(const size_t lane, uint64_t sustain)
 	{
 		if (lane == 0)
 		{
@@ -136,7 +136,7 @@ public:
 		return true;
 	}
 
-	bool setLength(size_t lane, uint32_t sustain)
+	bool set(size_t lane, uint64_t sustain)
 	{
 		if (lane == 1)
 		{
@@ -151,7 +151,7 @@ public:
 			else if (lane > 1)
 				lane--;
 
-			return Note_withSpecial<DrumType, numPads, Sustained>::setLength(lane, sustain);
+			return Note_withSpecial<DrumType, numPads, Sustained>::set(lane, sustain);
 		}
 	}
 
@@ -184,9 +184,9 @@ public:
 		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, Sustained>::validate();
 	}
 
-	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
+	std::vector<std::pair<size_t, uint64_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint32_t>> activeColors = Note_withSpecial<DrumType, numPads, Sustained>::getActiveColors();
+		std::vector<std::pair<size_t, uint64_t>> activeColors = Note_withSpecial<DrumType, numPads, Sustained>::getActiveColors();
 		for (auto& col : activeColors)
 			if (col.first > 0)
 				col.first++;
@@ -240,7 +240,7 @@ public:
 		}
 
 		if (m_doubleBass.isActive())
-			colors.push_back({ 95, 100, m_doubleBass.getLength() });
+			colors.push_back({ 95, 100, (uint32_t)m_doubleBass.getLength() });
 		return colors;
 	}
 

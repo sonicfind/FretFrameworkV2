@@ -11,10 +11,10 @@ class Vocal : public Sustained
 	VocalPitch m_pitch;
 
 public:
-	bool set(unsigned char pitch, uint32_t length) noexcept;
+	bool set(unsigned char pitch, uint64_t length) noexcept;
 
 	template <int min, int max>
-	bool set(Pitch<min, max> pitch, uint32_t length) noexcept
+	bool set(Pitch<min, max> pitch, uint64_t length) noexcept
 	{
 		if (!setPitch(pitch))
 			return false;

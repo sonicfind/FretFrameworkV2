@@ -23,7 +23,7 @@ public:
 		{
 			if constexpr (std::is_integral<T>::value)
 			{
-				if constexpr (std::is_signed_v<T>)
+				if constexpr (std::is_signed<T>::value)
 					value = *m_currentPosition == '-' ? (T)INT64_MIN : (T)INT64_MAX;
 				else
 					value = (T)UINT64_MAX;
@@ -83,6 +83,8 @@ public:
 			STRING_NOCASE,
 			STRING_CHART,
 			STRING_CHART_NOCASE,
+			UINT64,
+			INT64,
 			UINT32,
 			INT32,
 			UINT16,

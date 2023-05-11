@@ -21,7 +21,7 @@ class GuitarNote : public Note_withSpecial<Sustained, numColors, Sustained>
 	static constexpr Sustained REPLACEMENTS[numColors]{};
 
 public:
-	bool set(const size_t lane, uint32_t length)
+	bool set(const size_t lane, uint64_t length)
 	{
 		if (!Note_withSpecial<Sustained, numColors, Sustained>::set(lane, length))
 			return false;
@@ -33,7 +33,7 @@ public:
 		return true;
 	}
 
-	bool set_V1(const size_t lane, uint32_t length)
+	bool set_V1(const size_t lane, uint64_t length)
 	{
 		return false;
 	}
@@ -100,7 +100,7 @@ public:
 		return Note_withSpecial<Sustained, numColors, Sustained>::getMidiNotes();
 	}
 
-	uint32_t getLongestSustain() const noexcept
+	uint64_t getLongestSustain() const noexcept
 	{
 		if (m_special.isActive())
 			return m_special.getLength();
@@ -175,10 +175,10 @@ public:
 };
 
 template<>
-bool GuitarNote<5>::set_V1(const size_t lane, uint32_t sustain);
+bool GuitarNote<5>::set_V1(const size_t lane, uint64_t sustain);
 
 template<>
-bool GuitarNote<6>::set_V1(const size_t lane, uint32_t sustain);
+bool GuitarNote<6>::set_V1(const size_t lane, uint64_t sustain);
 
 template<>
 std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept;

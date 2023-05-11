@@ -25,17 +25,17 @@ void Difficulty_Saver_Midi<DrumNote<DrumPad_Pro, 4>>::write_details(const Diffic
 	{
 		if (node->isFlammed())
 		{
-			if (flam.start == UINT32_MAX)
+			if (flam.start == UINT64_MAX)
 				flam.start = node.key;
 			flam.end = node.key + node->getLongestSustain();
 		}
-		else if (flam.start != UINT32_MAX)
+		else if (flam.start != UINT64_MAX)
 		{
 			if (flam.end > node.key)
 				flam.end = node.key;
 
-			writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
-			flam.start = UINT32_MAX;
+			writer.addMidiNote(flam.start, 109, 100, flam.getLength());
+			flam.start = UINT64_MAX;
 		}
 
 		for (char i = 0; i < 3; ++i)
@@ -46,27 +46,27 @@ void Difficulty_Saver_Midi<DrumNote<DrumPad_Pro, 4>>::write_details(const Diffic
 
 			if (!pad.isCymbal())
 			{
-				if (toms[i].start == UINT32_MAX)
+				if (toms[i].start == UINT64_MAX)
 					toms[i].start = node.key;
 				toms[i].end = node.key + pad.getLength();
 			}
-			else if (toms[i].start != UINT32_MAX)
+			else if (toms[i].start != UINT64_MAX)
 			{
 				if (toms[i].end > node.key)
 					toms[i].end = node.key;
 
-				writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].end - toms[i].start);
-				toms[i].start = UINT32_MAX;
+				writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].getLength());
+				toms[i].start = UINT64_MAX;
 			}
 		}
 	}
 
-	if (flam.start != UINT32_MAX)
-		writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
+	if (flam.start != UINT64_MAX)
+		writer.addMidiNote(flam.start, 109, 100, flam.getLength());
 
 	for (char i = 0; i < 3; ++i)
-		if (toms[i].start != UINT32_MAX)
-			writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].end - toms[i].start);
+		if (toms[i].start != UINT64_MAX)
+			writer.addMidiNote(toms[i].start, 110 + i, 100, toms[i].getLength());
 	m_details = false;
 }
 
@@ -82,17 +82,17 @@ void Difficulty_Saver_Midi<DrumNote<DrumPad, 5>>::write_details(const Difficulty
 	{
 		if (node->isFlammed())
 		{
-			if (flam.start == UINT32_MAX)
+			if (flam.start == UINT64_MAX)
 				flam.start = node.key;
 			flam.end = node.key + node->getLongestSustain();
 		}
-		else if (flam.start != UINT32_MAX)
+		else if (flam.start != UINT64_MAX)
 		{
 			if (flam.end > node.key)
 				flam.end = node.key;
 
-			writer.addMidiNote(flam.start, 109, 100, flam.end - flam.start);
-			flam.start = UINT32_MAX;
+			writer.addMidiNote(flam.start, 109, 100, flam.getLength());
+			flam.start = UINT64_MAX;
 		}
 	}
 }

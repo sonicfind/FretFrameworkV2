@@ -26,12 +26,12 @@ public:
 	{
 		for (auto& vec : m_specialPhrases)
 		{
-			vec.key = uint32_t(vec.key * multiplier);
+			vec.key = uint64_t(vec.key * multiplier);
 			for (auto& special : *vec)
 				special *= multiplier;
 		}
 
 		for (auto& ev : m_events)
-			ev.key = uint32_t(ev.key * multiplier);
+			ev.key = uint64_t(ev.key * multiplier);
 	}
 };

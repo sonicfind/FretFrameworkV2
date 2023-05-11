@@ -6,7 +6,7 @@ template <size_t numTracks>
 class Extended_Save::WriteNode<VocalTrack<numTracks>> : public Extended_Save::WriteNode<Track>
 {
 public:
-	void write(const uint32_t position, CommonChartWriter& writer) const noexcept
+	void write(const uint64_t position, CommonChartWriter& writer) const noexcept
 	{
 		writePhrases(position, writer);
 		writeVocals(position, writer);
@@ -41,7 +41,7 @@ public:
 	}
 
 protected:
-	void writeVocals(const uint32_t position, CommonChartWriter& writer) const
+	void writeVocals(const uint64_t position, CommonChartWriter& writer) const
 	{
 		for (size_t i = 0; i < numTracks; ++i)
 		{
@@ -64,7 +64,7 @@ protected:
 		}
 	}
 
-	void writePercussion(const uint32_t position, CommonChartWriter& writer) const
+	void writePercussion(const uint64_t position, CommonChartWriter& writer) const
 	{
 		if (m_perc == nullptr)
 			return;

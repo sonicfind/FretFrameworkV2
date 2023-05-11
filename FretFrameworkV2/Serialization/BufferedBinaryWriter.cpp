@@ -2,19 +2,19 @@
 
 void BufferedBinaryWriter::writeString(std::string_view str)
 {
-	writeWebType((uint32_t)str.size());
+	writeWebType(str.size());
 	write(str.data(), str.size());
 }
 
 void BufferedBinaryWriter::appendString(std::string_view str)
 {
-	appendWebType((uint32_t)str.size());
+	appendWebType(str.size());
 	append(str.data(), str.size());
 }
 
 void BufferedBinaryWriter::writeBuffer()
 {
-	writeWebType((uint32_t)m_buffer.size());
+	writeWebType(m_buffer.size());
 	write<char>(m_buffer.data(), m_buffer.size());
 	m_buffer.clear();
 }

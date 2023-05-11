@@ -134,7 +134,7 @@ bool ChtFileReader::validateTrack(std::string_view str)
 void ChtFileReader::skipTrack()
 {
 	gotoNextLine();
-	uint32_t scopeLevel = 1;
+	size_t scopeLevel = 1;
 	size_t length = strcspn(m_currentPosition, "[}");
 	while (m_currentPosition + length != m_file.end())
 	{
@@ -216,7 +216,7 @@ void ChtFileReader::nextEvent()
 
 std::pair<size_t, uint64_t> ChtFileReader::extractSingleNote()
 {
-	const size_t color = extract<uint32_t>();
+	const size_t color = extract<size_t>();
 	uint64_t sustain = 0;
 
 	if (*m_currentPosition == '~')
@@ -240,11 +240,11 @@ std::vector<std::pair<size_t, uint64_t>> ChtFileReader::extractMultiNote()
 std::vector<char> ChtFileReader::extractSingleNoteMods()
 {
 	std::vector<char> mods;
-	uint32_t numMods;
+	size_t numMods;
 	if (extract(numMods))
 	{
 		mods.reserve(numMods);
-		for (uint32_t i = 0; i < numMods; ++i)
+		for (size_t i = 0; i < numMods; ++i)
 			mods.push_back(extract<char>() & 127);
 	}
 	return mods;
@@ -260,7 +260,7 @@ std::vector<std::pair<char, size_t>> ChtFileReader::extractMultiNoteMods()
 		for (unsigned char i = 0; i < numMods; ++i)
 		{
 			char modifier = extract<char>() & 127;
-			uint32_t lane = UINT32_MAX;
+			size_t lane = SIZE_MAX;
 			extract(lane);
 			mods.push_back({ modifier, lane });
 		}
@@ -275,8 +275,8 @@ std::string_view ChtFileReader::extractText()
 
 SpecialPhrase ChtFileReader::extractSpecialPhrase()
 {
-	uint32_t type = extract<uint32_t>();
-	uint32_t duration = extract<uint32_t>();
+	const size_t type = extract<size_t>();
+	const uint64_t duration = extract<uint64_t>();
 	return { (SpecialPhraseType)type, duration };
 }
 
@@ -320,7 +320,7 @@ Pitch<-1, 9> ChtFileReader::extractPitch()
 
 std::pair<size_t, std::string_view> ChtFileReader::extractLyric()
 {
-	size_t lane = extract<uint32_t>();
+	size_t lane = extract<size_t>();
 	if (lane == 0)
 		return { 0, {} };
 
@@ -360,13 +360,12 @@ std::pair<Pitch<-1, 9>, uint64_t> ChtFileReader::extractPitchAndDuration()
 
 size_t ChtFileReader::extractLeftHand()
 {
-	return extract<uint32_t>();
+	return extract<uint64_t>();
 }
 
 uint32_t ChtFileReader::extractMicrosPerQuarter()
 {
-	long double bpm1000 = extract<uint32_t>();
-	return (uint32_t)round(g_TEMPO_FACTOR / bpm1000);
+	return (uint32_t)round(g_TEMPO_FACTOR / extract<uint32_t>());
 }
 
 uint64_t ChtFileReader::extractAnchor()
@@ -376,8 +375,8 @@ uint64_t ChtFileReader::extractAnchor()
 
 TimeSig ChtFileReader::extractTimeSig()
 {
-	uint32_t numerator = extract<uint32_t>();
-	uint32_t denom = 255, metro = 0, n32nds = 0;
+	uint64_t numerator = extract<uint64_t>();
+	uint64_t denom = 255, metro = 0, n32nds = 0;
 	if (extract(denom))
 		if (extract(metro))
 			extract(n32nds);
@@ -385,10 +384,10 @@ TimeSig ChtFileReader::extractTimeSig()
 	return { (unsigned char)numerator, (unsigned char)denom, (unsigned char)metro, (unsigned char)n32nds };
 }
 
-std::pair<size_t, uint32_t> ChtFileReader::extractColorAndSustain_V1()
+std::pair<size_t, uint64_t> ChtFileReader::extractColorAndSustain_V1()
 {
-	const uint32_t color = extract<uint32_t>();
-	uint32_t sustain = extract<uint32_t>();
+	const size_t color = extract<size_t>();
+	const uint64_t sustain = extract<uint64_t>();
 	return { color, sustain };
 }
 

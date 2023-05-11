@@ -12,7 +12,7 @@ void Song::load_mid(const std::filesystem::path& path)
 
 	MidiFileReader reader(path, m_multiplier_note);
 
-	const auto addSection = [&](uint32_t position, std::string_view str)
+	const auto addSection = [&](uint64_t position, std::string_view str)
 	{
 		for (std::string_view prefix : { "[section ", "[prc_" })
 		{

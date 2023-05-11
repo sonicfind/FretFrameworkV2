@@ -6,7 +6,7 @@
 
 struct MidiEvent
 {
-	uint32_t position = 0;
+	uint64_t position = 0;
 	MidiEventType type = MidiEventType::Reset_Or_Meta;
 	unsigned char channel = 0;
 };
@@ -22,7 +22,7 @@ public:
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }
 	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
-	[[nodiscard]] uint32_t getPosition() const noexcept { return m_event.position; }
+	[[nodiscard]] uint64_t getPosition() const noexcept { return m_event.position; }
 	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
 	[[nodiscard]] unsigned char getMidiChannel() const noexcept { return m_event.channel; }
 

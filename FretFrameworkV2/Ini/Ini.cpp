@@ -22,7 +22,7 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 			{ "cover",                                { "cover",   ModifierNode::STRING_NOCASE } },
 
 			{ "dance_type",                           { "dance_type",   ModifierNode::UINT32 } },
-			{ "delay",                                { "delay",   ModifierNode::FLOAT} },
+			{ "delay",                                { "delay",   ModifierNode::FLOAT } },
 			{ "diff_band",                            { "diff_band",   ModifierNode::INT32 } },
 			{ "diff_bass",                            { "diff_bass",   ModifierNode::INT32 } },
 			{ "diff_bass_real",                       { "diff_bass_real",   ModifierNode::INT32 } },
@@ -57,7 +57,7 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 			{ "genre",                                { "genre",   ModifierNode::STRING } },
 			{ "guitar_type",                          { "guitar_type",   ModifierNode::UINT32 } },
 
-			{ "hopo_frequency",                       { "hopo_frequency",   ModifierNode::UINT32 } },
+			{ "hopo_frequency",                       { "hopo_frequency",   ModifierNode::UINT64 } },
 
 			{ "icon",                                 { "icon",   ModifierNode::STRING_NOCASE } },
 
@@ -77,8 +77,8 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 			{ "playlist",                             { "playlist",   ModifierNode::STRING } },
 			{ "playlist_track",                       { "playlist_track",   ModifierNode::UINT16 } },
 			{ "preview",                              { "preview",   ModifierNode::FLOATARRAY } },
-			{ "preview_end_time",                     { "preview_end_time",   ModifierNode::FLOAT} },
-			{ "preview_start_time",                   { "preview_start_time",   ModifierNode::FLOAT} },
+			{ "preview_end_time",                     { "preview_end_time",   ModifierNode::FLOAT } },
+			{ "preview_start_time",                   { "preview_start_time",   ModifierNode::FLOAT } },
 
 			{ "pro_drum",                             { "pro_drums",   ModifierNode::BOOL } },
 			{ "pro_drums",                            { "pro_drums",   ModifierNode::BOOL } },
@@ -93,11 +93,11 @@ std::vector<Modifiers::Modifier> Ini::ReadSongIniFile(const std::filesystem::pat
 
 			{ "scores",                               { "scores",   ModifierNode::STRING_NOCASE } },
 			{ "scores_ext",                           { "scores_ext",   ModifierNode::STRING_NOCASE } },
-			{ "song_length",                          { "song_length",   ModifierNode::UINT32 } },
+			{ "song_length",                          { "song_length",   ModifierNode::UINT64 } },
 			{ "star_power_note",                      { "multiplier_note",   ModifierNode::UINT16 } },
 			{ "sub_genre",                            { "sub_genre",   ModifierNode::STRING } },
 			{ "sub_playlist",                         { "sub_playlist",   ModifierNode::STRING } },
-			{ "sustain_cutoff_threshold",             { "sustain_cutoff_threshold",   ModifierNode::UINT32 } },
+			{ "sustain_cutoff_threshold",             { "sustain_cutoff_threshold",   ModifierNode::UINT64 } },
 			{ "sysex_high_hat_ctrl",                  { "sysex_high_hat_ctrl",   ModifierNode::BOOL } },
 			{ "sysex_open_bass",                      { "sysex_open_bass",   ModifierNode::BOOL } },
 			{ "sysex_pro_slide",                      { "sysex_pro_slide",   ModifierNode::BOOL } },

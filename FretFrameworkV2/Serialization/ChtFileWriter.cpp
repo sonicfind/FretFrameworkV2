@@ -48,7 +48,7 @@ void ChtFileWriter::finishTrack()
 	m_file << m_tabs << "}" << std::endl;
 }
 
-void ChtFileWriter::startEvent(uint32_t position, ChartEvent ev)
+void ChtFileWriter::startEvent(uint64_t position, ChartEvent ev)
 {
 	static constexpr std::string_view EVENTS[] = { "B", "TS", "A", "E", "SE", "N", "C", "M", "S", "L", "V", "VP", "NP", "CP", "R", "LH", "P", "RS" };
 	assert(ChartEvent::BPM <= ev && ev <= ChartEvent::RANGE_SHIFT);
@@ -60,14 +60,14 @@ void ChtFileWriter::finishEvent()
 	m_file << '\n';
 }
 
-void ChtFileWriter::writeSingleNote(const std::pair<size_t, uint32_t>& note)
+void ChtFileWriter::writeSingleNote(const std::pair<size_t, uint64_t>& note)
 {
 	write(note.first);
 	if (note.second >= 20)
 		m_file << '~' << note.second;
 }
 
-void ChtFileWriter::writeMultiNote(const std::vector<std::pair<size_t, uint32_t>>& notes)
+void ChtFileWriter::writeMultiNote(const std::vector<std::pair<size_t, uint64_t>>& notes)
 {
 	write(notes.size());
 	for (const auto& note : notes)
@@ -102,7 +102,7 @@ void ChtFileWriter::writeText(std::string_view str)
 
 void ChtFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 {
-	write(static_cast<uint32_t>(phrase.type));
+	write(static_cast<uint64_t>(phrase.type));
 	write(phrase.getLength());
 }
 
@@ -125,7 +125,7 @@ void ChtFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 	writeText(lyric.second);
 }
 
-void ChtFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint32_t>& note)
+void ChtFileWriter::writePitchAndDuration(const std::pair<Pitch<-1, 9>, uint64_t>& note)
 {
 	writePitch(note.first);
 	if (note.second > 0)
@@ -150,7 +150,7 @@ void ChtFileWriter::writeLeftHand(size_t position)
 
 void ChtFileWriter::writeMicrosPerQuarter(uint32_t micros)
 {
-	write((uint32_t)round(g_TEMPO_FACTOR / (long double)micros));
+	write((uint32_t)round(g_TEMPO_FACTOR / micros));
 }
 
 void ChtFileWriter::writeAnchor(uint64_t anchor)
@@ -160,15 +160,15 @@ void ChtFileWriter::writeAnchor(uint64_t anchor)
 
 void ChtFileWriter::writeTimeSig(TimeSig timeSig)
 {
-	write<uint32_t>(timeSig.numerator);
+	write<uint64_t>(timeSig.numerator);
 	if (timeSig.denominator < 255 || timeSig.metronome || timeSig.num32nds)
 	{
-		write<uint32_t>(timeSig.denominator);
+		write<uint64_t>(timeSig.denominator);
 		if (timeSig.metronome || timeSig.num32nds)
 		{
-			write<uint32_t>(timeSig.metronome);
+			write<uint64_t>(timeSig.metronome);
 			if (timeSig.num32nds)
-				write<uint32_t>(timeSig.num32nds);
+				write<uint64_t>(timeSig.num32nds);
 		}
 	}
 }

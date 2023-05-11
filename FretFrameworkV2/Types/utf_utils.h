@@ -96,7 +96,7 @@ class UtfUtils
   public:
     static  bool        GetCodePoint(unsigned char const* pSrc, unsigned char const* pSrcEnd, char32_t& cdpt) noexcept;
 
-    static  uint32_t    GetCodeUnits(char32_t cdpt, unsigned char* pDst) noexcept;
+    static  uint64_t    GetCodeUnits(char32_t cdpt, unsigned char* pDst) noexcept;
 
     //- Conversion to UTF-32/UTF-16 using fastest typical (lookup/computation on first code unit).
     //  These member functions are wrappers to the '*BigTableConvert' and '*SmallTableConvert'
@@ -569,7 +569,7 @@ UtfUtils::GetCodePoint(unsigned char const* pSrc, unsigned char const* const pSr
 ///     The number of UTF-8 code units resulting from the conversion of `cdpt`.
 //--------------------------------------------------------------------------------------------------
 //
-KEWB_FORCE_INLINE std::uint32_t
+KEWB_FORCE_INLINE std::uint64_t
 UtfUtils::GetCodeUnits(char32_t cdpt, unsigned char* pDst) noexcept
 {
     if (cdpt <= 0x7F)

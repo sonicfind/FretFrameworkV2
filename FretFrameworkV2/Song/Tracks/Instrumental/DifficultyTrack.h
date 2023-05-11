@@ -15,7 +15,7 @@ public:
 		Track::adjustTicks(multiplier);
 		for (auto& note : m_notes)
 		{
-			note.key = uint32_t(note.key * multiplier);
+			note.key = uint64_t(note.key * multiplier);
 			*note *= multiplier;
 		}
 	}

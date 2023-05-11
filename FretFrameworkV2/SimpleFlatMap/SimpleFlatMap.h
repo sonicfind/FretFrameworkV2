@@ -83,7 +83,7 @@ public:
 		m_list.pop_back();
 	}
 
-	auto emplace(typename std::vector<Node>::iterator _Where, uint32_t position, const T& obj = BASE)
+	auto emplace(typename std::vector<Node>::iterator _Where, Key position, const T& obj = BASE)
 	{
 		return m_list.emplace(_Where, position, obj);
 	}

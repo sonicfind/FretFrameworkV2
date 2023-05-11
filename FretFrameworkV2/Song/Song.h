@@ -51,7 +51,7 @@ private:
 
 private:
 	PointerWrapper<Modifiers::Modifier> getModifier(std::string_view name) noexcept;
-	uint32_t getHopoThreshold()  const noexcept;
+	uint64_t getHopoThreshold()  const noexcept;
 
 private:
 	std::filesystem::path m_directory;
@@ -64,8 +64,8 @@ private:
 	std::u32string m_charter;
 	std::u32string m_playlist;
 
-	uint32_t m_hopo_frequency = 0;
-	uint32_t m_sustain_cutoff_threshold = 0;
+	uint64_t m_hopo_frequency = 0;
+	uint64_t m_sustain_cutoff_threshold = 0;
 	uint16_t m_hopofreq_old = UINT16_MAX;
 	bool m_eighthnote_hopo = false;
 	unsigned char m_multiplier_note = 116;

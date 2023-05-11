@@ -37,7 +37,7 @@ void Song::setSustainThreshold() const
 	Sustained::s_minLength = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
 }
 
-uint32_t Song::getHopoThreshold() const noexcept
+uint64_t Song::getHopoThreshold() const noexcept
 {
 	if (m_hopo_frequency > 0)
 		return m_hopo_frequency;

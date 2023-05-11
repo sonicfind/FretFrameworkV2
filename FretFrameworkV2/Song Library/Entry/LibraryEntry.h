@@ -51,11 +51,11 @@ public:
 	const UnicodeString& getYear() const noexcept { return *m_year; }
 	const UnicodeString& getCharter() const noexcept { return *m_charter; }
 	const UnicodeString& getPlaylist() const noexcept { return *m_playlist; }
-	uint32_t getSongLength() const noexcept { return m_song_length; }
+	uint64_t getSongLength() const noexcept { return m_song_length; }
 	uint32_t getHopofreq_Old() const noexcept { return m_hopofreq_Old; }
-	uint32_t getHopoFrequency() const noexcept { return m_hopo_frequency; }
+	uint64_t getHopoFrequency() const noexcept { return m_hopo_frequency; }
 	uint32_t getMultiplierNote() const noexcept { return m_multiplier_note; }
-	uint32_t getSustainCutoffThreshold() const noexcept { return m_sustain_cutoff_threshold; }
+	uint64_t getSustainCutoffThreshold() const noexcept { return m_sustain_cutoff_threshold; }
 	bool getEightNoteHopo() const noexcept { return m_eighthnote_hopo; }
 
 	std::filesystem::path getDirectory() const noexcept { return m_chartFile.first.parent_path(); }
@@ -165,15 +165,15 @@ private:
 	UnicodeWrapper m_charter;
 	UnicodeWrapper m_playlist;
 
-	uint32_t m_song_length = 0;
+	uint64_t m_song_length = 0;
 	float m_previewRange[2]{};
 	uint16_t m_album_track = UINT16_MAX;
 	uint16_t m_playlist_track = UINT16_MAX;
 	std::u32string m_icon;
 	std::u32string m_source;
 	
-	uint32_t m_hopo_frequency = 0;
-	uint32_t m_sustain_cutoff_threshold = 0;
+	uint64_t m_hopo_frequency = 0;
+	uint64_t m_sustain_cutoff_threshold = 0;
 	uint16_t m_hopofreq_Old = UINT16_MAX;
 	bool m_eighthnote_hopo = false;
 	unsigned char m_multiplier_note = 116;

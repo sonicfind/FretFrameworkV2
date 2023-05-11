@@ -8,7 +8,7 @@ protected:
 	SpecialType m_special;
 
 public:
-	bool set(const size_t lane, uint32_t length)
+	bool set(const size_t lane, uint64_t length)
 	{
 		if (lane == 0)
 		{
@@ -33,9 +33,9 @@ public:
 		return m_special.isActive() || Note<NoteType, numColors>::validate();
 	}
 
-	std::vector<std::pair<size_t, uint32_t>> getActiveColors() const
+	std::vector<std::pair<size_t, uint64_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint32_t>> activeColors = Note<NoteType, numColors>::getActiveColors();
+		std::vector<std::pair<size_t, uint64_t>> activeColors = Note<NoteType, numColors>::getActiveColors();
 		for (auto& col : activeColors)
 			col.first++;
 
@@ -44,9 +44,9 @@ public:
 		return activeColors;
 	}
 
-	uint32_t getLongestSustain() const noexcept
+	uint64_t getLongestSustain() const noexcept
 	{
-		const uint32_t sustain = Note<NoteType, numColors>::getLongestSustain();
+		const uint64_t sustain = Note<NoteType, numColors>::getLongestSustain();
 		return m_special.isActive() && m_special.getLength() > sustain ? m_special.getLength() : sustain;;
 	}
 
@@ -56,7 +56,7 @@ public:
 		for (auto& col : colors)
 			std::get<0>(col)++;
 		if (m_special.isActive())
-			colors.insert(colors.begin(), { 0, 100, m_special.getLength() });
+			colors.insert(colors.begin(), { 0, 100, (uint32_t)m_special.getLength() });
 		return colors;
 	}
 

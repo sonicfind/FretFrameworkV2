@@ -154,7 +154,7 @@ std::vector<std::pair<char, size_t>> BCHFileReader::extractMultiNoteMods()
 		for (unsigned char i = 0; i < numMods; ++i)
 		{
 			char modifier = extract<char>();
-			uint32_t lane = UINT32_MAX;
+			size_t lane = SIZE_MAX;
 			if (modifier < 0)
 			{
 				lane = extract<unsigned char>();
@@ -174,8 +174,8 @@ std::string_view BCHFileReader::extractText()
 
 SpecialPhrase BCHFileReader::extractSpecialPhrase()
 {
-	uint32_t type = extract<unsigned char>();
-	uint64_t duration = extractWebType();
+	const size_t type = extract<unsigned char>();
+	const uint64_t duration = extractWebType();
 	return { (SpecialPhraseType)type, duration };
 }
 

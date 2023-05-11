@@ -6,8 +6,8 @@
 template <class T>
 struct Midi_Loader_Diff
 {
-	uint32_t notes[T::GetLaneCount()];
-	constexpr Midi_Loader_Diff() { for (uint32_t& note : notes) note = UINT32_MAX; }
+	uint64_t notes[T::GetLaneCount()];
+	constexpr Midi_Loader_Diff() { for (uint64_t& note : notes) note = UINT64_MAX; }
 };
 
 template <class T>
@@ -27,20 +27,21 @@ public:
 		memcpy(m_laneValues, s_defaultLanes, sizeof(s_defaultLanes));
 		while (const auto midiEvent = reader.parseEvent())
 		{
+			m_position = midiEvent->position;
 			if (midiEvent->type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					parseNote<true>(note, midiEvent->position);
+					parseNote<true>(note);
 				else
-					parseNote<false>(note, midiEvent->position);
+					parseNote<false>(note);
 			}
 			else if (midiEvent->type == MidiEventType::Note_Off)
-				parseNote<false>(reader.extractMidiNote(), midiEvent->position);
+				parseNote<false>(reader.extractMidiNote());
 			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
-				parseSysEx(reader.extractTextOrSysEx(), midiEvent->position);
+				parseSysEx(reader.extractTextOrSysEx());
 			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
-				parseText(reader.extractTextOrSysEx(), midiEvent->position);
+				parseText(reader.extractTextOrSysEx());
 		}
 
 		m_track.shrink();
@@ -52,32 +53,32 @@ public:
 
 private:
 	template <bool NoteOn>
-	void parseNote(MidiNote note, uint32_t position)
+	void parseNote(MidiNote note)
 	{
-		if (processSpecialNote<NoteOn>(note, position))
+		if (processSpecialNote<NoteOn>(note))
 			return;
 
 		if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
-			parseLaneColor<NoteOn>(note, position);
+			parseLaneColor<NoteOn>(note);
 		else if (120 <= note.value && note.value <= 124)
-			parseBRE<NoteOn>(note.value, position);
+			parseBRE<NoteOn>(note.value);
 		else if (note.value == m_multiplierNote)
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, position);
+			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower);
 		else if (note.value == 103)
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, position);
+			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo);
 		else if (note.value == 126)
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo, position);
+			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo);
 		else if (note.value == 127)
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_trill, position);
+			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_trill);
 		else
-			toggleExtraValues<NoteOn>(note, position);
+			toggleExtraValues<NoteOn>(note);
 	}
 
 	template <bool NoteOn>
-	bool processSpecialNote(MidiNote note, uint32_t position) { return false; }
+	bool processSpecialNote(MidiNote note) { return false; }
 
 	template <bool NoteOn>
-	void parseLaneColor(MidiNote note, uint32_t position)
+	void parseLaneColor(MidiNote note)
 	{
 		const int noteValue = note.value - s_noteRange.first;
 		const size_t lane = m_laneValues[noteValue];
@@ -87,92 +88,91 @@ private:
 		{
 			if constexpr (NoteOn)
 			{
-				m_difficulties[diff].notes[lane] = position;
+				m_difficulties[diff].notes[lane] = m_position;
 				if (m_track[diff].m_notes.capacity() == 0)
 					m_track[diff].m_notes.reserve(5000);
 
-				modNote(constructNote(m_track[diff], position), diff, lane, note.velocity);
+				modNote(constructNote(m_track[diff]), diff, lane, note.velocity);
 			}
 			else
-				addColor(m_track[diff].m_notes, diff, lane, position);
+				addColor(m_track[diff].m_notes, diff, lane);
 		}
 		else
-			processExtraLanes<NoteOn>(diff, lane, position);
+			processExtraLanes<NoteOn>(diff, lane);
 	}
 
-	T& constructNote(DifficultyTrack<T>& diff, uint32_t position)
+	T& constructNote(DifficultyTrack<T>& diff)
 	{
 		if (diff.m_notes.capacity() == 0)
 			diff.m_notes.reserve(5000);
 
-		return diff.m_notes.get_or_emplace_back(position);
+		return diff.m_notes.get_or_emplace_back(m_position);
 	}
 
 	void modNote(T& note, size_t diff, size_t lane, unsigned char velocity) {}
 
-	void addColor(SimpleFlatMap<T>& notes, size_t diff, size_t lane, uint32_t position)
+	void addColor(SimpleFlatMap<T>& notes, size_t diff, size_t lane)
 	{
-		uint32_t colorPosition = m_difficulties[diff].notes[lane];
-		if (colorPosition != UINT32_MAX)
+		uint64_t colorPosition = m_difficulties[diff].notes[lane];
+		if (colorPosition != UINT64_MAX)
 		{
-			GetNode(notes, colorPosition)->set(lane, position - colorPosition);
-			m_difficulties[diff].notes[lane] = UINT32_MAX;
+			GetNode(notes, colorPosition)->set(lane, m_position - colorPosition);
+			m_difficulties[diff].notes[lane] = UINT64_MAX;
 		}
 	}
 
 	template <bool NoteOn>
-	void processExtraLanes(size_t diff, size_t lane, uint32_t position) {}
+	void processExtraLanes(size_t diff, size_t lane) {}
 
 	template <bool NoteOn>
-	void parseBRE(uint32_t midiValue, uint32_t position)
+	void parseBRE(uint32_t midiValue)
 	{
 		if constexpr (NoteOn)
 		{
-			m_notes_BRE[midiValue - 120] = position;
+			m_notes_BRE[midiValue - 120] = m_position;
 			m_doBRE = m_notes_BRE[0] == m_notes_BRE[1] && m_notes_BRE[1] == m_notes_BRE[2] && m_notes_BRE[2] == m_notes_BRE[3];
 		}
 		else if (m_doBRE)
 		{
-			uint32_t colorPosition = m_notes_BRE[0];
-			m_track.m_specialPhrases[colorPosition].push_back({ SpecialPhraseType::StarPowerActivation, position - colorPosition });
+			m_track.m_specialPhrases[m_notes_BRE[0]].push_back({ SpecialPhraseType::StarPowerActivation, m_position - m_notes_BRE[0] });
 
 			for (size_t i = 0; i < 5; ++i)
-				m_notes_BRE[i] = UINT32_MAX;
+				m_notes_BRE[i] = UINT64_MAX;
 			m_doBRE = false;
 		}
 		else
 		{
 			const int lane = midiValue - 120;
-			uint32_t colorPosition = m_notes_BRE[lane];
-			if (colorPosition != UINT32_MAX)
+			uint64_t colorPosition = m_notes_BRE[lane];
+			if (colorPosition != UINT64_MAX)
 			{
-				m_track[4].m_notes[colorPosition].set(lane, position - colorPosition);
-				m_notes_BRE[lane] = UINT32_MAX;
+				m_track[4].m_notes[colorPosition].set(lane, m_position - colorPosition);
+				m_notes_BRE[lane] = UINT64_MAX;
 			}
 		}
 	}
 
-	void parseSysEx(std::string_view str, uint32_t position) {}
-	void parseText(std::string_view str, uint32_t position)
+	void parseSysEx(std::string_view str) {}
+	void parseText(std::string_view str)
 	{
-		m_track.m_events.get_or_emplace_back(position).push_back(UnicodeString::strToU32(str));
+		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));
 	}
 
 	template <bool NoteOn>
-	void toggleExtraValues(MidiNote note, uint32_t position) {}
+	void toggleExtraValues(MidiNote note) {}
 
 	template <bool NoteOn>
-	void addSpecialPhrase(SimpleFlatMap<std::vector<SpecialPhrase>>& phrases, std::pair<SpecialPhraseType, uint32_t>& combo, uint32_t position)
+	void addSpecialPhrase(SimpleFlatMap<std::vector<SpecialPhrase>>& phrases, std::pair<SpecialPhraseType, uint64_t>& combo)
 	{
 		if constexpr (NoteOn)
 		{
-			phrases.get_or_emplace_back(position);
-			combo.second = position;
+			phrases.get_or_emplace_back(m_position);
+			combo.second = m_position;
 		}
-		else if (combo.second != UINT32_MAX)
+		else if (combo.second != UINT64_MAX)
 		{
-			GetNode(phrases, combo.second)->push_back({ combo.first, position - combo.second });
-			combo.second = UINT32_MAX;
+			GetNode(phrases, combo.second)->push_back({ combo.first, m_position - combo.second });
+			combo.second = UINT64_MAX;
 		}
 	}
 
@@ -196,14 +196,15 @@ private:
 
 	const unsigned char m_multiplierNote;
 
+	uint64_t m_position = 0;
 	size_t m_laneValues[48];
-	uint32_t m_notes_BRE[5] = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
+	uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 	bool m_doBRE = false;
 
-	std::pair<SpecialPhraseType, uint32_t> m_solo = { SpecialPhraseType::Solo, UINT32_MAX };
-	std::pair<SpecialPhraseType, uint32_t> m_starPower = { SpecialPhraseType::StarPower, UINT32_MAX };
-	std::pair<SpecialPhraseType, uint32_t> m_tremolo = { SpecialPhraseType::Tremolo, UINT32_MAX };
-	std::pair<SpecialPhraseType, uint32_t> m_trill = { SpecialPhraseType::Trill, UINT32_MAX };
+	std::pair<SpecialPhraseType, uint64_t> m_solo = { SpecialPhraseType::Solo, UINT64_MAX };
+	std::pair<SpecialPhraseType, uint64_t> m_starPower = { SpecialPhraseType::StarPower, UINT64_MAX };
+	std::pair<SpecialPhraseType, uint64_t> m_tremolo = { SpecialPhraseType::Tremolo, UINT64_MAX };
+	std::pair<SpecialPhraseType, uint64_t> m_trill = { SpecialPhraseType::Trill, UINT64_MAX };
 
 	Midi_Loader_Diff<T> m_difficulties[4];
 	InstrumentalTrack<T>& m_track;

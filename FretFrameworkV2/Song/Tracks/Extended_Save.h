@@ -8,7 +8,7 @@ namespace Extended_Save
 	class WriteNode
 	{
 	public:
-		void write(const uint32_t position, CommonChartWriter& writer)  const noexcept
+		void write(const uint64_t position, CommonChartWriter& writer)  const noexcept
 		{
 			writePhrases(position, writer);
 			writeEvents(position, writer);
@@ -29,7 +29,7 @@ namespace Extended_Save
 		}
 
 	protected:
-		void writePhrases(const uint32_t position, CommonChartWriter& writer) const noexcept
+		void writePhrases(const uint64_t position, CommonChartWriter& writer) const noexcept
 		{
 			if (m_phrases)
 			{
@@ -42,7 +42,7 @@ namespace Extended_Save
 			}
 		}
 
-		void writeEvents(const uint32_t position, CommonChartWriter& writer) const noexcept
+		void writeEvents(const uint64_t position, CommonChartWriter& writer) const noexcept
 		{
 			if (m_events)
 			{

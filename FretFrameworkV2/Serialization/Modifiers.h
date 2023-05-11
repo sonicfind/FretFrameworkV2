@@ -8,6 +8,8 @@ namespace Modifiers
 	{
 		STRING,
 		STRING_NOCASE,
+		UINT64,
+		INT64,
 		UINT32,
 		INT32,
 		UINT16,
@@ -31,6 +33,8 @@ namespace Modifiers
 			using base_T = std::remove_const_t<std::remove_reference_t<T>>;
 			static_assert (std::is_same<base_T, std::u32string>::value ||
 				           std::is_same<base_T, UnicodeString>::value ||
+				           std::is_same<base_T, uint64_t>::value ||
+				           std::is_same<base_T, int64_t>::value ||
 				           std::is_same<base_T, uint32_t>::value ||
 				           std::is_same<base_T, int32_t>::value ||
 				           std::is_same<base_T, uint16_t>::value ||
@@ -38,22 +42,16 @@ namespace Modifiers
 				           std::is_same<base_T, bool>::value ||
 				           std::is_same<base_T, float>::value, "Type is not allowed in a modifier");
 
-			if constexpr (std::is_same<base_T, std::u32string>::value)
-				m_type = Type::STRING_NOCASE;
-			else if constexpr (std::is_same<base_T, UnicodeString>::value)
-				m_type = Type::STRING;
-			else if constexpr (std::is_same<base_T, uint32_t>::value)
-				m_type = Type::UINT32;
-			else if constexpr (std::is_same<base_T, int32_t>::value)
-				m_type = Type::INT32;
-			else if constexpr (std::is_same<base_T, uint16_t>::value)
-				m_type = Type::UINT16;
-			else if constexpr (std::is_same<base_T, uint16_t>::value)
-				m_type = Type::INT16;
-			else if constexpr (std::is_same<base_T, bool>::value)
-				m_type = Type::BOOL;
-			else
-				m_type = Type::FLOAT;
+			if constexpr (std::is_same<base_T, std::u32string>::value)     m_type = Type::STRING_NOCASE;
+			else if constexpr (std::is_same<base_T, UnicodeString>::value) m_type = Type::STRING;
+			else if constexpr (std::is_same<base_T, uint64_t>::value)      m_type = Type::UINT64;
+			else if constexpr (std::is_same<base_T, int64_t>::value)       m_type = Type::INT64;
+			else if constexpr (std::is_same<base_T, uint32_t>::value)      m_type = Type::UINT32;
+			else if constexpr (std::is_same<base_T, int32_t>::value)       m_type = Type::INT32;
+			else if constexpr (std::is_same<base_T, uint16_t>::value)      m_type = Type::UINT16;
+			else if constexpr (std::is_same<base_T, int16_t>::value)       m_type = Type::INT16;
+			else if constexpr (std::is_same<base_T, bool>::value)          m_type = Type::BOOL;
+			else                                                           m_type = Type::FLOAT;
 
 			new(m_BUFFER) base_T(std::forward<T>(value));
 		}
@@ -147,6 +145,8 @@ namespace Modifiers
 		{
 			if constexpr (std::is_same_v<T, UnicodeString>)       return m_type == Type::STRING;
 			else if constexpr (std::is_same_v<T, std::u32string>) return m_type == Type::STRING_NOCASE;
+			else if constexpr (std::is_same_v<T, uint64_t>)       return m_type == Type::UINT64;
+			else if constexpr (std::is_same_v<T, int64_t>)        return m_type == Type::INT64;
 			else if constexpr (std::is_same_v<T, uint32_t>)       return m_type == Type::UINT32;
 			else if constexpr (std::is_same_v<T, int32_t>)        return m_type == Type::INT32;
 			else if constexpr (std::is_same_v<T, uint16_t>)       return m_type == Type::UINT16;

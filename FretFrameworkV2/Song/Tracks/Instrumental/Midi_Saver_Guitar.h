@@ -22,17 +22,17 @@ namespace MidiGuitar
 		{
 			if (node->isTapped())
 			{
-				if (tap.start == UINT32_MAX)
+				if (tap.start == UINT64_MAX)
 					tap.start = node.key;
 				tap.end = node.key + node->getLongestSustain();
 			}
-			else if (tap.start != UINT32_MAX)
+			else if (tap.start != UINT64_MAX)
 			{
 				if (tap.end > node.key)
 					tap.end = node.key;
 
-				writer.addSysex(tap.start, index, 4, tap.end - tap.start);
-				tap.start = UINT32_MAX;
+				writer.addSysex(tap.start, index, 4, tap.getLength());
+				tap.start = UINT64_MAX;
 			}
 
 			ForceStatus forceStatus = node->getForcing();
@@ -49,7 +49,7 @@ namespace MidiGuitar
 					if (forcing.end > node.key)
 						forcing.end = node.key;
 
-					writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.end - forcing.start);
+					writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.getLength());
 
 					forcing.status = forceStatus;
 					if (forceStatus != ForceStatus::UNFORCED)
@@ -67,30 +67,30 @@ namespace MidiGuitar
 				const Sustained& spec = node->getSpecial();
 				if (spec.isActive())
 				{
-					if (open.start == UINT32_MAX)
+					if (open.start == UINT64_MAX)
 						open.start = node.key;
 					open.end = node.key + spec.getLength();
 				}
-				else if (open.start != UINT32_MAX)
+				else if (open.start != UINT64_MAX)
 				{
 					if (open.end > node.key)
 						open.end = node.key;
 
-					writer.addSysex(open.start, index, 1, open.end - open.start);
-					open.start = UINT32_MAX;
+					writer.addSysex(open.start, index, 1, open.getLength());
+					open.start = UINT64_MAX;
 				}
 			}
 		}
 
-		if (tap.start != UINT32_MAX)
-			writer.addSysex(tap.start, index, 4, tap.end - tap.start);
+		if (tap.start != UINT64_MAX)
+			writer.addSysex(tap.start, index, 4, tap.getLength());
 
 		if (forcing.status != ForceStatus::UNFORCED)
-			writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.end - forcing.start);
+			writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.getLength());
 
 		if constexpr (numFrets == 5)
-			if (open.start != UINT32_MAX)
-				writer.addSysex(open.start, index, 1, open.end - open.start);
+			if (open.start != UINT64_MAX)
+				writer.addSysex(open.start, index, 1, open.getLength());
 	}
 }
 

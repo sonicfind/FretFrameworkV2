@@ -21,7 +21,7 @@ void MidiFileWriter::setTrackName(std::string_view str)
 	m_trackname = str;
 }
 
-void MidiFileWriter::addMidiNote(uint32_t position, unsigned char value, unsigned char velocity, uint32_t length, unsigned char channel)
+void MidiFileWriter::addMidiNote(uint64_t position, unsigned char value, unsigned char velocity, uint64_t length, unsigned char channel)
 {
 	m_nodes[position].noteOns.push_back({ channel, { value, velocity } });
 
@@ -29,7 +29,7 @@ void MidiFileWriter::addMidiNote(uint32_t position, unsigned char value, unsigne
 	noteOffs.insert(noteOffs.begin(), { channel, { value, 0 } });
 }
 
-void MidiFileWriter::addSysex(uint32_t position, unsigned char diff, unsigned char type, uint32_t length)
+void MidiFileWriter::addSysex(uint64_t position, unsigned char diff, unsigned char type, uint64_t length)
 {
 	const auto downSize = [type](std::vector<Sysex>& sysexs, bool isON)
 	{
@@ -59,12 +59,12 @@ void MidiFileWriter::addSysex(uint32_t position, unsigned char diff, unsigned ch
 	downSize(sysexOffs, false);
 }
 
-void MidiFileWriter::addText(uint32_t position, std::string&& str, MidiEventType type)
+void MidiFileWriter::addText(uint64_t position, std::string&& str, MidiEventType type)
 {
 	m_nodes[position].events.push_back({ type, std::move(str) });
 }
 
-void MidiFileWriter::addMicros(uint32_t position, uint32_t micros)
+void MidiFileWriter::addMicros(uint64_t position, uint32_t micros)
 {
 	static char BUFFER[3];
 	if (micros >= 1 << 24)
@@ -75,7 +75,7 @@ void MidiFileWriter::addMicros(uint32_t position, uint32_t micros)
 	m_nodes[position].events.push_back({ MidiEventType::Tempo, { BUFFER, 3 } });
 }
 
-void MidiFileWriter::addTimeSig(uint32_t position, TimeSig sig)
+void MidiFileWriter::addTimeSig(uint64_t position, TimeSig sig)
 {
 	static char BUFFER[4];
 	memcpy(BUFFER, &sig, 4);
@@ -95,12 +95,12 @@ void MidiFileWriter::writeTrack()
 		writeMeta(MidiEventType::Text_TrackName, m_trackname);
 	}
 
-	uint32_t position = 0;
+	uint64_t position = 0;
 	MidiEventType currEvent = MidiEventType::Reset_Or_Meta;
 	char currChannel = 0;
 	for (const auto& node : m_nodes)
 	{
-		uint32_t delta = (uint32_t)node.key - position;
+		uint32_t delta = uint32_t(node.key - position);
 		for (const auto& off : node->noteOffs)
 		{
 			writeVLQ(delta);
@@ -153,7 +153,7 @@ void MidiFileWriter::writeTrack()
 			currEvent = MidiEventType::Note_On;
 			currChannel = on.first;
 		}
-		position = (uint32_t)node.key;
+		position = node.key;
 	}
 	m_nodes.clear();
 

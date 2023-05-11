@@ -6,8 +6,8 @@ template <class DrumType, size_t numPads>
 struct Midi_Loader_Diff<DrumNote<DrumType, numPads>>
 {
 	bool flam = false;
-	uint32_t notes[numPads + 1]{ UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
-	Midi_Loader_Diff() { if constexpr (numPads == 5) notes[5] = UINT32_MAX; }
+	uint64_t notes[numPads + 1]{ UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
+	Midi_Loader_Diff() { if constexpr (numPads == 5) notes[5] = UINT64_MAX; }
 };
 
 template <class DrumType, size_t numPads>
@@ -35,52 +35,52 @@ constexpr std::pair<unsigned char, unsigned char> Midi_Loader<DrumNote_Legacy>::
 
 template<>
 template <bool NoteOn>
-bool Midi_Loader<DrumNote<DrumPad_Pro, 4>>::processSpecialNote(MidiNote note, uint32_t position)
+bool Midi_Loader<DrumNote<DrumPad_Pro, 4>>::processSpecialNote(MidiNote note)
 {
 	if (note.value != 95)
 		return false;
 
 	if constexpr (NoteOn)
 	{
-		m_difficulties[3].notes[0] = position;
-		constructNote(m_track[3], position).modify('+');
+		m_difficulties[3].notes[0] = m_position;
+		constructNote(m_track[3]).modify('+');
 	}
 	else
-		addColor(m_track[3].m_notes, 3, 0, position);
+		addColor(m_track[3].m_notes, 3, 0);
 	return true;
 }
 
 template<>
 template <bool NoteOn>
-bool Midi_Loader<DrumNote<DrumPad, 5>>::processSpecialNote(MidiNote note, uint32_t position)
+bool Midi_Loader<DrumNote<DrumPad, 5>>::processSpecialNote(MidiNote note)
 {
 	if (note.value != 95)
 		return false;
 
 	if constexpr (NoteOn)
 	{
-		m_difficulties[3].notes[0] = position;
-		constructNote(m_track[3], position).modify('+');
+		m_difficulties[3].notes[0] = m_position;
+		constructNote(m_track[3]).modify('+');
 	}
 	else
-		addColor(m_track[3].m_notes, 3, 0, position);
+		addColor(m_track[3].m_notes, 3, 0);
 	return true;
 }
 
 template<>
 template <bool NoteOn>
-bool Midi_Loader<DrumNote_Legacy>::processSpecialNote(MidiNote note, uint32_t position)
+bool Midi_Loader<DrumNote_Legacy>::processSpecialNote(MidiNote note)
 {
 	if (note.value != 95)
 		return false;
 
 	if constexpr (NoteOn)
 	{
-		m_difficulties[3].notes[0] = position;
-		constructNote(m_track[3], position).modify('+');
+		m_difficulties[3].notes[0] = m_position;
+		constructNote(m_track[3]).modify('+');
 	}
 	else
-		addColor(m_track[3].m_notes, 3, 0, position);
+		addColor(m_track[3].m_notes, 3, 0);
 	return true;
 }
 
@@ -95,7 +95,7 @@ void Midi_Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, s
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note)
 {
 	if (note.value == 109)
 	{
@@ -103,7 +103,7 @@ void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note, uin
 		{
 			m_difficulties[i].flam = NoteOn;
 			if constexpr (NoteOn)
-				if (auto drum = m_track[i].m_notes.try_back(position))
+				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
 		}
 	}
@@ -113,7 +113,7 @@ void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note, uin
 
 template <>
 template <bool NoteOn>
-void Midi_Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note, uint32_t position)
+void Midi_Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note)
 {
 	if (note.value == 109)
 	{
@@ -121,7 +121,7 @@ void Midi_Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note, uint32_
 		{
 			m_difficulties[i].flam = NoteOn;
 			if constexpr (NoteOn)
-				if (auto drum = m_track[i].m_notes.try_back(position))
+				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
 		}
 	}
@@ -129,7 +129,7 @@ void Midi_Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note, uint32_
 
 template <>
 template <bool NoteOn>
-void  Midi_Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note, uint32_t position)
+void  Midi_Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note)
 {
 	if (note.value == 109)
 	{
@@ -137,7 +137,7 @@ void  Midi_Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note, uint32_t po
 		{
 			m_difficulties[i].flam = NoteOn;
 			if constexpr (NoteOn)
-				if (auto drum = m_track[i].m_notes.try_back(position))
+				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
 		}
 	}
@@ -149,10 +149,10 @@ void  Midi_Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note, uint32_t po
 }
 
 template <>
-void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<DrumNote<DrumPad_Pro, 4>>::parseText(std::string_view str);
 
 template <>
-void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<DrumNote<DrumPad, 5>>::parseText(std::string_view str);
 
 template <>
-void Midi_Loader<DrumNote_Legacy>::parseText(std::string_view str, uint32_t position);
+void Midi_Loader<DrumNote_Legacy>::parseText(std::string_view str);

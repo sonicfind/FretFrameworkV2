@@ -276,7 +276,7 @@ void LibraryEntry::mapModifierVariables()
 	}
 
 	if (auto modifier = getModifier("song_length"))
-		m_song_length = modifier->getValue<uint32_t>();
+		m_song_length = modifier->getValue<uint64_t>();
 
 	if (auto modifier = getModifier("preview_start_time"))
 		m_previewRange[0] = modifier->getValue<float>();
@@ -297,7 +297,7 @@ void LibraryEntry::mapModifierVariables()
 		m_source = modifier->getValue<std::u32string>();
 
 	if (auto modifier = getModifier("hopo_frequency"))
-		m_hopo_frequency = modifier->getValue<uint32_t>();
+		m_hopo_frequency = modifier->getValue<uint64_t>();
 
 	if (auto modifier = getModifier("eighthnote_hopo"))
 		m_eighthnote_hopo = modifier->getValue<bool>();

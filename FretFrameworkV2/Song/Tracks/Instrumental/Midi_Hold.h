@@ -4,7 +4,8 @@ namespace Midi_Details
 {
 	struct Hold
 	{
-		uint32_t start = UINT32_MAX;
-		uint32_t end = UINT32_MAX;
+		uint64_t start = UINT64_MAX;
+		uint64_t end = UINT64_MAX;
+		uint64_t getLength() const noexcept { return end - start; }
 	};
 }

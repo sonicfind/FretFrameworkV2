@@ -5,7 +5,7 @@
 namespace ForcingFix
 {
 	template <size_t numFrets>
-	void Fix(InstrumentalTrack<GuitarNote<numFrets>>& track, const uint32_t forceThreshold)
+	void Fix(InstrumentalTrack<GuitarNote<numFrets>>& track, const uint64_t forceThreshold)
 	{
 		for (size_t i = 0; i < 4; ++i)
 		{

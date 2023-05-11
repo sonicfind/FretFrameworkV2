@@ -91,7 +91,7 @@ std::string UnicodeString::U32ToStr(const std::u32string& u32)
 			size_t size = 0;
 			for (size_t i = 0; i < u32Size; ++i)
 			{
-				uint32_t movement = uu::UtfUtils::GetCodeUnits(u32Data[i], (unsigned char*)buf + size);
+				uint64_t movement = uu::UtfUtils::GetCodeUnits(u32Data[i], (unsigned char*)buf + size);
 				size += movement;
 				if (movement == 0)
 					buf[size++] = '_';
