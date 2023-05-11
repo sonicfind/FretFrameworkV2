@@ -4,34 +4,42 @@
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
 #include "Notes/DrumNote.h"
+#include "Song/ChartType.h"
 #include "SyncTrack.h"
 #include "SongEvents.h"
-#include "Song Library/Entry/LibraryEntry.h"
-
-enum class EntryStatus
-{
-	VALID,
-	NEEDS_RESCAN,
-	ERROR
-};
 
 class Song
 {
 public:
-	EntryStatus load(const LibraryEntry& entry);
-	bool load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept;
+	Song() = default;
+	Song(const std::filesystem::path& directory);
+	Song(const std::filesystem::path& directory,
+		 const std::u32string& name,
+	     const std::u32string& artist,
+	     const std::u32string& album,
+	     const std::u32string& genre,
+	     const std::u32string& year,
+	     const std::u32string& charter,
+	     const std::u32string& playlist,
+	     const uint64_t hopoFrequency,
+	     const uint16_t hopofreq_old,
+	     const unsigned char multiplierNote,
+	     const bool eighthNoteHopo,
+	     const uint64_t sustainCutoffThreshold,
+	     const DrumType_Enum drumType);
+
+	void loadIni();
+	bool compareToIni();
+	bool load(const std::filesystem::path& chartFile, const ChartType type) noexcept;
 	bool save(ChartType type) const noexcept;
 	void clear();
 
 private:
-	void setMetaData(const LibraryEntry& entry);
-	void setMetaData();
 	void setSustainThreshold() const;
 	void checkStartOfTempoMap();
-
-	bool loadIni();
+	
 	void saveIni() const;
-	void validateAudioStreams(const std::filesystem::path& directory);
+	void validateAudioStreams();
 
 	void load_cht(const std::filesystem::path& path, bool isFull);
 	void load_mid(const std::filesystem::path& path);

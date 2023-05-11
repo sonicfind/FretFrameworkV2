@@ -87,29 +87,6 @@ bool SongLibrary::runPartialScan()
 	return false;
 }
 
-void SongLibrary::finalize()
-{
-	m_preScannedDirectories.clear();
-
-	auto& tasks = TaskQueue::getInstance();
-	for (auto& node : m_songlist)
-		for (auto& entry : *node)
-		{
-			tasks.addTask([this, &entry] {
-				entry.finalize();
-				m_categories.title.add(entry);
-				m_categories.artist.add(entry);
-				m_categories.album.add(entry);
-				m_categories.genre.add(entry);
-				m_categories.year.add(entry);
-				m_categories.charter.add(entry);
-				m_categories.artistAlbum.add(entry);
-				m_categories.playlist.add(entry);
-			});
-		}
-	tasks.waitForCompletedTasks();
-}
-
 void SongLibrary::clear()
 {
 	m_stringBuffers.titles.clear();
@@ -138,79 +115,8 @@ size_t SongLibrary::getNumSongs() const noexcept
 	return size;
 }
 
-void SongLibrary::scanDirectory(const std::filesystem::path& directory)
-{
-	if (findOrMarkDirectory(directory))
-		return;
-
-	std::optional<std::filesystem::directory_entry> charts[5]{};
-	std::optional<std::filesystem::directory_entry> ini;
-	std::vector<std::filesystem::path> directories;
-	for (const auto& file : std::filesystem::directory_iterator(directory))
-	{
-		if (file.is_directory())
-		{
-			directories.push_back(file.path());
-			continue;
-		}
-
-		const std::filesystem::path filename = file.path().filename();
-		if (filename == ININAME)
-		{
-			ini = file;
-			continue;
-		}
-
-		for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
-		{
-			if (filename == CHARTTYPES[i].first)
-			{
-				charts[i] = file;
-				break;
-			}
-		}
-	}
-
-	if (!ini)
-	{
-		charts[0].reset();
-		charts[2].reset();
-		charts[3].reset();
-	}
-
-	for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
-	{
-		if (charts[i])
-		{
-			try
-			{
-				LibraryEntry entry({ charts[i]->path(), CHARTTYPES[i].second }, charts[i]->last_write_time());
-				if (ini)
-					entry.readIni(ini->path(), ini->last_write_time());
-
-				LoadedFile file(charts[i]->path());
-				if (entry.scan(file))
-					addEntry(file.calculateMD5(), std::move(entry));
-			}
-			catch (std::runtime_error err)
-			{
-
-			}
-			return;
-		}
-	}
-
-	auto& tasks = TaskQueue::getInstance();
-	for (auto& subDirectory : directories)
-		tasks.addTask([this, dir = std::move(subDirectory)] { scanDirectory(dir); });
-		
-}
-
 std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
 {
-	if (!std::filesystem::exists("songcache.bin"))
-		return {};
-
 	try
 	{
 		BufferedBinaryReader reader("songcache.bin");
@@ -252,26 +158,155 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 	{
 		reader.setNextSectionBounds();
 		tasks.addTask([this, reader, &validationFunc]() mutable {
-				if (std::optional<LibraryEntry> entry = validationFunc(reader))
-				{
-					const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
-					const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
-					const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
-					const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
-					const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
-					const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
-					const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
-					entry->mapStrings(name, artist, album, genre, year, charter, playlist);
-					entry->extractSongInfo(reader);
+			if (std::optional<LibraryEntry> entry = validationFunc(reader))
+			{
+				const UnicodeString& name = m_stringBuffers.titles[reader.extract<uint32_t>()];
+				const UnicodeString& artist = m_stringBuffers.artists[reader.extract<uint32_t>()];
+				const UnicodeString& album = m_stringBuffers.albums[reader.extract<uint32_t>()];
+				const UnicodeString& genre = m_stringBuffers.genres[reader.extract<uint32_t>()];
+				const UnicodeString& year = m_stringBuffers.years[reader.extract<uint32_t>()];
+				const UnicodeString& charter = m_stringBuffers.charters[reader.extract<uint32_t>()];
+				const UnicodeString& playlist = m_stringBuffers.playlists[reader.extract<uint32_t>()];
+				entry->mapStrings(name, artist, album, genre, year, charter, playlist);
+				entry->extractSongInfo(reader);
 
-					markScannedDirectory(entry->getDirectory());
-					addEntry(reader.extract<MD5>(), std::move(*entry));
-				}
+				markScannedDirectory(entry->getDirectory());
+				addEntry(reader.extract<MD5>(), std::move(*entry));
+			}
 			});
 		reader.gotoEndOfBuffer();
 	}
 
 	tasks.waitForCompletedTasks();
+}
+
+void SongLibrary::scanDirectory(const std::filesystem::path& directory)
+{
+	if (findOrMarkDirectory(directory))
+		return;
+
+	std::optional<std::filesystem::directory_entry> charts[5]{};
+	std::optional<std::filesystem::directory_entry> ini;
+	std::vector<std::filesystem::path> directories;
+	try
+	{
+		for (const auto& file : std::filesystem::directory_iterator(directory))
+		{
+			if (file.is_directory())
+			{
+				directories.push_back(file.path());
+				continue;
+			}
+
+			const std::filesystem::path filename = file.path().filename();
+			if (filename == ININAME)
+			{
+				ini = file;
+				continue;
+			}
+
+			for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
+			{
+				if (filename == CHARTTYPES[i].first)
+				{
+					charts[i] = file;
+					break;
+				}
+			}
+		}
+	}
+	catch (...)
+	{
+		return;
+	}
+
+	if (!ini)
+	{
+		charts[0].reset();
+		charts[2].reset();
+		charts[3].reset();
+	}
+
+	for (size_t i = 0; i < std::size(CHARTTYPES); ++i)
+	{
+		if (charts[i])
+		{
+			try
+			{
+				LibraryEntry entry({ charts[i]->path(), CHARTTYPES[i].second }, charts[i]->last_write_time());
+				if (ini)
+					entry.readIni(ini->path(), ini->last_write_time());
+
+				LoadedFile file(charts[i]->path());
+				if (entry.scan(file))
+					addEntry(file.calculateMD5(), std::move(entry));
+			}
+			catch (std::runtime_error err)
+			{
+
+			}
+			return;
+		}
+	}
+
+	auto& tasks = TaskQueue::getInstance();
+	for (auto& subDirectory : directories)
+		tasks.addTask([this, dir = std::move(subDirectory)] { scanDirectory(dir); });
+		
+}
+
+void SongLibrary::finalize()
+{
+	m_preScannedDirectories.clear();
+
+	auto& tasks = TaskQueue::getInstance();
+	for (auto& node : m_songlist)
+		for (auto& entry : *node)
+		{
+			tasks.addTask([this, &entry] {
+				entry.finalize();
+			m_categories.title.add(entry);
+			m_categories.artist.add(entry);
+			m_categories.album.add(entry);
+			m_categories.genre.add(entry);
+			m_categories.year.add(entry);
+			m_categories.charter.add(entry);
+			m_categories.artistAlbum.add(entry);
+			m_categories.playlist.add(entry);
+				});
+		}
+	tasks.waitForCompletedTasks();
+}
+
+void SongLibrary::writeToCacheFile() const
+{
+	std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>> nodes;
+	for (auto& node : m_songlist)
+	{
+		const std::pair<CacheIndices, MD5> base = { {} , node.key };
+		for (auto& entry : *node)
+			nodes.insert({ &entry, base });
+	}
+
+	BufferedBinaryWriter writer("songcache.bin");
+	writer.write(s_CACHE_VERSION);
+	m_categories.title.mapToCache(writer, nodes);
+	m_categories.artist.mapToCache(writer, nodes);
+	m_categories.album.mapToCache(writer, nodes);
+	m_categories.genre.mapToCache(writer, nodes);
+	m_categories.year.mapToCache(writer, nodes);
+	m_categories.charter.mapToCache(writer, nodes);
+	m_categories.playlist.mapToCache(writer, nodes);
+
+	writer.write((uint32_t)nodes.size());
+	for (const auto& node : nodes)
+	{
+		node.first->serializeFileInfo(writer);
+		writer.append(node.second.first);
+		node.first->serializeSongInfo(writer);
+		writer.append(node.second.second);
+		writer.writeBuffer();
+	}
 }
 
 void SongLibrary::addEntry(MD5 hash, LibraryEntry&& entry)
@@ -294,35 +329,4 @@ bool SongLibrary::findOrMarkDirectory(const std::filesystem::path& directory)
 
 	m_preScannedDirectories.insert(directory);
 	return false;
-}
-
-void SongLibrary::writeToCacheFile() const
-{
-	std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>> nodes;
-	for (auto& node : m_songlist)
-	{
-		const std::pair<CacheIndices, MD5> base = { {} , node.key};
-		for (auto& entry : *node)
-			nodes.insert({ &entry, base });
-	}
-
-	BufferedBinaryWriter writer("songcache.bin");
-	writer.write(s_CACHE_VERSION);
-	m_categories.title.mapToCache(writer, nodes);
-	m_categories.artist.mapToCache(writer, nodes);
-	m_categories.album.mapToCache(writer, nodes);
-	m_categories.genre.mapToCache(writer, nodes);
-	m_categories.year.mapToCache(writer, nodes);
-	m_categories.charter.mapToCache(writer, nodes);
-	m_categories.playlist.mapToCache(writer, nodes);
-	
-	writer.write((uint32_t)nodes.size());
-	for (const auto& node : nodes)
-	{
-		node.first->serializeFileInfo(writer);
-		writer.append(node.second.first);
-		node.first->serializeSongInfo(writer);
-		writer.append(node.second.second);
-		writer.writeBuffer();
-	}
 }

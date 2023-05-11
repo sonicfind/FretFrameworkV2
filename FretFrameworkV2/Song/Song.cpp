@@ -1,36 +1,25 @@
 #include "Song.h"
 #include <iostream>
 
-void Song::setMetaData(const LibraryEntry& entry)
-{
-	m_musicStream.clear();
-	m_guitarStream.clear();
-	m_rhythmStream.clear();
-	m_bassStream.clear();
-	m_keysStream.clear();
-	m_drumStream.clear();
-	m_drum2Stream.clear();
-	m_drum3Stream.clear();
-	m_drum4Stream.clear();
-	m_vocalStream.clear();
-	m_harmonyStream.clear();
-	m_crowdStream.clear();
-
-	m_name = entry.getName().get();
-	m_artist = entry.getName().get();
-	m_album = entry.getName().get();
-	m_genre = entry.getName().get();
-	m_year = entry.getName().get();
-	m_charter = entry.getName().get();
-	m_playlist = entry.getName().get();
-	m_hopo_frequency = entry.getHopoFrequency();
-	m_hopofreq_old = entry.getHopofreq_Old();
-	m_multiplier_note = entry.getMultiplierNote();
-	m_eighthnote_hopo = entry.getEightNoteHopo();
-	m_sustain_cutoff_threshold = entry.getSustainCutoffThreshold();
-	m_baseDrumType = entry.getDrumType();
-	m_modifiers.clear();
-}
+Song::Song(const std::filesystem::path& directory) : m_directory(directory) {}
+Song::Song(const std::filesystem::path& directory,
+	       const std::u32string& name,
+	       const std::u32string& artist,
+	       const std::u32string& album,
+	       const std::u32string& genre,
+	       const std::u32string& year,
+	       const std::u32string& charter,
+	       const std::u32string& playlist,
+	       const uint64_t hopoFrequency,
+	       const uint16_t hopofreq_old,
+	       const unsigned char multiplierNote,
+	       const bool eighthNoteHopo,
+	       const uint64_t sustainCutoffThreshold,
+	       const DrumType_Enum drumType)
+	: m_directory(directory)
+	, m_name(name), m_artist(artist), m_album(album), m_genre(genre), m_year(year), m_charter(charter), m_playlist(playlist)
+	, m_hopo_frequency(hopoFrequency), m_hopofreq_old(m_hopofreq_old), m_multiplier_note(multiplierNote)
+	, m_eighthnote_hopo(eighthNoteHopo), m_sustain_cutoff_threshold(sustainCutoffThreshold), m_baseDrumType(drumType) {}
 
 void Song::setSustainThreshold() const
 {
@@ -71,60 +60,20 @@ uint64_t Song::getHopoThreshold() const noexcept
 
 }
 
-EntryStatus Song::load(const LibraryEntry& entry)
-{	
-	const std::filesystem::directory_entry fileEntry = entry.getFileEntry();
-	if (!fileEntry.exists() || fileEntry.last_write_time() != entry.getLastWriteTime())
-		return EntryStatus::NEEDS_RESCAN;
-
-	m_directory = entry.getDirectory();
-	setMetaData(entry);
-	if (!loadIni())
-		return EntryStatus::NEEDS_RESCAN;
-
-	try
-	{
-		switch (entry.getChartType())
-		{
-		case ChartType::BCH:
-			load_bch(fileEntry.path());
-			break;
-		case ChartType::CHT:
-			load_cht(fileEntry.path(), false);
-			break;
-		case ChartType::MID:
-			load_mid(fileEntry.path());
-			break;
-		default:
-			break;
-		}
-	}
-	catch (std::runtime_error err)
-	{
-		std::cout << err.what() << std::endl;
-		return EntryStatus::ERROR;
-	}
-	checkStartOfTempoMap();
-	return EntryStatus::VALID;
-}
-
-bool Song::load(const std::pair<std::filesystem::path, ChartType>& chartFile) noexcept
+bool Song::load(const std::filesystem::path& chartFile, const ChartType type) noexcept
 {
-	m_directory = chartFile.first.parent_path();
-	setMetaData();
-
 	try
 	{
-		switch (chartFile.second)
+		switch (type)
 		{
 		case ChartType::BCH:
-			load_bch(chartFile.first);
+			load_bch(chartFile);
 			break;
 		case ChartType::CHT:
-			load_cht(chartFile.first, true);
+			load_cht(chartFile, true);
 			break;
 		case ChartType::MID:
-			load_mid(chartFile.first);
+			load_mid(chartFile);
 			break;
 		default:
 			break;
@@ -204,7 +153,7 @@ PointerWrapper<Modifiers::Modifier> Song::getModifier(std::string_view name) noe
 	return {};
 }
 
-void Song::validateAudioStreams(const std::filesystem::path& directory)
+void Song::validateAudioStreams()
 {
 	std::tuple<std::filesystem::path, PointerWrapper<std::u32string>, bool> VALIDSTREAMS[] =
 	{ 

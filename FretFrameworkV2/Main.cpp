@@ -127,7 +127,6 @@ void loadSong()
 		{ ".chart", ChartType::CHT },
 	};
 
-	Song song;
 	while (true)
 	{
 		std::cout << "Drag and drop a chart File: ";
@@ -139,8 +138,11 @@ void loadSong()
 		{
 			if (file.ends_with(CHARTTYPES[i].first))
 			{
+				const std::filesystem::path path = UnicodeString::strToU32(file);
 				startClock();
-				if (!song.load({ UnicodeString::strToU32(file), CHARTTYPES[i].second }))
+				Song song(path.parent_path());
+				song.loadIni();
+				if (!song.load(path, CHARTTYPES[i].second))
 					break;
 				stopClock("Song load");
 

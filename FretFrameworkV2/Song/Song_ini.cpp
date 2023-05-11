@@ -1,37 +1,8 @@
 #include "Song.h"
 #include "Ini/Ini.h"
 
-void Song::setMetaData()
+void Song::loadIni()
 {
-	m_name.clear();
-	m_artist.clear();
-	m_album.clear();
-	m_genre.clear();
-	m_year.clear();
-	m_charter.clear();
-	m_playlist.clear();
-	m_musicStream.clear();
-	m_guitarStream.clear();
-	m_rhythmStream.clear();
-	m_bassStream.clear();
-	m_keysStream.clear();
-	m_drumStream.clear();
-	m_drum2Stream.clear();
-	m_drum3Stream.clear();
-	m_drum4Stream.clear();
-	m_vocalStream.clear();
-	m_harmonyStream.clear();
-	m_crowdStream.clear();
-
-	m_hopo_frequency = 0;
-	m_sustain_cutoff_threshold = 0;
-	m_hopofreq_old = UINT16_MAX;
-	m_eighthnote_hopo = false;
-	m_multiplier_note = 116;
-	m_baseDrumType = DrumType_Enum::LEGACY;
-
-	m_modifiers.clear();
-
 	const std::filesystem::path iniFile(m_directory / U"song.ini");
 	if (!std::filesystem::exists(iniFile))
 		return;
@@ -121,7 +92,7 @@ void Song::setMetaData()
 	}
 }
 
-bool Song::loadIni()
+bool Song::compareToIni()
 {
 	const std::filesystem::path iniFile(m_directory / U"song.ini");
 	if (!std::filesystem::exists(iniFile))

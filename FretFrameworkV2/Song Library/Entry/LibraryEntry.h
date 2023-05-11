@@ -1,5 +1,6 @@
 #pragma once
 #include "ScanValues.h"
+#include "Song/ChartType.h"
 #include "Notes/DrumType.h"
 #include "Types/UnicodeString.h"
 #include "PtrWrapper/PtrWrapper.h"
@@ -19,13 +20,6 @@ enum class SongAttribute
 	PLAYLIST,
 	SONG_LENGTH,
 	SOURCE,
-};
-
-enum class ChartType
-{
-	BCH,
-	CHT,
-	MID
 };
 
 class LibraryEntry

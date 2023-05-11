@@ -489,6 +489,9 @@
     <ClInclude Include="Notes\SpecialPhrase.h">
       <Filter>Notes</Filter>
     </ClInclude>
+    <ClInclude Include="Song\ChartType.h">
+      <Filter>Song</Filter>
+    </ClInclude>
     <ClInclude Include="Notes\Pitch.h">
       <Filter>Notes</Filter>
     </ClInclude>
