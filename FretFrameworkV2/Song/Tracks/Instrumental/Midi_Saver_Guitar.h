@@ -11,97 +11,101 @@ namespace MidiGuitar
 	};
 
 	template <size_t numFrets>
-	void WriteModifiers(const SimpleFlatMap<GuitarNote<numFrets>>& notes, unsigned char index, MidiFileWriter& writer)
+	void WriteModifiers(const SimpleFlatMap<GuitarNote<numFrets>>& notes, MidiFileWriter::SysexList& sysexs, MidiFileWriter::MidiNoteList& noteList, const unsigned char diff)
 	{
-		const unsigned char FORCE_OFFSET = 65 + 12 * index;
+		const unsigned char FORCE_OFFSET = 65 + 12 * diff;
 
 		Midi_Details::Hold tap;
 		ForceHold forcing;
 		Midi_Details::Hold open;
-		for (const auto& node : notes)
+		size_t forceIndex = 0;
+		for (const auto& note : notes)
 		{
-			if (node->isTapped())
+			if (note->isTapped())
 			{
 				if (tap.start == UINT64_MAX)
-					tap.start = node.key;
-				tap.end = node.key + node->getLongestSustain();
+					tap.start = note.key;
+				tap.end = note.key + note->getLongestSustain();
 			}
 			else if (tap.start != UINT64_MAX)
 			{
-				if (tap.end > node.key)
-					tap.end = node.key;
+				if (tap.end > note.key)
+					tap.end = note.key;
 
-				writer.addSysex(tap.start, index, 4, tap.getLength());
+				sysexs[tap.start].push_back({ { diff, 4 }, tap.end });
 				tap.start = UINT64_MAX;
 			}
 
-			ForceStatus forceStatus = node->getForcing();
+			if constexpr (numFrets == 5)
+			{
+				const Sustained& spec = note->getSpecial();
+				if (spec.isActive())
+				{
+					if (open.start == UINT64_MAX)
+						open.start = note.key;
+					open.end = note.key + spec.getLength();
+				}
+				else if (open.start != UINT64_MAX)
+				{
+					if (open.end > note.key)
+						open.end = note.key;
+
+					sysexs[open.start].push_back({ { diff, 1 }, open.end });
+					open.start = UINT64_MAX;
+				}
+			}
+
+			ForceStatus forceStatus = note->getForcing();
 			if (forcing.status != forceStatus)
 			{
 				if (forcing.status == ForceStatus::UNFORCED)
 				{
 					forcing.status = forceStatus;
-					forcing.start = node.key;
-					forcing.end = node.key + node->getLongestSustain();
+					forcing.start = note.key;
+					forcing.end = note.key + note->getLongestSustain();
+					forceIndex = noteList.find_or_emplace(forceIndex, forcing.start);
 				}
 				else
 				{
-					if (forcing.end > node.key)
-						forcing.end = node.key;
+					if (forcing.end > note.key)
+						forcing.end = note.key;
 
-					writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.getLength());
+					noteList.at_index(forceIndex)->push_back({ { 0, (unsigned char)(FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF)), 100 }, forcing.end });
 
 					forcing.status = forceStatus;
 					if (forceStatus != ForceStatus::UNFORCED)
 					{
-						forcing.start = node.key;
-						forcing.end = node.key + node->getLongestSustain();
+						forcing.start = note.key;
+						forcing.end = note.key + note->getLongestSustain();
 					}
 				}
 			}
 			else if (forcing.status != ForceStatus::UNFORCED)
-				forcing.end = node.key + node->getLongestSustain();
-
-			if constexpr (numFrets == 5)
-			{
-				const Sustained& spec = node->getSpecial();
-				if (spec.isActive())
-				{
-					if (open.start == UINT64_MAX)
-						open.start = node.key;
-					open.end = node.key + spec.getLength();
-				}
-				else if (open.start != UINT64_MAX)
-				{
-					if (open.end > node.key)
-						open.end = node.key;
-
-					writer.addSysex(open.start, index, 1, open.getLength());
-					open.start = UINT64_MAX;
-				}
-			}
+				forcing.end = note.key + note->getLongestSustain();
 		}
 
 		if (tap.start != UINT64_MAX)
-			writer.addSysex(tap.start, index, 4, tap.getLength());
-
-		if (forcing.status != ForceStatus::UNFORCED)
-			writer.addMidiNote(forcing.start, FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF), 100, forcing.getLength());
+			sysexs[tap.start].push_back({ { diff, 4 }, tap.end });
 
 		if constexpr (numFrets == 5)
 			if (open.start != UINT64_MAX)
-				writer.addSysex(open.start, index, 1, open.getLength());
+				sysexs[open.start].push_back({ { diff, 1 }, open.end });
+
+		if (forcing.status != ForceStatus::UNFORCED)
+			noteList.at_index(forceIndex)->push_back({ { 0, (unsigned char)(FORCE_OFFSET + (forcing.status == ForceStatus::HOPO_OFF)), 100 }, forcing.end });
 	}
 }
 
 template <>
-void Difficulty_Saver_Midi<GuitarNote<5>>::write_details(const DifficultyTrack<GuitarNote<5>>& track, const unsigned char index, MidiFileWriter& writer)
+bool Difficulty_Saver_Midi::Get_Details<GuitarNote<5>>(const DifficultyTrack<GuitarNote<5>>& track, MidiFileWriter::SysexList& sysexs, MidiFileWriter::MidiNoteList& notes, const unsigned char diff)
 {
-	MidiGuitar::WriteModifiers(track.m_notes, index, writer);
+	MidiGuitar::WriteModifiers(track.m_notes, sysexs, notes, diff);
+	return true;
 }
 
 template <>
-void Difficulty_Saver_Midi<GuitarNote<6>>::write_details(const DifficultyTrack<GuitarNote<6>>& track, const unsigned char index, MidiFileWriter& writer)
+bool Difficulty_Saver_Midi::Get_Details<GuitarNote<6>>(const DifficultyTrack<GuitarNote<6>>& track, MidiFileWriter::SysexList& sysexs, MidiFileWriter::MidiNoteList& notes, const unsigned char diff)
 {
-	MidiGuitar::WriteModifiers(track.m_notes, index, writer);
+	MidiGuitar::WriteModifiers(track.m_notes, sysexs, notes, diff);
+	return true;
 }

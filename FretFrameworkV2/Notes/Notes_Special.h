@@ -50,7 +50,7 @@ public:
 		return m_special.isActive() && m_special.getLength() > sustain ? m_special.getLength() : sustain;;
 	}
 
-	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> getMidiNotes() const noexcept
 	{
 		auto colors = Note<NoteType, numColors>::getMidiNotes();
 		for (auto& col : colors)

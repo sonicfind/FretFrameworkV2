@@ -66,10 +66,10 @@ public:
 		return sustain;
 	}
 
-	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> getMidiNotes() const noexcept
 	{
-		std::vector<std::tuple<char, char, uint32_t>>  colors;
-		for (char i = 0; i < numColors; ++i)
+		std::vector<std::tuple<unsigned char, unsigned char, uint32_t>>  colors;
+		for (unsigned char i = 0; i < numColors; ++i)
 			if (m_colors[i].isActive())
 				colors.push_back({ i, 100, (uint32_t)m_colors[i].getLength() });
 		return colors;

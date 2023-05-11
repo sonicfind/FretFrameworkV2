@@ -8,9 +8,9 @@ void Save(const InstrumentalTrack<T>& track, std::string_view name, MidiFileWrit
 {
 	if (track.isOccupied())
 	{
-		writer.setTrackName(name);
+		writer.startTrack(name);
 		Midi_Saver_Instrument::Save(track, writer);
-		writer.writeTrack();
+		writer.finishTrack();
 	}
 }
 
@@ -19,24 +19,49 @@ void Save(const VocalTrack<numTracks>& track, std::string_view name, MidiFileWri
 {
 	if (track.isOccupied(INDEX))
 	{
-		writer.setTrackName(name);
+		writer.startTrack(name);
 		Midi_Saver_Vocals::Save<INDEX>(track, writer);
-		writer.writeTrack();
+		writer.finishTrack();
 	}
 }
+
+void WriteTempoMap(const SyncTrack& track, const std::u32string& midiSequence, MidiFileWriter& writer);
+void WriteEvents(const SongEvents& track, MidiFileWriter& writer);
 
 void Song::save_mid(const std::filesystem::path& path) const
 {
 	MidiFileWriter writer(path, m_tickrate);
+	WriteTempoMap(m_sync, m_midiSequenceName, writer);
+	WriteEvents(m_events, writer);
+	Save(m_noteTracks.lead_5      , "PART GUITAR", writer);
+	Save(m_noteTracks.lead_6      , "PART GUITAR GHL", writer);
+	Save(m_noteTracks.bass_5      , "PART BASS", writer);
+	Save(m_noteTracks.bass_6      , "PART BASS GHL", writer);
+	Save(m_noteTracks.rhythm      , "PART RHYTHM", writer);
+	Save(m_noteTracks.coop        , "PART GUITAR COOP", writer);
+	Save(m_noteTracks.keys        , "PART KEYS", writer);
+	Save(m_noteTracks.drums4_pro  , "PART DRUMS", writer);
+	Save(m_noteTracks.drums5      , "PART DRUMS", writer);
+	Save<0>(m_noteTracks.vocals   , "PART VOCALS", writer);
+	Save<0>(m_noteTracks.harmonies, "HARM1", writer);
+	Save<1>(m_noteTracks.harmonies, "HARM2", writer);
+	Save<2>(m_noteTracks.harmonies, "HARM3", writer);
+}
 
-	if (!m_midiSequenceName.empty())
-		writer.setTrackName(UnicodeString::U32ToStr(m_midiSequenceName));
+void WriteTempoMap(const SyncTrack& track, const std::u32string& midiSequence, MidiFileWriter& writer)
+{
+	auto sigIter = track.timeSigs.begin();
+	auto tempoIter = track.tempoMarkers.begin();
+	bool sigValid = sigIter != track.timeSigs.end();
+	bool tempoValid = tempoIter != track.tempoMarkers.end();
 
+	writer.startTrack(UnicodeString::U32ToStr(midiSequence));
+	TimeSig currSig = { 4, 2, 24, 8 };
+	while (sigValid || tempoValid)
 	{
-		TimeSig currSig = { 4, 2, 24, 8 };
-		for (const auto& node : m_sync.timeSigs)
+		while (sigValid && (!tempoValid || sigIter->key <= tempoIter->key))
 		{
-			TimeSig timeSig = *node;
+			TimeSig timeSig = sigIter->object;
 			if (timeSig.numerator == 0)
 				timeSig.numerator = currSig.numerator;
 			else
@@ -56,36 +81,41 @@ void Song::save_mid(const std::filesystem::path& path) const
 				timeSig.num32nds = currSig.num32nds;
 			else
 				currSig.num32nds = timeSig.num32nds;
-			writer.addTimeSig(node.key, timeSig);
+			writer.writeTimeSig(sigIter->key, timeSig);
+			sigValid = ++sigIter != track.timeSigs.end();
+		}
+
+		while (tempoValid && (!sigValid || tempoIter->key < sigIter->key))
+		{
+			writer.writeMicros(tempoIter->key, tempoIter->object.first);
+			tempoValid = ++tempoIter != track.tempoMarkers.end();
 		}
 	}
+	writer.finishTrack();
+}
 
-	for (const auto& tempo : m_sync.tempoMarkers)
-		writer.addMicros(tempo.key, tempo->first);
-	writer.writeTrack();
-	
+void WriteEvents(const SongEvents& track, MidiFileWriter& writer)
+{
+	auto sectionIter = track.sections.begin();
+	auto eventIter = track.globals.begin();
+	bool sectionValid = sectionIter != track.sections.end();
+	bool eventValid = eventIter != track.globals.end();
 
-	writer.setTrackName("EVENTS");
-	for (const auto& section : m_events.sections)
-		writer.addText(section.key, "[section " + section->toString() + ']');
+	writer.startTrack("EVENTS");
+	while (sectionValid || eventValid)
+	{
+		while (sectionValid && (!eventValid || sectionIter->key <= eventIter->key))
+		{
+			writer.writeText(sectionIter->key, "[section " + sectionIter->object.toString() + ']');
+			sectionValid = ++sectionIter != track.sections.end();
+		}
 
-	for (const auto& vec : m_events.globals)
-		for (const auto& ev : *vec)
-			writer.addText(vec.key, UnicodeString::U32ToStr(ev));
-	writer.writeTrack();
-
-
-	Save(m_noteTracks.lead_5      , "PART GUITAR", writer);
-	Save(m_noteTracks.lead_6      , "PART GUITAR GHL", writer);
-	Save(m_noteTracks.bass_5      , "PART BASS", writer);
-	Save(m_noteTracks.bass_6      , "PART BASS GHL", writer);
-	Save(m_noteTracks.rhythm      , "PART RHYTHM", writer);
-	Save(m_noteTracks.coop        , "PART GUITAR COOP", writer);
-	Save(m_noteTracks.keys        , "PART KEYS", writer);
-	Save(m_noteTracks.drums4_pro  , "PART DRUMS", writer);
-	Save(m_noteTracks.drums5      , "PART DRUMS", writer);
-	Save<0>(m_noteTracks.vocals   , "PART VOCALS", writer);
-	Save<0>(m_noteTracks.harmonies, "HARM1", writer);
-	Save<1>(m_noteTracks.harmonies, "HARM2", writer);
-	Save<2>(m_noteTracks.harmonies, "HARM3", writer);
+		while (eventValid && (!sectionValid || eventIter->key < sectionIter->key))
+		{
+			for (const auto& str : eventIter->object)
+				writer.writeText(eventIter->key, UnicodeString::U32ToStr(str));
+			eventValid = ++eventIter != track.globals.end();
+		}
+	}
+	writer.finishTrack();
 }

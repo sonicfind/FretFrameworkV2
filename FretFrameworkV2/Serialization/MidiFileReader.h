@@ -4,13 +4,6 @@
 #include "MidiStructs.h"
 #include <optional>
 
-struct MidiEvent
-{
-	uint64_t position = 0;
-	MidiEventType type = MidiEventType::Reset_Or_Meta;
-	unsigned char channel = 0;
-};
-
 class MidiFileReader : private BinaryFileReader<true>
 {
 public:

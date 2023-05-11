@@ -95,7 +95,7 @@ public:
 		return modifiers;
 	}
 
-	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> getMidiNotes() const noexcept
 	{
 		return Note_withSpecial<Sustained, numColors, Sustained>::getMidiNotes();
 	}
@@ -181,7 +181,7 @@ template<>
 bool GuitarNote<6>::set_V1(const size_t lane, uint64_t sustain);
 
 template<>
-std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept;
+std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept;
 
 template<>
-std::vector<std::tuple<char, char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept;
+std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept;

@@ -6,35 +6,35 @@
 
 class MidiFileWriter : private BinaryFileWriter<true>
 {
+public:
 	struct Sysex
 	{
-		static char BUFFER[8];
-
 		unsigned char diff;
 		unsigned char type;
-		unsigned char status;
-		void set() const;
 	};
 
-	struct MidiWriteNode
+	struct NoteNode
 	{
-		std::vector<std::pair<char, MidiNote>> noteOffs;
-		std::vector<Sysex> sysexOffs;
-		std::vector<std::pair<MidiEventType, std::string>> events;
-		std::vector<Sysex> sysexOns;
-		std::vector<std::pair<char, MidiNote>> noteOns;
+		unsigned char channel;
+		unsigned char note;
+		unsigned char velocity;
 	};
+
+	using PhraseList = SimpleFlatMap<std::vector<std::pair<unsigned char, uint64_t>>>;
+	using SysexList = SimpleFlatMap<std::vector<std::pair<Sysex, uint64_t>>>;
+	using MidiNoteList = SimpleFlatMap<std::vector<std::pair<NoteNode, uint64_t>>>;
+
 public:
 	MidiFileWriter(const std::filesystem::path& path, uint16_t tickRate);
 	~MidiFileWriter();
-	void setTrackName(std::string_view str);
-
-	void addMidiNote(uint64_t position, unsigned char value, unsigned char velocity, uint64_t length, unsigned char channel = 0);
-	void addSysex(uint64_t position, unsigned char diff, unsigned char type, uint64_t length);
-	void addText(uint64_t position, std::string&& str, MidiEventType type = MidiEventType::Text);
-	void addMicros(uint64_t position, uint32_t micros);
-	void addTimeSig(uint64_t position, TimeSig sig);
-	void writeTrack();
+	void startTrack(std::string_view str);
+	void writeText(uint64_t position, const std::string& str, MidiEventType type = MidiEventType::Text);
+	void writeSysex(uint64_t position, Sysex sysex, bool status);
+	void writeMidiNote(uint64_t position, NoteNode note);
+	
+	void writeMicros(uint64_t position, uint32_t micros);
+	void writeTimeSig(uint64_t position, TimeSig sig);
+	void finishTrack();
 
 private:
 	void writeVLQ(uint32_t value);
@@ -49,6 +49,6 @@ private:
 		uint16_t tickRate;
 	} m_header;
 
-	std::string m_trackname;
-	SimpleFlatMap<MidiWriteNode> m_nodes;
+	MidiEvent m_event;
+	std::streampos m_trackPosition;
 };

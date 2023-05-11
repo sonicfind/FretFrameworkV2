@@ -4,13 +4,13 @@
 #include "Midi_Hold.h"
 
 template <>
-void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<DrumPad_Pro, 4>>(MidiFileWriter& writer);
+SimpleFlatMap<std::vector<std::u32string>> Midi_Saver_Instrument::GetStartingEvent<DrumNote<DrumPad_Pro, 4>>() noexcept;
 
 template <>
-void Midi_Saver_Instrument::WriteMidiToggleEvent<DrumNote<DrumPad, 5>>(MidiFileWriter& writer);
+SimpleFlatMap<std::vector<std::u32string>> Midi_Saver_Instrument::GetStartingEvent<DrumNote<DrumPad, 5>>() noexcept;
 
 template <>
-void Difficulty_Saver_Midi<DrumNote<DrumPad_Pro, 4>>::write_details(const DifficultyTrack<DrumNote<DrumPad_Pro, 4>>& track, const unsigned char index, MidiFileWriter& writer);
+bool Difficulty_Saver_Midi::Get_Details<DrumNote<DrumPad_Pro, 4>>(const DifficultyTrack<DrumNote<DrumPad_Pro, 4>>& track, MidiFileWriter::SysexList& sysexs, MidiFileWriter::MidiNoteList& notes, const unsigned char diff);
 
 template <>
-void Difficulty_Saver_Midi<DrumNote<DrumPad, 5>>::write_details(const DifficultyTrack<DrumNote<DrumPad, 5>>& track, const unsigned char index, MidiFileWriter& writer);
+bool Difficulty_Saver_Midi::Get_Details<DrumNote<DrumPad, 5>>(const DifficultyTrack<DrumNote<DrumPad, 5>>& track, MidiFileWriter::SysexList& sysexs, MidiFileWriter::MidiNoteList& notes, const unsigned char diff);

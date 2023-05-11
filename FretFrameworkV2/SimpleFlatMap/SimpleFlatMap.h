@@ -23,7 +23,6 @@ class SimpleFlatMap
 		const T& operator*() const noexcept { return object; }
 	};
 
-	std::vector<Node> m_list;
 public:
 	SimpleFlatMap() = default;
 	SimpleFlatMap(const SimpleFlatMap&) = default;
@@ -93,12 +92,24 @@ public:
 		return m_list.erase(_Where);
 	}
 
+	[[nodiscard]] size_t find_or_emplace(size_t startingIndex, Key key)
+	{
+		return find_or_emplace_iter(startingIndex, key) - begin();
+	}
+
+	[[nodiscard]] size_t find_or_emplace(Key key)
+	{
+		return find_or_emplace(0, key);
+	}
+
+	[[nodiscard]] T& find_or_emplace_object(size_t startingIndex, Key key)
+	{
+		return find_or_emplace_iter(startingIndex, key)->object;
+	}
+
 	[[nodiscard]] T& operator[](Key key)
 	{
-		auto iter = std::lower_bound(begin(), end(), key);
-		if (iter == end() || key < iter->key)
-			iter = m_list.emplace(iter, key, BASE);
-		return iter->object;
+		return find_or_emplace_object(0, key);
 	}
 
 	[[nodiscard]] T& at(Key key)
@@ -201,5 +212,17 @@ public:
 	[[nodiscard]] auto begin() const noexcept { return m_list.begin(); }
 	[[nodiscard]] auto end() noexcept { return m_list.end(); }
 	[[nodiscard]] auto end() const noexcept { return m_list.end(); }
+
+private:
+	[[nodiscard]] auto find_or_emplace_iter(size_t startingIndex, Key key)
+	{
+		auto iter = std::lower_bound(begin() + startingIndex, end(), key);
+		if (iter == end() || key < iter->key)
+			iter = m_list.emplace(iter, key, BASE);
+		return iter;
+	}
+
+private:
+	std::vector<Node> m_list;
 };
 

@@ -55,3 +55,10 @@ struct ControlChange
 	unsigned char controller = 0;
 	unsigned char value = 0;
 };
+
+struct MidiEvent
+{
+	uint64_t position = 0;
+	MidiEventType type = MidiEventType::Reset_Or_Meta;
+	unsigned char channel = 0;
+};

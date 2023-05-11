@@ -219,10 +219,10 @@ public:
 		return modifiers;
 	}
 
-	std::vector<std::tuple<char, char, uint32_t>> getMidiNotes() const noexcept
+	std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> getMidiNotes() const noexcept
 	{
 		auto colors = Note_withSpecial<DrumType, numPads, Sustained>::getMidiNotes();
-		for (std::tuple<char, char, uint32_t>& col : colors)
+		for (std::tuple<unsigned char, unsigned char, uint32_t>& col : colors)
 		{
 			size_t index = std::get<0>(col);
 			if (index > 0)

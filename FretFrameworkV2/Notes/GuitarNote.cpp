@@ -48,7 +48,7 @@ bool GuitarNote<6>::set_V1(const size_t lane, uint64_t length)
 }
 
 template<>
-std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept
+std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<5>::getMidiNotes() const noexcept
 {
 	if (m_special.isActive())
 		return { {0, 100, (uint32_t)m_special.getLength()} };
@@ -57,9 +57,9 @@ std::vector<std::tuple<char, char, uint32_t>> GuitarNote<5>::getMidiNotes() cons
 }
 
 template<>
-std::vector<std::tuple<char, char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept
+std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept
 {
-	static constexpr char lanes[7] = { -2, 2, 3, 4, -1, 0, 1 };
+	static constexpr unsigned char lanes[7] = { -2, 2, 3, 4, -1, 0, 1 };
 	auto colors = Note_withSpecial<Sustained, 6, Sustained>::getMidiNotes();
 	for (auto& color : colors)
 		std::get<0>(color) = lanes[std::get<0>(color)];

@@ -16,156 +16,88 @@ MidiFileWriter::~MidiFileWriter()
 	write(m_header.tickRate);
 }
 
-void MidiFileWriter::setTrackName(std::string_view str)
+void MidiFileWriter::startTrack(std::string_view str)
 {
-	m_trackname = str;
-}
+	writeTag("MTrk");
+	write(uint32_t());
+	m_trackPosition = tell();
+	m_event.position = 0;
+	m_event.channel = 0;
+	m_event.type = MidiEventType::Reset_Or_Meta;
+	m_header.numTracks++;
 
-void MidiFileWriter::addMidiNote(uint64_t position, unsigned char value, unsigned char velocity, uint64_t length, unsigned char channel)
-{
-	m_nodes[position].noteOns.push_back({ channel, { value, velocity } });
-
-	auto& noteOffs = m_nodes[position + length].noteOffs;
-	noteOffs.insert(noteOffs.begin(), { channel, { value, 0 } });
-}
-
-void MidiFileWriter::addSysex(uint64_t position, unsigned char diff, unsigned char type, uint64_t length)
-{
-	const auto downSize = [type](std::vector<Sysex>& sysexs, bool isON)
+	if (!str.empty())
 	{
-		bool test[4]{};
-		for (const Sysex& syx : sysexs)
-			if (syx.type == type)
-				test[syx.diff] = true;
-
-		if (test[0] && test[1] && test[2] && test[3])
-		{
-			for (auto iter = sysexs.begin(); iter < sysexs.end();)
-			{
-				if (iter->type == type)
-					iter = sysexs.erase(iter);
-				else
-					++iter;
-			}
-			sysexs.push_back({ 0xFF, type, isON });
-		}
-	};
-	auto& sysexOns = m_nodes[position].sysexOns;
-	sysexOns.push_back({ diff, type, 1 });
-	downSize(sysexOns, true);
-
-	auto& sysexOffs = m_nodes[position + length].sysexOffs;
-	sysexOffs.insert(sysexOffs.begin(), { diff, type, 0 });
-	downSize(sysexOffs, false);
+		write(char(0));
+		writeMeta(MidiEventType::Text_TrackName, str);
+	}
 }
 
-void MidiFileWriter::addText(uint64_t position, std::string&& str, MidiEventType type)
+void MidiFileWriter::writeText(uint64_t position, const std::string& str, MidiEventType type)
 {
-	m_nodes[position].events.push_back({ type, std::move(str) });
+	writeVLQ(uint32_t(position - m_event.position));
+	writeMeta(type, str);
+	m_event.position = position;
 }
 
-void MidiFileWriter::addMicros(uint64_t position, uint32_t micros)
+void MidiFileWriter::writeSysex(uint64_t position, Sysex sysex, bool status)
+{
+	static char BUFFER[8] = { 'P', 'S', 0, 0, 0, 0, 0, (char)0xF7 };
+	BUFFER[4] = (char)sysex.diff;
+	BUFFER[5] = (char)sysex.type;
+	BUFFER[6] = (char)status;
+
+	writeVLQ(uint32_t(position - m_event.position));
+	writeString(MidiEventType::SysEx, { BUFFER, 8 });
+	m_event.position = position;
+}
+
+void MidiFileWriter::writeMidiNote(uint64_t position, NoteNode note)
+{
+	writeVLQ(uint32_t(position - m_event.position));
+
+	if (m_event.type != MidiEventType::Note_On || m_event.channel != note.channel)
+		write(char((char)MidiEventType::Note_On | note.channel));
+	write(note.note);
+	write(note.velocity);
+
+	m_event.position = position;
+	m_event.type = MidiEventType::Note_On;
+	m_event.channel = note.channel;
+}
+
+void MidiFileWriter::writeMicros(uint64_t position, uint32_t micros)
 {
 	static char BUFFER[3];
 	if (micros >= 1 << 24)
 		throw std::runtime_error("MicroSeconds value exceeds 24bit max");
-
 	micros = _byteswap_ulong(micros);
 	memcpy(BUFFER, (char*)&micros + 1, 3);
-	m_nodes[position].events.push_back({ MidiEventType::Tempo, { BUFFER, 3 } });
+
+	writeVLQ(uint32_t(position - m_event.position));
+	writeMeta(MidiEventType::Tempo, { BUFFER, 3 });
+	m_event.position = position;
 }
 
-void MidiFileWriter::addTimeSig(uint64_t position, TimeSig sig)
+void MidiFileWriter::writeTimeSig(uint64_t position, TimeSig sig)
 {
 	static char BUFFER[4];
 	memcpy(BUFFER, &sig, 4);
-	m_nodes[position].events.push_back({ MidiEventType::Time_Sig, { BUFFER, 4 } });
+
+	writeVLQ(uint32_t(position - m_event.position));
+	writeMeta(MidiEventType::Time_Sig, { BUFFER, 4 });
+	m_event.position = position;
 }
 
-char MidiFileWriter::Sysex::BUFFER[8] = { 'P', 'S', 0, 0, 0, 0, 0, (char)0xF7 };
-void MidiFileWriter::writeTrack()
+void MidiFileWriter::finishTrack()
 {
-	writeTag("MTrk");
-	write(uint32_t());
-	auto start = tell();
-
-	if (!m_trackname.empty())
-	{
-		write(char(0));
-		writeMeta(MidiEventType::Text_TrackName, m_trackname);
-	}
-
-	uint64_t position = 0;
-	MidiEventType currEvent = MidiEventType::Reset_Or_Meta;
-	char currChannel = 0;
-	for (const auto& node : m_nodes)
-	{
-		uint32_t delta = uint32_t(node.key - position);
-		for (const auto& off : node->noteOffs)
-		{
-			writeVLQ(delta);
-			if (currEvent != MidiEventType::Note_On || currChannel != off.first)
-				write(char((char)MidiEventType::Note_On | off.first));
-			write(off.second);
-
-			delta = 0;
-			currEvent = MidiEventType::Note_On;
-			currChannel = off.first;
-		}
-
-		for (const auto& sysex : node->sysexOffs)
-		{
-			writeVLQ(delta);
-			sysex.set();
-			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 8 });
-
-			delta = 0;
-			currEvent = MidiEventType::SysEx;
-		}
-
-		for (const auto& ev : node->events)
-		{
-			writeVLQ(delta);
-			writeMeta(ev.first, ev.second);
-
-			delta = 0;
-			currEvent = ev.first;
-		}
-
-		for (const auto& sysex : node->sysexOns)
-		{
-			writeVLQ(delta);
-			sysex.set();
-			writeString(MidiEventType::SysEx, { Sysex::BUFFER, 8 });
-
-			delta = 0;
-			currEvent = MidiEventType::SysEx;
-		}
-
-		for (const auto& on : node->noteOns)
-		{
-			writeVLQ(delta);
-			if (currEvent != MidiEventType::Note_On || currChannel != on.first)
-				write(char((char)MidiEventType::Note_On | on.first));
-			write(on.second);
-
-			delta = 0;
-			currEvent = MidiEventType::Note_On;
-			currChannel = on.first;
-		}
-		position = node.key;
-	}
-	m_nodes.clear();
-
 	write(char(0));
 	writeMeta(MidiEventType::End_Of_Track, {});
 
 	auto end = tell();
-	seek(start - std::streamoff(4));
-	write(uint32_t(end - start));
+	seek(m_trackPosition - std::streamoff(4));
+	write(uint32_t(end - m_trackPosition));
 	seek(end);
-	
-	m_header.numTracks++;
 }
 
 void MidiFileWriter::writeVLQ(uint32_t value)
@@ -203,11 +135,5 @@ void MidiFileWriter::writeString(MidiEventType type, std::string_view str)
 	write((char)type);
 	writeVLQ((uint32_t)str.size());
 	write(str.data(), str.size());
-}
-
-void MidiFileWriter::Sysex::set() const
-{
-	Sysex::BUFFER[4] = (char)diff;
-	Sysex::BUFFER[5] = (char)type;
-	Sysex::BUFFER[6] = (char)status;
+	m_event.type = type;
 }
