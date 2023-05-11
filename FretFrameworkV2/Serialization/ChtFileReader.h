@@ -62,6 +62,7 @@ public:
 
 public:
 	NoteTracks_V1 extractTrack_V1();
+	[[nodiscard]] std::optional<std::pair<uint64_t, ChartEvent>> extractEvent_V1();
 
 private:
 	std::vector<const std::vector<EventCombo>*> m_eventSets;

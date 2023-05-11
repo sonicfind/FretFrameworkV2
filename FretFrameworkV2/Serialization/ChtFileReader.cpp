@@ -435,6 +435,15 @@ ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrack_V1()
 	return type;
 }
 
+std::optional<std::pair<uint64_t, ChartEvent>> ChtFileReader::extractEvent_V1()
+{
+	if (!isStillCurrentTrack())
+		return {};
+
+	auto ev = parseEvent();
+	return ev;
+}
+
 std::vector<Modifiers::Modifier> ChtFileReader::extractModifiers(const ModifierOutline& list)
 {
 	std::vector<Modifiers::Modifier> modifiers;

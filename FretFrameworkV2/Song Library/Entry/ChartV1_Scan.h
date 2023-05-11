@@ -44,10 +44,9 @@ namespace ChartV1_Scan
 		if (!tracker.setDifficulty(values, reader.getDifficulty()))
 			return false;
 
-		while (reader.isStillCurrentTrack())
+		while (const auto chartEvent = reader.extractEvent_V1())
 		{
-			const auto chartEvent = reader.parseEvent();
-			if (chartEvent.second == ChartEvent::NOTE)
+			if (chartEvent->second == ChartEvent::NOTE)
 			{
 				auto note = reader.extractColorAndSustain_V1();
 				if (tracker.test(values, note.first))
