@@ -10,6 +10,7 @@ public:
 	PointerWrapper(T& obj) : ptr(&obj) {}
 	PointerWrapper& operator=(const PointerWrapper&) = default;
 	PointerWrapper& operator=(T& obj) { ptr = &obj; return *this; }
+	PointerWrapper& operator=(std::nullptr_t) { ptr = nullptr; return *this; }
 	T* operator->() const noexcept { return ptr; }
 	T& operator*() const noexcept { return *ptr; }
 	operator bool() { return ptr != nullptr; }
@@ -38,6 +39,7 @@ public:
 	PointerWrapper& operator=(const PointerWrapper&) = default;
 	PointerWrapper& operator=(T& obj) { ptr = &obj; return *this; }
 	PointerWrapper& operator=(const T& obj) { ptr = &obj; return *this; }
+	PointerWrapper& operator=(std::nullptr_t) { ptr = nullptr; return *this; }
 	const T* operator->() const noexcept { return ptr; }
 	const T& operator*() const noexcept { return *ptr; }
 	operator bool() { return ptr != nullptr; }
