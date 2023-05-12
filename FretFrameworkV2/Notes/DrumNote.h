@@ -37,7 +37,7 @@ public:
 	}
 
 	DrumDynamics getDynamics() const noexcept { return dynamics; }
-	void wheelDynamics()
+	DrumDynamics wheelDynamics()
 	{
 		if (dynamics == DrumDynamics::None)
 			dynamics = DrumDynamics::Accent;
@@ -45,6 +45,7 @@ public:
 			dynamics = DrumDynamics::Ghost;
 		else
 			dynamics = DrumDynamics::None;
+		return dynamics;
 	}
 	void setDynamics(DrumDynamics dyn) { dynamics = dyn; }
 
