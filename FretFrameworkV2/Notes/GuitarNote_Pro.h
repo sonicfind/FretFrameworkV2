@@ -54,6 +54,8 @@ class GuitarNote_Pro
 	bool m_forceNumbering = false;
 	bool m_reverseSlide = false;
 	StringEmphasis m_emphasis = StringEmphasis::None;
+	bool m_palmMuted = false;
+	bool m_vibrato = false;
 
 public:
 	bool set(size_t string, size_t fret, size_t length, StringMode mode = StringMode::Normal) noexcept
@@ -96,6 +98,12 @@ public:
 				break;
 			}
 			return true;
+		case 'P':
+			m_palmMuted = true;
+			return true;
+		case 'V':
+			m_vibrato = true;
+			return true;
 		default:
 			return false;
 		}
@@ -115,10 +123,15 @@ public:
 	void setForcedNumbering(bool active) noexcept { m_forceNumbering = active; }
 	void setSlideDirection(bool reverse) noexcept { m_reverseSlide = reverse; }
 	void setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; }
+	void setPalmMuted(bool active) noexcept { m_palmMuted = active; }
+	void setVibrato(bool active) noexcept { m_vibrato = active; }
 	bool isHOPO() const noexcept { return m_isHOPO; }
 	bool hasForcedNumbering() const noexcept { return m_forceNumbering; }
 	bool hasReversedSlide() const noexcept { return m_reverseSlide; }
 	StringEmphasis getStringEmphasis() const noexcept { return m_emphasis; }
+	bool isPalmMuted() const noexcept { return m_palmMuted; }
+	bool isVibrato() const noexcept { return m_vibrato; }
+
 	StringEmphasis wheelEmphasis() noexcept
 	{
 		if (m_emphasis == StringEmphasis::None)
