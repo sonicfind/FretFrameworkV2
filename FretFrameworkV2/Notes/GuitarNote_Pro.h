@@ -11,30 +11,55 @@ enum class StringMode
 	Pinch_Harmonics
 };
 
+template <size_t maxSize>
+class Fret
+{
+	size_t m_value = SIZE_MAX;
+public:
+	bool set(size_t value)
+	{
+		if (value > maxSize)
+			return false;
+
+		m_value = value;
+		return true;
+	}
+
+	void disable() noexcept
+	{
+		m_value = SIZE_MAX;
+	}
+
+	size_t get() const noexcept { return m_value; }
+};
+
 template <size_t numFrets>
 class String : public Sustained
 {
-	size_t m_fret = SIZE_MAX;
+	Fret<numFrets> m_fret = SIZE_MAX;
 	StringMode m_mode = StringMode::Normal;
 
 public:
-	bool setFret(size_t fret) noexcept
+	bool set(size_t fret, size_t length, StringMode mode = StringMode::Normal)
 	{
-		if (fret > numFrets)
+		if (!m_fret.set(fret))
 			return false;
-		m_fret = fret;
+
+		setLength(length);
+		setMode(mode);
 		return true;
 	}
 
 	void setMode(StringMode mode) noexcept { m_mode = mode; }
 	void disable() noexcept
 	{
-		m_fret = SIZE_MAX;
+		m_fret.disable();
 		m_mode = StringMode::Normal;
 		Sustained::disable();
 	}
 
-	size_t getFret() const noexcept { return m_fret; }
+	Fret& getFret() noexcept { return m_fret; }
+	Fret getFret() const noexcept { return m_fret; }
 	StringMode getMode() const noexcept { return m_mode; }
 };
 
@@ -58,14 +83,14 @@ class GuitarNote_Pro
 	bool m_vibrato = false;
 
 public:
-	bool set(size_t string, size_t fret, size_t length, StringMode mode = StringMode::Normal) noexcept
+	String& get(size_t string) noexcept
 	{
-		if (string >= 6 && !m_strings[string].setFret(fret))
-			return false;
+		return m_strings[string];
+	}
 
-		m_strings[string].setLength(length);
-		m_strings[string].setMode(mode);
-		return true;
+	const String& get(size_t string) const noexcept
+	{
+		return m_strings[string];
 	}
 
 	bool modify(char modifier, size_t lane = 0) noexcept
@@ -107,16 +132,6 @@ public:
 		default:
 			return false;
 		}
-	}
-
-	String& get(size_t string) noexcept
-	{
-		return m_strings[string];
-	}
-
-	const String& get(size_t string) const noexcept
-	{
-		return m_strings[string];
 	}
 
 	void setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; }
