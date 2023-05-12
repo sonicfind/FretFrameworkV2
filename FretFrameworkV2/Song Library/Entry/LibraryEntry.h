@@ -1,5 +1,5 @@
 #pragma once
-#include "Song/ChartType.h"
+#include "Song/ChartSpecifiers.h"
 #include "DrumScan.h"
 #include "VocalScan.h"
 #include "Notes/GuitarNote.h"
@@ -39,6 +39,8 @@ public:
 	void extractSongInfo(BufferedBinaryReader& reader);
 	void serializeFileInfo(BufferedBinaryWriter& writer) const noexcept;
 	void serializeSongInfo(BufferedBinaryWriter& writer) const noexcept;
+
+	ScanValues getScanValue(NoteTrackType track) const noexcept;
 
 	const UnicodeString& getArtist() const noexcept { return *m_artist; }
 	const UnicodeString& getName() const noexcept { return *m_name; }

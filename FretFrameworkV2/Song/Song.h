@@ -4,7 +4,7 @@
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
 #include "Notes/DrumNote.h"
-#include "Song/ChartType.h"
+#include "ChartSpecifiers.h"
 #include "SyncTrack.h"
 #include "SongEvents.h"
 

@@ -141,6 +141,26 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	writer.append(m_multiplier_note);
 }
 
+ScanValues LibraryEntry::getScanValue(NoteTrackType track) const noexcept
+{
+	switch (track)
+	{
+	case NoteTrackType::Lead:       return m_scanTracks.lead_5;
+	case NoteTrackType::Lead_6:     return m_scanTracks.lead_6;
+	case NoteTrackType::Bass:       return m_scanTracks.bass_5;
+	case NoteTrackType::Bass_6:     return m_scanTracks.bass_6;
+	case NoteTrackType::Rhythm:     return m_scanTracks.rhythm;
+	case NoteTrackType::Coop:       return m_scanTracks.coop;
+	case NoteTrackType::Keys:       return m_scanTracks.keys;
+	case NoteTrackType::Drums_4:    return m_scanTracks.drums4;
+	case NoteTrackType::Drums_4Pro: return m_scanTracks.drums4_pro;
+	case NoteTrackType::Drums_5:    return m_scanTracks.drums5;
+	case NoteTrackType::Vocals:     return m_scanTracks.vocals;
+	case NoteTrackType::Harmonies:  return m_scanTracks.harmonies;
+	default: return ScanValues();
+	}
+}
+
 DrumType_Enum LibraryEntry::getDrumType() const noexcept
 {
 	if (m_scanTracks.drums4.getSubTracks() > 0)

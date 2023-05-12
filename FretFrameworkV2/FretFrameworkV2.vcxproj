@@ -249,7 +249,7 @@
     <ClInclude Include="Song Library\Entry\VocalScan.h" />
     <ClInclude Include="Song Library\LibraryCategory.h" />
     <ClInclude Include="Song Library\SongLibrary.h" />
-    <ClInclude Include="Song\ChartType.h" />
+    <ClInclude Include="Song\ChartSpecifiers.h" />
     <ClInclude Include="Song\SongEvents.h" />
     <ClInclude Include="Song\SyncTrack.h" />
     <ClInclude Include="Song\Tracks\Extended_Save.h" />
