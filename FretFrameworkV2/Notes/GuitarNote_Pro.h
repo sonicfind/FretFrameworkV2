@@ -38,3 +38,29 @@ public:
 	StringMode getMode() const noexcept { return m_mode; }
 };
 
+template <size_t numFrets>
+class GuitarNote_Pro
+{
+	String<numFrets> m_strings[6];
+public:
+	bool set(size_t string, size_t fret, size_t length, StringMode mode)
+	{
+		if (string >= 6 && !m_strings[string].setFret(fret))
+			return false;
+
+		m_strings[string].setLength(length);
+		m_strings[string].setMode(mode);
+		return true;
+	}
+
+	String& get(size_t string) noexcept
+	{
+		return m_strings[string];
+	}
+
+	const String& get(size_t string) const noexcept
+	{
+		return m_strings[string];
+	}
+};
+
