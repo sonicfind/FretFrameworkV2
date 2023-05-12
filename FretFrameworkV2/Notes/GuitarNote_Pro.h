@@ -18,7 +18,7 @@ class String : public Sustained
 	StringMode m_mode = StringMode::Normal;
 
 public:
-	bool setFret(size_t fret)
+	bool setFret(size_t fret) noexcept
 	{
 		if (fret > numFrets)
 			return false;
@@ -26,8 +26,8 @@ public:
 		return true;
 	}
 
-	void setMode(StringMode mode) { m_mode = mode; }
-	void disable()
+	void setMode(StringMode mode) noexcept { m_mode = mode; }
+	void disable() noexcept
 	{
 		m_fret = SIZE_MAX;
 		m_mode = StringMode::Normal;
@@ -56,7 +56,7 @@ class GuitarNote_Pro
 	StringEmphasis m_emphasis = StringEmphasis::None;
 
 public:
-	bool set(size_t string, size_t fret, size_t length, StringMode mode)
+	bool set(size_t string, size_t fret, size_t length, StringMode mode = StringMode::Normal) noexcept
 	{
 		if (string >= 6 && !m_strings[string].setFret(fret))
 			return false;
@@ -64,6 +64,41 @@ public:
 		m_strings[string].setLength(length);
 		m_strings[string].setMode(mode);
 		return true;
+	}
+
+	bool modify(char modifier, size_t lane = 0) noexcept
+	{
+		switch (modifier)
+		{
+		case 'H':
+			m_isHOPO = true;
+			return true;
+		case 'F':
+			m_forceNumbering = true;
+			return true;
+		case 'R':
+			m_reverseSlide = true;
+			return true;
+		case 'E':
+			switch (lane)
+			{
+			case 0:
+				m_emphasis = StringEmphasis::None;
+				break;
+			case 1:
+				m_emphasis = StringEmphasis::High;
+				break;
+			case 2:
+				m_emphasis = StringEmphasis::Middle;
+				break;
+			case 3:
+				m_emphasis = StringEmphasis::Low;
+				break;
+			}
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	String& get(size_t string) noexcept
@@ -76,15 +111,15 @@ public:
 		return m_strings[string];
 	}
 
-	void setHOPO(bool isHopo) { m_isHOPO = isHopo; }
-	void setForcedNumbering(bool active) { m_forceNumbering = active; }
-	void setSlideDirection(bool reverse) { m_reverseSlide = reverse; }
-	void setStringEmphasis(StringEmphasis string) { m_emphasis = string; }
+	void setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; }
+	void setForcedNumbering(bool active) noexcept { m_forceNumbering = active; }
+	void setSlideDirection(bool reverse) noexcept { m_reverseSlide = reverse; }
+	void setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; }
 	bool isHOPO() const noexcept { return m_isHOPO; }
 	bool hasForcedNumbering() const noexcept { return m_forceNumbering; }
 	bool hasReversedSlide() const noexcept { return m_reverseSlide; }
 	StringEmphasis getStringEmphasis() const noexcept { return m_emphasis; }
-	StringEmphasis wheelEmphasis()
+	StringEmphasis wheelEmphasis() noexcept
 	{
 		if (m_emphasis == StringEmphasis::None)
 			m_emphasis = StringEmphasis::High;
