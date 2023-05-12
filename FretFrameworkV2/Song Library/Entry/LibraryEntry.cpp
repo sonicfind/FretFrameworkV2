@@ -1,5 +1,4 @@
 #include "LibraryEntry.h"
-#include "DrumScan.h"
 #include <iostream>
 
 const UnicodeString LibraryEntry::s_DEFAULT_NAME{ U"Unknown Title" };
@@ -64,7 +63,7 @@ void LibraryEntry::finalize()
 
 void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 {
-	ScanValues* const arr[11] =
+	ScanValues* const arr[] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -73,6 +72,7 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 		&m_scanTracks.rhythm,
 		&m_scanTracks.coop,
 		&m_scanTracks.keys,
+		&m_scanTracks.drums4,
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
 		&m_scanTracks.vocals,
@@ -80,10 +80,7 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 	};
 
 	for (auto track : arr)
-	{
-		reader.extract(track->m_subTracks);
-		reader.extract(track->m_intensity);
-	}
+		reader.extract(*track);
 
 	reader.extract(m_previewRange);
 	reader.extract(m_album_track);
@@ -110,7 +107,7 @@ void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcep
 
 void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
 {
-	const ScanValues* const arr[11] =
+	const ScanValues* const arr[] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -119,6 +116,7 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 		&m_scanTracks.rhythm,
 		&m_scanTracks.coop,
 		&m_scanTracks.keys,
+		&m_scanTracks.drums4,
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
 		&m_scanTracks.vocals,
@@ -126,10 +124,7 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	};
 
 	for (auto track : arr)
-	{
-		writer.append(track->m_subTracks);
-		writer.append(track->m_intensity);
-	}
+		writer.append(*track);
 
 	writer.append(m_previewRange);
 	writer.append(m_album_track);
@@ -148,9 +143,9 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 
 DrumType_Enum LibraryEntry::getDrumType() const noexcept
 {
-	if (m_scanTracks.drums4_pro.m_subTracks > 0)
+	if (m_scanTracks.drums4.getSubTracks() > 0)
 		return DrumType_Enum::FOURLANE_PRO;
-	else if (m_scanTracks.drums5.m_subTracks > 0)
+	else if (m_scanTracks.drums5.getSubTracks() > 0)
 		return DrumType_Enum::FIVELANE;
 	return DrumType_Enum::LEGACY;
 }
@@ -196,7 +191,7 @@ bool LibraryEntry::validateForNotes() const noexcept
 	};
 
 	for (const ScanValues* track : arr)
-		if (track->m_subTracks > 0)
+		if (track->getSubTracks() > 0)
 			return true;
 	return false;
 }
@@ -309,22 +304,46 @@ void LibraryEntry::mapModifierVariables()
 		if (starPower->getValue<uint16_t>() == 103)
 			m_multiplier_note = 103;
 
-	const std::pair<std::string_view, ScanValues*> intensities[]
-	{
-		{ "diff_guitar",      &m_scanTracks.lead_5 },
-		{ "diff_guitarghl",	  &m_scanTracks.lead_6 },
-		{ "diff_bass",		  &m_scanTracks.bass_5 },
-		{ "diff_bassghl",     &m_scanTracks.bass_6 },
-		{ "diff_rhythm",	  &m_scanTracks.rhythm },
-		{ "diff_guitar_coop", &m_scanTracks.coop },
-		{ "diff_keys",		  &m_scanTracks.keys },
-		{ "diff_drums",		  &m_scanTracks.drums4_pro },
-		{ "diff_drums",		  &m_scanTracks.drums5 },
-		{ "diff_vocals",	  &m_scanTracks.vocals },
-		{ "diff_vocals_harm", &m_scanTracks.harmonies },
-	};
+	if (auto intensity = getModifier("diff_guitar"))
+		m_scanTracks.lead_5.setIntensity(intensity->getValue<int32_t>());
 
-	for (int i = 0; i < 11; ++i)
-		if (auto modifier = getModifier(intensities[i].first))
-			intensities[i].second->m_intensity = modifier->getValue<int32_t>();
+	if (auto intensity = getModifier("diff_guitarghl"))
+		m_scanTracks.lead_6.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_bass"))
+		m_scanTracks.bass_5.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_bassghl"))
+		m_scanTracks.bass_6.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_rhythm"))
+		m_scanTracks.rhythm.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_guitar_coop"))
+		m_scanTracks.coop.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_keys"))
+		m_scanTracks.keys.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto modifier = getModifier("diff_drums"))
+	{
+		const uint32_t intensity = modifier->getValue<int32_t>();
+		m_scanTracks.drums4.setIntensity(intensity);
+		m_scanTracks.drums4_pro.setIntensity(intensity);
+		m_scanTracks.drums5.setIntensity(intensity);
+	}
+
+	if (auto intensity = getModifier("diff_drums_real"))
+		m_scanTracks.drums4_pro.setIntensity(intensity->getValue<int32_t>());
+
+	m_scanTracks.drums4_pro.transfer(m_scanTracks.drums4);
+
+	if (auto modifier = getModifier("pro_drums"); modifier && !modifier->getValue<bool>())
+		m_scanTracks.drums4_pro.reset();
+
+	if (auto intensity = getModifier("diff_vocals"))
+		m_scanTracks.vocals.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_vocals_harm"))
+		m_scanTracks.harmonies.setIntensity(intensity->getValue<int32_t>());
 }

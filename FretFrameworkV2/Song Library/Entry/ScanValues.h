@@ -1,18 +1,16 @@
 #pragma once
 class ScanValues
 {
-public:
+protected:
 	unsigned char m_subTracks = 0;
 	unsigned char m_intensity = 0xFF;
-	virtual ~ScanValues() {}
 
-	void addSubTrack(size_t diff)
+public:
+	bool hasSubTrack(size_t sub) const noexcept
 	{
-		m_subTracks |= 1 << diff;
+		return (1 << sub) & m_subTracks;
 	}
 
-	[[nodiscard]] bool wasTrackValidated(size_t diff) const noexcept
-	{
-		return (1 << diff) & m_subTracks;
-	}
+	unsigned char getSubTracks() const noexcept { return m_subTracks; }
+	unsigned char getIntensity() const noexcept { return m_intensity; }
 };

@@ -424,15 +424,15 @@ ChtFileReader::NoteTracks_V1 ChtFileReader::checkTrack_V1()
 	return Invalid;
 }
 
-ChtFileReader::NoteTracks_V1 ChtFileReader::extractTrackType_V1()
+std::pair<ChtFileReader::NoteTracks_V1, size_t> ChtFileReader::extractTrackAndDifficulty_V1()
 {
 	if (!checkDifficulty_V1())
-		return Invalid;
+		return { Invalid, 0 };
 
 	NoteTracks_V1 type = checkTrack_V1();
 	if (type != Invalid)
 		m_eventSets.push_back(g_validTypes + 2);
-	return type;
+	return { type, m_difficulty };
 }
 
 std::optional<std::pair<uint64_t, ChartEvent>> ChtFileReader::extractEvent_V1()

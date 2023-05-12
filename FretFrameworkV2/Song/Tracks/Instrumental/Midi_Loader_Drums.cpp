@@ -11,9 +11,9 @@ void Mod(Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumType, numPads>>& ext,Dr
 		auto& pad = note.get(lane - 1);
 		if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
 			if (2 <= lane && lane < 5)
-				pad.setCymbal(!m_ext.toms[lane - 2]);
+				pad.setCymbal(!ext.toms[lane - 2]);
 
-		if (m_ext.enableDynamics)
+		if (ext.enableDynamics)
 		{
 			if (velocity > 100)
 				pad.setDynamics(DrumDynamics::Accent);

@@ -193,9 +193,6 @@
     <ClCompile Include="TaskQueue\TaskQueue.cpp">
       <Filter>TaskQueue</Filter>
     </ClCompile>
-    <ClCompile Include="Song Library\Entry\DrumScan.cpp">
-      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
-    </ClCompile>
     <ClCompile Include="Song Library\Entry\ChartV1_Scan_Drums.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
@@ -209,9 +206,6 @@
       <Filter>Song\Tracks\InstrumentalTrack\Drums</Filter>
     </ClCompile>
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Saver_Drums.cpp">
-      <Filter>Song\Tracks\InstrumentalTrack\Drums</Filter>
-    </ClCompile>
-    <ClCompile Include="Song\Tracks\Instrumental\ChartV1_LegacyDrums.cpp">
       <Filter>Song\Tracks\InstrumentalTrack\Drums</Filter>
     </ClCompile>
     <ClCompile Include="Song Library\Entry\Midi_Scan_Drums.cpp">
@@ -234,6 +228,10 @@
     </ClCompile>
     <ClCompile Include="Song\Song_Save_Extended.cpp">
       <Filter>Song\Save</Filter>
+    </ClCompile>
+    <ClCompile Include="Notes\DrumNote_Legacy.cpp" />
+    <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -396,7 +394,7 @@
     <ClInclude Include="Song Library\Entry\ChartV1_Scan.h">
       <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Song Library\Entry\Midi_Scan.h">
+    <ClInclude Include="Song Library\Entry\Midi_Scan_Instrument.h">
       <Filter>Song Library\Entry\Track\Instrumental\Base</Filter>
     </ClInclude>
     <ClInclude Include="Song Library\Entry\Extended_Scan.h">
@@ -456,9 +454,6 @@
     <ClInclude Include="Song\Tracks\Instrumental\DrumTrack_Transfer.h">
       <Filter>Song\Tracks\InstrumentalTrack\Drums</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Tracks\Instrumental\ChartV1_LegacyDrums.h">
-      <Filter>Song\Tracks\InstrumentalTrack\Drums</Filter>
-    </ClInclude>
     <ClInclude Include="Song\Tracks\Vocal\Extended_Loader_Vocals.h">
       <Filter>Song\Tracks\VocalTrack</Filter>
     </ClInclude>
@@ -494,6 +489,12 @@
     </ClInclude>
     <ClInclude Include="Notes\Pitch.h">
       <Filter>Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\DrumScan_Legacy.h">
+      <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\VocalScan.h">
+      <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

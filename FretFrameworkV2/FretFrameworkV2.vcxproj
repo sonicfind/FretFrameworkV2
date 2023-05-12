@@ -166,8 +166,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
-    <ClCompile Include="Song Library\Entry\DrumScan.cpp" />
     <ClCompile Include="Song Library\Entry\ChartV1_Scan_Drums.cpp" />
+    <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp" />
     <ClCompile Include="Song Library\Entry\Extended_Scan_Drums.cpp" />
     <ClCompile Include="Song Library\Entry\Midi_Scan_Drums.cpp" />
     <ClCompile Include="Song Library\Entry\LibraryEntry.cpp" />
@@ -238,13 +238,15 @@
     <ClInclude Include="SimpleFlatMap\SimpleFlatMap.h" />
     <ClInclude Include="Song Library\Entry\DrumScan.h" />
     <ClInclude Include="Song Library\Entry\ChartV1_Scan_Drums.h" />
+    <ClInclude Include="Song Library\Entry\DrumScan_Legacy.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan_Drums.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Drums.h" />
     <ClInclude Include="Song Library\Entry\ChartV1_Scan.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan.h" />
-    <ClInclude Include="Song Library\Entry\Midi_Scan.h" />
+    <ClInclude Include="Song Library\Entry\Midi_Scan_Instrument.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan_Vocals.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Vocals.h" />
+    <ClInclude Include="Song Library\Entry\VocalScan.h" />
     <ClInclude Include="Song Library\LibraryCategory.h" />
     <ClInclude Include="Song Library\SongLibrary.h" />
     <ClInclude Include="Song\ChartType.h" />

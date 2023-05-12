@@ -5,12 +5,36 @@
 namespace Extended_Scan
 {
 	template <class T>
-	struct DifficultyTracker
+	[[nodiscard]] bool TestSingleNote(InstrumentScan<T>& scan, const size_t diff, size_t lane) noexcept
 	{
-		DifficultyTracker(size_t diff) : m_difficulty(diff) {}
-		bool scanDifficulty(ScanValues& values, CommonChartParser& parser)
-		{
-			if (m_difficulty >= 5 && InstrumentalScan::WasTrackValidated<T>(values, m_difficulty))
+		if (!T::TestIndex(lane))
+			return false;
+		scan.addDifficulty(diff);
+		return true;
+	}
+
+	template <class T>
+	[[nodiscard]] bool TestMultiNote(InstrumentScan<T>& scan, const size_t diff, const std::vector<std::pair<size_t, uint64_t>>& colors) noexcept
+	{
+		for (const auto& color : colors)
+			if (!T::TestIndex(color.first))
+				return false;
+		scan.addDifficulty(diff);
+		return true;
+	}
+
+	template <class T>
+	[[nodiscard]] bool Scan(InstrumentScan<T>& scan, CommonChartParser& parser)
+	{
+		if (scan.getSubTracks() > 0)
+			return false;
+
+		auto scanDifficulty = [&] {
+			if (!parser.validateDifficultyTrack())
+				return false;
+
+			const size_t diff = parser.getDifficulty();
+			if (diff >= 5 || scan.hasSubTrack(diff))
 				return false;
 
 			while (parser.isStillCurrentTrack())
@@ -18,57 +42,24 @@ namespace Extended_Scan
 				const auto trackEvent = parser.parseEvent();
 				if (trackEvent.second == ChartEvent::NOTE)
 				{
-					if (testSingleNote(values, parser.extractSingleNote().first))
+					if (TestSingleNote(scan, diff, parser.extractSingleNote().first))
 						return false;
 				}
 				else if (trackEvent.second == ChartEvent::MULTI_NOTE)
 				{
-					if (testMultiNote(values, parser.extractMultiNote()))
+					if (TestMultiNote(scan, diff, parser.extractMultiNote()))
 						return false;
 				}
 				parser.nextEvent();
 			}
 			return true;
-		}
-
-		[[nodiscard]] bool testSingleNote(ScanValues& values, size_t lane) noexcept
-		{
-			if (!T::TestIndex(lane))
-				return false;
-			values.addSubTrack(m_difficulty);
-			return true;
-		}
-
-		[[nodiscard]] bool testMultiNote(ScanValues& values, const std::vector<std::pair<size_t, uint64_t>>& colors) noexcept
-		{
-			for (const auto& color : colors)
-				if (!T::TestIndex(color.first))
-					return false;
-			values.addSubTrack(m_difficulty);
-			return true;
-		}
-
-	private:
-		const size_t m_difficulty;
-	};
-
-	template <class T>
-	bool Scan(ScanValues& values, CommonChartParser& parser)
-	{
-		if (values.m_subTracks > 0)
-			return false;
+		};
 
 		while (parser.isStillCurrentTrack())
 		{
 			if (!parser.isStartOfTrack())
 				parser.nextEvent();
-			else if (parser.validateDifficultyTrack())
-			{
-				DifficultyTracker<T> tracker(parser.getDifficulty());
-				if (!tracker.scanDifficulty(values, parser))
-					parser.skipTrack();
-			}
-			else
+			else if (!scanDifficulty())
 				parser.skipTrack();
 		}
 		return true;

@@ -5,43 +5,20 @@
 namespace ChartV1_Scan
 {
 	template <class T>
-	class V1Tracker
+	bool Test(InstrumentScan<T>& scan, size_t diff, size_t note)
 	{
-	public:
-		[[nodiscard]] bool setDifficulty(ScanValues& values, size_t diff)
+		if (T::TestIndex_V1(note))
 		{
-			if (InstrumentalScan::WasTrackValidated<T>(values, diff))
-				return false;
-
-			m_difficulty = diff;
+			scan.addDifficulty(diff);
 			return true;
 		}
-
-		[[nodiscard]] bool test(ScanValues& values, size_t note) const noexcept
-		{
-			if (T::TestIndex_V1(note))
-			{
-				values.addSubTrack(m_difficulty);
-				return true;
-			}
-			return false;
-		}
-
-	private:
-		size_t m_difficulty = 0;
-	};
-
-	template <class T>
-	bool Scan(ScanValues& values, ChtFileReader& reader)
-	{
-		V1Tracker<T> tracker;
-		return Scan(tracker, values, reader);
+		return false;
 	}
 
 	template <class T>
-	bool Scan(V1Tracker<T>& tracker, ScanValues& values, ChtFileReader& reader)
+	bool Scan(InstrumentScan<T>& scan, const size_t diff, ChtFileReader& reader)
 	{
-		if (!tracker.setDifficulty(values, reader.getDifficulty()))
+		if (scan.hasSubTrack(diff))
 			return false;
 
 		while (const auto chartEvent = reader.extractEvent_V1())
@@ -49,7 +26,7 @@ namespace ChartV1_Scan
 			if (chartEvent->second == ChartEvent::NOTE)
 			{
 				auto note = reader.extractColorAndSustain_V1();
-				if (tracker.test(values, note.first))
+				if (Test(scan, diff, note.first))
 					return false;
 			}
 			reader.nextEvent();

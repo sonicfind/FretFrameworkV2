@@ -1,7 +1,9 @@
 #pragma once
-#include "ScanValues.h"
 #include "Song/ChartType.h"
-#include "Notes/DrumType.h"
+#include "DrumScan.h"
+#include "VocalScan.h"
+#include "Notes/GuitarNote.h"
+#include "Notes/Keys.h"
 #include "Types/UnicodeString.h"
 #include "PtrWrapper/PtrWrapper.h"
 #include "Serialization/ChtFileReader.h"
@@ -138,17 +140,18 @@ private:
 
 	struct
 	{
-		ScanValues lead_5;
-		ScanValues lead_6;
-		ScanValues bass_5;
-		ScanValues bass_6;
-		ScanValues rhythm;
-		ScanValues coop;
-		ScanValues keys;
-		ScanValues drums4_pro;
-		ScanValues drums5;
-		ScanValues vocals;
-		ScanValues harmonies;
+		InstrumentScan<GuitarNote<5>> lead_5;
+		InstrumentScan<GuitarNote<6>> lead_6;
+		InstrumentScan<GuitarNote<5>> bass_5;
+		InstrumentScan<GuitarNote<6>> bass_6;
+		InstrumentScan<GuitarNote<5>> rhythm;
+		InstrumentScan<GuitarNote<5>> coop;
+		InstrumentScan<Keys<5>> keys;
+		InstrumentScan<DrumNote<DrumPad, 4>> drums4;
+		InstrumentScan<DrumNote<DrumPad_Pro, 4>> drums4_pro;
+		InstrumentScan<DrumNote<DrumPad, 5>> drums5;
+		VocalScan<1> vocals;
+		VocalScan<3> harmonies;
 	} m_scanTracks;
 
 	UnicodeWrapper m_name;

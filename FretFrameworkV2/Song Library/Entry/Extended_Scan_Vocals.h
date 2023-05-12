@@ -1,15 +1,14 @@
 #pragma once
-#include "ScanValues.h"
+#include "VocalScan.h"
 #include "Notes/VocalNote.h"
-#include "Notes/VocalPercussion.h"
 #include "Serialization/CommonChartParser.h"
 
 namespace Extended_Scan_Vocals
 {
 	template<size_t numTracks>
-	bool Scan(ScanValues& values, CommonChartParser& parser)
+	bool Scan(VocalScan<numTracks>& values, CommonChartParser& parser)
 	{
-		if (values.m_subTracks > 0)
+		if (values.getSubTracks() > 0)
 			return false;
 
 		VocalPitch pitch;
@@ -24,14 +23,14 @@ namespace Extended_Scan_Vocals
 					break;
 
 				auto lyric = parser.extractLyric();
-				if (lyric.first == 0 || lyric.first > numTracks || values.wasTrackValidated(lyric.first))
+				if (lyric.first == 0 || lyric.first > numTracks || values.hasSubTrack(lyric.first))
 					break;
 
 				auto pitch = parser.extractPitchAndDuration();
 				if (pitch.set(pitch))
 				{
 					values.addSubTrack(lyric.first);
-					if (values.m_subTracks == (1 << numTracks) - 1)
+					if (values.isComplete())
 						return false;
 				}
 				break;
