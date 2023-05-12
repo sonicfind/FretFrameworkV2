@@ -496,6 +496,9 @@
     <ClInclude Include="Song Library\Entry\VocalScan.h">
       <Filter>Song Library\Entry\Track\Vocal</Filter>
     </ClInclude>
+    <ClInclude Include="Notes\GuitarNote_Pro.h">
+      <Filter>Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">

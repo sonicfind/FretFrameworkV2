@@ -203,6 +203,7 @@
     <ClInclude Include="Notes\DrumNote_Legacy.h" />
     <ClInclude Include="Notes\DrumType.h" />
     <ClInclude Include="Notes\GuitarNote.h" />
+    <ClInclude Include="Notes\GuitarNote_Pro.h" />
     <ClInclude Include="Notes\Keys.h" />
     <ClInclude Include="Notes\Sustained.h" />
     <ClInclude Include="Notes\NoteName.h" />
