@@ -161,3 +161,19 @@ public:
 	}
 };
 
+template <size_t numFrets>
+class ArpeggioNote : public Sustained
+{
+	Fret<numFrets> m_strings[6];
+public:
+	Fret& get(size_t string) noexcept
+	{
+		return m_strings[string];
+	}
+
+	const Fret& get(size_t string) const noexcept
+	{
+		return m_strings[string];
+	}
+};
+
