@@ -1,12 +1,11 @@
 #pragma once
-#include "InstrumentalTrack.h"
+#include "DifficultyTrack.h"
 
 namespace ChartV1
 {
 	template <class T>
-	[[nodiscard]] bool Load(InstrumentalTrack<T>& track, ChtFileReader& reader)
+	[[nodiscard]] bool Load(DifficultyTrack<T>& diff, ChtFileReader& reader)
 	{
-		DifficultyTrack<T>& diff = track[reader.getDifficulty()];
 		if (diff.isOccupied())
 			return false;
 

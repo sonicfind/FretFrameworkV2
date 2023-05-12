@@ -6,23 +6,23 @@
 void Song::traverse_cht_V1(ChtFileReader& reader)
 {
 	InstrumentalTrack<DrumNote_Legacy> legacy_track;
-	const auto loadNoteTrack = [&] (ChtFileReader::NoteTracks_V1 track) {
-		switch (track)
+	const auto loadNoteTrack = [&] (std::pair<ChtFileReader::NoteTracks_V1, size_t> track) {
+		switch (track.first)
 		{
-			case ChtFileReader::Single:       return ChartV1::Load(m_noteTracks.lead_5, reader);
-			case ChtFileReader::DoubleGuitar: return ChartV1::Load(m_noteTracks.coop, reader);
-			case ChtFileReader::DoubleBass:   return ChartV1::Load(m_noteTracks.bass_5, reader);
-			case ChtFileReader::DoubleRhythm: return ChartV1::Load(m_noteTracks.rhythm, reader);
+			case ChtFileReader::Single:       return ChartV1::Load(m_noteTracks.lead_5[track.second], reader);
+			case ChtFileReader::DoubleGuitar: return ChartV1::Load(m_noteTracks.coop[track.second], reader);
+			case ChtFileReader::DoubleBass:   return ChartV1::Load(m_noteTracks.bass_5[track.second], reader);
+			case ChtFileReader::DoubleRhythm: return ChartV1::Load(m_noteTracks.rhythm[track.second], reader);
 			case ChtFileReader::Drums:
 				switch (DrumNote_Legacy::GetType())
 				{
-					case DrumType_Enum::LEGACY:       return ChartV1::Load(legacy_track, reader);
-					case DrumType_Enum::FOURLANE_PRO: return ChartV1::Load(m_noteTracks.drums4_pro, reader);
-					case DrumType_Enum::FIVELANE:     return ChartV1::Load(m_noteTracks.drums5, reader);
+					case DrumType_Enum::FOURLANE_PRO: return ChartV1::Load(m_noteTracks.drums4_pro[track.second], reader);
+					case DrumType_Enum::FIVELANE:     return ChartV1::Load(m_noteTracks.drums5[track.second], reader);
+					default:                          return ChartV1::Load(legacy_track[track.second], reader);
 				}
-			case ChtFileReader::Keys:      return ChartV1::Load(m_noteTracks.keys, reader);
-			case ChtFileReader::GHLGuitar: return ChartV1::Load(m_noteTracks.lead_6, reader);
-			case ChtFileReader::GHLBass:   return ChartV1::Load(m_noteTracks.bass_6, reader);
+			case ChtFileReader::Keys:      return ChartV1::Load(m_noteTracks.keys[track.second], reader);
+			case ChtFileReader::GHLGuitar: return ChartV1::Load(m_noteTracks.lead_6[track.second], reader);
+			case ChtFileReader::GHLBass:   return ChartV1::Load(m_noteTracks.bass_6[track.second], reader);
 			default:
 				return false;
 		}
@@ -65,7 +65,7 @@ void Song::traverse_cht_V1(ChtFileReader& reader)
 				reader.nextEvent();
 			}
 		}
-		else if (!loadNoteTrack(reader.extractTrackType_V1()))
+		else if (!loadNoteTrack(reader.extractTrackAndDifficulty_V1()))
 			reader.skipTrack();
 	}
 
