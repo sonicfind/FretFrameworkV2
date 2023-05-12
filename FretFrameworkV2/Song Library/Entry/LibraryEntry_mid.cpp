@@ -39,9 +39,9 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 						continue;
 
 					if (legacyScans.getType() != DrumType_Enum::FIVELANE)
-						legacyScans.transfer(m_scanTracks.drums4_pro);
+						m_scanTracks.drums4_pro = legacyScans;
 					else
-						legacyScans.transfer(m_scanTracks.drums5);
+						m_scanTracks.drums5 = legacyScans;
 				}
 				else if (legacyScans.getType() == DrumType_Enum::FOURLANE_PRO)
 					Midi_Scanner_Instrument::Scan(m_scanTracks.drums4_pro, reader);

@@ -336,7 +336,7 @@ void LibraryEntry::mapModifierVariables()
 	if (auto intensity = getModifier("diff_drums_real"))
 		m_scanTracks.drums4_pro.setIntensity(intensity->getValue<int32_t>());
 
-	m_scanTracks.drums4_pro.transfer(m_scanTracks.drums4);
+	m_scanTracks.drums4 = m_scanTracks.drums4_pro;
 
 	if (auto modifier = getModifier("pro_drums"); modifier && !modifier->getValue<bool>())
 		m_scanTracks.drums4_pro.reset();

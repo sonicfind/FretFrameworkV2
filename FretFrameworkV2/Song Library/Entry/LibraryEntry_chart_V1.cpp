@@ -35,7 +35,7 @@ void LibraryEntry::traverse_cht_V1(ChtFileReader& reader)
 	}
 
 	if (legacyScans.getType() != DrumType_Enum::FIVELANE)
-		legacyScans.transfer(m_scanTracks.drums4_pro);
+		m_scanTracks.drums4_pro = legacyScans;
 	else
-		legacyScans.transfer(m_scanTracks.drums5);
+		m_scanTracks.drums5 = legacyScans;
 }

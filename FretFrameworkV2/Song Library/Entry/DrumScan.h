@@ -23,11 +23,10 @@ public:
 	void setIntensity(unsigned char level) noexcept { m_intensity = level; }
 
 	template <class Type, size_t numDrumPads>
-	void transfer(InstrumentScan<DrumNote<Type, numDrumPads>>& scan)
+	InstrumentScan<DrumNote<DrumType, numPads>>& operator=(InstrumentScan<DrumNote<Type, numDrumPads>>& scan)
 	{
-		for (size_t i = 0; i < 5; ++i)
-			if (hasSubTrack(i))
-				scan.addDifficulty(i);
+		ScanValues::operator=(scan);
+		return *this;
 	}
 
 	void reset() noexcept { m_subTracks = 0; }
