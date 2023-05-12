@@ -187,7 +187,7 @@ namespace Midi_Loader_Instrument
 	};
 
 	template <class T>
-	bool Scan(InstrumentalTrack<T>& track, MidiFileReader& reader)
+	bool Load(InstrumentalTrack<T>& track, MidiFileReader& reader)
 	{
 		if (track.isOccupied())
 			return false;
