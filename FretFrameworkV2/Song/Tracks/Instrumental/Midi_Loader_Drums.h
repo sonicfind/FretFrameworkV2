@@ -5,7 +5,6 @@
 template <class DrumType, size_t numPads>
 struct Midi_Loader_Instrument::Loader_Diff<DrumNote<DrumType, numPads>>
 {
-	bool flam = false;
 	uint64_t notes[numPads + 1]{ UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 	Loader_Diff() { if constexpr (numPads == 5) notes[5] = UINT64_MAX; }
 };
@@ -16,6 +15,7 @@ struct Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumType, numPads>>
 	using PRO_DRUMS = std::is_same<DrumType, DrumPad_Pro>;
 	bool enableDynamics = false;
 	bool toms[3] = { !PRO_DRUMS::value, !PRO_DRUMS::value, !PRO_DRUMS::value };
+	bool flams[4]{};
 };
 
 template <>
@@ -98,7 +98,7 @@ void Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues
 	{
 		for (size_t i = 0; i < 4; ++i)
 		{
-			m_difficulties[i].flam = NoteOn;
+			m_ext.flams[i] = NoteOn;
 			if constexpr (NoteOn)
 				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
@@ -116,7 +116,7 @@ void Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(Mid
 	{
 		for (size_t i = 0; i < 4; ++i)
 		{
-			m_difficulties[i].flam = NoteOn;
+			m_ext.flams[i] = NoteOn;
 			if constexpr (NoteOn)
 				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
@@ -132,14 +132,17 @@ void  Midi_Loader_Instrument::Loader<DrumNote_Legacy>::toggleExtraValues(MidiNot
 	{
 		for (size_t i = 0; i < 4; ++i)
 		{
-			m_difficulties[i].flam = NoteOn;
+			m_ext.flams[i] = NoteOn;
 			if constexpr (NoteOn)
 				if (auto drum = m_track[i].m_notes.try_back(m_position))
 					drum->setFlam(true);
 		}
 	}
 	else if (110 <= note.value && note.value <= 112)
+	{
 		m_ext.toms[note.value - 110] = NoteOn;
+		DrumNote_Legacy::Signal4Pro();
+	}
 }
 
 template <>

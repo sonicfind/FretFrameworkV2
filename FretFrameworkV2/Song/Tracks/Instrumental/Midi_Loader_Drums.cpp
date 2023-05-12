@@ -1,16 +1,17 @@
 #include "Midi_Loader_Drums.h"
 
-template <>
-void Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::modNote(DrumNote<DrumPad_Pro, 4>& note, size_t diff, size_t lane, unsigned char velocity)
+template <class DrumType, size_t numPads>
+void Mod(Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumType, numPads>>& ext,DrumNote<DrumType, numPads>& note, size_t diff, size_t lane, unsigned char velocity)
 {
-	if (m_difficulties[diff].flam)
+	if (ext.flams[diff])
 		note.setFlam(true);
 
 	if (lane > 0)
 	{
 		auto& pad = note.get(lane - 1);
-		if (2 <= lane && lane < 5)
-			pad.setCymbal(!m_ext.toms[lane - 2]);
+		if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
+			if (2 <= lane && lane < 5)
+				pad.setCymbal(!m_ext.toms[lane - 2]);
 
 		if (m_ext.enableDynamics)
 		{
@@ -20,45 +21,24 @@ void Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::modNote(DrumNote<
 				pad.setDynamics(DrumDynamics::Ghost);
 		}
 	}
+}
+
+template <>
+void Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::modNote(DrumNote<DrumPad_Pro, 4>& note, size_t diff, size_t lane, unsigned char velocity)
+{
+	Mod(m_ext, note, diff, lane, velocity);
 }
 
 template <>
 void Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::modNote(DrumNote<DrumPad, 5>& note, size_t diff, size_t lane, unsigned char velocity)
 {
-	if (m_ext.enableDynamics && lane > 0)
-	{
-		if (velocity > 100)
-			note.get(lane - 1).setDynamics(DrumDynamics::Accent);
-		else if (velocity < 100)
-			note.get(lane - 1).setDynamics(DrumDynamics::Ghost);
-	}
+	Mod(m_ext, note, diff, lane, velocity);
 }
 
 template <>
 void Midi_Loader_Instrument::Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, size_t lane, unsigned char velocity)
 {
-	if (m_difficulties[diff].flam)
-		note.setFlam(true);
-
-	if (lane > 0)
-	{
-		auto& pad = note.get(lane - 1);
-		if (2 <= lane && lane < 5)
-		{
-			if (m_ext.toms[lane - 2])
-				DrumNote_Legacy::Signal4Pro();
-			else
-				pad.setCymbal(true);
-		}
-
-		if (m_ext.enableDynamics)
-		{
-			if (velocity > 100)
-				pad.setDynamics(DrumDynamics::Accent);
-			else if (velocity < 100)
-				pad.setDynamics(DrumDynamics::Ghost);
-		}
-	}
+	Mod(m_ext, note, diff, lane, velocity);
 }
 
 template <>
