@@ -29,7 +29,7 @@ namespace ChartV1
 				switch (phrase.type)
 				{
 				case SpecialPhraseType::StarPower:
-				case SpecialPhraseType::StarPowerActivation:
+				case SpecialPhraseType::StarPowerActivation_or_BRE:
 				case SpecialPhraseType::Tremolo:
 				case SpecialPhraseType::Trill:
 					diff.m_specialPhrases.get_or_emplace_back(trackEvent->first).push_back(phrase);

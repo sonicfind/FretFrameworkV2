@@ -28,7 +28,7 @@ namespace Difficulty_Saver_Midi
 					vecAdd.push_back({ 116, endPoint });
 					doNextDifficulty = false;
 					break;
-				case SpecialPhraseType::StarPowerActivation:
+				case SpecialPhraseType::StarPowerActivation_or_BRE:
 					vecAdd.push_back({ 120, endPoint });
 					vecAdd.push_back({ 121, endPoint });
 					vecAdd.push_back({ 122, endPoint });
@@ -118,7 +118,7 @@ namespace Midi_Saver_Instrument
 				case SpecialPhraseType::StarPower:
 					vecAdd.push_back({ 116, endPoint });
 					break;
-				case SpecialPhraseType::StarPowerActivation:
+				case SpecialPhraseType::StarPowerActivation_or_BRE:
 					vecAdd.push_back({ 120, endPoint });
 					vecAdd.push_back({ 121, endPoint });
 					vecAdd.push_back({ 122, endPoint });

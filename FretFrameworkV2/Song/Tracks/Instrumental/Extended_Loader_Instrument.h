@@ -63,7 +63,7 @@ namespace Extended_Load_Instrument
 				{
 				case SpecialPhraseType::StarPower:
 				case SpecialPhraseType::Solo:
-				case SpecialPhraseType::StarPowerActivation:
+				case SpecialPhraseType::StarPowerActivation_or_BRE:
 				case SpecialPhraseType::Tremolo:
 				case SpecialPhraseType::Trill:
 					track.m_specialPhrases.get_or_emplace_back(trackEvent.first).push_back(phrase);
@@ -97,7 +97,7 @@ namespace Extended_Load_Instrument
 			{
 			case SpecialPhraseType::StarPower:
 			case SpecialPhraseType::Solo:
-			case SpecialPhraseType::StarPowerActivation:
+			case SpecialPhraseType::StarPowerActivation_or_BRE:
 			case SpecialPhraseType::Tremolo:
 			case SpecialPhraseType::Trill:
 				phrases.push_back(phrase);

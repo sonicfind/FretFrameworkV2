@@ -115,7 +115,7 @@ namespace Midi_Loader_Instrument
 			}
 			else if (m_doBRE)
 			{
-				m_track.m_specialPhrases[m_notes_BRE[0]].push_back({ SpecialPhraseType::StarPowerActivation, m_position - m_notes_BRE[0] });
+				m_track.m_specialPhrases[m_notes_BRE[0]].push_back({ SpecialPhraseType::StarPowerActivation_or_BRE, m_position - m_notes_BRE[0] });
 
 				for (size_t i = 0; i < 5; ++i)
 					m_notes_BRE[i] = UINT64_MAX;

@@ -13,7 +13,7 @@ enum class SpecialPhraseType
 	Arpeggio = 7,
 	StarPower_Diff = 8,
 
-	StarPowerActivation = 64,
+	StarPowerActivation_or_BRE = 64,
 	Tremolo = 65,
 	Trill = 66,
 	LyricShift = 67,
