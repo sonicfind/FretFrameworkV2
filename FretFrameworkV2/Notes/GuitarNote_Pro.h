@@ -3,7 +3,6 @@
 enum class StringMode
 {
 	Normal,
-	Ghost,
 	Bend,
 	Muted,
 	Tapped,
