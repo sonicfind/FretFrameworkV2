@@ -9,6 +9,7 @@ class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
 public:
 	DifficultyTrack<GuitarNote_Pro<numFrets>> m_difficulties[5];
 	SimpleFlatMap<NoteName> m_roots;
+	SimpleFlatMap<LeftHandPosition<numFrets>> m_handPositions;
 
 	InstrumentalTrack() = default;
 	InstrumentalTrack(InstrumentalTrack&&) = default;

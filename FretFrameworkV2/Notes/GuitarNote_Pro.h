@@ -203,3 +203,19 @@ public:
 	}
 };
 
+
+template <size_t numFrets>
+class LeftHandPosition
+{
+	size_t m_position;
+public:
+	bool set(size_t position)
+	{
+		if (position == 0 || position > numFrets - 3)
+			return false;
+		m_position = position;
+		return true;
+	}
+
+	uint32_t getPosition() const noexcept { return m_position; }
+};
