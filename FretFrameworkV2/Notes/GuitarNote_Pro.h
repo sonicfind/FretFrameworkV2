@@ -64,12 +64,19 @@ enum class StringEmphasis
 	Low
 };
 
+enum class SlideDirection
+{
+	None,
+	Normal,
+	Reversed
+};
+
 template <size_t numFrets>
 class GuitarNote_Pro
 {
 	bool m_isHOPO = false;
 	bool m_forceNumbering = false;
-	bool m_reverseSlide = false;
+	SlideDirection m_slide = SlideDirection::None;
 	StringEmphasis m_emphasis = StringEmphasis::None;
 	bool m_palmMuted = false;
 	bool m_vibrato = false;
@@ -98,22 +105,27 @@ public:
 		case 'F':
 			m_forceNumbering = true;
 			return true;
-		case 'R':
-			m_reverseSlide = true;
+		case 'S':
+			switch (lane)
+			{
+			case 0:
+				m_slide = SlideDirection::Normal;
+				break;
+			case 1:
+				m_slide = SlideDirection::Reversed;
+				break;
+			}
 			return true;
 		case 'E':
 			switch (lane)
 			{
 			case 0:
-				m_emphasis = StringEmphasis::None;
-				break;
-			case 1:
 				m_emphasis = StringEmphasis::High;
 				break;
-			case 2:
+			case 1:
 				m_emphasis = StringEmphasis::Middle;
 				break;
-			case 3:
+			case 2:
 				m_emphasis = StringEmphasis::Low;
 				break;
 			}
@@ -131,16 +143,27 @@ public:
 
 	void setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; }
 	void setForcedNumbering(bool active) noexcept { m_forceNumbering = active; }
-	void setSlideDirection(bool reverse) noexcept { m_reverseSlide = reverse; }
+	void setSlideDirection(SlideDirection slide) noexcept { m_slide = slide; }
 	void setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; }
 	void setPalmMuted(bool active) noexcept { m_palmMuted = active; }
 	void setVibrato(bool active) noexcept { m_vibrato = active; }
 	bool isHOPO() const noexcept { return m_isHOPO; }
 	bool hasForcedNumbering() const noexcept { return m_forceNumbering; }
-	bool hasReversedSlide() const noexcept { return m_reverseSlide; }
+	SlideDirection getSlideDirection() const noexcept { return m_slide; }
 	StringEmphasis getStringEmphasis() const noexcept { return m_emphasis; }
 	bool isPalmMuted() const noexcept { return m_palmMuted; }
 	bool isVibrato() const noexcept { return m_vibrato; }
+
+	SlideDirection wheelSlideStatus() noexcept
+	{
+		if (m_slide == SlideDirection::None)
+			m_slide = SlideDirection::Normal;
+		else if (m_slide == SlideDirection::Normal)
+			m_slide = SlideDirection::Reversed;
+		else
+			m_slide = SlideDirection::None;
+		return m_slide;
+	}
 
 	StringEmphasis wheelEmphasis() noexcept
 	{
