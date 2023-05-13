@@ -88,7 +88,7 @@ public:
 		return m_strings[string];
 	}
 
-	const String& get(size_t string) const noexcept
+	const String<numFrets>& operator[](size_t string) const noexcept
 	{
 		return m_strings[string];
 	}
@@ -166,12 +166,12 @@ class ArpeggioNote : public Sustained
 {
 	Fret<numFrets> m_strings[6];
 public:
-	Fret& get(size_t string) noexcept
+	Fret<numFrets>& operator[](size_t string) noexcept
 	{
 		return m_strings[string];
 	}
 
-	const Fret& get(size_t string) const noexcept
+	const Fret<numFrets>& operator[](size_t string) const noexcept
 	{
 		return m_strings[string];
 	}
