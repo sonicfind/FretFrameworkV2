@@ -21,7 +21,7 @@ namespace Midi_Loader_Instrument
 	public:
 		Loader(InstrumentalTrack<T>& track, unsigned char multiplierNote) : m_track(track), m_multiplierNote(multiplierNote)
 		{
-			memcpy(m_laneValues, s_defaultLanes, sizeof(s_defaultLanes));
+			memcpy(m_laneValues, s_defaultLanes, s_numValues * sizeof(size_t));
 		}
 
 		void setPosition(uint64_t position) { m_position = position; }
@@ -38,7 +38,7 @@ namespace Midi_Loader_Instrument
 				parseBRE<NoteOn>(note.value);
 			else if (note.value == m_multiplierNote)
 				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower);
-			else if (note.value == 103)
+			else if (note.value == s_soloValue)
 				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo);
 			else if (note.value == 126)
 				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo);
@@ -61,9 +61,9 @@ namespace Midi_Loader_Instrument
 		template <bool NoteOn>
 		void parseLaneColor(MidiNote note)
 		{
-			const int noteValue = note.value - s_noteRange.first;
+			const size_t noteValue = note.value - s_noteRange.first;
 			const size_t lane = m_laneValues[noteValue];
-			const size_t diff = s_diffValues[noteValue];
+			const size_t diff = getDifficulty(noteValue);
 
 			if (lane < T::GetLaneCount())
 			{
@@ -81,6 +81,8 @@ namespace Midi_Loader_Instrument
 			else
 				processExtraLanes<NoteOn>(diff, lane);
 		}
+
+		size_t getDifficulty(size_t noteValue) const noexcept { return s_diffValues[noteValue]; }
 
 		T& constructNote(DifficultyTrack<T>& diff)
 		{
@@ -153,7 +155,8 @@ namespace Midi_Loader_Instrument
 
 	private:
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-		static constexpr size_t s_diffValues[48] =
+		static constexpr size_t s_numValues = 48;
+		static constexpr size_t s_diffValues[96] =
 		{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -161,7 +164,7 @@ namespace Midi_Loader_Instrument
 			3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 		};
 
-		static constexpr size_t s_defaultLanes[48] =
+		static constexpr size_t s_defaultLanes[96] =
 		{
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -169,10 +172,12 @@ namespace Midi_Loader_Instrument
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 		};
 
+		static constexpr unsigned char s_soloValue = 103;
+
 		const unsigned char m_multiplierNote;
 
 		uint64_t m_position = 0;
-		size_t m_laneValues[48];
+		size_t m_laneValues[96];
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 		bool m_doBRE = false;
 

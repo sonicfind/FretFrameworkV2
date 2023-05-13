@@ -29,7 +29,7 @@ template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_noteRange{ 58, 103 };
 
 template <>
-constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_defaultLanes[48] =
+constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_defaultLanes[96] =
 {
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -38,7 +38,7 @@ constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_defaultLanes[4
 };
 
 template <>
-constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_defaultLanes[48] =
+constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_defaultLanes[96] =
 {
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
 	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
