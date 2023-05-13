@@ -6,6 +6,15 @@
 namespace Midi_Loader_Instrument
 {
 	template <class T>
+	T& ConstructNote(DifficultyTrack<T>& diff, uint64_t position)
+	{
+		if (diff.m_notes.capacity() == 0)
+			diff.m_notes.reserve(5000);
+
+		return diff.m_notes.get_or_emplace_back(position);
+	}
+
+	template <class T>
 	struct Loader_Diff
 	{
 		uint64_t notes[T::GetLaneCount()];
@@ -70,10 +79,7 @@ namespace Midi_Loader_Instrument
 				if constexpr (NoteOn)
 				{
 					m_difficulties[diff].notes[lane] = m_position;
-					if (m_track[diff].m_notes.capacity() == 0)
-						m_track[diff].m_notes.reserve(5000);
-
-					modNote(constructNote(m_track[diff]), diff, lane, note.velocity);
+					modNote(ConstructNote(m_track[diff], m_position), diff, lane, note.velocity);
 				}
 				else
 					addColor(m_track[diff].m_notes, diff, lane);
@@ -83,14 +89,6 @@ namespace Midi_Loader_Instrument
 		}
 
 		size_t getDifficulty(size_t noteValue) const noexcept { return s_diffValues[noteValue]; }
-
-		T& constructNote(DifficultyTrack<T>& diff)
-		{
-			if (diff.m_notes.capacity() == 0)
-				diff.m_notes.reserve(5000);
-
-			return diff.m_notes.get_or_emplace_back(m_position);
-		}
 
 		void modNote(T& note, size_t diff, size_t lane, unsigned char velocity) {}
 

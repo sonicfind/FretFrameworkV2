@@ -40,7 +40,7 @@ bool Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::processSpecialNot
 	if constexpr (NoteOn)
 	{
 		m_difficulties[3].notes[0] = m_position;
-		constructNote(m_track[3]).modify('+');
+		ConstructNote(m_track[3], m_position).modify('+');
 	}
 	else
 		addColor(m_track[3].m_notes, 3, 0);
@@ -57,7 +57,7 @@ bool Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::processSpecialNote(Mi
 	if constexpr (NoteOn)
 	{
 		m_difficulties[3].notes[0] = m_position;
-		constructNote(m_track[3]).modify('+');
+		ConstructNote(m_track[3], m_position).modify('+');
 	}
 	else
 		addColor(m_track[3].m_notes, 3, 0);
@@ -74,7 +74,7 @@ bool Midi_Loader_Instrument::Loader<DrumNote_Legacy>::processSpecialNote(MidiNot
 	if constexpr (NoteOn)
 	{
 		m_difficulties[3].notes[0] = m_position;
-		constructNote(m_track[3]).modify('+');
+		ConstructNote(m_track[3], m_position).modify('+');
 	}
 	else
 		addColor(m_track[3].m_notes, 3, 0);
