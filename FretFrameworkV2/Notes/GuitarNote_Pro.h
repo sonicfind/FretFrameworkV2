@@ -31,36 +31,29 @@ public:
 	}
 
 	size_t get() const noexcept { return m_value; }
+	bool isActive() const noexcept { return m_value != SIZE_MAX; }
 };
 
 template <size_t numFrets>
 class String : public Sustained
 {
-	Fret<numFrets> m_fret = SIZE_MAX;
 	StringMode m_mode = StringMode::Normal;
 
 public:
-	bool set(size_t fret, size_t length, StringMode mode = StringMode::Normal)
-	{
-		if (!m_fret.set(fret))
-			return false;
+	Fret<numFrets> m_fret;
 
-		setLength(length);
-		setMode(mode);
-		return true;
-	}
-
+public:
 	void setMode(StringMode mode) noexcept { m_mode = mode; }
+	StringMode getMode() const noexcept { return m_mode; }
+
 	void disable() noexcept
 	{
+		Sustained::disable();
 		m_fret.disable();
 		m_mode = StringMode::Normal;
-		Sustained::disable();
 	}
 
-	Fret& getFret() noexcept { return m_fret; }
-	Fret getFret() const noexcept { return m_fret; }
-	StringMode getMode() const noexcept { return m_mode; }
+	bool isActive() const noexcept { return Sustained::isActive() && m_fret.isActive(); }
 };
 
 enum class StringEmphasis
@@ -74,7 +67,6 @@ enum class StringEmphasis
 template <size_t numFrets>
 class GuitarNote_Pro
 {
-	String<numFrets> m_strings[6];
 	bool m_isHOPO = false;
 	bool m_forceNumbering = false;
 	bool m_reverseSlide = false;
@@ -83,7 +75,10 @@ class GuitarNote_Pro
 	bool m_vibrato = false;
 
 public:
-	String& get(size_t string) noexcept
+	String<numFrets> m_strings[6];
+
+public:
+	String<numFrets>& operator[](size_t string) noexcept
 	{
 		return m_strings[string];
 	}
@@ -164,7 +159,9 @@ public:
 template <size_t numFrets>
 class ArpeggioNote : public Sustained
 {
+public:
 	Fret<numFrets> m_strings[6];
+
 public:
 	Fret<numFrets>& operator[](size_t string) noexcept
 	{
