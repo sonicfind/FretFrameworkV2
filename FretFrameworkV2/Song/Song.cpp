@@ -18,7 +18,7 @@ Song::Song(const std::filesystem::path& directory,
 	       const DrumType_Enum drumType)
 	: m_directory(directory)
 	, m_name(name), m_artist(artist), m_album(album), m_genre(genre), m_year(year), m_charter(charter), m_playlist(playlist)
-	, m_hopo_frequency(hopoFrequency), m_hopofreq_old(m_hopofreq_old), m_multiplier_note(multiplierNote)
+	, m_hopo_frequency(hopoFrequency), m_hopofreq_old(hopofreq_old), m_multiplier_note(multiplierNote)
 	, m_eighthnote_hopo(eighthNoteHopo), m_sustain_cutoff_threshold(sustainCutoffThreshold), m_baseDrumType(drumType) {}
 
 void Song::setSustainThreshold() const
