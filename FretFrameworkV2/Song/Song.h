@@ -7,6 +7,7 @@
 #include "ChartSpecifiers.h"
 #include "SyncTrack.h"
 #include "SongEvents.h"
+#include "Serialization/ChtFileReader.h"
 
 class Song
 {

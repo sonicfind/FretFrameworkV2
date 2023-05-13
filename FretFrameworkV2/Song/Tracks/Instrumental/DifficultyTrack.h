@@ -1,7 +1,5 @@
 #pragma once
 #include "../Track.h"
-#include "Serialization/ChtFileReader.h"
-#include "Serialization/MidiFileWriter.h"
 
 template <typename T>
 class DifficultyTrack : public Track
