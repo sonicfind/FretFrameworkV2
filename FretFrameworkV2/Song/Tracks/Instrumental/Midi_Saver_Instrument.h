@@ -148,7 +148,7 @@ namespace Midi_Saver_Instrument
 		for (unsigned char i = 0; i < 4 && doDiff; ++i)
 			doDiff = Difficulty_Saver_Midi::Get_Details(track[i], sysexs, notes, i);
 
-		for (unsigned char i = 0; i < 5; ++i)
+		for (unsigned char i = 0; i < 4; ++i)
 			Difficulty_Saver_Midi::Get_Notes(track[i], notes, i);
 
 		SimpleFlatMap<MidiWriteNode> nodes;

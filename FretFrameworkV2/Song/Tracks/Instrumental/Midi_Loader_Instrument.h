@@ -119,19 +119,9 @@ namespace Midi_Loader_Instrument
 			{
 				m_track.m_specialPhrases[m_notes_BRE[0]].push_back({ SpecialPhraseType::StarPowerActivation_or_BRE, m_position - m_notes_BRE[0] });
 
-				for (size_t i = 0; i < 5; ++i)
-					m_notes_BRE[i] = UINT64_MAX;
+				for (uint64_t& note : m_notes_BRE)
+					note = UINT64_MAX;
 				m_doBRE = false;
-			}
-			else
-			{
-				const int lane = midiValue - 120;
-				uint64_t colorPosition = m_notes_BRE[lane];
-				if (colorPosition != UINT64_MAX)
-				{
-					m_track[4].m_notes[colorPosition].set(lane, m_position - colorPosition);
-					m_notes_BRE[lane] = UINT64_MAX;
-				}
 			}
 		}
 

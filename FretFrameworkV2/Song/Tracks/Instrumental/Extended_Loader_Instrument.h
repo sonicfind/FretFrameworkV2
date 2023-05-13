@@ -124,7 +124,7 @@ namespace Extended_Load_Instrument
 		{
 			if (!parser.isStartOfTrack())
 				ParseEvent(track, parser);
-			else if (!parser.validateDifficultyTrack() || !Load(track[parser.getDifficulty()], parser))
+			else if (!parser.validateDifficultyTrack() || parser.getDifficulty() >= 4 || !Load(track[parser.getDifficulty()], parser))
 				parser.skipTrack();
 		}
 		return true;

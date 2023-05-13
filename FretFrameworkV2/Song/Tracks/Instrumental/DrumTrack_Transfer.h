@@ -9,7 +9,7 @@ namespace LegacyDrums
 	{
 		to.m_specialPhrases = std::move(from.m_specialPhrases);
 		to.m_events = std::move(from.m_events);
-		for (size_t i = 0; i < 5; ++i)
+		for (size_t i = 0; i < 4; ++i)
 		{
 			if (!to.m_difficulties[i].isOccupied() && from.m_difficulties[i].isOccupied())
 			{

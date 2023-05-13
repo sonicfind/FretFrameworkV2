@@ -5,7 +5,7 @@ template <class T>
 class InstrumentalTrack : public Track
 {
 public:
-	DifficultyTrack<T> m_difficulties[5];
+	DifficultyTrack<T> m_difficulties[4];
 
 public:
 	InstrumentalTrack() = default;

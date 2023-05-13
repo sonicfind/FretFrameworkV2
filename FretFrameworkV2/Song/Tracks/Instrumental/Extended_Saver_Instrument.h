@@ -70,7 +70,7 @@ namespace Instrument_Save
 	void Save(const InstrumentalTrack<T>& track, CommonChartWriter& writer)
 	{
 		Extended_Save::Save(track, writer);
-		for (unsigned char i = 0; i < 5; ++i)
+		for (unsigned char i = 0; i < 4; ++i)
 		{
 			const DifficultyTrack<T>& diff = track[i];
 			if (diff.isOccupied())

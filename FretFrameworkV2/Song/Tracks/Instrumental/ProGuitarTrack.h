@@ -7,7 +7,7 @@ template <size_t numFrets>
 class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
 {
 public:
-	DifficultyTrack<GuitarNote_Pro<numFrets>> m_difficulties[5];
+	DifficultyTrack<GuitarNote_Pro<numFrets>> m_difficulties[4];
 	SimpleFlatMap<NoteName> m_roots;
 	SimpleFlatMap<LeftHandPosition<numFrets>> m_handPositions;
 
