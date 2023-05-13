@@ -154,6 +154,12 @@ public:
 			m_emphasis = StringEmphasis::None;
 		return m_emphasis;
 	}
+
+	void operator*=(float multiplier)
+	{
+		for (auto& string : m_strings)
+			string *= multiplier;
+	}
 };
 
 template <size_t numFrets>
