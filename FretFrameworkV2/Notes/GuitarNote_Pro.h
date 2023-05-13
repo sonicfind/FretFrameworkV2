@@ -140,12 +140,12 @@ public:
 		}
 	}
 
-	void setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; }
-	void setForcedNumbering(bool active) noexcept { m_forceNumbering = active; }
-	void setSlideDirection(SlideDirection slide) noexcept { m_slide = slide; }
-	void setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; }
-	void setPalmMuted(bool active) noexcept { m_palmMuted = active; }
-	void setVibrato(bool active) noexcept { m_vibrato = active; }
+	GuitarNote_Pro& setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; return *this; }
+	GuitarNote_Pro& setForcedNumbering(bool active) noexcept { m_forceNumbering = active; return *this; }
+	GuitarNote_Pro& setSlideDirection(SlideDirection slide) noexcept { m_slide = slide; return *this; }
+	GuitarNote_Pro& setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; return *this; }
+	GuitarNote_Pro& setPalmMuted(bool active) noexcept { m_palmMuted = active; return *this; }
+	GuitarNote_Pro& setVibrato(bool active) noexcept { m_vibrato = active; return *this; }
 	bool isHOPO() const noexcept { return m_isHOPO; }
 	bool hasForcedNumbering() const noexcept { return m_forceNumbering; }
 	SlideDirection getSlideDirection() const noexcept { return m_slide; }
