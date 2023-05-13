@@ -6,7 +6,7 @@
 template <typename T, typename Key = uint64_t>
 class SimpleFlatMap
 {
-	static constexpr T BASE;
+	static constexpr T BASE{};
 	struct Node
 	{
 		Key key;

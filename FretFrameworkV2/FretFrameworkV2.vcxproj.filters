@@ -82,6 +82,9 @@
     <Filter Include="SyncTrack">
       <UniqueIdentifier>{541496ce-0c36-4fe3-a690-3d96f9abf197}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song\Tracks\InstrumentalTrack\ProGuitar">
+      <UniqueIdentifier>{5c70ceee-2905-4f21-98b9-db57ccb8cf5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -382,9 +385,6 @@
     <ClInclude Include="Serialization\MidiStructs.h">
       <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
-      <Filter>Song\Tracks\InstrumentalTrack</Filter>
-    </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h">
       <Filter>Song\Tracks\InstrumentalTrack</Filter>
     </ClInclude>
@@ -498,6 +498,15 @@
     </ClInclude>
     <ClInclude Include="Notes\GuitarNote_Pro.h">
       <Filter>Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\ProGuitarTrack.h">
+      <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\DifficultyTrack.h">
+      <Filter>Song\Tracks\InstrumentalTrack\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\ProGuitarDifficulty.h">
+      <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

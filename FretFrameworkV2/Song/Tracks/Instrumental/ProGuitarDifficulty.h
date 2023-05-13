@@ -1,0 +1,43 @@
+#pragma once
+#include "DifficultyTrack.h"
+#include "Notes/GuitarNote_Pro.h"
+
+template <size_t numFrets>
+class DifficultyTrack<GuitarNote_Pro<numFrets>> : public Track
+{
+public:
+	SimpleFlatMap<GuitarNote_Pro<numFrets>> m_notes;
+	SimpleFlatMap<ArpeggioNote<numFrets>> m_arpeggios;
+
+public:
+	virtual void adjustTicks(float multiplier) override
+	{
+		Track::adjustTicks(multiplier);
+		for (auto& note : m_notes)
+		{
+			note.key = uint64_t(note.key * multiplier);
+			*note *= multiplier;
+		}
+
+		for (auto& note : m_arpeggios)
+		{
+			note.key = uint64_t(note.key * multiplier);
+			*note *= multiplier;
+		}
+	}
+
+	virtual void clear() override
+	{
+		Track::clear();
+		m_notes.clear();
+		m_arpeggios.clear();
+	}
+
+	[[nodiscard]] virtual bool isOccupied() const override { return !m_notes.isEmpty() || !m_arpeggios.isEmpty() || Track::isOccupied(); }
+
+	void shrink()
+	{
+		if ((m_notes.size() < 500 || 10000 <= m_notes.size()) && m_notes.size() < m_notes.capacity())
+			m_notes.shrink_to_fit();
+	}
+};
