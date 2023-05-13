@@ -1,14 +1,17 @@
 #pragma once
 #include "SimpleFlatMap/SimpleFlatMap.h"
-template <class T>
-auto& GetNode(SimpleFlatMap<T>& map, uint64_t position)
+namespace Midi_Loader
 {
-	auto iter = map.end();
-	while (iter != map.begin())
+	template <class T>
+	auto& GetNode(SimpleFlatMap<T>& map, uint64_t position)
 	{
-		--iter;
-		if (iter->key <= position)
-			break;
+		auto iter = map.end();
+		while (iter != map.begin())
+		{
+			--iter;
+			if (iter->key <= position)
+				break;
+		}
+		return *iter;
 	}
-	return *iter;
 }

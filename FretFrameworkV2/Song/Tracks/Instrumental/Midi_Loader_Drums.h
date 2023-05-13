@@ -90,26 +90,29 @@ void Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::modNote(DrumNote<Drum
 template <>
 void Midi_Loader_Instrument::Loader<DrumNote_Legacy>::modNote(DrumNote_Legacy& note, size_t diff, size_t lane, unsigned char velocity);
 
-template <bool NoteOn, class DrumType, size_t numPads, class DrumNoteClass>
-void ToggleExtras(Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumType, numPads>>& ext, InstrumentalTrack<DrumNoteClass>& track, uint64_t position, unsigned char midiValue)
+namespace Midi_Loader_Drums
 {
-	if (midiValue == 109)
+	template <bool NoteOn, class DrumType, size_t numPads, class DrumNoteClass>
+	void ToggleExtras(Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumType, numPads>>& ext, InstrumentalTrack<DrumNoteClass>& track, uint64_t position, unsigned char midiValue)
 	{
-		for (size_t i = 0; i < 4; ++i)
+		if (midiValue == 109)
 		{
-			ext.flams[i] = NoteOn;
-			if constexpr (NoteOn)
-				if (auto drum = track[i].m_notes.try_back(position))
-					drum->setFlam(true);
+			for (size_t i = 0; i < 4; ++i)
+			{
+				ext.flams[i] = NoteOn;
+				if constexpr (NoteOn)
+					if (auto drum = track[i].m_notes.try_back(position))
+						drum->setFlam(true);
+			}
 		}
-	}
-	else if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
-	{
-		if (110 <= midiValue && midiValue <= 112)
+		else if constexpr (std::is_same<DrumType, DrumPad_Pro>::value)
 		{
-			ext.toms[midiValue - 110] = NoteOn;
-			if constexpr(std::is_same<DrumNoteClass, DrumNote_Legacy>::value)
-				DrumNote_Legacy::Signal4Pro();
+			if (110 <= midiValue && midiValue <= 112)
+			{
+				ext.toms[midiValue - 110] = NoteOn;
+				if constexpr (std::is_same<DrumNoteClass, DrumNote_Legacy>::value)
+					DrumNote_Legacy::Signal4Pro();
+			}
 		}
 	}
 }
@@ -118,21 +121,21 @@ template <>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<DrumNote<DrumPad_Pro, 4>>::toggleExtraValues(MidiNote note)
 {
-	ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
+	Midi_Loader_Drums::ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
 }
 
 template <>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::toggleExtraValues(MidiNote note)
 {
-	ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
+	Midi_Loader_Drums::ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
 }
 
 template <>
 template <bool NoteOn>
 void  Midi_Loader_Instrument::Loader<DrumNote_Legacy>::toggleExtraValues(MidiNote note)
 {
-	ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
+	Midi_Loader_Drums::ToggleExtras<NoteOn>(m_ext, m_track, m_position, note.value);
 }
 
 template <>

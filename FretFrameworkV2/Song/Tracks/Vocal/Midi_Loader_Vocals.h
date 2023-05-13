@@ -126,7 +126,7 @@ private:
 		}
 		else if (combo.second != UINT64_MAX)
 		{
-			GetNode(m_track.m_specialPhrases, combo.second)->push_back({ combo.first, m_position - combo.second });
+			Midi_Loader::GetNode(m_track.m_specialPhrases, combo.second)->push_back({combo.first, m_position - combo.second});
 			combo.second = UINT64_MAX;
 		}
 	}

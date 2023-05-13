@@ -97,7 +97,7 @@ namespace Midi_Loader_Instrument
 			uint64_t colorPosition = m_difficulties[diff].notes[lane];
 			if (colorPosition != UINT64_MAX)
 			{
-				GetNode(notes, colorPosition)->set(lane, m_position - colorPosition);
+				Midi_Loader::GetNode(notes, colorPosition)->set(lane, m_position - colorPosition);
 				m_difficulties[diff].notes[lane] = UINT64_MAX;
 			}
 		}
@@ -136,7 +136,7 @@ namespace Midi_Loader_Instrument
 			}
 			else if (combo.second != UINT64_MAX)
 			{
-				GetNode(phrases, combo.second)->push_back({ combo.first, m_position - combo.second });
+				Midi_Loader::GetNode(phrases, combo.second)->push_back({ combo.first, m_position - combo.second });
 				combo.second = UINT64_MAX;
 			}
 		}
