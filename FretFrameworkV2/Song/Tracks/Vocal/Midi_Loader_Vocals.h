@@ -54,18 +54,18 @@ private:
 			else if (midiValue == 97)
 				addPercussion<false, NoteOn>(m_perc);
 			else if (midiValue == 105 || midiValue == 106)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricLine, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricLine, m_position, 100);
 			else if (midiValue == m_multiplierNote)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position, 100);
 			else if (midiValue == 0)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_rangeShift, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_rangeShift, m_position, 100);
 			else if (midiValue == 1)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricShift, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricShift, m_position, 100);
 		}
 		else if constexpr (INDEX == 1)
 		{
 			if (midiValue == 105 || midiValue == 106)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_harmonyLine, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_harmonyLine, m_position, 100);
 		}
 	}
 
@@ -140,11 +140,11 @@ private:
 	uint64_t m_vocalPos = UINT64_MAX;
 	std::pair<uint64_t, std::string_view> m_lyric{ UINT64_MAX, "" };
 
-	std::pair<SpecialPhraseType, uint64_t> m_starPower = { SpecialPhraseType::StarPower,   UINT64_MAX };
-	std::pair<SpecialPhraseType, uint64_t> m_lyricLine = { SpecialPhraseType::LyricLine,   UINT64_MAX };
-	std::pair<SpecialPhraseType, uint64_t> m_harmonyLine = { SpecialPhraseType::HarmonyLine, UINT64_MAX };
-	std::pair<SpecialPhraseType, uint64_t> m_rangeShift = { SpecialPhraseType::RangeShift,  UINT64_MAX };
-	std::pair<SpecialPhraseType, uint64_t> m_lyricShift = { SpecialPhraseType::LyricShift,  UINT64_MAX };
+	Midi_Loader::PhraseNode<SpecialPhraseType> m_starPower =   { SpecialPhraseType::StarPower };
+	Midi_Loader::PhraseNode<SpecialPhraseType> m_lyricLine =   { SpecialPhraseType::LyricLine };
+	Midi_Loader::PhraseNode<SpecialPhraseType> m_harmonyLine = { SpecialPhraseType::HarmonyLine };
+	Midi_Loader::PhraseNode<SpecialPhraseType> m_rangeShift =  { SpecialPhraseType::RangeShift };
+	Midi_Loader::PhraseNode<SpecialPhraseType> m_lyricShift =  { SpecialPhraseType::LyricShift };
 
 	VocalTrack<numTracks>& m_track;
 	

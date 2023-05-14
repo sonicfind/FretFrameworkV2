@@ -46,13 +46,13 @@ namespace Midi_Loader_Instrument
 			else if (120 <= note.value && note.value <= 124)
 				parseBRE<NoteOn>(note.value);
 			else if (note.value == m_multiplierNote)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position, note.velocity);
 			else if (note.value == s_soloValue)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, m_position, note.velocity);
 			else if (note.value == 126)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo, m_position, note.velocity);
 			else if (note.value == 127)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_trill, m_position);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_trill, m_position, note.velocity);
 			else
 				toggleExtraValues<NoteOn>(note);
 		}
@@ -154,10 +154,10 @@ namespace Midi_Loader_Instrument
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 		bool m_doBRE = false;
 
-		std::pair<SpecialPhraseType, uint64_t> m_solo = { SpecialPhraseType::Solo, UINT64_MAX };
-		std::pair<SpecialPhraseType, uint64_t> m_starPower = { SpecialPhraseType::StarPower, UINT64_MAX };
-		std::pair<SpecialPhraseType, uint64_t> m_tremolo = { SpecialPhraseType::Tremolo, UINT64_MAX };
-		std::pair<SpecialPhraseType, uint64_t> m_trill = { SpecialPhraseType::Trill, UINT64_MAX };
+		Midi_Loader::PhraseNode<SpecialPhraseType> m_solo = { SpecialPhraseType::Solo };
+		Midi_Loader::PhraseNode<SpecialPhraseType> m_starPower = { SpecialPhraseType::StarPower };
+		Midi_Loader::PhraseNode<SpecialPhraseType> m_tremolo = { SpecialPhraseType::Tremolo };
+		Midi_Loader::PhraseNode<SpecialPhraseType> m_trill = { SpecialPhraseType::Trill };
 
 		Loader_Diff<T> m_difficulties[4];
 		InstrumentalTrack<T>& m_track;

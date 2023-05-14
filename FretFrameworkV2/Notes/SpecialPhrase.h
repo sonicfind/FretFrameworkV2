@@ -22,5 +22,6 @@ enum class SpecialPhraseType
 struct SpecialPhrase : public Sustained<false>
 {
 	SpecialPhraseType type;
-	constexpr SpecialPhrase(SpecialPhraseType _type, uint64_t length) : type(_type) { setLength(length); }
+	unsigned char midiVelocity;
+	constexpr SpecialPhrase(SpecialPhraseType _type, uint64_t length, unsigned char velocity = 100) : type(_type), midiVelocity(velocity) { setLength(length); }
 };
