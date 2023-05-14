@@ -53,14 +53,14 @@ std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<5>::g
 	if (m_special.isActive())
 		return { {0, 100, (uint32_t)m_special.getLength()} };
 	else
-		return Note<Sustained, 5>::getMidiNotes();
+		return Note<Sustained<true>, 5>::getMidiNotes();
 }
 
 template<>
 std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> GuitarNote<6>::getMidiNotes() const noexcept
 {
 	static constexpr unsigned char lanes[7] = { -2, 2, 3, 4, -1, 0, 1 };
-	auto colors = Note_withSpecial<Sustained, 6, Sustained>::getMidiNotes();
+	auto colors = Note_withSpecial<Sustained<true>, 6, Sustained<true>>::getMidiNotes();
 	for (auto& color : colors)
 		std::get<0>(color) = lanes[std::get<0>(color)];
 	return colors;

@@ -23,7 +23,7 @@ Song::Song(const std::filesystem::path& directory,
 
 void Song::setSustainThreshold() const
 {
-	Sustained::s_minLength = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
+	Sustained<true>::s_minLength = m_sustain_cutoff_threshold > 0 ? m_sustain_cutoff_threshold : m_tickrate / 3;
 }
 
 uint64_t Song::getHopoThreshold() const noexcept

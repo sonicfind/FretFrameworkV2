@@ -20,7 +20,7 @@ enum class SpecialPhraseType
 	Chord_Numbering = 68,
 };
 
-struct SpecialPhrase : public Sustained
+struct SpecialPhrase : public Sustained<false>
 {
 	SpecialPhraseType type;
 	constexpr SpecialPhrase(SpecialPhraseType _type, uint64_t length) : type(_type) { setLength(length); }

@@ -38,7 +38,7 @@ namespace MidiGuitar
 
 			if constexpr (numFrets == 5)
 			{
-				const Sustained& spec = note->getSpecial();
+				const Sustained<true>& spec = note->getSpecial();
 				if (spec.isActive())
 				{
 					if (open.start == UINT64_MAX)

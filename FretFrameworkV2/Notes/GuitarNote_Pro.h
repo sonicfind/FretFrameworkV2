@@ -34,7 +34,7 @@ public:
 };
 
 template <size_t numFrets>
-class String : public Sustained
+class String : public Sustained<true>
 {
 	StringMode m_mode = StringMode::Normal;
 
@@ -185,7 +185,7 @@ public:
 };
 
 template <size_t numFrets>
-class ArpeggioNote : public Sustained
+class ArpeggioNote : public Sustained<false>
 {
 public:
 	Fret<numFrets> m_strings[6];

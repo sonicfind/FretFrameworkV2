@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 
+template <bool minimumToggle>
 class Sustained
 {
 public:

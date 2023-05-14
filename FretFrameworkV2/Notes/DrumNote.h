@@ -9,7 +9,7 @@ enum class DrumDynamics
 	Ghost
 };
 
-class DrumPad : public Sustained
+class DrumPad : public Sustained<true>
 {
 protected:
 	DrumDynamics dynamics = DrumDynamics::None;
@@ -97,12 +97,12 @@ public:
 
 
 template <class DrumType, size_t numPads>
-class DrumNote : public Note_withSpecial<DrumType, numPads, Sustained>
+class DrumNote : public Note_withSpecial<DrumType, numPads, Sustained<true>>
 {
 protected:
-	using Note_withSpecial<DrumType, numPads, Sustained>::m_colors;
-	using Note_withSpecial<DrumType, numPads, Sustained>::m_special;
-	Sustained m_doubleBass;
+	using Note_withSpecial<DrumType, numPads, Sustained<true>>::m_colors;
+	using Note_withSpecial<DrumType, numPads, Sustained<true>>::m_special;
+	Sustained<true> m_doubleBass;
 
 	bool m_isFlammed = false;
 
@@ -152,16 +152,16 @@ public:
 			else if (lane > 1)
 				lane--;
 
-			return Note_withSpecial<DrumType, numPads, Sustained>::set(lane, length);
+			return Note_withSpecial<DrumType, numPads, Sustained<true>>::set(lane, length);
 		}
 	}
 
-	Sustained& getDoubleBass() noexcept
+	Sustained<true>& getDoubleBass() noexcept
 	{
 		return m_doubleBass;
 	}
 
-	const Sustained& getDoubleBass() const noexcept
+	const Sustained<true>& getDoubleBass() const noexcept
 	{
 		return m_doubleBass;
 	}
@@ -182,12 +182,12 @@ public:
 
 	bool validate() const noexcept
 	{
-		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, Sustained>::validate();
+		return m_doubleBass.isActive() || Note_withSpecial<DrumType, numPads, Sustained<true>>::validate();
 	}
 
 	std::vector<std::pair<size_t, uint64_t>> getActiveColors() const
 	{
-		std::vector<std::pair<size_t, uint64_t>> activeColors = Note_withSpecial<DrumType, numPads, Sustained>::getActiveColors();
+		std::vector<std::pair<size_t, uint64_t>> activeColors = Note_withSpecial<DrumType, numPads, Sustained<true>>::getActiveColors();
 		for (auto& col : activeColors)
 			if (col.first > 0)
 				col.first++;
@@ -222,7 +222,7 @@ public:
 
 	std::vector<std::tuple<unsigned char, unsigned char, uint32_t>> getMidiNotes() const noexcept
 	{
-		auto colors = Note_withSpecial<DrumType, numPads, Sustained>::getMidiNotes();
+		auto colors = Note_withSpecial<DrumType, numPads, Sustained<true>>::getMidiNotes();
 		for (std::tuple<unsigned char, unsigned char, uint32_t>& col : colors)
 		{
 			size_t index = std::get<0>(col);

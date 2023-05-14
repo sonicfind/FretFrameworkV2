@@ -12,7 +12,7 @@ enum class PitchType
 };
 
 template <int OCTAVE_MIN = -1, int OCTAVE_MAX = 6>
-class Pitch : public Sustained
+class Pitch : public Sustained<true>
 {
 	static_assert(OCTAVE_MIN < OCTAVE_MAX && OCTAVE_MIN >= -1 && OCTAVE_MAX <= 9);
 
