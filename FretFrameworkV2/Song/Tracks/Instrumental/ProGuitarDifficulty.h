@@ -2,7 +2,7 @@
 #include "DifficultyTrack.h"
 #include "Notes/GuitarNote_Pro.h"
 
-template <size_t numFrets>
+template <int numFrets>
 class DifficultyTrack<GuitarNote_Pro<numFrets>> : public Track
 {
 public:

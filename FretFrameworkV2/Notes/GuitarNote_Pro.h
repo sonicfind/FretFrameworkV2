@@ -10,12 +10,12 @@ enum class StringMode
 	Pinch_Harmonics
 };
 
-template <size_t maxSize>
+template <int maxSize>
 class Fret
 {
-	size_t m_value = SIZE_MAX;
+	int m_value = -1;
 public:
-	bool set(size_t value)
+	bool set(int value)
 	{
 		if (value > maxSize)
 			return false;
@@ -26,20 +26,21 @@ public:
 
 	void disable() noexcept
 	{
-		m_value = SIZE_MAX;
+		m_value = -1;
 	}
 
-	size_t get() const noexcept { return m_value; }
-	bool isActive() const noexcept { return m_value != SIZE_MAX; }
+	int get() const noexcept { return m_value; }
+	bool isActive() const noexcept { return m_value != -1; }
 };
 
-template <size_t numFrets>
+template <int numFrets>
 class String : public Sustained<true>
 {
-	StringMode m_mode = StringMode::Normal;
-
 public:
 	Fret<numFrets> m_fret;
+
+private:
+	StringMode m_mode = StringMode::Normal;
 
 public:
 	void setMode(StringMode mode) noexcept { m_mode = mode; }
@@ -70,7 +71,7 @@ enum class SlideDirection
 	Reversed
 };
 
-template <size_t numFrets>
+template <int numFrets>
 class GuitarNote_Pro
 {
 	bool m_isHOPO = false;
@@ -184,7 +185,7 @@ public:
 	}
 };
 
-template <size_t numFrets>
+template <int numFrets>
 class ArpeggioNote : public Sustained<false>
 {
 public:
@@ -203,12 +204,12 @@ public:
 };
 
 
-template <size_t numFrets>
+template <int numFrets>
 class LeftHandPosition
 {
-	size_t m_position;
+	int m_position;
 public:
-	bool set(size_t position)
+	bool set(int position)
 	{
 		if (position == 0 || position > numFrets - 3)
 			return false;
@@ -216,5 +217,5 @@ public:
 		return true;
 	}
 
-	uint32_t getPosition() const noexcept { return m_position; }
+	int getPosition() const noexcept { return m_position; }
 };

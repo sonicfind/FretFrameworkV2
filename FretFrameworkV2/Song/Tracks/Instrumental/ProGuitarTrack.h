@@ -3,7 +3,7 @@
 #include "ProGuitarDifficulty.h"
 #include "Notes/NoteName.h"
 
-template <size_t numFrets>
+template <int numFrets>
 class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
 {
 public:
