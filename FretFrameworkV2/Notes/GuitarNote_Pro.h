@@ -141,7 +141,7 @@ enum class EmphasisType
 	Low
 };
 
-class StringEmphasis : public Sustained<false>
+class StringEmphasis
 {
 	EmphasisType m_string = EmphasisType::High;
 public:

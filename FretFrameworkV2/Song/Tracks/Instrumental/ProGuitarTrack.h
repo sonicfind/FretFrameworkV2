@@ -3,18 +3,12 @@
 #include "ProGuitarDifficulty.h"
 #include "Notes/NoteName.h"
 
-enum class ChordPhraseType
+enum class ChordPhrase
 {
 	Force_Numbering,
 	Slash,
 	Hide,
-	Sharp_Flat_Switch
-};
-
-struct ChordPhrase : public Sustained<false>
-{
-	ChordPhraseType type;
-	constexpr ChordPhrase(ChordPhraseType _type, uint64_t length) : type(_type) { setLength(length); }
+	Accidental_Switch
 };
 
 template <int numFrets>
