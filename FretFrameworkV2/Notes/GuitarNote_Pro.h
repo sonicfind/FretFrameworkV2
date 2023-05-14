@@ -56,28 +56,11 @@ public:
 	bool isActive() const noexcept { return Sustained::isActive() && m_fret.isActive(); }
 };
 
-enum class StringEmphasis
-{
-	None,
-	High,
-	Middle,
-	Low
-};
-
-enum class SlideDirection
-{
-	None,
-	Normal,
-	Reversed
-};
-
 template <int numFrets>
 class GuitarNote_Pro
 {
 	bool m_isHOPO = false;
 	bool m_forceNumbering = false;
-	SlideDirection m_slide = SlideDirection::None;
-	StringEmphasis m_emphasis = StringEmphasis::None;
 	bool m_palmMuted = false;
 	bool m_vibrato = false;
 
@@ -105,31 +88,6 @@ public:
 		case 'F':
 			m_forceNumbering = true;
 			return true;
-		case 'S':
-			switch (lane)
-			{
-			case 0:
-				m_slide = SlideDirection::Normal;
-				break;
-			case 1:
-				m_slide = SlideDirection::Reversed;
-				break;
-			}
-			return true;
-		case 'E':
-			switch (lane)
-			{
-			case 0:
-				m_emphasis = StringEmphasis::High;
-				break;
-			case 1:
-				m_emphasis = StringEmphasis::Middle;
-				break;
-			case 2:
-				m_emphasis = StringEmphasis::Low;
-				break;
-			}
-			return true;
 		case 'P':
 			m_palmMuted = true;
 			return true;
@@ -143,40 +101,12 @@ public:
 
 	GuitarNote_Pro& setHOPO(bool isHopo) noexcept { m_isHOPO = isHopo; return *this; }
 	GuitarNote_Pro& setForcedNumbering(bool active) noexcept { m_forceNumbering = active; return *this; }
-	GuitarNote_Pro& setSlideDirection(SlideDirection slide) noexcept { m_slide = slide; return *this; }
-	GuitarNote_Pro& setStringEmphasis(StringEmphasis string) noexcept { m_emphasis = string; return *this; }
 	GuitarNote_Pro& setPalmMuted(bool active) noexcept { m_palmMuted = active; return *this; }
 	GuitarNote_Pro& setVibrato(bool active) noexcept { m_vibrato = active; return *this; }
 	bool isHOPO() const noexcept { return m_isHOPO; }
 	bool hasForcedNumbering() const noexcept { return m_forceNumbering; }
-	SlideDirection getSlideDirection() const noexcept { return m_slide; }
-	StringEmphasis getStringEmphasis() const noexcept { return m_emphasis; }
 	bool isPalmMuted() const noexcept { return m_palmMuted; }
 	bool isVibrato() const noexcept { return m_vibrato; }
-
-	SlideDirection wheelSlideStatus() noexcept
-	{
-		if (m_slide == SlideDirection::None)
-			m_slide = SlideDirection::Normal;
-		else if (m_slide == SlideDirection::Normal)
-			m_slide = SlideDirection::Reversed;
-		else
-			m_slide = SlideDirection::None;
-		return m_slide;
-	}
-
-	StringEmphasis wheelEmphasis() noexcept
-	{
-		if (m_emphasis == StringEmphasis::None)
-			m_emphasis = StringEmphasis::High;
-		else if (m_emphasis == StringEmphasis::High)
-			m_emphasis = StringEmphasis::Middle;
-		else if (m_emphasis == StringEmphasis::Middle)
-			m_emphasis = StringEmphasis::Low;
-		else
-			m_emphasis = StringEmphasis::None;
-		return m_emphasis;
-	}
 
 	void operator*=(double multiplier)
 	{
@@ -218,4 +148,42 @@ public:
 	}
 
 	int getPosition() const noexcept { return m_position; }
+};
+
+enum class EmphasisType
+{
+	High,
+	Middle,
+	Low
+};
+
+class StringEmphasis : public Sustained<false>
+{
+	EmphasisType m_string = EmphasisType::High;
+public:
+	StringEmphasis() = default;
+	StringEmphasis(EmphasisType string) : m_string(string) {}
+	StringEmphasis& setEmphasis(EmphasisType string) { m_string = string; return *this; }
+	EmphasisType getEmphasis() const noexcept { return m_string; }
+
+	StringEmphasis wheelEmphasis() noexcept
+	{
+		if (m_string == EmphasisType::High)
+			m_string = EmphasisType::Middle;
+		else if (m_string == EmphasisType::Middle)
+			m_string = EmphasisType::Low;
+		else
+			m_string = EmphasisType::High;
+		return m_string;
+	}
+};
+
+class ProSlide : public Sustained<false>
+{
+	bool m_isReversed = false;
+public:
+	ProSlide() = default;
+	ProSlide(bool isReverse) : m_isReversed(isReverse) {}
+	ProSlide& setDirection(bool isReverse) { m_isReversed = isReverse; return *this; }
+	bool isReversed() const noexcept { return m_isReversed; }
 };
