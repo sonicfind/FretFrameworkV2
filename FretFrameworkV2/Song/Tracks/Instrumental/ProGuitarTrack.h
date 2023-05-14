@@ -33,13 +33,6 @@ public:
 	SimpleFlatMap<NoteName> m_roots;
 	SimpleFlatMap<LeftHandPosition> m_handPositions;
 
-	InstrumentalTrack() = default;
-	InstrumentalTrack(InstrumentalTrack&&) = default;
-	InstrumentalTrack& operator=(InstrumentalTrack&&) = default;
-
-	InstrumentalTrack(const InstrumentalTrack&) = delete;
-	InstrumentalTrack& operator=(const InstrumentalTrack&) = delete;
-
 	[[nodiscard]] virtual bool isOccupied() const override
 	{
 		for (const auto& diff : m_difficulties)

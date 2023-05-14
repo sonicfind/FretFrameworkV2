@@ -8,13 +8,6 @@ public:
 	DifficultyTrack<T> m_difficulties[4];
 
 public:
-	InstrumentalTrack() = default;
-	InstrumentalTrack(InstrumentalTrack&&) = default;
-	InstrumentalTrack& operator=(InstrumentalTrack&&) = default;
-
-	InstrumentalTrack(const InstrumentalTrack&) = delete;
-	InstrumentalTrack& operator=(const InstrumentalTrack&) = delete;
-
 	[[nodiscard]] virtual bool isOccupied() const override
 	{
 		for (const auto& diff : m_difficulties)
