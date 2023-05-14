@@ -139,9 +139,16 @@ class LeftHandPosition
 {
 	int m_position;
 public:
+	LeftHandPosition() = default;
+	LeftHandPosition(int position)
+	{
+		if (!set(position))
+			throw std::runtime_error("Invalid left hand position");
+	}
+
 	bool set(int position)
 	{
-		if (position == 0 || position > numFrets - 3)
+		if (position == 0 || position > numFrets)
 			return false;
 		m_position = position;
 		return true;
