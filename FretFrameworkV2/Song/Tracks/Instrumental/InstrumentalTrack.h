@@ -30,7 +30,7 @@ public:
 			diff.clear();
 	}
 
-	virtual void adjustTicks(float multiplier)
+	virtual void adjustTicks(double multiplier) override
 	{
 		Track::adjustTicks(multiplier);
 		for (auto& diff : m_difficulties)

@@ -8,7 +8,7 @@ public:
 	SimpleFlatMap<T> m_notes;
 
 public:
-	virtual void adjustTicks(float multiplier) override
+	virtual void adjustTicks(double multiplier) override
 	{
 		Track::adjustTicks(multiplier);
 		for (auto& note : m_notes)

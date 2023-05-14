@@ -22,11 +22,11 @@ public:
 	uint64_t getLength() const { return m_length; }
 	bool isActive() const { return m_length > 0; }
 
-	void operator*=(float multiplier)
+	void operator*=(double multiplier)
 	{
 		if (m_length)
 		{
-			float sustain = m_length * multiplier;
+			double sustain = m_length * multiplier;
 			if (sustain < 1)
 				sustain = 1;
 			m_length = uint64_t(sustain);

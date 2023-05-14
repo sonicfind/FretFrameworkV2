@@ -265,6 +265,12 @@ public:
 
 	[[nodiscard]] bool isFlammed() const noexcept { return m_isFlammed; }
 
+	void operator*=(double multiplier)
+	{
+		m_doubleBass *= multiplier;
+		Note_withSpecial<DrumType, numPads, Sustained<true>>::operator*=(multiplier);
+	}
+
 	static bool TestIndex_V1(const size_t lane)
 	{
 		return lane <= numPads;

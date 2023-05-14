@@ -32,7 +32,7 @@ public:
 		m_specialPhrases.clear();
 	}
 
-	virtual void adjustTicks(float multiplier) override
+	virtual void adjustTicks(double multiplier) override
 	{
 		Track::adjustTicks(multiplier);
 		for (auto& track : m_vocals)

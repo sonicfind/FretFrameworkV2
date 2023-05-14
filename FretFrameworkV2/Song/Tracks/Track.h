@@ -22,7 +22,7 @@ public:
 		m_events.clear();
 	}
 
-	virtual void adjustTicks(float multiplier)
+	virtual void adjustTicks(double multiplier)
 	{
 		for (auto& vec : m_specialPhrases)
 		{

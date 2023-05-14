@@ -88,7 +88,7 @@ public:
 		return !operator==(note);
 	}
 
-	void operator*=(float multiplier)
+	void operator*=(double multiplier)
 	{
 		for (auto& col : m_colors)
 			col *= multiplier;

@@ -10,7 +10,7 @@ public:
 	SimpleFlatMap<ArpeggioNote<numFrets>> m_arpeggios;
 
 public:
-	virtual void adjustTicks(float multiplier) override
+	virtual void adjustTicks(double multiplier) override
 	{
 		Track::adjustTicks(multiplier);
 		for (auto& note : m_notes)

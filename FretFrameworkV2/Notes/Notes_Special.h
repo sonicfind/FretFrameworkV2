@@ -70,7 +70,7 @@ public:
 		return !operator==(note);
 	}
 
-	void operator*=(float multiplier)
+	void operator*=(double multiplier)
 	{
 		m_special *= multiplier;
 		Note<NoteType, numColors>::operator*=(multiplier);

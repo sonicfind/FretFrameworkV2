@@ -177,7 +177,7 @@ public:
 		return m_emphasis;
 	}
 
-	void operator*=(float multiplier)
+	void operator*=(double multiplier)
 	{
 		for (auto& string : m_strings)
 			string *= multiplier;
