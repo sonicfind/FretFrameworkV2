@@ -478,9 +478,6 @@
     <ClInclude Include="Song\SongEvents.h">
       <Filter>Song</Filter>
     </ClInclude>
-    <ClInclude Include="Song\Tracks\MidiNodeGetter.h">
-      <Filter>Song\Tracks</Filter>
-    </ClInclude>
     <ClInclude Include="Notes\SpecialPhrase.h">
       <Filter>Notes</Filter>
     </ClInclude>
@@ -507,6 +504,9 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarDifficulty.h">
       <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Midi_Loader.h">
+      <Filter>Song\Tracks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

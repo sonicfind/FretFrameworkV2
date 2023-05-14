@@ -1,7 +1,7 @@
 #pragma once
 #include "VocalTrack.h"
 #include "Serialization/MidiFileReader.h"
-#include "Song/Tracks/MidiNodeGetter.h"
+#include "Song/Tracks/Midi_Loader.h"
 
 template <size_t numTracks>
 class Midi_Loader_Vocal
@@ -54,18 +54,18 @@ private:
 			else if (midiValue == 97)
 				addPercussion<false, NoteOn>(m_perc);
 			else if (midiValue == 105 || midiValue == 106)
-				addSpecialPhrase<NoteOn>(m_lyricLine);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricLine, m_position);
 			else if (midiValue == m_multiplierNote)
-				addSpecialPhrase<NoteOn>(m_starPower);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position);
 			else if (midiValue == 0)
-				addSpecialPhrase<NoteOn>(m_rangeShift);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_rangeShift, m_position);
 			else if (midiValue == 1)
-				addSpecialPhrase<NoteOn>(m_lyricShift);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricShift, m_position);
 		}
 		else if constexpr (INDEX == 1)
 		{
 			if (midiValue == 105 || midiValue == 106)
-				addSpecialPhrase<NoteOn>(m_harmonyLine);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_harmonyLine, m_position);
 		}
 	}
 
@@ -114,21 +114,6 @@ private:
 			m_track[INDEX].reserve(500);
 
 		return m_track[INDEX].emplace_back(position, { UnicodeString::strToU32(m_lyric.second) });
-	}
-
-	template <bool NoteOn>
-	void addSpecialPhrase(std::pair<SpecialPhraseType, uint64_t>& combo)
-	{
-		if constexpr (NoteOn)
-		{
-			m_track.m_specialPhrases.get_or_emplace_back(m_position);
-			combo.second = m_position;
-		}
-		else if (combo.second != UINT64_MAX)
-		{
-			Midi_Loader::GetNode(m_track.m_specialPhrases, combo.second)->push_back({combo.first, m_position - combo.second});
-			combo.second = UINT64_MAX;
-		}
 	}
 
 	template <bool PLAYABLE, bool NoteOn>

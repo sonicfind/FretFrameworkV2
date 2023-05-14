@@ -1,7 +1,7 @@
 #pragma once
 #include "InstrumentalTrack.h"
 #include "Serialization/MidiFileReader.h"
-#include "Song/Tracks/MidiNodeGetter.h"
+#include "Song/Tracks/Midi_Loader.h"
 
 namespace Midi_Loader_Instrument
 {
@@ -46,13 +46,13 @@ namespace Midi_Loader_Instrument
 			else if (120 <= note.value && note.value <= 124)
 				parseBRE<NoteOn>(note.value);
 			else if (note.value == m_multiplierNote)
-				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position);
 			else if (note.value == s_soloValue)
-				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, m_position);
 			else if (note.value == 126)
-				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_tremolo, m_position);
 			else if (note.value == 127)
-				addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_trill);
+				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_trill, m_position);
 			else
 				toggleExtraValues<NoteOn>(note);
 		}
@@ -125,21 +125,6 @@ namespace Midi_Loader_Instrument
 
 		template <bool NoteOn>
 		void toggleExtraValues(MidiNote note) {}
-
-		template <bool NoteOn>
-		void addSpecialPhrase(SimpleFlatMap<std::vector<SpecialPhrase>>& phrases, std::pair<SpecialPhraseType, uint64_t>& combo)
-		{
-			if constexpr (NoteOn)
-			{
-				phrases.get_or_emplace_back(m_position);
-				combo.second = m_position;
-			}
-			else if (combo.second != UINT64_MAX)
-			{
-				Midi_Loader::GetNode(phrases, combo.second)->push_back({ combo.first, m_position - combo.second });
-				combo.second = UINT64_MAX;
-			}
-		}
 
 	private:
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };

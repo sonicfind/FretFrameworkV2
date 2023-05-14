@@ -61,26 +61,22 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t dif
 	{
 		m_difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
-		{
 			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_ON);
-		}
 	}
 	// HopoOff marker
 	else if (lane == 7)
 	{
 		m_difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
-		{
 			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_OFF);
-		}
 	}
 	else if (lane == 8)
 	{
 		if (diff == 3)
 		{
-			addSpecialPhrase<NoteOn>(m_track.m_specialPhrases, m_solo);
+			Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, m_position);
 			return;
 		}
 
@@ -106,16 +102,16 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t dif
 				++iter;
 		}
 
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower);
+		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, m_position);
 	}
 	else if (lane == 9)
 		m_difficulties[diff].sliderNotes = NoteOn;
 	else if (lane == 10)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[0]);
+		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[0], m_position);
 	else if (lane == 11)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[1]);
+		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[1], m_position);
 	else if (lane == 12)
-		addSpecialPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower);
+		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, m_position);
 }
 
 template <>
@@ -127,20 +123,16 @@ void Midi_Loader_Instrument::Loader<GuitarNote<6>>::processExtraLanes(size_t dif
 	{
 		m_difficulties[diff].hopoOn = NoteOn;
 		if constexpr (NoteOn)
-		{
 			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_ON);
-		}
 	}
 	// HopoOff marker
 	else if (lane == 8)
 	{
 		m_difficulties[diff].hopoOff = NoteOn;
 		if constexpr (NoteOn)
-		{
 			if (auto note = m_track[diff].m_notes.try_back(m_position))
 				note->setForcing(ForceStatus::HOPO_OFF);
-		}
 	}
 	else if (lane == 10)
 		m_difficulties[diff].sliderNotes = NoteOn;

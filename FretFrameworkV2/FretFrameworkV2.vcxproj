@@ -265,7 +265,7 @@
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h" />
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarDifficulty.h" />
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarTrack.h" />
-    <ClInclude Include="Song\Tracks\MidiNodeGetter.h" />
+    <ClInclude Include="Song\Tracks\Midi_Loader.h" />
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
     <ClInclude Include="Song Library\Entry\LibraryEntry.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Guitar.h" />
