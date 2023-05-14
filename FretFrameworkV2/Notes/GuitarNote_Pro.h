@@ -59,13 +59,14 @@ public:
 template <int numFrets>
 class GuitarNote_Pro
 {
+public:
+	String<numFrets> m_strings[6];
+
+private:
 	bool m_isHOPO = false;
 	bool m_forceNumbering = false;
 	bool m_palmMuted = false;
 	bool m_vibrato = false;
-
-public:
-	String<numFrets> m_strings[6];
 
 public:
 	String<numFrets>& operator[](size_t string) noexcept
