@@ -36,13 +36,13 @@ namespace Midi_Loader_Instrument
 		void setPosition(uint64_t position) { m_position = position; }
 
 		template <bool NoteOn>
-		void parseNote(MidiNote note)
+		void parseNote(MidiNote note, unsigned char channel)
 		{
 			if (processSpecialNote<NoteOn>(note))
 				return;
 
 			if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
-				parseLaneColor<NoteOn>(note);
+				parseLaneColor<NoteOn>(note, channel);
 			else if (120 <= note.value && note.value <= 124)
 				parseBRE<NoteOn>(note.value);
 			else if (note.value == m_multiplierNote)
@@ -68,7 +68,7 @@ namespace Midi_Loader_Instrument
 		bool processSpecialNote(MidiNote note) { return false; }
 
 		template <bool NoteOn>
-		void parseLaneColor(MidiNote note)
+		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
 			const size_t noteValue = note.value - s_noteRange.first;
 			const size_t lane = m_laneValues[noteValue];
@@ -193,12 +193,12 @@ namespace Midi_Loader_Instrument
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					loader.parseNote<true>(note);
+					loader.parseNote<true>(note, midiEvent->channel);
 				else
-					loader.parseNote<false>(note);
+					loader.parseNote<false>(note, midiEvent->channel);
 			}
 			else if (midiEvent->type == MidiEventType::Note_Off)
-				loader.parseNote<false>(reader.extractMidiNote());
+				loader.parseNote<false>(reader.extractMidiNote(), midiEvent->channel);
 			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
 				loader.parseSysEx(reader.extractTextOrSysEx());
 			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
