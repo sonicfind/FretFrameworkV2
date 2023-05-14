@@ -6,10 +6,32 @@
 template <int numFrets>
 class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
 {
+	class LeftHandPosition
+	{
+		int m_position;
+	public:
+		LeftHandPosition() = default;
+		LeftHandPosition(int position)
+		{
+			if (!set(position))
+				throw std::runtime_error("Invalid left hand position");
+		}
+
+		bool set(int position)
+		{
+			if (position == 0 || position > numFrets)
+				return false;
+			m_position = position;
+			return true;
+		}
+
+		int getPosition() const noexcept { return m_position; }
+	};
+
 public:
 	DifficultyTrack<GuitarNote_Pro<numFrets>> m_difficulties[4];
 	SimpleFlatMap<NoteName> m_roots;
-	SimpleFlatMap<LeftHandPosition<numFrets>> m_handPositions;
+	SimpleFlatMap<LeftHandPosition> m_handPositions;
 
 	InstrumentalTrack() = default;
 	InstrumentalTrack(InstrumentalTrack&&) = default;

@@ -134,30 +134,6 @@ public:
 	}
 };
 
-
-template <int numFrets>
-class LeftHandPosition
-{
-	int m_position;
-public:
-	LeftHandPosition() = default;
-	LeftHandPosition(int position)
-	{
-		if (!set(position))
-			throw std::runtime_error("Invalid left hand position");
-	}
-
-	bool set(int position)
-	{
-		if (position == 0 || position > numFrets)
-			return false;
-		m_position = position;
-		return true;
-	}
-
-	int getPosition() const noexcept { return m_position; }
-};
-
 enum class EmphasisType
 {
 	High,
