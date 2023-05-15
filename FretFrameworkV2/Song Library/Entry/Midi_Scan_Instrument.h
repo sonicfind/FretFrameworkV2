@@ -26,13 +26,13 @@ namespace Midi_Scanner_Instrument
 		Scanner(InstrumentScan<T>& scan) : m_scan(scan) {}
 
 		template <bool NoteOn>
-		void parseNote(MidiNote note)
+		void parseNote(MidiNote note, unsigned char channel)
 		{
 			if (processSpecialNote<NoteOn>(note))
 				return;
 
 			if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
-				parseLaneColor<NoteOn>(note);
+				parseLaneColor<NoteOn>(note, channel);
 			else
 				processExtraValues(note);
 		}
@@ -44,7 +44,7 @@ namespace Midi_Scanner_Instrument
 		bool processSpecialNote(MidiNote note) { return false; }
 
 		template <bool NoteOn>
-		void parseLaneColor(MidiNote note)
+		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
 			const int noteValue = note.value - s_noteRange.first;
 			const size_t diff = s_diffValues[noteValue];
@@ -106,12 +106,12 @@ namespace Midi_Scanner_Instrument
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					scanner.parseNote<true>(note);
+					scanner.parseNote<true>(note, midiEvent->channel);
 				else
-					scanner.parseNote<false>(note);
+					scanner.parseNote<false>(note, midiEvent->channel);
 			}
 			else if (midiEvent->type == MidiEventType::Note_Off)
-				scanner.parseNote<false>(reader.extractMidiNote());
+				scanner.parseNote<false>(reader.extractMidiNote(), midiEvent->channel);
 			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
 				scanner.parseText(reader.extractTextOrSysEx());
 

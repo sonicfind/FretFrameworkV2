@@ -60,7 +60,7 @@ bool Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::processSpecialNote(MidiN
 
 template <>
 template <bool NoteOn>
-void Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
+void Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note, unsigned char channel)
 {
 	const int noteValue = note.value - s_noteRange.first;
 	const size_t lane = m_lanes.values[noteValue];
