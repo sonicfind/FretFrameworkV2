@@ -44,8 +44,8 @@ private:
 	template <size_t INDEX, bool NoteOn>
 	void parseNote(unsigned char midiValue)
 	{
-		static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 85 };
-		if (PITCHRANGE.first <= midiValue && midiValue < PITCHRANGE.second)
+		static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 84 };
+		if (PITCHRANGE.first <= midiValue && midiValue <= PITCHRANGE.second)
 			parseVocal<INDEX, NoteOn>(midiValue);
 		else if constexpr (INDEX == 0)
 		{
@@ -72,7 +72,7 @@ private:
 	template <size_t INDEX, bool NoteOn>
 	void parseVocal(unsigned char pitch)
 	{
-		if (m_vocalPos != UINT64_MAX && m_lyric.first == m_vocalPos)
+		if (m_vocalPos != UINT64_MAX)
 		{
 			uint64_t sustain = m_position - m_vocalPos;
 			if constexpr (NoteOn)
@@ -89,7 +89,11 @@ private:
 		}
 
 		if constexpr (NoteOn)
+		{
 			m_vocalPos = m_position;
+			if (m_lyric.first != UINT64_MAX)
+				m_lyric.first = m_position;
+		}
 		else
 			m_vocalPos = UINT64_MAX;
 	}
@@ -101,7 +105,7 @@ private:
 		{
 			if (m_lyric.first != UINT64_MAX)
 				emplaceVocal<INDEX>(m_lyric.first);
-			m_lyric = { m_position, text };
+			m_lyric = { m_vocalPos != UINT64_MAX ? m_vocalPos : m_position, text };
 		}
 		else if constexpr (INDEX == 0)
 			m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(text));

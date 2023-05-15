@@ -39,8 +39,8 @@ namespace Midi_Scanner_Vocal
 		template <size_t INDEX, bool NoteOn>
 		bool parseNote(unsigned char midiValue)
 		{
-			static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 85 };
-			if (PITCHRANGE.first <= midiValue && midiValue < PITCHRANGE.second)
+			static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 84 };
+			if (PITCHRANGE.first <= midiValue && midiValue <= PITCHRANGE.second)
 			{
 				if (!m_scan.hasSubTrack(INDEX))
 					return parseVocal<INDEX, NoteOn>(midiValue);
@@ -65,7 +65,7 @@ namespace Midi_Scanner_Vocal
 		template <size_t INDEX, bool NoteOn>
 		bool parseVocal(unsigned char pitch)
 		{
-			if (m_vocal != UINT64_MAX && m_lyric == m_vocal)
+			if (m_vocal != UINT64_MAX)
 			{
 				if constexpr (INDEX == 0)
 				{
@@ -87,7 +87,11 @@ namespace Midi_Scanner_Vocal
 
 		SetVocalPosition:
 			if constexpr (NoteOn)
+			{
 				m_vocal = m_position;
+				if (m_lyric != UINT64_MAX)
+					m_lyric = m_position;
+			}
 			else
 				m_vocal = UINT64_MAX;
 			return false;
@@ -96,7 +100,7 @@ namespace Midi_Scanner_Vocal
 		void parseText_midi(std::string_view text)
 		{
 			if (text[0] != '[')
-				m_lyric = m_position;
+				m_lyric = m_vocal != UINT64_MAX ? m_vocal : m_position;
 		}
 
 	private:
