@@ -76,7 +76,9 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
 		&m_scanTracks.vocals,
-		&m_scanTracks.harmonies
+		&m_scanTracks.harmonies,
+		&m_scanTracks.proguitar_17,
+		&m_scanTracks.proguitar_22,
 	};
 
 	for (auto track : arr)
@@ -120,7 +122,9 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
 		&m_scanTracks.vocals,
-		&m_scanTracks.harmonies
+		&m_scanTracks.harmonies,
+		&m_scanTracks.proguitar_17,
+		&m_scanTracks.proguitar_22,
 	};
 
 	for (auto track : arr)
@@ -145,18 +149,20 @@ ScanValues LibraryEntry::getScanValue(NoteTrackType track) const noexcept
 {
 	switch (track)
 	{
-	case NoteTrackType::Lead:       return m_scanTracks.lead_5;
-	case NoteTrackType::Lead_6:     return m_scanTracks.lead_6;
-	case NoteTrackType::Bass:       return m_scanTracks.bass_5;
-	case NoteTrackType::Bass_6:     return m_scanTracks.bass_6;
-	case NoteTrackType::Rhythm:     return m_scanTracks.rhythm;
-	case NoteTrackType::Coop:       return m_scanTracks.coop;
-	case NoteTrackType::Keys:       return m_scanTracks.keys;
-	case NoteTrackType::Drums_4:    return m_scanTracks.drums4;
-	case NoteTrackType::Drums_4Pro: return m_scanTracks.drums4_pro;
-	case NoteTrackType::Drums_5:    return m_scanTracks.drums5;
-	case NoteTrackType::Vocals:     return m_scanTracks.vocals;
-	case NoteTrackType::Harmonies:  return m_scanTracks.harmonies;
+	case NoteTrackType::Lead:          return m_scanTracks.lead_5;
+	case NoteTrackType::Lead_6:        return m_scanTracks.lead_6;
+	case NoteTrackType::Bass:          return m_scanTracks.bass_5;
+	case NoteTrackType::Bass_6:        return m_scanTracks.bass_6;
+	case NoteTrackType::Rhythm:        return m_scanTracks.rhythm;
+	case NoteTrackType::Coop:          return m_scanTracks.coop;
+	case NoteTrackType::Keys:          return m_scanTracks.keys;
+	case NoteTrackType::Drums_4:       return m_scanTracks.drums4;
+	case NoteTrackType::Drums_4Pro:    return m_scanTracks.drums4_pro;
+	case NoteTrackType::Drums_5:       return m_scanTracks.drums5;
+	case NoteTrackType::Vocals:        return m_scanTracks.vocals;
+	case NoteTrackType::Harmonies:     return m_scanTracks.harmonies;
+	case NoteTrackType::ProGuitar_17:  return m_scanTracks.proguitar_17;
+	case NoteTrackType::ProGuitar_22:  return m_scanTracks.proguitar_22;
 	default: return ScanValues();
 	}
 }
@@ -195,7 +201,7 @@ DrumType_Enum LibraryEntry::getDrumTypeFromModifier() const noexcept
 
 bool LibraryEntry::validateForNotes() const noexcept
 {
-	const ScanValues* const arr[11] =
+	const ScanValues* const arr[] =
 	{
 		&m_scanTracks.lead_5,
 		&m_scanTracks.lead_6,
@@ -207,7 +213,9 @@ bool LibraryEntry::validateForNotes() const noexcept
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
 		&m_scanTracks.vocals,
-		&m_scanTracks.harmonies
+		&m_scanTracks.harmonies,
+		&m_scanTracks.proguitar_17,
+		&m_scanTracks.proguitar_22,
 	};
 
 	for (const ScanValues* track : arr)

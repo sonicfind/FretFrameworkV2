@@ -19,5 +19,7 @@ enum class NoteTrackType
 	Drums_4Pro,
 	Drums_5,
 	Vocals,
-	Harmonies
+	Harmonies,
+	ProGuitar_17,
+	ProGuitar_22,
 };

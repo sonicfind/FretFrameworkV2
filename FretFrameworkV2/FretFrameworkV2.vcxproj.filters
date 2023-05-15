@@ -85,6 +85,9 @@
     <Filter Include="Song\Tracks\InstrumentalTrack\ProGuitar">
       <UniqueIdentifier>{5c70ceee-2905-4f21-98b9-db57ccb8cf5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song Library\Entry\Track\Instrumental\ProGuitar">
+      <UniqueIdentifier>{fbb325b2-533c-443a-ab3a-b7794b5027fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.cpp">
       <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\Midi_Scan_ProGuitar.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\ProGuitar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -513,6 +519,9 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\Midi_Loader.h">
       <Filter>Song\Tracks</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\Midi_Scan_ProGuitar.h">
+      <Filter>Song Library\Entry\Track\Instrumental\ProGuitar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -169,6 +169,7 @@
     <ClCompile Include="Song Library\Entry\ChartV1_Scan_Drums.cpp" />
     <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp" />
     <ClCompile Include="Song Library\Entry\Extended_Scan_Drums.cpp" />
+    <ClCompile Include="Song Library\Entry\Midi_Scan_ProGuitar.cpp" />
     <ClCompile Include="Song Library\Entry\Midi_Scan_Drums.cpp" />
     <ClCompile Include="Song Library\Entry\LibraryEntry.cpp" />
     <ClCompile Include="Song Library\Entry\LibraryEntry_bch.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Song Library\Entry\ChartV1_Scan_Drums.h" />
     <ClInclude Include="Song Library\Entry\DrumScan_Legacy.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan_Drums.h" />
+    <ClInclude Include="Song Library\Entry\Midi_Scan_ProGuitar.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Drums.h" />
     <ClInclude Include="Song Library\Entry\ChartV1_Scan.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan.h" />

@@ -3,6 +3,7 @@
 #include "Midi_Scan_Drums.h"
 #include "Notes/Keys.h"
 #include "Midi_Scan_Vocals.h"
+#include "Midi_Scan_ProGuitar.h"
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
@@ -56,6 +57,10 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 				harmonyTracker.scan<1>(reader);
 			else if (name == "HARM3")
 				harmonyTracker.scan<2>(reader);
+			else if (name == "PART REAL_GUITAR")
+				Midi_Scanner_Instrument::Scan(m_scanTracks.proguitar_17, reader);
+			else if (name == "PART REAL_GUITAR_22")
+				Midi_Scanner_Instrument::Scan(m_scanTracks.proguitar_22, reader);
 		}
 	}
 

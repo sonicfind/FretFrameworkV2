@@ -4,6 +4,7 @@
 #include "VocalScan.h"
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
+#include "Notes/GuitarNote_Pro.h"
 #include "Types/UnicodeString.h"
 #include "PtrWrapper/PtrWrapper.h"
 #include "Serialization/ChtFileReader.h"
@@ -154,6 +155,8 @@ private:
 		InstrumentScan<DrumNote<DrumPad, 5>> drums5;
 		VocalScan<1> vocals;
 		VocalScan<3> harmonies;
+		InstrumentScan<GuitarNote_Pro<17>> proguitar_17;
+		InstrumentScan<GuitarNote_Pro<22>> proguitar_22;
 	} m_scanTracks;
 
 	UnicodeWrapper m_name;

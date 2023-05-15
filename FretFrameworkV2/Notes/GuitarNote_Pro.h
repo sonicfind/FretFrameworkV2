@@ -114,6 +114,8 @@ public:
 		for (auto& string : m_strings)
 			string *= multiplier;
 	}
+
+	static constexpr size_t GetLaneCount() { return 6; }
 };
 
 template <int numFrets>
