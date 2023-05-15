@@ -47,7 +47,7 @@ namespace Midi_Scanner_Instrument
 		void parseLaneColor(MidiNote note)
 		{
 			const int noteValue = note.value - s_noteRange.first;
-			const int diff = s_diffValues[noteValue];
+			const size_t diff = s_diffValues[noteValue];
 
 			if (m_difficulties[diff].active)
 				return;
@@ -72,7 +72,7 @@ namespace Midi_Scanner_Instrument
 		
 
 	private:
-		static constexpr int s_diffValues[48] =
+		static constexpr size_t s_diffValues[96] =
 		{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
