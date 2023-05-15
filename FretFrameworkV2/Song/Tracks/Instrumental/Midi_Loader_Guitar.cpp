@@ -1,6 +1,22 @@
 #include "Midi_Loader_Guitar.h"
 
 template <>
+Midi_Loader_Instrument::Loader_Lanes<GuitarNote<5>>::Loader_Lanes() : values{
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+}{}
+
+template <>
+Midi_Loader_Instrument::Loader_Lanes<GuitarNote<6>>::Loader_Lanes() : values{
+	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
+	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
+	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
+	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
+} {}
+
+template <>
 void Midi_Loader_Instrument::Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity)
 {
 	if (m_difficulties[diff].sliderNotes)
@@ -35,7 +51,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseSysEx(std::string_view 
 			{
 			case 1:
 				for (size_t diff = 0; diff < 4; ++diff)
-					m_laneValues[12 * diff + 1] = !str[6];
+					m_lanes.values[12 * diff + 1] = !str[6];
 				break;
 			case 4:
 				for (size_t diff = 0; diff < 4; ++diff)
@@ -55,7 +71,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseSysEx(std::string_view 
 			switch (str[5])
 			{
 			case 1:
-				m_laneValues[12 * str[4] + 1] = !str[6];
+				m_lanes.values[12 * str[4] + 1] = !str[6];
 				break;
 			case 4:
 				if (str[6])
@@ -106,7 +122,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseText(std::string_view s
 	if (str == "[ENHANCED_OPENS]" || str == "ENHANCED_OPENS")
 	{
 		for (size_t diff = 0; diff < 4; ++diff)
-			m_laneValues[12 * diff] = 0;
+			m_lanes.values[12 * diff] = 0;
 	}
 	else
 		m_track.m_events.get_or_emplace_back(m_position).push_back(UnicodeString::strToU32(str));

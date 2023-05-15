@@ -5,16 +5,25 @@
 namespace Midi_Scanner_Instrument
 {
 	template <class T>
+	struct Scanner_Lanes
+	{
+		size_t values[96];
+		Scanner_Lanes() : values{
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+		} {}
+	};
+
+	template <class T>
 	struct Scanner_Extensions {};
 
 	template <class T>
 	class Scanner
 	{
 	public:
-		Scanner(InstrumentScan<T>& scan) : m_scan(scan)
-		{
-			memcpy(m_laneValues, s_defaultLanes, sizeof(s_defaultLanes));
-		}
+		Scanner(InstrumentScan<T>& scan) : m_scan(scan) {}
 
 		template <bool NoteOn>
 		void parseNote(MidiNote note)
@@ -43,7 +52,7 @@ namespace Midi_Scanner_Instrument
 			if (m_difficulties[diff].active)
 				return;
 
-			const int lane = m_laneValues[noteValue];
+			const size_t lane = m_lanes.values[noteValue];
 			if (lane < T::GetLaneCount())
 			{
 				if constexpr (!NoteOn)
@@ -63,14 +72,6 @@ namespace Midi_Scanner_Instrument
 		
 
 	private:
-		static constexpr int s_defaultLanes[48] =
-		{
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-		};
-
 		static constexpr int s_diffValues[48] =
 		{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -81,7 +82,7 @@ namespace Midi_Scanner_Instrument
 
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
 
-		int m_laneValues[48];
+		Scanner_Lanes<T> m_lanes;
 
 		struct
 		{

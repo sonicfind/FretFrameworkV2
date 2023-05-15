@@ -15,6 +15,18 @@ namespace Midi_Loader_Instrument
 	}
 
 	template <class T>
+	struct Loader_Lanes
+	{
+		size_t values[96];
+		Loader_Lanes() : values{
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+		} {}
+	};
+
+	template <class T>
 	struct Loader_Diff
 	{
 		uint64_t notes[T::GetLaneCount()];
@@ -28,11 +40,7 @@ namespace Midi_Loader_Instrument
 	struct Loader
 	{
 	public:
-		Loader(InstrumentalTrack<T>& track, unsigned char multiplierNote) : m_track(track), m_multiplierNote(multiplierNote)
-		{
-			memcpy(m_laneValues, s_defaultLanes, s_numValues * sizeof(size_t));
-		}
-
+		Loader(InstrumentalTrack<T>& track, unsigned char multiplierNote) : m_track(track), m_multiplierNote(multiplierNote) {}
 		void setPosition(uint64_t position) { m_position = position; }
 
 		template <bool NoteOn>
@@ -71,7 +79,7 @@ namespace Midi_Loader_Instrument
 		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
 			const size_t noteValue = note.value - s_noteRange.first;
-			const size_t lane = m_laneValues[noteValue];
+			const size_t lane = m_lanes.values[noteValue];
 			const size_t diff = getDifficulty(noteValue);
 
 			if (lane < T::GetLaneCount())
@@ -128,7 +136,6 @@ namespace Midi_Loader_Instrument
 
 	private:
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-		static constexpr size_t s_numValues = 48;
 		static constexpr size_t s_diffValues[96] =
 		{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -137,20 +144,11 @@ namespace Midi_Loader_Instrument
 			3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 		};
 
-		static constexpr size_t s_defaultLanes[96] =
-		{
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-		};
-
 		static constexpr unsigned char s_soloValue = 103;
 
 		const unsigned char m_multiplierNote;
-
+		
 		uint64_t m_position = 0;
-		size_t m_laneValues[96];
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 		bool m_doBRE = false;
 
@@ -158,6 +156,8 @@ namespace Midi_Loader_Instrument
 		Midi_Loader::PhraseNode<SpecialPhraseType> m_starPower = { SpecialPhraseType::StarPower };
 		Midi_Loader::PhraseNode<SpecialPhraseType> m_tremolo = { SpecialPhraseType::Tremolo };
 		Midi_Loader::PhraseNode<SpecialPhraseType> m_trill = { SpecialPhraseType::Trill };
+
+		Loader_Lanes<T> m_lanes;
 
 		Loader_Diff<T> m_difficulties[4];
 		InstrumentalTrack<T>& m_track;

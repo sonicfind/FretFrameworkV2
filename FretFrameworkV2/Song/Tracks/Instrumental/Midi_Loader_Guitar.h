@@ -29,22 +29,10 @@ template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_noteRange{ 58, 103 };
 
 template <>
-constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_defaultLanes[96] =
-{
-	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-};
+Midi_Loader_Instrument::Loader_Lanes<GuitarNote<5>>::Loader_Lanes();
 
 template <>
-constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_defaultLanes[96] =
-{
-	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
-	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
-	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
-	0, 4, 5, 6, 1, 2, 3, 7, 8, 9, 10, 11,
-};
+Midi_Loader_Instrument::Loader_Lanes<GuitarNote<6>>::Loader_Lanes();
 
 template <>
 void Midi_Loader_Instrument::Loader<GuitarNote<5>>::modNote(GuitarNote<5>& note, size_t diff, size_t lane, unsigned char velocity);
@@ -81,7 +69,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t dif
 		}
 
 		for (size_t i = 0; i < 4; ++i)
-			m_laneValues[12 * i + 8] = 12;
+			m_lanes.values[12 * i + 8] = 12;
 
 		for (auto iter = m_track.m_specialPhrases.begin(); iter < m_track.m_specialPhrases.end();)
 		{

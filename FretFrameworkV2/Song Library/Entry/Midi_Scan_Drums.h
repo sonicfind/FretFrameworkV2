@@ -63,7 +63,7 @@ template <bool NoteOn>
 void Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note)
 {
 	const int noteValue = note.value - s_noteRange.first;
-	const int lane = m_laneValues[noteValue];
+	const size_t lane = m_lanes.values[noteValue];
 
 	if (lane >= 6)
 		return;

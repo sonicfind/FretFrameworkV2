@@ -236,6 +236,9 @@
     <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
+    <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.cpp">
+      <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
