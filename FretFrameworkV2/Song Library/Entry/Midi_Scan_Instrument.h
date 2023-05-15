@@ -40,6 +40,8 @@ namespace Midi_Scanner_Instrument
 		void parseText(std::string_view str) {}
 
 	private:
+		size_t getDifficulty(size_t noteValue) const noexcept { return s_diffValues[noteValue]; }
+
 		template <bool NoteOn>
 		bool processSpecialNote(MidiNote note) { return false; }
 
@@ -47,7 +49,7 @@ namespace Midi_Scanner_Instrument
 		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
 			const int noteValue = note.value - s_noteRange.first;
-			const size_t diff = s_diffValues[noteValue];
+			const size_t diff = getDifficulty(noteValue);
 
 			if (m_difficulties[diff].active)
 				return;
