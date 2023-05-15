@@ -3,6 +3,7 @@
 #include "Tracks/Instrumental/Midi_Loader_Drums.h"
 #include "Tracks/Instrumental/DrumTrack_Transfer.h"
 #include "Tracks/Vocal/Midi_Loader_Vocals.h"
+#include "Tracks/Instrumental/Midi_Loader_ProGuitar.h"
 #include <iostream>
 
 void Song::load_mid(const std::filesystem::path& path)
@@ -83,6 +84,10 @@ void Song::load_mid(const std::filesystem::path& path)
 			return harmonyTracker.load<1>(reader);
 		else if (name == "HARM3" || name == "PART HARM3")
 			return harmonyTracker.load<2>(reader);
+		else if (name == "PART REAL_GUITAR")
+			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_17, reader);
+		else if (name == "PART REAL_GUITAR_22")
+			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_22, reader);
 		return true;
 	};
 

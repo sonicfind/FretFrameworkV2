@@ -505,6 +505,9 @@
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarDifficulty.h">
       <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
     </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.h">
+      <Filter>Song\Tracks\InstrumentalTrack\ProGuitar</Filter>
+    </ClInclude>
     <ClInclude Include="Song\Tracks\Midi_Loader.h">
       <Filter>Song\Tracks</Filter>
     </ClInclude>

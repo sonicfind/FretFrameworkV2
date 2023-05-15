@@ -254,6 +254,7 @@
     <ClInclude Include="Song\SongEvents.h" />
     <ClInclude Include="Song\SyncTrack.h" />
     <ClInclude Include="Song\Tracks\Extended_Save.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Saver_Drums.h" />
     <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Saver_Guitar.h" />
