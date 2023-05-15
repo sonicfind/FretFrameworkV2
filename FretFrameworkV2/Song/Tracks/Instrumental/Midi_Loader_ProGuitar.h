@@ -47,7 +47,7 @@ Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<17>>::Loader_Lanes();
 template <>
 Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<22>>::Loader_Lanes();
 
-namespace ProGuitar_Midi
+namespace Midi_Loader_ProGuitar
 {
 	constexpr NoteName s_ROOTS[] = { NoteName::E, NoteName::F, NoteName::F_Sharp_Gb, NoteName::G, NoteName::G_Sharp_Ab, NoteName::A, NoteName::A_Sharp_Bb, NoteName::B, NoteName::C, NoteName::C_Sharp_Db, NoteName::D, NoteName::D_Sharp_Eb };
 
@@ -165,7 +165,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::parseLaneColor(MidiNote
 {
 	const size_t noteValue = note.value - s_noteRange.first;
 	const size_t diff = getDifficulty(noteValue);
-	ProGuitar_Midi::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
 }
 
 template<>
@@ -174,20 +174,20 @@ void Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::parseLaneColor(MidiNote
 {
 	const size_t noteValue = note.value - s_noteRange.first;
 	const size_t diff = getDifficulty(noteValue);
-	ProGuitar_Midi::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
 }
 
 template <>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::toggleExtraValues(MidiNote note)
 {
-	ProGuitar_Midi::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
+	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
 }
 
 template <>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::toggleExtraValues(MidiNote note)
 {
-	ProGuitar_Midi::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
+	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
 }
 
