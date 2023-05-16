@@ -260,6 +260,9 @@
     <ClCompile Include="Song Library\Entry\ProKeysScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\ProKeys</Filter>
     </ClCompile>
+    <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProKeys.cpp">
+      <Filter>Song\Tracks\InstrumentalTrack\ProKeys</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">

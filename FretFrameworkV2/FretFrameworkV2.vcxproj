@@ -194,6 +194,7 @@
     <ClCompile Include="Song\Tracks\Extended_Save.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_Drums.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.cpp" />
+    <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProKeys.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Saver_Drums.cpp" />
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_Guitar.cpp" />
     <ClCompile Include="TaskQueue\TaskQueue.cpp" />

@@ -17,6 +17,7 @@ enum class SpecialPhraseType
 	Tremolo = 65,
 	Trill = 66,
 	LyricShift = 67,
+	Glissando = 68
 };
 
 struct SpecialPhrase : public Sustained<false>

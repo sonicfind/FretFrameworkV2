@@ -21,6 +21,13 @@ struct Midi_Loader_Instrument::Loader_Diff<Keys_Pro> {};
 template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<Keys_Pro>::s_noteRange{ 48, 72 };
 
+template <>
+Midi_Loader_Instrument::Loader<Keys_Pro>::Loader(InstrumentalTrack<Keys_Pro>& track, unsigned char multiplierNote);
+
+template <>
+template <bool NoteOn>
+void Midi_Loader_Instrument::Loader<Keys_Pro>::parseBRE(uint32_t midiValue) {}
+
 template<>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<Keys_Pro>::parseLaneColor(MidiNote note, unsigned char channel)
@@ -36,7 +43,7 @@ void Midi_Loader_Instrument::Loader<Keys_Pro>::parseLaneColor(MidiNote note, uns
 		uint64_t colorPosition = m_lanes.values[lane];
 		if (colorPosition != UINT64_MAX)
 		{
-			Midi_Loader::GetNode(m_track[0].m_notes, colorPosition).object.set({ (char)note.value, m_position - colorPosition });
+			Midi_Loader::GetNode(m_track[0].m_notes, colorPosition)->set({ (char)note.value, m_position - colorPosition });
 			m_lanes.values[lane] = UINT64_MAX;
 		}
 	}
