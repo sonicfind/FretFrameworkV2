@@ -12,4 +12,12 @@ public:
 
 	bool isComplete() const noexcept { return m_subTracks == 15; }
 	void setIntensity(unsigned char level) noexcept { m_intensity = level; }
+	void reset() { m_subTracks = 0; }
+
+	template <class U>
+	InstrumentScan<T>& operator=(InstrumentScan<U>& scan)
+	{
+		ScanValues::operator=(scan);
+		return *this;
+	}
 };

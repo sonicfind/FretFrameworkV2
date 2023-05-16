@@ -167,6 +167,7 @@
     <ClCompile Include="Notes\VocalNote.cpp" />
     <ClCompile Include="Notes\VocalPercussion.cpp" />
     <ClCompile Include="Song Library\Entry\ChartV1_Scan_Drums.cpp" />
+    <ClCompile Include="Song Library\Entry\DrumScan.cpp" />
     <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp" />
     <ClCompile Include="Song Library\Entry\Extended_Scan_Drums.cpp" />
     <ClCompile Include="Song Library\Entry\Midi_Scan_ProGuitar.cpp" />
