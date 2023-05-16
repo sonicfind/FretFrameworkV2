@@ -95,7 +95,17 @@ namespace Midi_Loader_Instrument
 				processExtraLanes<NoteOn>(diff, lane);
 		}
 
-		size_t getDifficulty(size_t noteValue) const noexcept { return s_diffValues[noteValue]; }
+		size_t getDifficulty(size_t noteValue) const noexcept
+		{
+			static constexpr size_t DIFFS[48] =
+			{
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+				3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+			};
+			return DIFFS[noteValue];
+		}
 
 		void modNote(T& note, size_t diff, size_t lane, unsigned char velocity) {}
 
@@ -135,13 +145,6 @@ namespace Midi_Loader_Instrument
 
 	private:
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-		static constexpr size_t s_diffValues[96] =
-		{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-			3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-		};
 		
 		uint64_t m_position = 0;
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
