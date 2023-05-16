@@ -5,14 +5,14 @@
 template <>
 struct Midi_Scanner_Instrument::Scanner_Lanes<Keys_Pro>
 {
-	bool values[25];
+	bool values[25]{};
 };
 
 template <>
 struct Midi_Scanner_Instrument::Scanner_Diff<Keys_Pro> {};
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<Keys_Pro>::s_noteRange{ 24, 72 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<Keys_Pro>::s_noteRange{ 48, 72 };
 
 template<>
 template <bool NoteOn>
