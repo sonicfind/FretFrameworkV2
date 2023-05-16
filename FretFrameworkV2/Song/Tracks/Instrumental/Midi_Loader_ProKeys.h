@@ -3,15 +3,9 @@
 #include "ProKeysDifficulty.h"
 
 template <>
-struct Midi_Loader_Instrument::Loader_Lanes<Keys_Pro> {};
-
-template <>
-struct Midi_Loader_Instrument::Loader_Diff<Keys_Pro> {};
-
-template <>
-struct Midi_Loader_Instrument::Loader_Ext<Keys_Pro>
+struct Midi_Loader_Instrument::Loader_Lanes<Keys_Pro>
 {
-	uint64_t notes[25] =
+	uint64_t values[25] =
 	{
 		UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
 		UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
@@ -20,6 +14,9 @@ struct Midi_Loader_Instrument::Loader_Ext<Keys_Pro>
 		UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
 	};
 };
+
+template <>
+struct Midi_Loader_Instrument::Loader_Diff<Keys_Pro> {};
 
 template <>
 constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<Keys_Pro>::s_noteRange{ 48, 72 };
@@ -31,16 +28,16 @@ void Midi_Loader_Instrument::Loader<Keys_Pro>::parseLaneColor(MidiNote note, uns
 	const size_t lane = note.value - s_noteRange.first;
 	if constexpr (NoteOn)
 	{
-		m_ext.notes[lane] = m_position;
+		m_lanes.values[lane] = m_position;
 		ConstructNote(m_track[0], m_position);
 	}
 	else
 	{
-		uint64_t colorPosition = m_ext.notes[lane];
+		uint64_t colorPosition = m_lanes.values[lane];
 		if (colorPosition != UINT64_MAX)
 		{
 			Midi_Loader::GetNode(m_track[0].m_notes, colorPosition).object.set({ (char)note.value, m_position - colorPosition });
-			m_ext.notes[lane] = UINT64_MAX;
+			m_lanes.values[lane] = UINT64_MAX;
 		}
 	}
 }
