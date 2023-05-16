@@ -17,6 +17,13 @@ namespace Midi_Scanner_Instrument
 	};
 
 	template <class T>
+	struct Scanner_Diff
+	{
+		bool notes[T::GetLaneCount()]{};
+		bool active = false;
+	};
+
+	template <class T>
 	struct Scanner_Extensions {};
 
 	template <class T>
@@ -85,12 +92,7 @@ namespace Midi_Scanner_Instrument
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
 
 		Scanner_Lanes<T> m_lanes;
-
-		struct
-		{
-			bool notes[T::GetLaneCount()]{};
-			bool active = false;
-		} m_difficulties[4];
+		Scanner_Diff<T> m_difficulties[4];
 		Scanner_Extensions<T> m_ext;
 		InstrumentScan<T>& m_scan;
 	};
