@@ -36,10 +36,10 @@ constexpr size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::s_diffValue
 };
 
 template <>
-constexpr unsigned char Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::s_soloValue = 115;
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::Loader(InstrumentalTrack<GuitarNote_Pro<17>>& track, unsigned char multiplierNote);
 
 template <>
-constexpr unsigned char Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::s_soloValue = 115;
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::Loader(InstrumentalTrack<GuitarNote_Pro<22>>& track, unsigned char multiplierNote);
 
 template <>
 Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<17>>::Loader_Lanes();

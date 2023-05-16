@@ -7,7 +7,14 @@ template <size_t numTracks>
 class Midi_Loader_Vocal
 {
 public:
-	Midi_Loader_Vocal(VocalTrack<numTracks>& track, unsigned char multiplier) : m_track(track), m_multiplierNote(multiplier) {}
+	Midi_Loader_Vocal(VocalTrack<numTracks>& track, unsigned char multiplier)
+		: m_track(track), m_phrases({
+			{ { multiplier }, { SpecialPhraseType::StarPower } },
+			{ { 105, 106 }, { SpecialPhraseType::LyricLine } },
+			{ { 0 }, { SpecialPhraseType::RangeShift } },
+			{ { 1 }, { SpecialPhraseType::LyricShift } },
+			{ { 0xFF }, { SpecialPhraseType::HarmonyLine } },
+		}) {}
 
 	template <size_t INDEX = 0>
 	bool load(MidiFileReader& reader)
@@ -23,12 +30,12 @@ public:
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					parseNote<INDEX, true>(note.value);
+					parseNote<INDEX, true>(note);
 				else
-					parseNote<INDEX, false>(note.value);
+					parseNote<INDEX, false>(note);
 			}
 			else if (midiEvent->type == MidiEventType::Note_Off)
-				parseNote<INDEX, false>(reader.extractMidiNote().value);
+				parseNote<INDEX, false>(reader.extractMidiNote());
 			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
 				parseSysEx(reader.extractTextOrSysEx());
 			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
@@ -42,30 +49,24 @@ public:
 
 private:
 	template <size_t INDEX, bool NoteOn>
-	void parseNote(unsigned char midiValue)
+	void parseNote(MidiNote note)
 	{
 		static constexpr std::pair<unsigned char, unsigned char> PITCHRANGE = { 36, 84 };
-		if (PITCHRANGE.first <= midiValue && midiValue <= PITCHRANGE.second)
-			parseVocal<INDEX, NoteOn>(midiValue);
+		if (PITCHRANGE.first <= note.value && note.value <= PITCHRANGE.second)
+			parseVocal<INDEX, NoteOn>(note.value);
 		else if constexpr (INDEX == 0)
 		{
-			if (midiValue == 96)
+			if (note.value == 96)
 				addPercussion<true, NoteOn>(m_perc);
-			else if (midiValue == 97)
+			else if (note.value == 97)
 				addPercussion<false, NoteOn>(m_perc);
-			else if (midiValue == 105 || midiValue == 106)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricLine, m_position, 100);
-			else if (midiValue == m_multiplierNote)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_starPower, m_position, 100);
-			else if (midiValue == 0)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_rangeShift, m_position, 100);
-			else if (midiValue == 1)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_lyricShift, m_position, 100);
+			else
+				m_phrases.addPhrase<NoteOn>(m_track.m_specialPhrases, m_position, note);
 		}
 		else if constexpr (INDEX == 1)
 		{
-			if (midiValue == 105 || midiValue == 106)
-				Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_harmonyLine, m_position, 100);
+			if (note.value == 105 || note.value == 106)
+				m_phrases.addPhrase<NoteOn>(m_track.m_specialPhrases, m_position, SpecialPhraseType::HarmonyLine, 100);
 		}
 	}
 
@@ -137,18 +138,12 @@ private:
 	}
 
 private:
-	const unsigned char m_multiplierNote;
-
 	uint64_t m_position = 0;
 	uint64_t m_perc = UINT64_MAX;
 	uint64_t m_vocalPos = UINT64_MAX;
 	std::pair<uint64_t, std::string_view> m_lyric{ UINT64_MAX, "" };
 
-	Midi_Loader::PhraseNode<SpecialPhraseType> m_starPower =   { SpecialPhraseType::StarPower };
-	Midi_Loader::PhraseNode<SpecialPhraseType> m_lyricLine =   { SpecialPhraseType::LyricLine };
-	Midi_Loader::PhraseNode<SpecialPhraseType> m_harmonyLine = { SpecialPhraseType::HarmonyLine };
-	Midi_Loader::PhraseNode<SpecialPhraseType> m_rangeShift =  { SpecialPhraseType::RangeShift };
-	Midi_Loader::PhraseNode<SpecialPhraseType> m_lyricShift =  { SpecialPhraseType::LyricShift };
+	Midi_Loader::Loader_Phrases<SpecialPhraseType> m_phrases;
 
 	VocalTrack<numTracks>& m_track;
 	

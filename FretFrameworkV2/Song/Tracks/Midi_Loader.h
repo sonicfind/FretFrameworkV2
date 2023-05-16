@@ -24,19 +24,65 @@ namespace Midi_Loader
 		return *iter;
 	}
 
-	template <bool NoteOn, class Phrase, class PhraseType>
-	void AddPhrase(SimpleFlatMap<std::vector<Phrase>>& phrases, PhraseNode<PhraseType>& phrase, const uint64_t position, const unsigned char velocity)
+	template <class PhraseType>
+	class Loader_Phrases
 	{
-		if constexpr (NoteOn)
+		std::vector<std::pair<std::vector<unsigned char>, Midi_Loader::PhraseNode<PhraseType>>> m_phrases;
+
+	public:
+		Loader_Phrases(const std::vector<std::pair<std::vector<unsigned char>, Midi_Loader::PhraseNode<PhraseType>>>& phrases) : m_phrases(phrases) {}
+
+		template <bool NoteOn, class Phrase>
+		bool addPhrase(SimpleFlatMap<std::vector<Phrase>>& phrases, const uint64_t position, const MidiNote note) noexcept
 		{
-			phrases.get_or_emplace_back(position);
-			phrase.position = position;
-			phrase.velocity = velocity;
+			for (auto& phrase : m_phrases)
+			{
+				for (unsigned char val : phrase.first)
+				{
+					if (val == note.value)
+					{
+						auto& phr = phrase.second;
+						if constexpr (NoteOn)
+						{
+							phrases.get_or_emplace_back(position);
+							phr.position = position;
+							phr.velocity = note.velocity;
+						}
+						else if (phr.position != UINT64_MAX)
+						{
+							Midi_Loader::GetNode(phrases, phr.position)->push_back({ phr.type, position - phr.position, phr.velocity });
+							phr.position = UINT64_MAX;
+						}
+						return true;
+					}
+				}
+			}
+			return false;
 		}
-		else if (phrase.position != UINT64_MAX)
+
+		template <bool NoteOn, class Phrase>
+		void addPhrase(SimpleFlatMap<std::vector<Phrase>>& phrases, const uint64_t position, const PhraseType type, const unsigned char velocity)
 		{
-			Midi_Loader::GetNode(phrases, phrase.position)->push_back({ phrase.type, position - phrase.position, phrase.velocity });
-			phrase.position = UINT64_MAX;
+			for (auto& phrase : m_phrases)
+			{
+				auto& phr = phrase.second;
+				if (phr.type == type)
+				{
+					if constexpr (NoteOn)
+					{
+						phrases.get_or_emplace_back(position);
+						phr.position = position;
+						phr.velocity = velocity;
+					}
+					else if (phr.position != UINT64_MAX)
+					{
+						Midi_Loader::GetNode(phrases, phr.position)->push_back({ phr.type, position - phr.position, phr.velocity });
+						phr.position = UINT64_MAX;
+					}
+					return;
+				}
+			}
+			throw std::runtime_error("Invalid phrase type chosen");
 		}
-	}
+	};
 }

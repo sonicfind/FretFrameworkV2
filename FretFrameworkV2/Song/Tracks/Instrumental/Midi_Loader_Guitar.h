@@ -8,8 +8,11 @@ struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<5>>
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
-	Midi_Loader::PhraseNode<SpecialPhraseType> starPower = { SpecialPhraseType::StarPower_Diff };
-	Midi_Loader::PhraseNode<SpecialPhraseType> faceOff[2] = { { SpecialPhraseType::FaceOff_Player1 }, { SpecialPhraseType::FaceOff_Player2 } };
+	Midi_Loader::Loader_Phrases<SpecialPhraseType> phrases = { {
+		{ { 0 }, { SpecialPhraseType::StarPower_Diff  } },
+		{ { 0 }, { SpecialPhraseType::FaceOff_Player1 } },
+		{ { 0 }, { SpecialPhraseType::FaceOff_Player2 } },
+	} };
 	uint64_t notes[6] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 };
 
@@ -64,7 +67,7 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t dif
 	{
 		if (diff == 3)
 		{
-			Midi_Loader::AddPhrase<NoteOn>(m_track.m_specialPhrases, m_solo, m_position, 100);
+			m_phrases.addPhrase<NoteOn>(m_track.m_specialPhrases, m_position, SpecialPhraseType::Solo, 100);
 			return;
 		}
 
@@ -90,16 +93,16 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::processExtraLanes(size_t dif
 				++iter;
 		}
 
-		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, m_position, 100);
+		m_difficulties[diff].phrases.addPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_position, SpecialPhraseType::StarPower_Diff, 100);
 	}
 	else if (lane == 9)
 		m_difficulties[diff].sliderNotes = NoteOn;
 	else if (lane == 10)
-		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[0], m_position, 100);
+		m_difficulties[diff].phrases.addPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_position, SpecialPhraseType::FaceOff_Player1, 100);
 	else if (lane == 11)
-		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].faceOff[1], m_position, 100);
+		m_difficulties[diff].phrases.addPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_position, SpecialPhraseType::FaceOff_Player2, 100);
 	else if (lane == 12)
-		Midi_Loader::AddPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_difficulties[diff].starPower, m_position, 100);
+		m_difficulties[diff].phrases.addPhrase<NoteOn>(m_track[diff].m_specialPhrases, m_position, SpecialPhraseType::StarPower_Diff, 100);
 }
 
 template <>
