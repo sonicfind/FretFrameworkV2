@@ -259,6 +259,7 @@
     <ClInclude Include="Song\SyncTrack.h" />
     <ClInclude Include="Song\Tracks\Extended_Save.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_ProGuitar.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_ProKeys.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Saver_Drums.h" />
     <ClInclude Include="Song\Tracks\Instrumental\GuitarForcing.h" />
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Saver_Guitar.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Song\Tracks\Instrumental\Midi_Hold.h" />
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarDifficulty.h" />
     <ClInclude Include="Song\Tracks\Instrumental\ProGuitarTrack.h" />
+    <ClInclude Include="Song\Tracks\Instrumental\ProKeysDifficulty.h" />
     <ClInclude Include="Song\Tracks\Midi_Loader.h" />
     <ClInclude Include="Song\Tracks\Vocal\VocalTrack.h" />
     <ClInclude Include="Song Library\Entry\LibraryEntry.h" />

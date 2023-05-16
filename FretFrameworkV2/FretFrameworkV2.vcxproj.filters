@@ -88,6 +88,9 @@
     <Filter Include="Song Library\Entry\Track\Instrumental\ProGuitar">
       <UniqueIdentifier>{fbb325b2-533c-443a-ab3a-b7794b5027fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song\Tracks\InstrumentalTrack\ProKeys">
+      <UniqueIdentifier>{aaa01992-a6b9-4d93-a7a3-691f146ff831}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -525,6 +528,12 @@
     </ClInclude>
     <ClInclude Include="Notes\Keys_Pro.h">
       <Filter>Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\Midi_Loader_ProKeys.h">
+      <Filter>Song\Tracks\InstrumentalTrack\ProKeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Song\Tracks\Instrumental\ProKeysDifficulty.h">
+      <Filter>Song\Tracks\InstrumentalTrack\ProKeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

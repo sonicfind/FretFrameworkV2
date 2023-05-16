@@ -4,12 +4,14 @@
 #include "Tracks/Instrumental/DrumTrack_Transfer.h"
 #include "Tracks/Vocal/Midi_Loader_Vocals.h"
 #include "Tracks/Instrumental/Midi_Loader_ProGuitar.h"
+#include "Tracks/Instrumental/Midi_Loader_ProKeys.h"
 #include <iostream>
 
 void Song::load_mid(const std::filesystem::path& path)
 {
 	Midi_Loader_Vocal<1> vocalTracker(m_noteTracks.vocals, m_multiplier_note);
 	Midi_Loader_Vocal<3> harmonyTracker(m_noteTracks.harmonies, m_multiplier_note);
+	InstrumentalTrack<Keys_Pro> proKeys_buffer;
 
 	MidiFileReader reader(path, m_multiplier_note);
 
@@ -88,6 +90,31 @@ void Song::load_mid(const std::filesystem::path& path)
 			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_17, reader);
 		else if (name == "PART REAL_GUITAR_22")
 			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_22, reader);
+		else if (name.starts_with("PART REAL_KEYS_"))
+		{
+			proKeys_buffer.clear();
+			if (!Midi_Loader_Instrument::Load(proKeys_buffer, reader))
+				return false;
+
+			size_t index;
+			switch (name.back())
+			{
+			case 'X': index = 3; break;
+			case 'H': index = 2; break;
+			case 'M': index = 1; break;
+			case 'E': index = 0; break;
+			default:
+				return false;
+			}
+
+			m_noteTracks.proKeys[index].m_notes = std::move(proKeys_buffer[0].m_notes);
+			m_noteTracks.proKeys[index].m_ranges = std::move(proKeys_buffer[0].m_ranges);
+			if (m_noteTracks.proKeys.m_specialPhrases.isEmpty())
+				m_noteTracks.proKeys.m_specialPhrases = std::move(proKeys_buffer.m_specialPhrases);
+
+			if (m_noteTracks.proKeys.m_events.isEmpty())
+				m_noteTracks.proKeys.m_events = std::move(proKeys_buffer.m_events);
+		}
 		return true;
 	};
 

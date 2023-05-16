@@ -1,5 +1,6 @@
 #pragma once
 #include "Tracks/Instrumental/ProGuitarTrack.h"
+#include "Tracks/Instrumental/ProKeysDifficulty.h"
 #include "Tracks/Vocal/VocalTrack.h"
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
@@ -88,19 +89,20 @@ private:
 
 	struct
 	{
-		InstrumentalTrack<GuitarNote<5>>             lead_5;
-		InstrumentalTrack<GuitarNote<6>>             lead_6;
-		InstrumentalTrack<GuitarNote<5>>             bass_5;
-		InstrumentalTrack<GuitarNote<6>>             bass_6;
-		InstrumentalTrack<GuitarNote<5>>             rhythm;
-		InstrumentalTrack<GuitarNote<5>>             coop;
-		InstrumentalTrack<Keys<5>>                   keys;
-		InstrumentalTrack<DrumNote<DrumPad_Pro, 4>>  drums4_pro;
-		InstrumentalTrack<DrumNote<DrumPad, 5>>      drums5;
-		VocalTrack<1>                                vocals;
-		VocalTrack<3>                                harmonies;
-		InstrumentalTrack<GuitarNote_Pro<17>>        proguitar_17;
-		InstrumentalTrack<GuitarNote_Pro<22>>        proguitar_22;
+		InstrumentalTrack<GuitarNote<5>>            lead_5;
+		InstrumentalTrack<GuitarNote<6>>            lead_6;
+		InstrumentalTrack<GuitarNote<5>>            bass_5;
+		InstrumentalTrack<GuitarNote<6>>            bass_6;
+		InstrumentalTrack<GuitarNote<5>>            rhythm;
+		InstrumentalTrack<GuitarNote<5>>            coop;
+		InstrumentalTrack<Keys<5>>                  keys;
+		InstrumentalTrack<DrumNote<DrumPad_Pro, 4>> drums4_pro;
+		InstrumentalTrack<DrumNote<DrumPad, 5>>     drums5;
+		VocalTrack<1>                               vocals;
+		VocalTrack<3>                               harmonies;
+		InstrumentalTrack<GuitarNote_Pro<17>>       proguitar_17;
+		InstrumentalTrack<GuitarNote_Pro<22>>       proguitar_22;
+		InstrumentalTrack<Keys_Pro>                 proKeys;
 	} m_noteTracks;
 
 	std::u32string m_midiSequenceName;
