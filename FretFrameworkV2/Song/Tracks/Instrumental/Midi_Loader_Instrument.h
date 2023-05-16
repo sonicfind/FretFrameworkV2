@@ -156,7 +156,7 @@ namespace Midi_Loader_Instrument
 		Midi_Loader::Loader_Phrases<SpecialPhraseType> m_phrases;
 		Loader_Lanes<T> m_lanes;
 
-		Loader_Diff<T> m_difficulties[4];
+		Loader_Diff<T> m_difficulties[4]{};
 		InstrumentalTrack<T>& m_track;
 		Loader_Ext<T> m_ext;
 	};

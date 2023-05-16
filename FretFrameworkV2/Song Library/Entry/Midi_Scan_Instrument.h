@@ -92,7 +92,7 @@ namespace Midi_Scanner_Instrument
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
 
 		Scanner_Lanes<T> m_lanes;
-		Scanner_Diff<T> m_difficulties[4];
+		Scanner_Diff<T> m_difficulties[4]{};
 		Scanner_Extensions<T> m_ext;
 		InstrumentScan<T>& m_scan;
 	};
