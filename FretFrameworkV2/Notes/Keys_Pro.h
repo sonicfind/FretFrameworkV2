@@ -73,6 +73,12 @@ public:
 			throw std::runtime_error("Index extends past number of active notes");
 		return m_pitches[index];
 	}
+
+	void operator*=(double multiplier)
+	{
+		for (size_t i = 0; i < m_numActiveNotes; ++i)
+			m_pitches[i] *= multiplier;
+	}
 };
 
 enum class ProKey_Ranges
