@@ -58,10 +58,13 @@ namespace Midi_Loader_Instrument
 
 			if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
 				parseLaneColor<NoteOn>(note, channel);
-			else if (120 <= note.value && note.value <= 124)
-				parseBRE<NoteOn>(note.value);
 			else if (!m_phrases.addPhrase<NoteOn>(m_track.m_specialPhrases, m_position, note))
-				toggleExtraValues<NoteOn>(note);
+			{
+				if (120 <= note.value && note.value <= 124)
+					parseBRE<NoteOn>(note.value);
+				else
+					toggleExtraValues<NoteOn>(note);
+			}
 		}
 
 		void parseSysEx(std::string_view str) {}
