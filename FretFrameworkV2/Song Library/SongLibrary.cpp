@@ -117,13 +117,16 @@ size_t SongLibrary::getNumSongs() const noexcept
 
 std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
 {
-	try
+	if (std::filesystem::exists("songcache.bin"))
 	{
-		BufferedBinaryReader reader("songcache.bin");
-		if (s_CACHE_VERSION == reader.extract<uint32_t, false>())
-			return std::move(reader);
+		try
+		{
+			BufferedBinaryReader reader("songcache.bin");
+			if (s_CACHE_VERSION == reader.extract<uint32_t, false>())
+				return std::move(reader);
+		}
+		catch (...) {}
 	}
-	catch (...) {}
 	return {};
 }
 
