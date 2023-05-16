@@ -47,7 +47,16 @@ namespace Midi_Scanner_Instrument
 		void parseText(std::string_view str) {}
 
 	private:
-		size_t getDifficulty(size_t noteValue) const noexcept { return s_diffValues[noteValue]; }
+		size_t getDifficulty(size_t noteValue) const noexcept {
+			static constexpr size_t DIFFS[48] =
+			{
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+				3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+			};
+			return DIFFS[noteValue];
+		}
 
 		template <bool NoteOn>
 		bool processSpecialNote(MidiNote note) { return false; }
@@ -78,17 +87,8 @@ namespace Midi_Scanner_Instrument
 		}
 
 		void processExtraValues(MidiNote note) { }
-		
 
 	private:
-		static constexpr size_t s_diffValues[96] =
-		{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-			3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-		};
-
 		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
 
 		Scanner_Lanes<T> m_lanes;

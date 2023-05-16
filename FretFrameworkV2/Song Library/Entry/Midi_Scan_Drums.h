@@ -71,7 +71,7 @@ void Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote 
 	if (lane == 5)
 		m_scan.setType(DrumType_Enum::FIVELANE);
 
-	const size_t diff = s_diffValues[noteValue];
+	const size_t diff = getDifficulty(noteValue);
 	if (!m_difficulties[diff].active)
 	{
 		if constexpr (!NoteOn)
