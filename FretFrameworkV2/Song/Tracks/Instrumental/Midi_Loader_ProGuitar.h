@@ -7,8 +7,9 @@ struct Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numFrets>>
 {
 	bool hopo = false;
 	uint64_t notes[6] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
-	uint64_t slide = UINT64_MAX;
 	uint64_t arpeggio = UINT64_MAX;
+	ProSlide slide = ProSlide::None;
+	EmphasisType emphasis = EmphasisType::None;
 };
 
 template <>
@@ -65,7 +66,7 @@ namespace Midi_Loader_ProGuitar
 					auto& guitar = Midi_Loader_Instrument::ConstructNote(track, position);
 					if (guitar[lane].m_fret.set(velocity - 100))
 					{
-						guitar.setHOPO(diffTracker.hopo);
+						guitar.setHOPO(diffTracker.hopo).setSlide(diffTracker.slide).setEmphasis(diffTracker.emphasis);
 						switch (channel)
 						{
 						case 2: guitar[lane].setMode(StringMode::Bend); break;
@@ -99,7 +100,13 @@ namespace Midi_Loader_ProGuitar
 		else if (lane == 7)
 		{
 			if constexpr (NoteOn)
-				track.m_notes.get_or_emplace_back(position).setSlide(channel == 11 ? ProSlide::Reversed : ProSlide::Normal);
+			{
+				diffTracker.slide = channel == 11 ? ProSlide::Reversed : ProSlide::Normal;
+				if (auto note = track.m_notes.try_back(position))
+					note->setSlide(diffTracker.slide);
+			}
+			else
+				diffTracker.slide = ProSlide::None;
 		}
 		else if (lane == 8)
 		{
@@ -120,11 +127,17 @@ namespace Midi_Loader_ProGuitar
 			{
 				switch (channel)
 				{
-				case 13: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::High); break;
-				case 14: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::Middle); break;
-				case 15: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::Low); break;
+				case 13: diffTracker.emphasis = EmphasisType::High; break;
+				case 14: diffTracker.emphasis = EmphasisType::Middle; break;
+				case 15: diffTracker.emphasis = EmphasisType::Low; break;
+				default: return;
 				}
+
+				if (auto note = track.m_notes.try_back(position))
+					note->setEmphasis(diffTracker.emphasis);
 			}
+			else
+				diffTracker.emphasis = EmphasisType::None;
 		}
 	}
 
