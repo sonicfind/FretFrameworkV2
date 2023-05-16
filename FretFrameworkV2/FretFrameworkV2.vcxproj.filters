@@ -523,6 +523,9 @@
     <ClInclude Include="Song Library\Entry\Midi_Scan_ProGuitar.h">
       <Filter>Song Library\Entry\Track\Instrumental\ProGuitar</Filter>
     </ClInclude>
+    <ClInclude Include="Notes\Keys_Pro.h">
+      <Filter>Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Types\UnicodeString.natvis">
