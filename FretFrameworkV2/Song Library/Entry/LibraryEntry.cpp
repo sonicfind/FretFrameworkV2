@@ -75,8 +75,8 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 		&m_scanTracks.drums4,
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
-		&m_scanTracks.proguitar_17,
-		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proGuitar_17,
+		&m_scanTracks.proGuitar_22,
 		&m_scanTracks.proKeys,
 		&m_scanTracks.vocals,
 		&m_scanTracks.harmonies,
@@ -122,8 +122,8 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 		&m_scanTracks.drums4,
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
-		&m_scanTracks.proguitar_17,
-		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proGuitar_17,
+		&m_scanTracks.proGuitar_22,
 		&m_scanTracks.proKeys,
 		&m_scanTracks.vocals,
 		&m_scanTracks.harmonies,
@@ -163,8 +163,8 @@ ScanValues LibraryEntry::getScanValue(NoteTrackType track) const noexcept
 	case NoteTrackType::Drums_5:       return m_scanTracks.drums5;
 	case NoteTrackType::Vocals:        return m_scanTracks.vocals;
 	case NoteTrackType::Harmonies:     return m_scanTracks.harmonies;
-	case NoteTrackType::ProGuitar_17:  return m_scanTracks.proguitar_17;
-	case NoteTrackType::ProGuitar_22:  return m_scanTracks.proguitar_22;
+	case NoteTrackType::ProGuitar_17:  return m_scanTracks.proGuitar_17;
+	case NoteTrackType::ProGuitar_22:  return m_scanTracks.proGuitar_22;
 	default: return ScanValues();
 	}
 }
@@ -214,8 +214,8 @@ bool LibraryEntry::validateForNotes() const noexcept
 		&m_scanTracks.keys,
 		&m_scanTracks.drums4_pro,
 		&m_scanTracks.drums5,
-		&m_scanTracks.proguitar_17,
-		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proGuitar_17,
+		&m_scanTracks.proGuitar_22,
 		&m_scanTracks.proKeys,
 		&m_scanTracks.vocals,
 		&m_scanTracks.harmonies,

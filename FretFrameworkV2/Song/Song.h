@@ -98,8 +98,8 @@ private:
 		InstrumentalTrack<Keys<5>>                  keys;
 		InstrumentalTrack<DrumNote<DrumPad_Pro, 4>> drums4_pro;
 		InstrumentalTrack<DrumNote<DrumPad, 5>>     drums5;
-		InstrumentalTrack<GuitarNote_Pro<17>>       proguitar_17;
-		InstrumentalTrack<GuitarNote_Pro<22>>       proguitar_22;
+		InstrumentalTrack<GuitarNote_Pro<17>>       proGuitar_17;
+		InstrumentalTrack<GuitarNote_Pro<22>>       proGuitar_22;
 		InstrumentalTrack<Keys_Pro>                 proKeys;
 		VocalTrack<1>                               vocals;
 		VocalTrack<3>                               harmonies;

@@ -87,9 +87,9 @@ void Song::load_mid(const std::filesystem::path& path)
 		else if (name == "HARM3" || name == "PART HARM3")
 			return harmonyTracker.load<2>(reader);
 		else if (name == "PART REAL_GUITAR")
-			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_17, reader);
+			return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_17, reader);
 		else if (name == "PART REAL_GUITAR_22")
-			return Midi_Loader_Instrument::Load(m_noteTracks.proguitar_22, reader);
+			return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_22, reader);
 		else if (name.starts_with("PART REAL_KEYS_"))
 		{
 			proKeys_buffer.clear();
