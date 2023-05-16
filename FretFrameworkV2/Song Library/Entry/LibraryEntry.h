@@ -154,11 +154,11 @@ private:
 		InstrumentScan<DrumNote<DrumPad, 4>> drums4;
 		InstrumentScan<DrumNote<DrumPad_Pro, 4>> drums4_pro;
 		InstrumentScan<DrumNote<DrumPad, 5>> drums5;
-		VocalScan<1> vocals;
-		VocalScan<3> harmonies;
 		InstrumentScan<GuitarNote_Pro<17>> proguitar_17;
 		InstrumentScan<GuitarNote_Pro<22>> proguitar_22;
 		InstrumentScan<Keys_Pro> proKeys;
+		VocalScan<1> vocals;
+		VocalScan<3> harmonies;
 	} m_scanTracks;
 
 	UnicodeWrapper m_name;
