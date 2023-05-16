@@ -79,6 +79,7 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 		&m_scanTracks.harmonies,
 		&m_scanTracks.proguitar_17,
 		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proKeys,
 	};
 
 	for (auto track : arr)
@@ -125,6 +126,7 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 		&m_scanTracks.harmonies,
 		&m_scanTracks.proguitar_17,
 		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proKeys,
 	};
 
 	for (auto track : arr)
@@ -216,6 +218,7 @@ bool LibraryEntry::validateForNotes() const noexcept
 		&m_scanTracks.harmonies,
 		&m_scanTracks.proguitar_17,
 		&m_scanTracks.proguitar_22,
+		&m_scanTracks.proKeys,
 	};
 
 	for (const ScanValues* track : arr)

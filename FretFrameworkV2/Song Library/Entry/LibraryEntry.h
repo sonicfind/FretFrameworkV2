@@ -2,6 +2,7 @@
 #include "Song/ChartSpecifiers.h"
 #include "DrumScan.h"
 #include "VocalScan.h"
+#include "ProKeysScan.h"
 #include "Notes/GuitarNote.h"
 #include "Notes/Keys.h"
 #include "Notes/GuitarNote_Pro.h"
@@ -157,6 +158,7 @@ private:
 		VocalScan<3> harmonies;
 		InstrumentScan<GuitarNote_Pro<17>> proguitar_17;
 		InstrumentScan<GuitarNote_Pro<22>> proguitar_22;
+		InstrumentScan<Keys_Pro> proKeys;
 	} m_scanTracks;
 
 	UnicodeWrapper m_name;

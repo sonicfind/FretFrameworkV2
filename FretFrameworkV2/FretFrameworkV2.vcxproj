@@ -180,6 +180,7 @@
     <ClCompile Include="Song Library\Entry\LibraryEntry_mid.cpp" />
     <ClCompile Include="Song Library\Entry\LibraryEntry_Ini.cpp" />
     <ClCompile Include="Song Library\Entry\Midi_Scan_Guitar.cpp" />
+    <ClCompile Include="Song Library\Entry\ProKeysScan.cpp" />
     <ClCompile Include="Song Library\SongLibrary.cpp" />
     <ClCompile Include="Song\Song.cpp" />
     <ClCompile Include="Song\Song_bch.cpp" />
@@ -251,7 +252,9 @@
     <ClInclude Include="Song Library\Entry\Extended_Scan.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Instrument.h" />
     <ClInclude Include="Song Library\Entry\Extended_Scan_Vocals.h" />
+    <ClInclude Include="Song Library\Entry\Midi_Scan_ProKeys.h" />
     <ClInclude Include="Song Library\Entry\Midi_Scan_Vocals.h" />
+    <ClInclude Include="Song Library\Entry\ProKeysScan.h" />
     <ClInclude Include="Song Library\Entry\VocalScan.h" />
     <ClInclude Include="Song Library\LibraryCategory.h" />
     <ClInclude Include="Song Library\SongLibrary.h" />

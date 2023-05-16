@@ -91,6 +91,9 @@
     <Filter Include="Song\Tracks\InstrumentalTrack\ProKeys">
       <UniqueIdentifier>{aaa01992-a6b9-4d93-a7a3-691f146ff831}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Song Library\Entry\Track\Instrumental\ProKeys">
+      <UniqueIdentifier>{a7facaaa-7584-4a1f-9910-475936e85638}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="Song Library\Entry\DrumScan.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
+    </ClCompile>
+    <ClCompile Include="Song Library\Entry\ProKeysScan.cpp">
+      <Filter>Song Library\Entry\Track\Instrumental\ProKeys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -537,6 +543,12 @@
     </ClInclude>
     <ClInclude Include="Song\Tracks\Instrumental\ProKeysDifficulty.h">
       <Filter>Song\Tracks\InstrumentalTrack\ProKeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\Midi_Scan_ProKeys.h">
+      <Filter>Song Library\Entry\Track\Instrumental\ProKeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Song Library\Entry\ProKeysScan.h">
+      <Filter>Song Library\Entry\Track\Instrumental\ProKeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

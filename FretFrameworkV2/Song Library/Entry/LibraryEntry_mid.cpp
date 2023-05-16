@@ -4,6 +4,7 @@
 #include "Notes/Keys.h"
 #include "Midi_Scan_Vocals.h"
 #include "Midi_Scan_ProGuitar.h"
+#include "Midi_Scan_ProKeys.h"
 
 void LibraryEntry::scan_mid(const LoadedFile& file)
 {
@@ -35,7 +36,6 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 			{
 				if (legacyScans.getType() == DrumType_Enum::LEGACY)
 				{
-					
 					if (!Midi_Scanner_Instrument::Scan(legacyScans, reader))
 						continue;
 
@@ -61,6 +61,27 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 				Midi_Scanner_Instrument::Scan(m_scanTracks.proguitar_17, reader);
 			else if (name == "PART REAL_GUITAR_22")
 				Midi_Scanner_Instrument::Scan(m_scanTracks.proguitar_22, reader);
+			else if (name.starts_with("PART REAL_KEYS_"))
+			{
+				size_t index;
+				switch (name.back())
+				{
+				case 'X': index = 3; break;
+				case 'H': index = 2; break;
+				case 'M': index = 1; break;
+				case 'E': index = 0; break;
+				default: continue;
+				}
+
+				if (m_scanTracks.proKeys.hasSubTrack(index))
+					continue;
+
+				InstrumentScan<Keys_Pro> buffer;
+				Midi_Scanner_Instrument::Scan(buffer, reader);
+
+				if (buffer.getSubTracks() > 0)
+					m_scanTracks.proKeys.addDifficulty(index);
+			}
 		}
 	}
 
