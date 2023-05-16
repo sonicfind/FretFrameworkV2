@@ -99,15 +99,7 @@ namespace Midi_Loader_ProGuitar
 		else if (lane == 7)
 		{
 			if constexpr (NoteOn)
-			{
-				track.m_slides.emplace_back(position, channel == 11);
-				diffTracker.slide = position;
-			}
-			else
-			{
-				track.m_slides.back().setLength(position - diffTracker.slide);
-				diffTracker.slide = UINT64_MAX;
-			}
+				track.m_notes.get_or_emplace_back(position).setSlide(channel == 11 ? ProSlide::Reversed : ProSlide::Normal);
 		}
 		else if (lane == 8)
 		{
@@ -128,9 +120,9 @@ namespace Midi_Loader_ProGuitar
 			{
 				switch (channel)
 				{
-				case 13: track.m_emphasis.emplace_back(position, EmphasisType::High); break;
-				case 14: track.m_emphasis.emplace_back(position, EmphasisType::Middle); break;
-				case 15: track.m_emphasis.emplace_back(position, EmphasisType::Low); break;
+				case 13: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::High); break;
+				case 14: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::Middle); break;
+				case 15: track.m_notes.get_or_emplace_back(position).setEmphasis(EmphasisType::Low); break;
 				}
 			}
 		}

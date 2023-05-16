@@ -7,9 +7,7 @@ class DifficultyTrack<GuitarNote_Pro<numFrets>> : public Track
 {
 public:
 	SimpleFlatMap<GuitarNote_Pro<numFrets>> m_notes;
-	SimpleFlatMap<ProSlide> m_slides;
 	SimpleFlatMap<ArpeggioNote<numFrets>> m_arpeggios;
-	SimpleFlatMap<StringEmphasis> m_emphasis;
 
 public:
 	virtual void adjustTicks(double multiplier) override
@@ -21,10 +19,10 @@ public:
 			*note *= multiplier;
 		}
 
-		for (auto& note : m_arpeggios)
+		for (auto& arp : m_arpeggios)
 		{
-			note.key = uint64_t(note.key * multiplier);
-			*note *= multiplier;
+			arp.key = uint64_t(arp.key * multiplier);
+			*arp *= multiplier;
 		}
 	}
 
