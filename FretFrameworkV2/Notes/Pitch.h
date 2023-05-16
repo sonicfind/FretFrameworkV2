@@ -57,18 +57,31 @@ public:
 
 	[[nodiscard]] constexpr bool set(NoteName note, int octave) noexcept
 	{ 
-		return setOctave(octave) && setNote(note);
+		const int origOctave = m_octave;
+		if (!setOctave(octave) || !setNote(note))
+		{
+			m_octave = origOctave;
+			return false;
+		}
+		return true;
 	}
 
 	template <int other_min, int other_max>
 	[[nodiscard]] constexpr bool set(const Pitch<other_min, other_max>& pitch) noexcept
 	{
-		return setOctave(pitch.getOctave()) && setNote(pitch.getNote());
+		const int origOctave = m_octave;
+		if (!set(pitch.getNote(), pitch.getOctave()))
+		{
+			m_octave = origOctave;
+			return false;
+		}
+		return true;
 	}
 
+	constexpr bool set(char binaryValue) noexcept { return binaryValue >= 0 && set(static_cast<NoteName>(binaryValue % OCTAVE_LENGTH), (binaryValue / OCTAVE_LENGTH) - 1); }
 	constexpr bool set(char binaryValue, uint64_t length) noexcept
 	{
-		if (binaryValue < 0 || !set(static_cast<NoteName>(binaryValue % OCTAVE_LENGTH), (binaryValue / OCTAVE_LENGTH) - 1))
+		if (!set(binaryValue))
 			return false;
 		setLength(length);
 		return true;
