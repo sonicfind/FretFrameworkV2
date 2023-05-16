@@ -65,7 +65,7 @@ namespace Midi_Scanner_Vocal
 		template <size_t INDEX, bool NoteOn>
 		bool parseVocal(unsigned char pitch)
 		{
-			if (m_vocal != UINT64_MAX)
+			if (m_vocal != UINT64_MAX && m_lyric != UINT64_MAX)
 			{
 				if constexpr (INDEX == 0)
 				{
