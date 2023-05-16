@@ -47,7 +47,7 @@ public:
 		for (const auto& diff : m_difficulties)
 			if (diff.isOccupied())
 				return true;
-		return !m_roots.isEmpty() || Track::isOccupied();
+		return !m_roots.isEmpty() || !m_handPositions.isEmpty() || !m_chordPhrases.isEmpty() || Track::isOccupied();
 	}
 
 	virtual void clear() override
@@ -56,6 +56,8 @@ public:
 		for (auto& diff : m_difficulties)
 			diff.clear();
 		m_roots.clear();
+		m_handPositions.clear();
+		m_chordPhrases.clear();
 	}
 
 	virtual void adjustTicks(float multiplier)
@@ -67,6 +69,12 @@ public:
 
 		for (auto& root : m_roots)
 			root.key = uint64_t(root.key * multiplier);
+
+		for (auto& hand : m_handPositions)
+			hand.key = uint64_t(hand.key * multiplier);
+
+		for (auto& vec : m_chordPhrases)
+			vec.key = uint64_t(vec.key * multiplier);
 	}
 
 	void shrink()
