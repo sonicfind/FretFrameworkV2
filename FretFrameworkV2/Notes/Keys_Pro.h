@@ -74,3 +74,13 @@ public:
 		return m_pitches[index];
 	}
 };
+
+enum class ProKey_Ranges
+{
+	C1_E2,
+	D1_F2,
+	E1_G2,
+	F1_A2,
+	G1_B2,
+	A1_C3,
+};
