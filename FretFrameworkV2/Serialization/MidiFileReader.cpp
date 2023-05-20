@@ -159,9 +159,7 @@ ControlChange MidiFileReader::extractControlChange() const noexcept
 
 uint32_t MidiFileReader::extractMicrosPerQuarter() const noexcept
 {
-	uint32_t micros = 0;
-	memcpy((char*)&micros + 1, m_currentPosition, 3);
-	return _byteswap_ulong(micros);
+	return (m_currentPosition[0] << 16) | (m_currentPosition[1] << 8) | m_currentPosition[0];
 }
 
 TimeSig MidiFileReader::extractTimeSig() const noexcept

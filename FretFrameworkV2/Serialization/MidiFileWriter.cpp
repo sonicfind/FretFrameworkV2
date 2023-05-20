@@ -71,8 +71,10 @@ void MidiFileWriter::writeMicros(uint64_t position, uint32_t micros)
 	static char BUFFER[3];
 	if (micros >= 1 << 24)
 		throw std::runtime_error("MicroSeconds value exceeds 24bit max");
-	micros = _byteswap_ulong(micros);
-	memcpy(BUFFER, (char*)&micros + 1, 3);
+
+	BUFFER[0] = (micros >> 16) & 0xFF;
+	BUFFER[1] = (micros >> 8) & 0xFF;
+	BUFFER[2] = micros & 0xFF;
 
 	writeVLQ(uint32_t(position - m_event.position));
 	writeMeta(MidiEventType::Tempo, { BUFFER, 3 });
