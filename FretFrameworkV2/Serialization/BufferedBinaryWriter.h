@@ -1,38 +1,40 @@
 #pragma once
 #include "BinaryFileWriter.h"
 
-class BufferedBinaryWriter : public BinaryFileWriter<false>
+class BufferedBinaryWriter : protected BinaryFileWriter<false>
 {
 public:
 	using BinaryFileWriter::BinaryFileWriter;
 
 	template <typename T>
-	void append(const T& value)
+	void write(const T* const data, size_t size)
 	{
-		append(value, sizeof(T));
+		if (!m_buffers.empty())
+			m_buffers.back().append((const char*)data, size);
+		else
+			BinaryFileWriter::write(data, size);
+	}
+
+	template <typename T>
+	void write(const T& value, size_t size)
+	{
+		write(&value, size);
+	}
+
+	template <typename T>
+	void write(const T& value)
+	{
+		write(value, sizeof(T));
 	}
 
 	void writeString(std::string_view str);
-	void appendString(std::string_view str);
-	void writeBuffer();
+	void startBuffer();
+	void endBuffer();
 
 protected:
-	template <typename T>
-	void append(const T* const data, size_t size)
-	{
-		m_buffer.append((const char*)data, size);
-	}
-
-	template <typename T>
-	void append(const T& value, size_t size)
-	{
-		append(&value, size);
-	}
-
 	void writeWebType(uint64_t value);
-	void appendWebType(uint64_t value);
 
 private:
-	std::string m_buffer;
+	std::vector<std::string> m_buffers;
 };
 

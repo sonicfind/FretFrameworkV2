@@ -55,11 +55,12 @@ public:
 
 	void mapToCache(BufferedBinaryWriter& writer, std::unordered_map<const LibraryEntry*, std::pair<CacheIndices, MD5>>& nodes) const
 	{
-		writer.append((uint32_t)m_elements.size());
+		writer.startBuffer();
+		writer.write((uint32_t)m_elements.size());
 		for (uint32_t i = 0; i < m_elements.size(); ++i)
 		{
 			const auto& element = m_elements.at_index(i);
-			writer.appendString(element.key->toString());
+			writer.writeString(element.key->toString());
 			for (const auto& song : *element)
 			{
 				if      constexpr (Attribute == SongAttribute::ARTIST)   nodes.at(song.raw()).first.artistIndex = i;
@@ -70,7 +71,7 @@ public:
 				else if constexpr (Attribute == SongAttribute::PLAYLIST) nodes.at(song.raw()).first.playlistIndex = i;
 			}
 		}
-		writer.writeBuffer();
+		writer.endBuffer();
 	}
 
 	auto begin() const noexcept { return m_elements.begin(); }
@@ -107,10 +108,11 @@ public:
 			}
 		}
 
-		writer.append((uint32_t)strings.size());
+		writer.startBuffer();
+		writer.write((uint32_t)strings.size());
 		for (const auto& string : strings)
-			writer.appendString(string->toString());
-		writer.writeBuffer();
+			writer.writeString(string->toString());
+		writer.endBuffer();
 	}
 
 	auto begin() const noexcept { return m_elements.begin(); }

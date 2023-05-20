@@ -301,11 +301,12 @@ void SongLibrary::writeToCacheFile() const
 	writer.write((uint32_t)nodes.size());
 	for (const auto& node : nodes)
 	{
+		writer.startBuffer();
 		node.first->serializeFileInfo(writer);
-		writer.append(node.second.first);
+		writer.write(node.second.first);
 		node.first->serializeSongInfo(writer);
-		writer.append(node.second.second);
-		writer.writeBuffer();
+		writer.write(node.second.second);
+		writer.endBuffer();
 	}
 }
 

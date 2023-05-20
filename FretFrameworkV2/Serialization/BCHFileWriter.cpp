@@ -52,11 +52,12 @@ void BCHFileWriter::startEvent(uint64_t position, ChartEvent ev)
 	writeWebType(position - m_position);
 	m_position = position;
 	write((unsigned char)ev);
+	startBuffer();
 }
 
 void BCHFileWriter::finishEvent()
 {
-	writeBuffer();
+	endBuffer();
 }
 
 void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint64_t>& note)
@@ -64,16 +65,16 @@ void BCHFileWriter::writeSingleNote(const std::pair<size_t, uint64_t>& note)
 	assert(note.first < 128);
 	if (note.second >= 20)
 	{
-		append(unsigned char(note.first + 128));
-		appendWebType(note.second);
+		write(unsigned char(note.first + 128));
+		writeWebType(note.second);
 	}
 	else
-		append((unsigned char)note.first);
+		write((unsigned char)note.first);
 }
 
 void BCHFileWriter::writeMultiNote(const std::vector<std::pair<size_t, uint64_t>>& notes)
 {
-	append((unsigned char)notes.size());
+	write((unsigned char)notes.size());
 	for (const auto& note : notes)
 		writeSingleNote(note);
 }
@@ -83,80 +84,80 @@ void BCHFileWriter::writeSingleNoteMods(const std::vector<char>& mods)
 	if (mods.empty())
 		return;
 
-	append((unsigned char)mods.size());
+	write((unsigned char)mods.size());
 	for (const char mod : mods)
-		append(mod);
+		write(mod);
 }
 
 void BCHFileWriter::writeMultiNoteMods(const std::vector<std::pair<char, size_t>>& mods)
 {
-	append((unsigned char)mods.size());
+	write((unsigned char)mods.size());
 	for (const auto& mod : mods)
 	{
 		if (mod.second != SIZE_MAX)
-			append(mod.first);
+			write(mod.first);
 		else
 		{
-			append(char(mod.first | 128));
-			append((unsigned char)mod.second);
+			write(char(mod.first | 128));
+			write((unsigned char)mod.second);
 		}
 	}
 }
 
 void BCHFileWriter::writeText(std::string_view str)
 {
-	append(str.data(), str.size());
+	write(str.data(), str.size());
 }
 
 void BCHFileWriter::writeSpecialPhrase(const SpecialPhrase& phrase)
 {
-	append((unsigned char)phrase.type);
-	appendWebType(phrase.getLength());
+	write((unsigned char)phrase.type);
+	writeWebType(phrase.getLength());
 }
 
 void BCHFileWriter::writePitch(Pitch<-1, 9> pitch)
 {
-	append(pitch.getBinaryValue());
+	write(pitch.getBinaryValue());
 }
 
 void BCHFileWriter::writePitchAndDuration(Pitch<-1, 9> pitch)
 {
 	writePitch(pitch);
 	if (pitch.getLength() > 0)
-		appendWebType(pitch.getLength());
+		writeWebType(pitch.getLength());
 }
 
 void BCHFileWriter::writeLyric(std::pair<size_t, std::string_view> lyric)
 {
-	append((unsigned char)lyric.first);
-	appendWebType(lyric.second.size());
-	append(lyric.second.data(), lyric.second.size());
+	write((unsigned char)lyric.first);
+	writeWebType(lyric.second.size());
+	write(lyric.second.data(), lyric.second.size());
 }
 
 void BCHFileWriter::writeNoteName(NoteName note, PitchType type)
 {
 	assert(NoteName::C <= note && note <= NoteName::B);
-	append(static_cast<unsigned char>(note));
+	write(static_cast<unsigned char>(note));
 }
 
 void BCHFileWriter::writeLeftHand(size_t position)
 {
-	append(position);
+	write(position);
 }
 
 void BCHFileWriter::writeMicrosPerQuarter(uint32_t micros)
 {
-	append(micros);
+	write(micros);
 }
 
 void BCHFileWriter::writeAnchor(uint64_t anchor)
 {
-	appendWebType(anchor);
+	writeWebType(anchor);
 }
 
 void BCHFileWriter::writeTimeSig(TimeSig timeSig)
 {
-	append(timeSig);
+	write(timeSig);
 }
 
 void BCHFileWriter::writeTrackHeader(const char(&tag)[5])
