@@ -17,11 +17,7 @@ LoadedFile::LoadedFile(const std::filesystem::path& filepath)
 	m_fileData[m_fileSize] = 0;
 }
 
-LoadedFile::LoadedFile(const char* data, size_t size) : m_fileSize(size), m_fileData(std::make_shared_for_overwrite<char[]>(m_fileSize + 1))
-{
-	memcpy(m_fileData.get(), data, size);
-	m_fileData[m_fileSize] = 0;
-}
+LoadedFile::LoadedFile(const std::shared_ptr<char[]>& data, size_t size) : m_fileSize(size), m_fileData(data) {}
 
 const char* LoadedFile::begin() const noexcept
 {

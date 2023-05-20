@@ -7,7 +7,7 @@ class LoadedFile
 {
 public:
 	LoadedFile(const std::filesystem::path& filepath);
-	LoadedFile(const char* data, size_t size);
+	LoadedFile(const std::shared_ptr<char[]>& data, size_t size);
 
 	[[nodiscard]] const char* begin() const noexcept;
 	[[nodiscard]] const char* end() const noexcept;
