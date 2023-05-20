@@ -56,13 +56,18 @@ void Midi_Loader_Instrument::Loader<Keys_Pro>::toggleExtraValues(MidiNote note)
 	if constexpr (!NoteOn)
 		return;
 
+	size_t index;
 	switch (note.value)
 	{
-	case 0: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::C1_E2; break;
-	case 2: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::D1_F2; break;
-	case 4: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::E1_G2; break;
-	case 5: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::F1_A2; break;
-	case 7: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::G1_B2; break;
-	case 9: m_track[0].m_ranges.get_or_emplace_back(m_position) = ProKey_Ranges::A1_C3; break;
+	case 0: index = 0; break;
+	case 2: index = 1; break;
+	case 4: index = 2; break;
+	case 5: index = 3; break;
+	case 7: index = 4; break;
+	case 9: index = 5; break;
+	default:
+		return;
 	}
+	static constexpr ProKey_Ranges RANGES[] = { ProKey_Ranges::C1_E2, ProKey_Ranges::D1_F2, ProKey_Ranges::E1_G2, ProKey_Ranges::F1_A2, ProKey_Ranges::G1_B2, ProKey_Ranges::A1_C3, };
+	m_track[0].m_ranges.get_or_emplace_back(m_position) = RANGES[index];
 }
