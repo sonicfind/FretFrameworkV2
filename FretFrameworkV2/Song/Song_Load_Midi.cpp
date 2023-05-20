@@ -7,26 +7,27 @@
 #include "Tracks/Instrumental/Midi_Loader_ProKeys.h"
 #include <iostream>
 
+bool AddSection(SimpleFlatMap<UnicodeString>& sections, const uint64_t position, const std::string_view str)
+{
+	for (std::string_view prefix : { "[section ", "[prc_" })
+	{
+		if (str.starts_with(prefix))
+		{
+			sections.get_or_emplace_back(position) = std::string_view(str.begin() + prefix.length(), str.end() - 1);
+			return true;
+		}
+	}
+	return false;
+}
+
 void Song::load_mid(const std::filesystem::path& path)
 {
 	Midi_Loader_Vocal<1> vocalTracker(m_noteTracks.vocals, m_multiplier_note);
 	Midi_Loader_Vocal<3> harmonyTracker(m_noteTracks.harmonies, m_multiplier_note);
-	InstrumentalTrack<Keys_Pro> proKeys_buffer;
 
 	MidiFileReader reader(path, m_multiplier_note);
-
-	const auto addSection = [&](uint64_t position, std::string_view str)
-	{
-		for (std::string_view prefix : { "[section ", "[prc_" })
-		{
-			if (str.starts_with(prefix))
-			{
-				m_events.sections.get_or_emplace_back(position) = std::string_view(str.begin() + prefix.length(), str.end() - 1);
-				return true;
-			}
-		}
-		return false;
-	};
+	m_tickrate = reader.getTickRate();
+	setSustainThreshold();
 
 	const auto readTrack = [&] (const std::string_view name)
 	{
@@ -40,25 +41,18 @@ void Song::load_mid(const std::filesystem::path& path)
 				if (midiEvent->type <= MidiEventType::Text_EnumLimit)
 				{
 					std::string_view text = reader.extractTextOrSysEx();
-					if (!addSection(midiEvent->position, text))
+					if (!AddSection(m_events.sections, midiEvent->position, text))
 						m_events.globals.get_or_emplace_back(midiEvent->position).push_back(UnicodeString::strToU32(text));
 				}
 			}
 		}
-		else if (name == "PART GUITAR" || name == "T1 GEMS")
-			return Midi_Loader_Instrument::Load(m_noteTracks.lead_5, reader);
-		else if (name == "PART GUITAR GHL")
-			return Midi_Loader_Instrument::Load(m_noteTracks.lead_6, reader);
-		else if (name == "PART BASS")
-			return Midi_Loader_Instrument::Load(m_noteTracks.bass_5, reader);
-		else if (name == "PART BASS GHL")
-			return Midi_Loader_Instrument::Load(m_noteTracks.bass_6, reader);
-		else if (name == "PART RHYTHM")
-			return Midi_Loader_Instrument::Load(m_noteTracks.rhythm, reader);
-		else if (name == "PART GUITAR COOP")
-			return Midi_Loader_Instrument::Load(m_noteTracks.coop, reader);
-		else if (name == "PART KEYS")
-			return Midi_Loader_Instrument::Load(m_noteTracks.keys, reader);
+		else if (name == "PART GUITAR" || name == "T1 GEMS") return Midi_Loader_Instrument::Load(m_noteTracks.lead_5, reader);
+		else if (name == "PART GUITAR GHL")                  return Midi_Loader_Instrument::Load(m_noteTracks.lead_6, reader);
+		else if (name == "PART BASS")                        return Midi_Loader_Instrument::Load(m_noteTracks.bass_5, reader);
+		else if (name == "PART BASS GHL")                    return Midi_Loader_Instrument::Load(m_noteTracks.bass_6, reader);
+		else if (name == "PART RHYTHM")                      return Midi_Loader_Instrument::Load(m_noteTracks.rhythm, reader);
+		else if (name == "PART GUITAR COOP")                 return Midi_Loader_Instrument::Load(m_noteTracks.coop, reader);
+		else if (name == "PART KEYS")                        return Midi_Loader_Instrument::Load(m_noteTracks.keys, reader);
 		else if (name == "PART DRUMS")
 		{
 			if (m_baseDrumType == DrumType_Enum::LEGACY)
@@ -68,44 +62,34 @@ void Song::load_mid(const std::filesystem::path& path)
 				if (!Midi_Loader_Instrument::Load(track, reader))
 					return false;
 
-				if (DrumNote_Legacy::GetType() != DrumType_Enum::FIVELANE)
-					LegacyDrums::Transfer(track, m_noteTracks.drums4_pro);
-				else
-					LegacyDrums::Transfer(track, m_noteTracks.drums5);
+				if (DrumNote_Legacy::GetType() != DrumType_Enum::FIVELANE) LegacyDrums::Transfer(track, m_noteTracks.drums4_pro);
+				else                                                       LegacyDrums::Transfer(track, m_noteTracks.drums5);
 			}
-			else if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO)
-				return Midi_Loader_Instrument::Load(m_noteTracks.drums4_pro, reader);
-			else
-				return Midi_Loader_Instrument::Load(m_noteTracks.drums5, reader);
+			else if (m_baseDrumType == DrumType_Enum::FOURLANE_PRO) return Midi_Loader_Instrument::Load(m_noteTracks.drums4_pro, reader);
+			else                                                    return Midi_Loader_Instrument::Load(m_noteTracks.drums5, reader);
 		}
-		else if (name == "PART VOCALS")
-			return vocalTracker.load(reader);
-		else if (name == "HARM1" || name == "PART HARM1")
-			return harmonyTracker.load<0>(reader);
-		else if (name == "HARM2" || name == "PART HARM2")
-			return harmonyTracker.load<1>(reader);
-		else if (name == "HARM3" || name == "PART HARM3")
-			return harmonyTracker.load<2>(reader);
-		else if (name == "PART REAL_GUITAR")
-			return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_17, reader);
-		else if (name == "PART REAL_GUITAR_22")
-			return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_22, reader);
+		else if (name == "PART VOCALS")                   return vocalTracker.load(reader);
+		else if (name == "HARM1" || name == "PART HARM1") return harmonyTracker.load<0>(reader);
+		else if (name == "HARM2" || name == "PART HARM2") return harmonyTracker.load<1>(reader);
+		else if (name == "HARM3" || name == "PART HARM3") return harmonyTracker.load<2>(reader);
+		else if (name == "PART REAL_GUITAR")              return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_17, reader);
+		else if (name == "PART REAL_GUITAR_22")           return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_22, reader);
 		else if (name.starts_with("PART REAL_KEYS_"))
 		{
-			proKeys_buffer.clear();
-			if (!Midi_Loader_Instrument::Load(proKeys_buffer, reader))
-				return false;
-
-			size_t index;
+			size_t index = 4;
 			switch (name.back())
 			{
 			case 'X': index = 3; break;
 			case 'H': index = 2; break;
 			case 'M': index = 1; break;
 			case 'E': index = 0; break;
-			default:
-				return false;
 			}
+
+			if (index > 3 || m_noteTracks.proKeys[index].isOccupied())
+				return false;
+
+			InstrumentalTrack<Keys_Pro> proKeys_buffer;
+			Midi_Loader_Instrument::Load(proKeys_buffer, reader);
 
 			m_noteTracks.proKeys[index].m_notes = std::move(proKeys_buffer[0].m_notes);
 			m_noteTracks.proKeys[index].m_ranges = std::move(proKeys_buffer[0].m_ranges);
@@ -117,9 +101,6 @@ void Song::load_mid(const std::filesystem::path& path)
 		}
 		return true;
 	};
-
-	m_tickrate = reader.getTickRate();
-	setSustainThreshold();
 
 	while (reader.startTrack())
 	{
