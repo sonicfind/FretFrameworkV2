@@ -97,6 +97,9 @@
     <Filter Include="Song Library\Entry\Track\Instrumental\ProKeys">
       <UniqueIdentifier>{a7facaaa-7584-4a1f-9910-475936e85638}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Serialization\CONFileLoader">
+      <UniqueIdentifier>{0edf6d56-cb01-4cff-8c42-60714255bbed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serialization\FileReader.cpp">
@@ -264,6 +267,9 @@
     </ClCompile>
     <ClCompile Include="Notes\DrumNote_Legacy.cpp">
       <Filter>Notes</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization\CONFileLoader.cpp">
+      <Filter>Serialization\CONFileLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -557,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="Song Library\Entry\ProKeysScan.h">
       <Filter>Song Library\Entry\Track\Instrumental\ProKeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\CONFileLoader.h">
+      <Filter>Serialization\CONFileLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

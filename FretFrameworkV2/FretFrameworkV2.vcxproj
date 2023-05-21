@@ -154,6 +154,7 @@
     <ClCompile Include="Serialization\BufferedBinaryReader.cpp" />
     <ClCompile Include="Serialization\BufferedBinaryWriter.cpp" />
     <ClCompile Include="Serialization\ChtFileReader.cpp" />
+    <ClCompile Include="Serialization\CONFileLoader.cpp" />
     <ClCompile Include="Serialization\FileReader.cpp" />
     <ClCompile Include="Serialization\IniFileReader.cpp" />
     <ClCompile Include="Serialization\IniFileWriter.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Serialization\CommonChartTypes.h" />
     <ClInclude Include="Serialization\CommonChartParser.h" />
     <ClInclude Include="Serialization\CommonChartWriter.h" />
+    <ClInclude Include="Serialization\CONFileLoader.h" />
     <ClInclude Include="Serialization\FileReader.h" />
     <ClInclude Include="Serialization\IniFileReader.h" />
     <ClInclude Include="Serialization\IniFileWriter.h" />
