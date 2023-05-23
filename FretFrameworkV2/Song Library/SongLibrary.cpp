@@ -261,13 +261,11 @@ void SongLibrary::scanDirectory(const std::filesystem::path& directory)
 void SongLibrary::finalize()
 {
 	m_preScannedDirectories.clear();
-
-	auto& tasks = TaskQueue::getInstance();
 	for (auto& node : m_songlist)
+	{
 		for (auto& entry : *node)
 		{
-			tasks.addTask([this, &entry] {
-				entry.finalize();
+			entry.finalize();
 			m_categories.title.add(entry);
 			m_categories.artist.add(entry);
 			m_categories.album.add(entry);
@@ -276,9 +274,8 @@ void SongLibrary::finalize()
 			m_categories.charter.add(entry);
 			m_categories.artistAlbum.add(entry);
 			m_categories.playlist.add(entry);
-				});
 		}
-	tasks.waitForCompletedTasks();
+	}
 }
 
 void SongLibrary::writeToCacheFile() const
