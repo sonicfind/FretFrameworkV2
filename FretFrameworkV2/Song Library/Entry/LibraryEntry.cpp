@@ -372,6 +372,18 @@ void LibraryEntry::mapModifierVariables()
 	if (auto modifier = getModifier("pro_drums"); modifier && !modifier->getValue<bool>())
 		m_scanTracks.drums4_pro.reset();
 
+	if (auto intensity = getModifier("diff_guitar_real"))
+		m_scanTracks.proGuitar_17.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_guitar_real_22"))
+		m_scanTracks.proGuitar_22.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_bass_real"))
+		m_scanTracks.proBass_17.setIntensity(intensity->getValue<int32_t>());
+
+	if (auto intensity = getModifier("diff_bass_real_22"))
+		m_scanTracks.proBass_22.setIntensity(intensity->getValue<int32_t>());
+
 	if (auto intensity = getModifier("diff_vocals"))
 		m_scanTracks.vocals.setIntensity(intensity->getValue<int32_t>());
 
