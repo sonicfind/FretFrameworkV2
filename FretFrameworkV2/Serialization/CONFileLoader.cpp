@@ -40,14 +40,13 @@ CONFile::CONFileLoader::CONFileLoader(const std::filesystem::path& filepath)
 
 	fseek(m_file, 0x37C, SEEK_SET);
 	readToBuffer(2);
-	const size_t blockCount = (size_t)buffer[0] << 8 | (size_t)buffer[1];
-	const size_t length = 0x1000 * blockCount;
+	const size_t length = 0x1000 * ((size_t)buffer[0] << 8 | (size_t)buffer[1]);
 
 	fseek(m_file, 0x37E, SEEK_SET);
 	readToBuffer(3);
 	const size_t firstBlock = (size_t)buffer[0] << 16 | (size_t)buffer[1] << 8 | (size_t)buffer[2];
 
-	auto fileListingBuffer = getData_contiguous(firstBlock, firstBlock + blockCount, length);
+	auto fileListingBuffer = getData_contiguous(firstBlock, length);
 	for (size_t i = 0; i < length; i += 0x40)
 	{
 		CONFileListing listing((unsigned char*)fileListingBuffer.get() + i);
@@ -98,13 +97,16 @@ LoadedFile CONFile::CONFileLoader::loadFile(size_t index) const
 
 LoadedFile CONFile::CONFileLoader::loadFile(const CONFileListing& listing) const
 {
-	auto data = std::make_unique<char[]>(listing.getFileSize());
-	if (!listing.isContinguous())
-		throw std::runtime_error("Not yet supported");
-	return LoadedFile(getData_contiguous(listing.getFirstBlock(), listing.getFirstBlock() + listing.getNumBlocks(), listing.getFileSize()), listing.getFileSize());
+	if (listing.isDirectory())
+		throw std::runtime_error("Direcotory listing cannot be loaded as a file");
+
+	if (listing.isContinguous())
+		return LoadedFile(getData_contiguous(listing.getFirstBlock(), listing.getFileSize()), listing.getFileSize());
+	else
+		return LoadedFile(getData_split(listing.getFirstBlock(), listing.getFileSize()), listing.getFileSize());
 }
 
-size_t CONFile::CONFileLoader::getBlockLocation(size_t blocknum) const noexcept
+size_t CONFile::CONFileLoader::calculateBlockNum(size_t blocknum) const noexcept
 {
 	size_t blockAdjust = 0;
 	if (blocknum >= 0xAA)
@@ -113,31 +115,78 @@ size_t CONFile::CONFileLoader::getBlockLocation(size_t blocknum) const noexcept
 		if (blocknum >= 0x70E4)
 			blockAdjust += ((blocknum / 0x70E4) + 1) << m_shiftValue;
 	}
-	return 0xC000 + (blockAdjust + blocknum) * 0x1000;
+	return blockAdjust + blocknum;
 }
 
-std::shared_ptr<char[]> CONFile::CONFileLoader::getData_contiguous(size_t blockNum, size_t endBlock, size_t fileSize) const
+std::shared_ptr<char[]> CONFile::CONFileLoader::getData_contiguous(size_t blockNum, size_t fileSize) const
 {
-	std::shared_ptr<char[]> data = std::make_shared<char[]>(fileSize);
-	size_t readCount = 170 - (blockNum % 170);
-	size_t readSize = 0x1000 * readCount;
-	size_t offset = 0;
-	while (blockNum < endBlock && offset < fileSize)
-	{
-		if (_fseeki64(m_file, getBlockLocation(blockNum), SEEK_SET) != 0)
-			throw;
+	std::shared_ptr<char[]> data = std::make_shared<char[]>(fileSize + 1);
+	if (_fseeki64(m_file, 0xC000 + calculateBlockNum(blockNum) * 0x1000, SEEK_SET) != 0)
+		throw;
 
+	const size_t skipVal = (size_t)0x1000 << m_shiftValue;
+	size_t div = (blockNum / 28900) + 1;
+	size_t numBlocks = 170 - (blockNum % 170);
+	size_t readSize = 0x1000 * numBlocks;
+	size_t offset = 0;
+	while (true)
+	{
 		if (readSize > fileSize - offset)
 			readSize = fileSize - offset;
 
 		if (fread(data.get() + offset, readSize, 1, m_file) != 1)
 			throw;
 
-		blockNum += readCount;
 		offset += readSize;
+		if (offset == fileSize)
+			break;
 
-		readCount = 170;
-		readSize = (size_t)170 * 0x1000;
+		blockNum += numBlocks;
+		numBlocks = 170;
+		readSize = numBlocks * 0x1000;
+		_fseeki64(m_file, skipVal, SEEK_CUR);
+		if (blockNum == div * 28900)
+		{
+			_fseeki64(m_file, skipVal, SEEK_CUR);
+			++div;
+		}
 	}
+	data[fileSize] = 0;
+	return data;
+}
+
+std::shared_ptr<char[]> CONFile::CONFileLoader::getData_split(size_t blockNum, size_t fileSize) const
+{
+	std::shared_ptr<char[]> data = std::make_shared<char[]>(fileSize + 1);
+	size_t offset = 0;
+	while (true)
+	{
+		size_t block = calculateBlockNum(blockNum);
+		size_t blockLocation = 0xC000 + block * 0x1000;
+		if (_fseeki64(m_file, blockLocation, SEEK_SET) != 0)
+			throw;
+
+		size_t readSize = 0x1000;
+		if (readSize > fileSize - offset)
+			readSize = fileSize - offset;
+
+		if (fread(data.get() + offset, readSize, 1, m_file) != 1)
+			throw;
+
+		offset += readSize;
+		if (offset == fileSize)
+			break;
+
+		size_t hashlocation = blockLocation - ((blockNum % 170) * 4072 + 4075);
+		if (_fseeki64(m_file, hashlocation, SEEK_SET) != 0)
+			throw;
+
+		unsigned char buffer[3];
+		if (fread(buffer, 3, 1, m_file) != 1)
+			throw;
+
+		blockNum = (size_t)buffer[0] << 16 | (size_t)buffer[1] << 8 | buffer[2];
+	}
+	data[fileSize] = 0;
 	return data;
 }

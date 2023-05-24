@@ -42,11 +42,8 @@ namespace CONFile
 		LoadedFile loadFile(const CONFileListing& listing) const;
 
 	private:
-		size_t getBlockLocation(size_t blocknum) const noexcept;
-		std::shared_ptr<char[]> getData_contiguous(size_t blockNum, size_t endBlock, size_t fileSize) const;
+		size_t calculateBlockNum(size_t blocknum) const noexcept;
+		std::shared_ptr<char[]> getData_contiguous(size_t blockNum, size_t fileSize) const;
+		std::shared_ptr<char[]> getData_split(size_t blockNum, size_t fileSize) const;
 	};
-
-
 }
-
-
