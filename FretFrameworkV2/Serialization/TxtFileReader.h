@@ -100,4 +100,7 @@ protected:
 	std::string_view extractModifierName();
 	std::optional<ModifierNode> findNode(std::string_view name, const ModifierOutline& list);
 	Modifiers::Modifier createModifier(ModifierNode node);
+
+protected:
+	const char* m_next = nullptr;
 };

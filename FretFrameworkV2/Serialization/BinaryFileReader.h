@@ -73,6 +73,8 @@ public:
 	}
 
 protected:
+	const char* m_next = nullptr;
+
 	template <typename T>
 	[[nodiscard]] T extract_nonvirtual()
 	{

@@ -12,5 +12,4 @@ public:
 protected:
 	const LoadedFile m_file;
 	const char* m_currentPosition = nullptr;
-	const char* m_next = nullptr;
 };
