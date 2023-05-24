@@ -31,7 +31,9 @@ CONFile::CONFileLoader::CONFileLoader(const std::filesystem::path& filepath)
 		throw std::runtime_error("CONFile could not be loaded");
 
 	readToBuffer(4);
-	if (strncmp((char*)buffer, "CON ", 4) != 0)
+	if (strncmp((char*)buffer, "CON ", 4) != 0 &&
+		strncmp((char*)buffer, "LIVE", 4) != 0 &&
+		strncmp((char*)buffer, "PIRS", 4) != 0)
 		throw std::runtime_error("CONFile 4-byte tag invalid or represents a different xbox file type");
 
 	fseek(m_file, 0x0340, SEEK_SET);
