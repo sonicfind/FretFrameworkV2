@@ -6,7 +6,7 @@
 
 class SongLibrary
 {
-	static constexpr uint32_t s_CACHE_VERSION = 0x05162301;
+	static constexpr uint32_t s_CACHE_VERSION = 0x05242301;
 
 public:
 	void runFullScan(const std::vector<std::u32string>& baseDirectories);
