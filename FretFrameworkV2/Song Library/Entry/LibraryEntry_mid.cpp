@@ -61,6 +61,10 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 				Midi_Scanner_Instrument::Scan(m_scanTracks.proGuitar_17, reader);
 			else if (name == "PART REAL_GUITAR_22")
 				Midi_Scanner_Instrument::Scan(m_scanTracks.proGuitar_22, reader);
+			else if (name == "PART REAL_BASS")
+				Midi_Scanner_Instrument::Scan(m_scanTracks.proBass_17, reader);
+			else if (name == "PART REAL_BASS_22")
+				Midi_Scanner_Instrument::Scan(m_scanTracks.proBass_22, reader);
 			else if (name.starts_with("PART REAL_KEYS_"))
 			{
 				size_t index;

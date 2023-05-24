@@ -74,6 +74,8 @@ void Song::load_mid(const std::filesystem::path& path)
 		else if (name == "HARM3" || name == "PART HARM3") return harmonyTracker.load<2>(reader);
 		else if (name == "PART REAL_GUITAR")              return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_17, reader);
 		else if (name == "PART REAL_GUITAR_22")           return Midi_Loader_Instrument::Load(m_noteTracks.proGuitar_22, reader);
+		else if (name == "PART REAL_BASS")              return Midi_Loader_Instrument::Load(m_noteTracks.proBass_17, reader);
+		else if (name == "PART REAL_BASS_22")           return Midi_Loader_Instrument::Load(m_noteTracks.proBass_22, reader);
 		else if (name.starts_with("PART REAL_KEYS_"))
 		{
 			size_t index = 4;
