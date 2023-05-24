@@ -11,8 +11,8 @@ enum class ChordPhrase
 	Accidental_Switch
 };
 
-template <int numFrets>
-class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
+template <int numStrings, int numFrets>
+class InstrumentalTrack<GuitarNote_Pro<numStrings, numFrets>> : public Track
 {
 	class LeftHandPosition
 	{
@@ -37,7 +37,7 @@ class InstrumentalTrack<GuitarNote_Pro<numFrets>> : public Track
 	};
 
 public:
-	DifficultyTrack<GuitarNote_Pro<numFrets>> m_difficulties[4];
+	DifficultyTrack<GuitarNote_Pro<numStrings, numFrets>> m_difficulties[4];
 	SimpleFlatMap<NoteName> m_roots;
 	SimpleFlatMap<LeftHandPosition> m_handPositions;
 	SimpleFlatMap<std::vector<ChordPhrase>> m_chordPhrases;
@@ -83,12 +83,12 @@ public:
 			diff.shrink();
 	}
 
-	DifficultyTrack<GuitarNote_Pro<numFrets>>& operator[](size_t i)
+	DifficultyTrack<GuitarNote_Pro<numStrings, numFrets>>& operator[](size_t i)
 	{
 		return m_difficulties[i];
 	}
 
-	const DifficultyTrack<GuitarNote_Pro<numFrets>>& operator[](size_t i) const noexcept
+	const DifficultyTrack<GuitarNote_Pro<numStrings, numFrets>>& operator[](size_t i) const noexcept
 	{
 		return m_difficulties[i];
 	}

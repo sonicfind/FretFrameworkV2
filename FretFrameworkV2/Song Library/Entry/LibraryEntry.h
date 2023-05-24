@@ -154,8 +154,10 @@ private:
 		InstrumentScan<DrumNote<DrumPad, 4>> drums4;
 		InstrumentScan<DrumNote<DrumPad_Pro, 4>> drums4_pro;
 		InstrumentScan<DrumNote<DrumPad, 5>> drums5;
-		InstrumentScan<GuitarNote_Pro<17>> proGuitar_17;
-		InstrumentScan<GuitarNote_Pro<22>> proGuitar_22;
+		InstrumentScan<GuitarNote_Pro<6, 17>> proGuitar_17;
+		InstrumentScan<GuitarNote_Pro<6, 22>> proGuitar_22;
+		InstrumentScan<GuitarNote_Pro<4, 17>> proBass_17;
+		InstrumentScan<GuitarNote_Pro<4, 22>> proBass_22;
 		InstrumentScan<Keys_Pro> proKeys;
 		VocalScan<1> vocals;
 		VocalScan<3> harmonies;

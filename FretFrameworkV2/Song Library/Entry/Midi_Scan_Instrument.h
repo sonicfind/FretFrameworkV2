@@ -19,6 +19,7 @@ namespace Midi_Scanner_Instrument
 	template <class T>
 	struct Scanner_Diff
 	{
+		static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 60, 100 };
 		bool notes[T::GetLaneCount()]{};
 		bool active = false;
 	};
@@ -38,7 +39,7 @@ namespace Midi_Scanner_Instrument
 			if (processSpecialNote<NoteOn>(note))
 				return;
 
-			if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
+			if (Scanner_Diff<T>::NOTERANGE.first <= note.value && note.value <= Scanner_Diff<T>::NOTERANGE.second)
 				parseLaneColor<NoteOn>(note, channel);
 			else
 				processExtraValues(note);
@@ -64,7 +65,7 @@ namespace Midi_Scanner_Instrument
 		template <bool NoteOn>
 		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
-			const int noteValue = note.value - s_noteRange.first;
+			const int noteValue = note.value - Scanner_Diff<T>::NOTERANGE.first;
 			const size_t diff = getDifficulty(noteValue);
 
 			if (m_difficulties[diff].active)
@@ -89,8 +90,6 @@ namespace Midi_Scanner_Instrument
 		void processExtraValues(MidiNote note) { }
 
 	private:
-		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-
 		Scanner_Lanes<T> m_lanes;
 		Scanner_Diff<T> m_difficulties[4]{};
 		Scanner_Extensions<T> m_ext;

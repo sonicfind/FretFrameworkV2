@@ -9,16 +9,16 @@ struct Midi_Scanner_Instrument::Scanner_Lanes<Keys_Pro>
 };
 
 template <>
-struct Midi_Scanner_Instrument::Scanner_Diff<Keys_Pro> {};
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<Keys_Pro>::s_noteRange{ 48, 72 };
+struct Midi_Scanner_Instrument::Scanner_Diff<Keys_Pro>
+{
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 48, 72 };
+};
 
 template<>
 template <bool NoteOn>
 void Midi_Scanner_Instrument::Scanner<Keys_Pro>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	const size_t lane = note.value - s_noteRange.first;
+	const size_t lane = note.value - m_difficulties->NOTERANGE.first;
 	if constexpr (NoteOn)
 		m_lanes.values[lane] = true;
 	else if (m_lanes.values[lane])

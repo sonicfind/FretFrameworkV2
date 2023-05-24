@@ -5,18 +5,13 @@
 template<class DrumType, size_t numPads>
 struct Midi_Scanner_Instrument::Scanner_Extensions<DrumNote<DrumType, numPads>>
 {
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 60, 96 + (unsigned char)numPads };
 	bool expertPlus = false;
 	bool doubleBass = false;
 };
 
 template<>
 struct Midi_Scanner_Instrument::Scanner_Extensions<DrumNote_Legacy> : public Scanner_Extensions<DrumNote<DrumPad_Pro, 5>> {};
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<DrumNote<DrumPad, 5>>::s_noteRange{ 60, 102 };
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template <bool NoteOn, class DrumType, size_t numPads>
 bool ParseSpec(Midi_Scanner_Instrument::Scanner_Extensions<DrumNote<DrumType, numPads>>& ext, MidiNote note)
@@ -62,7 +57,7 @@ template <>
 template <bool NoteOn>
 void Midi_Scanner_Instrument::Scanner<DrumNote_Legacy>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	const int noteValue = note.value - s_noteRange.first;
+	const int noteValue = note.value - m_difficulties->NOTERANGE.first;
 	const size_t lane = m_lanes.values[noteValue];
 
 	if (lane >= 6)

@@ -16,10 +16,10 @@ struct Midi_Loader_Instrument::Loader_Lanes<Keys_Pro>
 };
 
 template <>
-struct Midi_Loader_Instrument::Loader_Diff<Keys_Pro> {};
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<Keys_Pro>::s_noteRange{ 48, 72 };
+struct Midi_Loader_Instrument::Loader_Diff<Keys_Pro>
+{
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 48, 72 };
+};
 
 template <>
 Midi_Loader_Instrument::Loader<Keys_Pro>::Loader(InstrumentalTrack<Keys_Pro>& track, unsigned char multiplierNote);
@@ -32,7 +32,7 @@ template<>
 template <bool NoteOn>
 void Midi_Loader_Instrument::Loader<Keys_Pro>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	const size_t lane = note.value - s_noteRange.first;
+	const size_t lane = note.value - m_difficulties->NOTERANGE.first;
 	if constexpr (NoteOn)
 	{
 		m_lanes.values[lane] = m_position;

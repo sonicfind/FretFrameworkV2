@@ -5,6 +5,7 @@
 template <class DrumType, size_t numPads>
 struct Midi_Loader_Instrument::Loader_Diff<DrumNote<DrumType, numPads>>
 {
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 60, 96 + (unsigned char)numPads };
 	uint64_t notes[numPads + 1]{ UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 	Loader_Diff() { if constexpr (numPads == 5) notes[5] = UINT64_MAX; }
 };
@@ -23,12 +24,6 @@ struct Midi_Loader_Instrument::Loader_Diff<DrumNote_Legacy> : public Midi_Loader
 
 template <>
 struct Midi_Loader_Instrument::Loader_Ext<DrumNote_Legacy> : public Midi_Loader_Instrument::Loader_Ext<DrumNote<DrumPad_Pro, 5>> {};
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<DrumNote<DrumPad, 5>>::s_noteRange{ 60, 102 };
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<DrumNote_Legacy>::s_noteRange{ 60, 102 };
 
 template<>
 template <bool NoteOn>

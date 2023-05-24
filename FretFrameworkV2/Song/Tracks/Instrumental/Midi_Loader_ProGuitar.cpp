@@ -1,25 +1,32 @@
 #include "Midi_Loader_ProGuitar.h"
 
-template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::Loader(InstrumentalTrack<GuitarNote_Pro<17>>& track, unsigned char multiplierNote)
-	: m_track(track), m_phrases({
+Midi_Loader::Loader_Phrases<SpecialPhraseType> GetPhrases(unsigned char multiplierNote)
+{
+	return { {
 	{ { 115 }, { SpecialPhraseType::Solo } },
 	{ { multiplierNote }, { SpecialPhraseType::StarPower } },
 	{ { 126 }, { SpecialPhraseType::Tremolo } },
-	{ { 127 }, { SpecialPhraseType::Trill} },
-}) {}
+	{ { 127 }, { SpecialPhraseType::Trill } },
+	} };
+};
 
 template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::Loader(InstrumentalTrack<GuitarNote_Pro<22>>& track, unsigned char multiplierNote)
-	: m_track(track), m_phrases({
-	{ { 115 }, { SpecialPhraseType::Solo } },
-	{ { multiplierNote }, { SpecialPhraseType::StarPower } },
-	{ { 126 }, { SpecialPhraseType::Tremolo } },
-	{ { 127 }, { SpecialPhraseType::Trill} },
-}) {}
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 17>>& track, unsigned char multiplierNote)
+	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::getDifficulty(size_t noteValue) const noexcept
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 17>>& track, unsigned char multiplierNote)
+	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
+
+template <>
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 22>>& track, unsigned char multiplierNote)
+	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
+
+template <>
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 22>>& track, unsigned char multiplierNote)
+	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
+
+size_t Midi_Loader_ProGuitar::DIFF(size_t noteValue)
 {
 	static constexpr size_t DIFFS[96] =
 	{
@@ -32,30 +39,13 @@ size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::getDifficulty(size_t 
 }
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::getDifficulty(size_t noteValue) const noexcept
-{
-	static constexpr size_t DIFFS[96] =
-	{
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	};
-	return DIFFS[noteValue];
-}
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
 
 template <>
-Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<17>>::Loader_Lanes() : values{
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-} {}
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
 
 template <>
-Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<22>>::Loader_Lanes() : values{
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-} {}
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
+
+template <>
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }

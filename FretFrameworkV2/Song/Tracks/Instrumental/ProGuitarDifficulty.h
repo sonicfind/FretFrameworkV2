@@ -2,11 +2,11 @@
 #include "DifficultyTrack.h"
 #include "Notes/GuitarNote_Pro.h"
 
-template <int numFrets>
-class DifficultyTrack<GuitarNote_Pro<numFrets>> : public Track
+template <int numStrings, int numFrets>
+class DifficultyTrack<GuitarNote_Pro<numStrings, numFrets>> : public Track
 {
 public:
-	SimpleFlatMap<GuitarNote_Pro<numFrets>> m_notes;
+	SimpleFlatMap<GuitarNote_Pro<numStrings, numFrets>> m_notes;
 	SimpleFlatMap<ArpeggioNote<numFrets>> m_arpeggios;
 
 public:

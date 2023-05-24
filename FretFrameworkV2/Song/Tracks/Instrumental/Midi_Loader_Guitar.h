@@ -5,6 +5,7 @@
 template <>
 struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<5>>
 {
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 59, 107 };
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
@@ -19,17 +20,12 @@ struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<5>>
 template <>
 struct Midi_Loader_Instrument::Loader_Diff<GuitarNote<6>>
 {
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 58, 103 };
 	bool sliderNotes = false;
 	bool hopoOn = false;
 	bool hopoOff = false;
 	uint64_t notes[7] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 };
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<5>>::s_noteRange{ 59, 107 };
-
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote<6>>::s_noteRange{ 58, 103 };
 
 template <>
 Midi_Loader_Instrument::Loader_Lanes<GuitarNote<5>>::Loader_Lanes();

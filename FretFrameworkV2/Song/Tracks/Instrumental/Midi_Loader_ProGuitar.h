@@ -2,9 +2,13 @@
 #include "Midi_Loader_Instrument.h"
 #include "ProGuitarTrack.h"
 
-template <int numFrets>
-struct Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numFrets>>
+template <int numStrings, int numFrets>
+struct Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<numStrings, numFrets>> {};
+
+template <int numStrings, int numFrets>
+struct Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numStrings, numFrets>>
 {
+	static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 24, 106 };
 	bool hopo = false;
 	uint64_t notes[6] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 	uint64_t arpeggio = UINT64_MAX;
@@ -13,36 +17,45 @@ struct Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numFrets>>
 };
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::s_noteRange{ 24, 106 };
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::getDifficulty(size_t noteValue) const noexcept;
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::s_noteRange{ 24, 106 };
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::getDifficulty(size_t noteValue) const noexcept;
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::getDifficulty(size_t noteValue) const noexcept;
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::getDifficulty(size_t noteValue) const noexcept;
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::getDifficulty(size_t noteValue) const noexcept;
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::getDifficulty(size_t noteValue) const noexcept;
 
 template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::Loader(InstrumentalTrack<GuitarNote_Pro<17>>& track, unsigned char multiplierNote);
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 17>>& track, unsigned char multiplierNote);
 
 template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::Loader(InstrumentalTrack<GuitarNote_Pro<22>>& track, unsigned char multiplierNote);
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 17>>& track, unsigned char multiplierNote);
 
 template <>
-Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<17>>::Loader_Lanes();
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 22>>& track, unsigned char multiplierNote);
 
 template <>
-Midi_Loader_Instrument::Loader_Lanes<GuitarNote_Pro<22>>::Loader_Lanes();
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 22>>& track, unsigned char multiplierNote);
 
 namespace Midi_Loader_ProGuitar
 {
 	constexpr NoteName s_ROOTS[] = { NoteName::E, NoteName::F, NoteName::F_Sharp_Gb, NoteName::G, NoteName::G_Sharp_Ab, NoteName::A, NoteName::A_Sharp_Bb, NoteName::B, NoteName::C, NoteName::C_Sharp_Db, NoteName::D, NoteName::D_Sharp_Eb };
+	constexpr size_t LANES[96] = {
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+	};
 
-	template <bool NoteOn, int numFrets>
-	void ParseColor(DifficultyTrack<GuitarNote_Pro<numFrets>>& track, Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numFrets>>& diffTracker, const uint64_t position, const size_t lane, const unsigned char velocity, unsigned char channel)
+	size_t DIFF(size_t noteValue);
+
+	template <bool NoteOn, int numStrings, int numFrets>
+	void ParseColor(DifficultyTrack<GuitarNote_Pro<numStrings, numFrets>>& track, Midi_Loader_Instrument::Loader_Diff<GuitarNote_Pro<numStrings, numFrets>>& diffTracker, const uint64_t position, const size_t noteValue, const unsigned char velocity, unsigned char channel)
 	{
+		size_t lane = LANES[noteValue];
 		if (lane < 6)
 		{
 			if constexpr (NoteOn)
@@ -129,8 +142,8 @@ namespace Midi_Loader_ProGuitar
 		}
 	}
 
-	template <bool NoteOn, int numFrets>
-	void ToggleExtras(InstrumentalTrack<GuitarNote_Pro<numFrets>>& track, Midi_Loader_Instrument::Loader_Ext<GuitarNote_Pro<numFrets>>& ext, const uint64_t position, MidiNote note)
+	template <bool NoteOn, int numStrings, int numFrets>
+	void ToggleExtras(InstrumentalTrack<GuitarNote_Pro<numStrings, numFrets>>& track, Midi_Loader_Instrument::Loader_Ext<GuitarNote_Pro<numStrings, numFrets>>& ext, const uint64_t position, MidiNote note)
 	{
 		if constexpr (!NoteOn)
 			return;
@@ -154,32 +167,64 @@ namespace Midi_Loader_ProGuitar
 
 template<>
 template <bool NoteOn>
-void Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::parseLaneColor(MidiNote note, unsigned char channel)
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	const size_t noteValue = note.value - s_noteRange.first;
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
 	const size_t diff = getDifficulty(noteValue);
-	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, noteValue, note.velocity, channel);
 }
 
 template<>
 template <bool NoteOn>
-void Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::parseLaneColor(MidiNote note, unsigned char channel)
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	const size_t noteValue = note.value - s_noteRange.first;
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
 	const size_t diff = getDifficulty(noteValue);
-	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, m_lanes.values[noteValue], note.velocity, channel);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, noteValue, note.velocity, channel);
+}
+
+template<>
+template <bool NoteOn>
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::parseLaneColor(MidiNote note, unsigned char channel)
+{
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
+	const size_t diff = getDifficulty(noteValue);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, noteValue, note.velocity, channel);
+}
+
+template<>
+template <bool NoteOn>
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::parseLaneColor(MidiNote note, unsigned char channel)
+{
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
+	const size_t diff = getDifficulty(noteValue);
+	Midi_Loader_ProGuitar::ParseColor<NoteOn>(m_track[diff], m_difficulties[diff], m_position, noteValue, note.velocity, channel);
 }
 
 template <>
 template <bool NoteOn>
-void Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::toggleExtraValues(MidiNote note)
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::toggleExtraValues(MidiNote note)
 {
 	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
 }
 
 template <>
 template <bool NoteOn>
-void Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::toggleExtraValues(MidiNote note)
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::toggleExtraValues(MidiNote note)
+{
+	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
+}
+
+template <>
+template <bool NoteOn>
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::toggleExtraValues(MidiNote note)
+{
+	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
+}
+
+template <>
+template <bool NoteOn>
+void Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::toggleExtraValues(MidiNote note)
 {
 	Midi_Loader_ProGuitar::ToggleExtras<NoteOn>(m_track, m_ext, m_position, note);
 }

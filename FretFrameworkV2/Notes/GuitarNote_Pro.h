@@ -71,11 +71,11 @@ enum class EmphasisType
 	Low
 };
 
-template <int numFrets>
+template <int numStrings, int numFrets>
 class GuitarNote_Pro
 {
 public:
-	String<numFrets> m_strings[6];
+	String<numFrets> m_strings[numStrings];
 
 private:
 	bool m_isHOPO = false;
@@ -181,7 +181,7 @@ public:
 			string *= multiplier;
 	}
 
-	static constexpr size_t GetLaneCount() { return 6; }
+	static constexpr size_t GetLaneCount() { return numStrings; }
 };
 
 template <int numFrets>

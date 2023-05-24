@@ -29,6 +29,7 @@ namespace Midi_Loader_Instrument
 	template <class T>
 	struct Loader_Diff
 	{
+		static constexpr std::pair<unsigned char, unsigned char> NOTERANGE{ 60, 100 };
 		uint64_t notes[T::GetLaneCount()];
 		constexpr Loader_Diff() { for (uint64_t& note : notes) note = UINT64_MAX; }
 	};
@@ -56,7 +57,7 @@ namespace Midi_Loader_Instrument
 			if (processSpecialNote<NoteOn>(note))
 				return;
 
-			if (s_noteRange.first <= note.value && note.value <= s_noteRange.second)
+			if (m_difficulties->NOTERANGE.first <= note.value && note.value <= m_difficulties->NOTERANGE.second)
 				parseLaneColor<NoteOn>(note, channel);
 			else if (!m_phrases.addPhrase<NoteOn>(m_track.m_specialPhrases, m_position, note))
 			{
@@ -80,7 +81,7 @@ namespace Midi_Loader_Instrument
 		template <bool NoteOn>
 		void parseLaneColor(MidiNote note, unsigned char channel)
 		{
-			const size_t noteValue = note.value - s_noteRange.first;
+			const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
 			const size_t lane = m_lanes.values[noteValue];
 			const size_t diff = getDifficulty(noteValue);
 
@@ -147,8 +148,6 @@ namespace Midi_Loader_Instrument
 		void toggleExtraValues(MidiNote note) {}
 
 	private:
-		static constexpr std::pair<unsigned char, unsigned char> s_noteRange{ 60, 100 };
-		
 		uint64_t m_position = 0;
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 		bool m_doBRE = false;

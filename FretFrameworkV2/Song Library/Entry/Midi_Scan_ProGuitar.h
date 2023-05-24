@@ -2,76 +2,104 @@
 #include "Midi_Scan_Instrument.h"
 #include "Notes/GuitarNote_Pro.h"
 
-template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<17>>::s_noteRange{ 24, 106 };
+template <int numStrings, int numFrets>
+struct Midi_Scanner_Instrument::Scanner_Lanes<GuitarNote_Pro<numStrings, numFrets>> {};
 
 template <>
-constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<22>>::s_noteRange{ 24, 106 };
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner_Diff<GuitarNote_Pro<6, 17>>::NOTERANGE{ 24, 106 };
 
 template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<17>>::getDifficulty(size_t noteValue) const noexcept;
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner_Diff<GuitarNote_Pro<4, 17>>::NOTERANGE{ 24, 106 };
 
 template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<22>>::getDifficulty(size_t noteValue) const noexcept;
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner_Diff<GuitarNote_Pro<6, 22>>::NOTERANGE{ 24, 106 };
 
 template <>
-Midi_Scanner_Instrument::Scanner_Lanes<GuitarNote_Pro<17>>::Scanner_Lanes();
+constexpr std::pair<unsigned char, unsigned char> Midi_Scanner_Instrument::Scanner_Diff<GuitarNote_Pro<4, 22>>::NOTERANGE{ 24, 106 };
 
 template <>
-Midi_Scanner_Instrument::Scanner_Lanes<GuitarNote_Pro<22>>::Scanner_Lanes();
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 17>>::getDifficulty(size_t noteValue) const noexcept;
 
-template<>
-template <bool NoteOn>
-void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<17>>::parseLaneColor(MidiNote note, unsigned char channel)
+template <>
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 17>>::getDifficulty(size_t noteValue) const noexcept;
+
+template <>
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 22>>::getDifficulty(size_t noteValue) const noexcept;
+
+template <>
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 22>>::getDifficulty(size_t noteValue) const noexcept;
+
+namespace Midi_Scan_ProGuitar
 {
-	if (channel == 1)
-		return;
+	constexpr size_t LANES[96] = {
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+	};
 
-	const size_t noteValue = note.value - s_noteRange.first;
-	const size_t diff = getDifficulty(noteValue);
-	if (m_difficulties[diff].active)
-		return;
+	size_t DIFF(size_t noteValue);
 
-	const size_t lane = m_lanes.values[noteValue];
-	if (lane >= 6)
-		return;
-
-	if constexpr (NoteOn)
+	template <bool NoteOn, int numStrings, int numFrets>
+	bool ParseColor(Midi_Scanner_Instrument::Scanner_Diff<GuitarNote_Pro<numStrings, numFrets>>& diff, size_t noteValue, unsigned char channel, unsigned char velocity)
 	{
-		if (note.velocity <= 117)
-			m_difficulties[diff].notes[lane] = true;
-	}
-	else if (m_difficulties[diff].notes[lane])
-	{
-		m_scan.addDifficulty(diff);
-		m_difficulties[diff].active = true;
+		if (!diff.active && channel != 1)
+		{
+			const size_t lane = LANES[noteValue];
+			if (lane < 6)
+			{
+				if constexpr (!NoteOn)
+				{
+					if (diff.notes[lane])
+					{
+						diff.active = true;
+						return true;
+					}
+				}
+				else if (velocity <= 117)
+					diff.notes[lane] = true;
+			}
+		}
+		return false;
 	}
 }
 
 template<>
 template <bool NoteOn>
-void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<22>>::parseLaneColor(MidiNote note, unsigned char channel)
+void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 17>>::parseLaneColor(MidiNote note, unsigned char channel)
 {
-	if (channel == 1)
-		return;
-
-	const size_t noteValue = note.value - s_noteRange.first;
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
 	const size_t diff = getDifficulty(noteValue);
-	if (m_difficulties[diff].active)
-		return;
-
-	const size_t lane = m_lanes.values[noteValue];
-	if (lane >= 6)
-		return;
-
-	if constexpr (NoteOn)
-	{
-		if (note.velocity <= 122)
-			m_difficulties[diff].notes[lane] = true;
-	}
-	else if (m_difficulties[diff].notes[lane])
-	{
+	if (Midi_Scan_ProGuitar::ParseColor<NoteOn>(m_difficulties[diff], noteValue, channel, note.velocity))
 		m_scan.addDifficulty(diff);
-		m_difficulties[diff].active = true;
-	}
+}
+
+template<>
+template <bool NoteOn>
+void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 17>>::parseLaneColor(MidiNote note, unsigned char channel)
+{
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
+	const size_t diff = getDifficulty(noteValue);
+	if (Midi_Scan_ProGuitar::ParseColor<NoteOn>(m_difficulties[diff], noteValue, channel, note.velocity))
+		m_scan.addDifficulty(diff);
+}
+
+template<>
+template <bool NoteOn>
+void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 22>>::parseLaneColor(MidiNote note, unsigned char channel)
+{
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
+	const size_t diff = getDifficulty(noteValue);
+	if (Midi_Scan_ProGuitar::ParseColor<NoteOn>(m_difficulties[diff], noteValue, channel, note.velocity))
+		m_scan.addDifficulty(diff);
+}
+
+template<>
+template <bool NoteOn>
+void Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 22>>::parseLaneColor(MidiNote note, unsigned char channel)
+{
+	const size_t noteValue = note.value - m_difficulties->NOTERANGE.first;
+	const size_t diff = getDifficulty(noteValue);
+	if (Midi_Scan_ProGuitar::ParseColor<NoteOn>(m_difficulties[diff], noteValue, channel, note.velocity))
+		m_scan.addDifficulty(diff);
 }
