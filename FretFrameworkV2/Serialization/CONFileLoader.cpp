@@ -1,17 +1,21 @@
 #include "CONFileLoader.h"
+#include "Types/UnicodeString.h"
 
 CONFile::CONFileListing::CONFileListing(unsigned char* buf)
 {
-	memcpy(m_filename, buf, 0x28);
-	m_filename[0x28] = 0;
+	m_flags = buf[40];
+	m_filename = UnicodeString::strToU32(std::string_view((char*)buf, m_flags & 0x3F));
 
-	buf += 0x28;
-	m_flags = buf[0];
-	memcpy(&m_numBlocks, buf + 1, 3);
-	memcpy(&m_firstBlock, buf + 7, 3);
-	m_pathIndex = buf[10] << 8 | buf[11];
-	m_size = buf[12] << 24 | buf[13] << 16 | buf[14] << 8 | buf[15];
-	m_lastWrite = buf[16] << 24 | buf[17] << 16 | buf[18] << 8 | buf[19];
+	memcpy(&m_numBlocks, buf + 41, 3);
+	memcpy(&m_firstBlock, buf + 47, 3);
+	m_pathIndex = buf[50] << 8 | buf[51];
+	m_size = buf[52] << 24 | buf[53] << 16 | buf[54] << 8 | buf[55];
+	m_lastWrite = buf[56] << 24 | buf[57] << 16 | buf[58] << 8 | buf[59];
+}
+
+void CONFile::CONFileListing::setParentPath(const std::filesystem::path parent)
+{
+	m_filename = parent / m_filename;
 }
 
 CONFile::CONFileLoader::CONFileLoader(const std::filesystem::path& filepath)
@@ -49,6 +53,9 @@ CONFile::CONFileLoader::CONFileLoader(const std::filesystem::path& filepath)
 		CONFileListing listing((unsigned char*)fileListingBuffer.get() + i);
 		if (listing.getFilename().empty())
 			break;
+
+		if (listing.getPathIndex() != -1)
+			listing.setParentPath(m_filelist[listing.getPathIndex()].getFilename());
 		m_filelist.push_back(std::move(listing));
 	}
 }

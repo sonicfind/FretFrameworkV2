@@ -2,29 +2,28 @@
 #include "LoadedFile.h"
 namespace CONFile
 {
-
-
 	class CONFileListing
 	{
-		char m_filename[0x29];
-		char m_flags;
+		std::filesystem::path m_filename;
+		unsigned char m_flags;
 		uint32_t m_numBlocks = 0;
 		uint32_t m_firstBlock = 0;
-		uint16_t m_pathIndex;
+		int16_t m_pathIndex;
 		uint32_t m_size;
 		int32_t m_lastWrite;
 
 	public:
 		CONFileListing(unsigned char* buf);
-		std::string_view getFilename() const noexcept { return m_filename; }
+		const std::filesystem::path& getFilename() const noexcept { return m_filename; }
 		size_t getNumBlocks() const noexcept { return m_numBlocks; }
 		size_t getFirstBlock() const noexcept { return m_firstBlock; }
-		size_t getPathIndex() const noexcept { return m_pathIndex; }
+		int16_t getPathIndex() const noexcept { return m_pathIndex; }
 		size_t getFileSize() const noexcept { return m_size; }
 		int32_t getLastWriteTime() const noexcept { return m_lastWrite; }
 
 		bool isDirectory() const noexcept { return m_flags & 0x80; }
 		bool isContinguous() const noexcept { return m_flags & 0x40; }
+		void setParentPath(const std::filesystem::path parent);
 	};
 
 	class CONFileLoader
