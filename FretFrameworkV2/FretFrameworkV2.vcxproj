@@ -161,6 +161,7 @@
     <ClCompile Include="Serialization\LoadedFile.cpp" />
     <ClCompile Include="Serialization\MidiFileReader.cpp" />
     <ClCompile Include="Serialization\MidiFileWriter.cpp" />
+    <ClCompile Include="Serialization\DTAFileReader.cpp" />
     <ClCompile Include="Serialization\TxtFileReader.cpp" />
     <ClCompile Include="Serialization\ChtFileWriter.cpp" />
     <ClCompile Include="Serialization\TxtFileWriter.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="Serialization\CommonChartParser.h" />
     <ClInclude Include="Serialization\CommonChartWriter.h" />
     <ClInclude Include="Serialization\CONFileLoader.h" />
+    <ClInclude Include="Serialization\DTAFileReader.h" />
     <ClInclude Include="Serialization\FileReader.h" />
     <ClInclude Include="Serialization\IniFileReader.h" />
     <ClInclude Include="Serialization\IniFileWriter.h" />

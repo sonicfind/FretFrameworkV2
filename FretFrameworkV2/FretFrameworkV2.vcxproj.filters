@@ -271,6 +271,9 @@
     <ClCompile Include="Serialization\CONFileLoader.cpp">
       <Filter>Serialization\CONFileLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\DTAFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">
@@ -566,6 +569,9 @@
     </ClInclude>
     <ClInclude Include="Serialization\CONFileLoader.h">
       <Filter>Serialization\CONFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\DTAFileReader.h">
+      <Filter>Serialization\FileReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
