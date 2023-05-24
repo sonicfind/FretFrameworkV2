@@ -241,7 +241,6 @@
     <ClCompile Include="Song\Song_Save_Extended.cpp">
       <Filter>Song\Save</Filter>
     </ClCompile>
-    <ClCompile Include="Notes\DrumNote_Legacy.cpp" />
     <ClCompile Include="Song Library\Entry\DrumScan_Legacy.cpp">
       <Filter>Song Library\Entry\Track\Instrumental\Drums</Filter>
     </ClCompile>
@@ -262,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="Song\Tracks\Instrumental\Midi_Loader_ProKeys.cpp">
       <Filter>Song\Tracks\InstrumentalTrack\ProKeys</Filter>
+    </ClCompile>
+    <ClCompile Include="Notes\DrumNote_Legacy.cpp">
+      <Filter>Notes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
