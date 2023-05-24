@@ -22,4 +22,6 @@ enum class NoteTrackType
 	Harmonies,
 	ProGuitar_17,
 	ProGuitar_22,
+	ProBass_17,
+	ProBass_22,
 };

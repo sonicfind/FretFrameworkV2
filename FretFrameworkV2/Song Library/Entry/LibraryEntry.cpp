@@ -169,6 +169,8 @@ ScanValues LibraryEntry::getScanValue(NoteTrackType track) const noexcept
 	case NoteTrackType::Harmonies:     return m_scanTracks.harmonies;
 	case NoteTrackType::ProGuitar_17:  return m_scanTracks.proGuitar_17;
 	case NoteTrackType::ProGuitar_22:  return m_scanTracks.proGuitar_22;
+	case NoteTrackType::ProBass_17:  return m_scanTracks.proBass_17;
+	case NoteTrackType::ProBass_22:  return m_scanTracks.proBass_22;
 	default: return ScanValues();
 	}
 }
