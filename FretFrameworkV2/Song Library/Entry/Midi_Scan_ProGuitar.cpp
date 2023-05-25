@@ -13,13 +13,7 @@ size_t Midi_Scan_ProGuitar::DIFF(size_t noteValue)
 }
 
 template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Scan_ProGuitar::DIFF(noteValue); }
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Scan_ProGuitar::DIFF(noteValue); }
 
 template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 17>>::getDifficulty(size_t noteValue) const noexcept { return  Midi_Scan_ProGuitar::DIFF(noteValue); }
-
-template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<6, 22>>::getDifficulty(size_t noteValue) const noexcept { return  Midi_Scan_ProGuitar::DIFF(noteValue); }
-
-template <>
-size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<4, 22>>::getDifficulty(size_t noteValue) const noexcept { return  Midi_Scan_ProGuitar::DIFF(noteValue); }
+size_t Midi_Scanner_Instrument::Scanner<GuitarNote_Pro<22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Scan_ProGuitar::DIFF(noteValue); }

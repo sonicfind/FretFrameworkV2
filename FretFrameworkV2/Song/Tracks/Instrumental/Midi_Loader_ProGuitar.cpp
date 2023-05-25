@@ -11,19 +11,11 @@ Midi_Loader::Loader_Phrases<SpecialPhraseType> GetPhrases(unsigned char multipli
 };
 
 template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 17>>& track, unsigned char multiplierNote)
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::Loader(InstrumentalTrack<GuitarNote_Pro<17>>& track, unsigned char multiplierNote)
 	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
 
 template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 17>>& track, unsigned char multiplierNote)
-	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
-
-template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<6, 22>>& track, unsigned char multiplierNote)
-	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
-
-template <>
-Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::Loader(InstrumentalTrack<GuitarNote_Pro<4, 22>>& track, unsigned char multiplierNote)
+Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::Loader(InstrumentalTrack<GuitarNote_Pro<22>>& track, unsigned char multiplierNote)
 	: m_track(track), m_phrases(GetPhrases(multiplierNote)) {}
 
 size_t Midi_Loader_ProGuitar::DIFF(size_t noteValue)
@@ -39,13 +31,7 @@ size_t Midi_Loader_ProGuitar::DIFF(size_t noteValue)
 }
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
 
 template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 17>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
-
-template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<6, 22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
-
-template <>
-size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<4, 22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
+size_t Midi_Loader_Instrument::Loader<GuitarNote_Pro<22>>::getDifficulty(size_t noteValue) const noexcept { return Midi_Loader_ProGuitar::DIFF(noteValue); }
