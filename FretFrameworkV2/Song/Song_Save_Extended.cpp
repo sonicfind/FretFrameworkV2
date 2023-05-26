@@ -112,7 +112,7 @@ protected:
 	{
 		if (m_anchor)
 		{
-			writer.startEvent(position, ChartEvent::BPM);
+			writer.startEvent(position, ChartEvent::ANCHOR);
 			writer.writeAnchor(*m_anchor);
 			writer.finishEvent();
 		}

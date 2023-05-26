@@ -72,7 +72,7 @@ void Song::load_tempoMap(CommonChartParser& parser)
 			m_sync.tempoMarkers.get_or_emplace_back(trackEvent.first).first = parser.extractMicrosPerQuarter();
 			break;
 		case ChartEvent::ANCHOR:
-			m_sync.tempoMarkers.get_or_emplace_back(trackEvent.first).second = parser.extractMicrosPerQuarter();
+			m_sync.tempoMarkers.get_or_emplace_back(trackEvent.first).second = parser.extractAnchor();
 			break;
 		case ChartEvent::TIME_SIG:
 			m_sync.timeSigs.get_or_emplace_back(trackEvent.first) = parser.extractTimeSig();
