@@ -3,6 +3,7 @@
 class CommonChartWriter
 {
 public:
+	virtual ~CommonChartWriter() {}
 	virtual void setPitchMode(PitchType mode) = 0;
 
 	virtual void writeHeaderTrack(uint32_t tickRate) = 0;

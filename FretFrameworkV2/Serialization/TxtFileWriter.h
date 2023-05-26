@@ -12,7 +12,7 @@ public:
 		m_file << ' ' << value;
 	}
 
-	~TxtFileWriter();
+	virtual ~TxtFileWriter() {}
 
 protected:
 	std::ofstream m_file;

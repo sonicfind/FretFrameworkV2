@@ -16,6 +16,8 @@ public:
 	{
 		m_file.write(tag, 4);
 	}
+	
+	virtual ~BinaryFileWriter() {}
 
 	template <typename T>
 	void write(const T* src, const size_t size)
