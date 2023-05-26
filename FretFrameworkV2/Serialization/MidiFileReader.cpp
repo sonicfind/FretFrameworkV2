@@ -26,15 +26,15 @@ void MidiFileReader::processHeaderChunk()
 	if (!checkTag("MThd"))
 		throw std::runtime_error("Midi Header Chunk Tag 'MTrk' not found");
 
-	const uint32_t length = extract<uint32_t>();
+	const uint32_t length = _byteswap_ulong(extract<uint32_t>());
 	if (length < 6)
 		throw std::runtime_error("Midi Header length is invalid (must be at least six)");
 
 	m_nextTrack = m_currentPosition + length;
 
-	m_header.format = extract<uint16_t>();
-	m_header.numTracks = extract<uint16_t>();
-	m_header.tickRate = extract<uint16_t>();
+	m_header.format = _byteswap_ushort(extract<uint16_t>());
+	m_header.numTracks = _byteswap_ushort(extract<uint16_t>());
+	m_header.tickRate = _byteswap_ushort(extract<uint16_t>());
 }
 
 MidiFileReader::MidiFileReader(const std::filesystem::path& path, unsigned char multiplierNote) : BinaryFileReader(path), m_multiplierNote(multiplierNote)
@@ -58,7 +58,7 @@ bool MidiFileReader::startTrack()
 	if (!checkTag("MTrk"))
 		throw std::runtime_error("Midi Track Tag 'MTrk' not found for Track " + std::to_string(m_trackCount));
 
-	const uint32_t trackLength = extract<uint32_t>();
+	const uint32_t trackLength = _byteswap_ulong(extract<uint32_t>());
 	m_nextTrack = m_currentPosition + trackLength;
 
 	if (m_nextTrack > m_file.end())

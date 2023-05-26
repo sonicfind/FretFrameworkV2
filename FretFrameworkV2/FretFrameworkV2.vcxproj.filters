@@ -265,6 +265,12 @@
     <ClCompile Include="Notes\DrumNote_Legacy.cpp">
       <Filter>Notes</Filter>
     </ClCompile>
+    <ClCompile Include="Serialization\BinaryFileWriter.cpp">
+      <Filter>Serialization\FileWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization\BinaryFileReader.cpp">
+      <Filter>Serialization\FileReader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization\FileReader.h">

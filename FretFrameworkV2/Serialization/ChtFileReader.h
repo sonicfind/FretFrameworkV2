@@ -37,6 +37,7 @@ public:
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() override;
 	[[nodiscard]] virtual std::pair<uint64_t, ChartEvent> parseEvent() override;
+	virtual void skipEvent() override;
 	virtual void nextEvent() override;
 
 	[[nodiscard]] virtual std::pair<size_t, uint64_t> extractSingleNote() override;

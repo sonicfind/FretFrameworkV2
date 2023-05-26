@@ -4,7 +4,7 @@
 #include "Song/TimeSig.h"
 #include "MidiStructs.h"
 
-class MidiFileWriter : private BinaryFileWriter<true>
+class MidiFileWriter : private BinaryFileWriter
 {
 public:
 	struct Sysex

@@ -1,13 +1,24 @@
 #include "BCHFileReader.h"
 #include <assert.h>
 
-void BCHFileReader::parseTrackHeader()
+BCHFileReader::BCHFileReader(const std::filesystem::path& path) : BufferedBinaryReader(path)
 {
-	uint32_t trackSize = extract_nonvirtual<uint32_t>();
-	if (m_currentPosition + trackSize > m_file.end())
-		throw std::runtime_error("BCH Track extends past EOF");
+	parseHeader();
+}
 
-	m_nextTracks.push_back(m_currentPosition + trackSize);
+BCHFileReader::BCHFileReader(const LoadedFile& file) : BufferedBinaryReader(file)
+{
+	parseHeader();
+}
+
+void BCHFileReader::parseHeader()
+{
+	if (!validateHeaderTrack())
+		throw std::runtime_error("Header track not found at the start of the file");
+
+	m_tickrate = extract<uint32_t>();
+	m_nextTracks.pop_back();
+	m_ends.pop_back();
 }
 
 bool BCHFileReader::isStartOfTrack() const
@@ -17,11 +28,7 @@ bool BCHFileReader::isStartOfTrack() const
 
 bool BCHFileReader::validateHeaderTrack()
 {
-	if (!validateTrack("BThd"))
-		return false;
-
-	m_next = m_nextTracks.back();
-	return true;
+	return validateTrack("BThd");
 }
 
 bool BCHFileReader::validateSyncTrack()
@@ -39,7 +46,7 @@ bool BCHFileReader::validateNoteTrack()
 	if (!validateTrack("BTin") && !validateTrack("BTvc"))
 		return false;
 
-	m_noteTrackID = extract_nonvirtual<unsigned char>();
+	m_noteTrackID = extract<unsigned char>();
 	return true;
 }
 
@@ -48,7 +55,7 @@ bool BCHFileReader::validateDifficultyTrack()
 	if (!validateTrack("BTdf"))
 		return false;
 
-	m_difficulty = extract_nonvirtual<unsigned char>();
+	m_difficulty = extract<unsigned char>();
 	return true;
 }
 
@@ -62,7 +69,8 @@ bool BCHFileReader::validateAnimationTrack()
 	if (!checkTag(str))
 		return false;
 
-	parseTrackHeader();
+	enterSection();
+	m_nextTracks.push_back(m_ends.back());
 	m_tickPosition = 0;
 	return true;
 }
@@ -71,11 +79,17 @@ void BCHFileReader::skipTrack()
 {
 	if (isStartOfTrack())
 	{
-		FileReader::move(4);
-		parseTrackHeader();
+		move(4);
+		enterSection();
 	}
-	m_currentPosition = m_next = m_nextTracks.back();
-	m_nextTracks.pop_back();
+	else
+	{
+		if (m_ends.back() != m_nextTracks.back())
+			m_ends.pop_back();
+
+		m_nextTracks.pop_back();
+	}
+	exitSection();
 }
 
 bool BCHFileReader::isStillCurrentTrack()
@@ -84,29 +98,36 @@ bool BCHFileReader::isStillCurrentTrack()
 		return true;
 
 	m_nextTracks.pop_back();
+	m_ends.pop_back();
 	return false;
 }
 
 std::pair<uint64_t, ChartEvent>  BCHFileReader::parseEvent()
 {
-	m_tickPosition += extractWebType<false>();
+	m_tickPosition += extractWebType();
 
-	ChartEvent type = (ChartEvent)extract_nonvirtual<unsigned char>();
+	ChartEvent type = (ChartEvent)extract<unsigned char>();
 	if (type > ChartEvent::VOCAL_PERCUSSION)
 		type = ChartEvent::UNKNOWN;
 
-	const uint64_t length = extractWebType<false>();
-	m_next = m_currentPosition + length;
-
-	if (m_next > m_nextTracks.back())
-		throw std::runtime_error("Invalid length for BCH Track event");
-
+	enterSection();
 	return { m_tickPosition, type };
+}
+
+void BCHFileReader::skipEvent()
+{
+	m_tickPosition += extractWebType();
+	if (!move(1))
+		throw std::runtime_error("Track corrupted");
+
+	const uint64_t length = extractWebType();
+	if (!move(length))
+		throw std::runtime_error("Track corrupted");
 }
 
 void BCHFileReader::nextEvent()
 {
-	gotoEndOfBuffer();
+	exitSection();
 }
 
 std::pair<size_t, uint64_t> BCHFileReader::extractSingleNote()
@@ -169,7 +190,7 @@ std::vector<std::pair<char, size_t>> BCHFileReader::extractMultiNoteMods()
 
 std::string_view BCHFileReader::extractText()
 {
-	return extractString(m_next - m_currentPosition);
+	return extractString(m_ends.back() - m_currentPosition);
 }
 
 SpecialPhrase BCHFileReader::extractSpecialPhrase()

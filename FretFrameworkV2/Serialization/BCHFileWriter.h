@@ -38,11 +38,7 @@ public:
 	virtual void writeTimeSig(TimeSig timeSig) override;
 
 private:
-	using BinaryFileWriter::writeTag;
-
 	std::vector<std::streampos> m_trackPositions;
 	uint64_t m_position;
 	void writeTrackHeader(const char(&tag)[5]);
-
-	void writeTrackLength();
 };

@@ -104,10 +104,10 @@ void LibraryEntry::extractSongInfo(BufferedBinaryReader& reader)
 
 void LibraryEntry::serializeFileInfo(BufferedBinaryWriter& writer) const noexcept
 {
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.first.parent_path().u32string()));
-	writer.appendString(UnicodeString::U32ToStr(m_chartFile.first.filename().u32string()));
-	writer.append(m_chartWriteTime.time_since_epoch().count());
-	writer.append(m_iniWriteTime.time_since_epoch().count());
+	writer.writeString(UnicodeString::U32ToStr(m_chartFile.first.parent_path().u32string()));
+	writer.writeString(UnicodeString::U32ToStr(m_chartFile.first.filename().u32string()));
+	writer.write(m_chartWriteTime.time_since_epoch().count());
+	writer.write(m_iniWriteTime.time_since_epoch().count());
 }
 
 void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcept
@@ -134,21 +134,21 @@ void LibraryEntry::serializeSongInfo(BufferedBinaryWriter& writer) const noexcep
 	};
 
 	for (auto track : arr)
-		writer.append(*track);
+		writer.write(*track);
 
-	writer.append(m_previewRange);
-	writer.append(m_album_track);
-	writer.append(m_playlist_track);
-	writer.append(m_song_length);
-	writer.appendString(UnicodeString::U32ToStr(m_icon));
-	writer.appendString(UnicodeString::U32ToStr(m_source));
+	writer.write(m_previewRange);
+	writer.write(m_album_track);
+	writer.write(m_playlist_track);
+	writer.write(m_song_length);
+	writer.writeString(UnicodeString::U32ToStr(m_icon));
+	writer.writeString(UnicodeString::U32ToStr(m_source));
 
-	writer.append(m_hopo_frequency);
-	writer.append(m_sustain_cutoff_threshold);
+	writer.write(m_hopo_frequency);
+	writer.write(m_sustain_cutoff_threshold);
 
-	writer.append(m_hopofreq_Old);
-	writer.append(m_eighthnote_hopo);
-	writer.append(m_multiplier_note);
+	writer.write(m_hopofreq_Old);
+	writer.write(m_eighthnote_hopo);
+	writer.write(m_multiplier_note);
 }
 
 ScanValues LibraryEntry::getScanValue(NoteTrackType track) const noexcept

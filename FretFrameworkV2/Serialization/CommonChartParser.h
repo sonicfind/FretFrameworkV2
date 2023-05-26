@@ -20,6 +20,7 @@ public:
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() = 0;
 	[[nodiscard]] virtual std::pair<uint64_t, ChartEvent> parseEvent() = 0;
+	virtual void skipEvent() = 0;
 	virtual void nextEvent() = 0;
 
 	[[nodiscard]] virtual std::pair<size_t, uint64_t> extractSingleNote() = 0;

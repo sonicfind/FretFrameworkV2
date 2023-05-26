@@ -2,10 +2,11 @@
 #include "BufferedBinaryReader.h"
 #include "CommonChartParser.h"
 
-class BCHFileReader : public BufferedBinaryReader, public CommonChartParser
+class BCHFileReader : private BufferedBinaryReader, public CommonChartParser
 {
 public:
-	using BufferedBinaryReader::BufferedBinaryReader;
+	BCHFileReader(const std::filesystem::path& path);
+	BCHFileReader(const LoadedFile& file);
 
 	[[nodiscard]] virtual bool isStartOfTrack() const override;
 	[[nodiscard]] virtual bool validateHeaderTrack() override;
@@ -18,7 +19,8 @@ public:
 
 	[[nodiscard]] virtual bool isStillCurrentTrack() override;
 	[[nodiscard]] virtual std::pair<uint64_t, ChartEvent> parseEvent() override;
-	 virtual void nextEvent() override;
+	virtual void skipEvent() override;
+	virtual void nextEvent() override;
 
 	[[nodiscard]] virtual std::pair<size_t, uint64_t> extractSingleNote() override;
 	[[nodiscard]] virtual std::vector<std::pair<size_t, uint64_t>> extractMultiNote() override;
@@ -39,11 +41,12 @@ public:
 	[[nodiscard]] virtual uint64_t extractAnchor() override;
 	[[nodiscard]] virtual TimeSig extractTimeSig() override;
 
+	uint32_t getTickRate() const noexcept { return m_tickrate; };
+
 private:
 	std::vector<const char*> m_nextTracks;
-
-	using BinaryFileReader::checkTag;
-	void parseTrackHeader();
+	uint32_t m_tickrate;
 	
 	[[nodiscard]] bool validateTrack(const char(&str)[5]);
+	void parseHeader();
 };

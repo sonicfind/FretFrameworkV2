@@ -3,22 +3,22 @@
 MidiFileWriter::MidiFileWriter(const std::filesystem::path& path, uint16_t tickRate) : BinaryFileWriter(path)
 {
 	m_header.tickRate = tickRate;
-	writeTag("MThd");
-	write(uint32_t(6));
+	write("MThd", 4);
+	write(_byteswap_ulong(6));
 	write(m_header);
 }
 
 MidiFileWriter::~MidiFileWriter()
 {
 	seek(8);
-	write(m_header.format);
-	write(m_header.numTracks);
-	write(m_header.tickRate);
+	write(_byteswap_ushort(m_header.format));
+	write(_byteswap_ushort(m_header.numTracks));
+	write(_byteswap_ushort(m_header.tickRate));
 }
 
 void MidiFileWriter::startTrack(std::string_view str)
 {
-	writeTag("MTrk");
+	write("MTrk", 4);
 	write(uint32_t());
 	m_trackPosition = tell();
 	m_event.position = 0;
@@ -98,7 +98,7 @@ void MidiFileWriter::finishTrack()
 
 	auto end = tell();
 	seek(m_trackPosition - std::streamoff(4));
-	write(uint32_t(end - m_trackPosition));
+	write(_byteswap_ulong(uint32_t(end - m_trackPosition)));
 	seek(end);
 }
 

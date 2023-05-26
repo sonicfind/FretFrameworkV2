@@ -4,7 +4,7 @@
 #include "MidiStructs.h"
 #include <optional>
 
-class MidiFileReader : private BinaryFileReader<true>
+class MidiFileReader : private BinaryFileReader
 {
 public:
 	MidiFileReader(const std::filesystem::path& path, unsigned char multiplierNote);
@@ -46,4 +46,5 @@ private:
 
 	const unsigned char m_multiplierNote = 116;
 	const char* m_nextTrack;
+	const char* m_next;
 };

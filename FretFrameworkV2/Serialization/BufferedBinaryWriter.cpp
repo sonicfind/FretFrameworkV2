@@ -6,17 +6,18 @@ void BufferedBinaryWriter::writeString(std::string_view str)
 	write(str.data(), str.size());
 }
 
-void BufferedBinaryWriter::appendString(std::string_view str)
+void BufferedBinaryWriter::startBuffer()
 {
-	appendWebType(str.size());
-	append(str.data(), str.size());
+	m_buffers.emplace_back();
 }
 
-void BufferedBinaryWriter::writeBuffer()
+void BufferedBinaryWriter::endBuffer()
 {
-	writeWebType(m_buffer.size());
-	write<char>(m_buffer.data(), m_buffer.size());
-	m_buffer.clear();
+	const std::string buffer = std::move(m_buffers.back());
+	m_buffers.pop_back();
+
+	writeWebType(buffer.size());
+	write(buffer.data(), buffer.size());
 }
 
 void BufferedBinaryWriter::writeWebType(uint64_t value)
@@ -29,18 +30,5 @@ void BufferedBinaryWriter::writeWebType(uint64_t value)
 		bool exceeds32 = value > UINT32_MAX;
 		write<char>(253 + exceeds16 + exceeds32);
 		write(value, 2 + 2ULL * (exceeds16 + 2 * exceeds32));
-	}
-}
-
-void BufferedBinaryWriter::appendWebType(uint64_t value)
-{
-	if (value < 253)
-		append(value, 1);
-	else
-	{
-		bool exceeds16 = value > UINT16_MAX;
-		bool exceeds32 = value > UINT32_MAX;
-		append<char>(253 + exceeds16 + exceeds32);
-		append(value, 2 + 2ULL * (exceeds16 + 2 * exceeds32));
 	}
 }

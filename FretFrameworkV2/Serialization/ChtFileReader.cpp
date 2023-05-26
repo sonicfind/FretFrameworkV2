@@ -209,6 +209,11 @@ std::pair<uint64_t, ChartEvent> ChtFileReader::parseEvent()
 	return { position, ChartEvent::UNKNOWN };
 }
 
+void ChtFileReader::skipEvent()
+{
+	gotoNextLine();
+}
+
 void ChtFileReader::nextEvent()
 {
 	gotoNextLine();

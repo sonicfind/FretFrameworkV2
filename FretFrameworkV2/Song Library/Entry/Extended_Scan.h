@@ -58,7 +58,7 @@ namespace Extended_Scan
 		while (parser.isStillCurrentTrack())
 		{
 			if (!parser.isStartOfTrack())
-				parser.nextEvent();
+				parser.skipEvent();
 			else if (!scanDifficulty())
 				parser.skipTrack();
 		}

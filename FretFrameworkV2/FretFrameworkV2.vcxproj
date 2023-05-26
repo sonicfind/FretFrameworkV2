@@ -151,6 +151,8 @@
     <ClCompile Include="Notes\Sustained.cpp" />
     <ClCompile Include="Serialization\BCHFileReader.cpp" />
     <ClCompile Include="Serialization\BCHFileWriter.cpp" />
+    <ClCompile Include="Serialization\BinaryFileReader.cpp" />
+    <ClCompile Include="Serialization\BinaryFileWriter.cpp" />
     <ClCompile Include="Serialization\BufferedBinaryReader.cpp" />
     <ClCompile Include="Serialization\BufferedBinaryWriter.cpp" />
     <ClCompile Include="Serialization\ChtFileReader.cpp" />

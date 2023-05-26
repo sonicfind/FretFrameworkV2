@@ -122,7 +122,7 @@ std::optional<BufferedBinaryReader> SongLibrary::loadCachefile()
 		try
 		{
 			BufferedBinaryReader reader("songcache.bin");
-			if (s_CACHE_VERSION == reader.extract<uint32_t, false>())
+			if (s_CACHE_VERSION == reader.extract<uint32_t>())
 				return std::move(reader);
 		}
 		catch (...) {}
@@ -134,13 +134,15 @@ void SongLibrary::readStrings(BufferedBinaryReader& reader)
 {
 	static constexpr auto getStrings = [](BufferedBinaryReader& reader)
 	{
-		reader.setNextSectionBounds();
+		reader.enterSection();
 
 		const uint32_t numStrings = reader.extract<uint32_t>();
 		std::vector<UnicodeString> strings;
 		strings.reserve(numStrings);
 		for (uint32_t i = 0; i < numStrings; ++i)
 			strings.emplace_back(reader.extractString());
+
+		reader.exitSection();
 		return strings;
 	};
 
@@ -156,10 +158,10 @@ void SongLibrary::readStrings(BufferedBinaryReader& reader)
 void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 {
 	auto& tasks = TaskQueue::getInstance();
-	const uint32_t numNodes = reader.extract<uint32_t, false>();
+	const uint32_t numNodes = reader.extract<uint32_t>();
 	for (uint32_t i = 0; i < numNodes; ++i)
 	{
-		reader.setNextSectionBounds();
+		reader.enterSection();
 		tasks.addTask([this, reader, &validationFunc]() mutable {
 			if (std::optional<LibraryEntry> entry = validationFunc(reader))
 			{
@@ -177,7 +179,7 @@ void SongLibrary::readNodes(BufferedBinaryReader& reader, auto&& validationFunc)
 				addEntry(reader.extract<MD5>(), std::move(*entry));
 			}
 			});
-		reader.gotoEndOfBuffer();
+		reader.exitSection();
 	}
 
 	tasks.waitForCompletedTasks();
@@ -301,11 +303,12 @@ void SongLibrary::writeToCacheFile() const
 	writer.write((uint32_t)nodes.size());
 	for (const auto& node : nodes)
 	{
+		writer.startBuffer();
 		node.first->serializeFileInfo(writer);
-		writer.append(node.second.first);
+		writer.write(node.second.first);
 		node.first->serializeSongInfo(writer);
-		writer.append(node.second.second);
-		writer.writeBuffer();
+		writer.write(node.second.second);
+		writer.endBuffer();
 	}
 }
 
