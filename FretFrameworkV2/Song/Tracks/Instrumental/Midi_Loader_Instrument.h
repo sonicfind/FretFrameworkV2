@@ -54,6 +54,14 @@ namespace Midi_Loader_Instrument
 		template <bool NoteOn>
 		void parseNote(MidiNote note, unsigned char channel)
 		{
+			if constexpr (NoteOn)
+			{
+				if (m_position <= m_lastOn + 16)
+					m_position = m_lastOn;
+				else
+					m_lastOn = m_position;
+			}
+
 			if (processSpecialNote<NoteOn>(note))
 				return;
 
@@ -149,6 +157,7 @@ namespace Midi_Loader_Instrument
 
 	private:
 		uint64_t m_position = 0;
+		uint64_t m_lastOn = 0;
 		uint64_t m_notes_BRE[5] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 		bool m_doBRE = false;
 

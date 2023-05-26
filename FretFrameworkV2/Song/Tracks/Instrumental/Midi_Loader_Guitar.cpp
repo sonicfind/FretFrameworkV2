@@ -45,6 +45,14 @@ void Midi_Loader_Instrument::Loader<GuitarNote<5>>::parseSysEx(std::string_view 
 {
 	if (str.compare(0, 2, "PS") == 0)
 	{
+		if (str[6])
+		{
+			if (m_position <= m_lastOn + 16)
+				m_position = m_lastOn;
+			else
+				m_lastOn = m_position;
+		}
+
 		if (str[4] == (char)0xFF)
 		{
 			switch (str[5])
@@ -93,23 +101,33 @@ void Midi_Loader_Instrument::Loader<GuitarNote<6>>::parseSysEx(std::string_view 
 {
 	if (str.compare(0, 2, "PS") == 0 && str[5] == 4)
 	{
-		if (str[4] == (char)0xFF)
+		if (str[6])
 		{
-			for (size_t diff = 0; diff < 4; ++diff)
+			if (m_position <= m_lastOn + 16)
+				m_position = m_lastOn;
+			else
+				m_lastOn = m_position;
+
+			if (str[4] == (char)0xFF)
 			{
-				m_difficulties[diff].sliderNotes = str[6];
-				if (str[6])
+				for (size_t diff = 0; diff < 4; ++diff)
 				{
+					m_difficulties[diff].sliderNotes = true;
 					if (auto note = m_track[diff].m_notes.try_back(m_position))
 						note->setTap(true);
 				}
 			}
+			else
+			{
+				m_difficulties[str[4]].sliderNotes = true;
+				if (auto note = m_track[str[4]].m_notes.try_back(m_position))
+					note->setTap(true);
+			}
 		}
-		else if (str[6])
+		else if (str[4] == (char)0xFF)
 		{
-			m_difficulties[str[4]].sliderNotes = true;
-			if (auto note = m_track[str[4]].m_notes.try_back(m_position))
-				note->setTap(true);
+			for (size_t diff = 0; diff < 4; ++diff)
+				m_difficulties[diff].sliderNotes = false;
 		}
 		else
 			m_difficulties[str[4]].sliderNotes = false;
