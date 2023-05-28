@@ -32,11 +32,6 @@ public:
 	template <typename T>
 	bool extract(T& value)
 	{
-		if constexpr (sizeof(T) == 1)
-		{
-			value = *reinterpret_cast<const T*>(m_currentPosition);
-			return move(1);
-		}
 		return extract<T>(value, sizeof(T));
 	}
 
