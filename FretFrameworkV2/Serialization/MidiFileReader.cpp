@@ -4,21 +4,19 @@ uint32_t MidiFileReader::readVLQ()
 {
 	size_t index = 0;
 	uint32_t value = 0;
-	while (m_currentPosition[index] < 0)
+	while (true)
 	{
+		char c = extract<char>();
+		value |= c & 127;
+		if (c >= 0)
+			return value;
+
 		if (index == 3)
 			throw std::runtime_error("Invalid variable length quantity");
 
-		value |= m_currentPosition[index++] & 127;
+		++index;
 		value <<= 7;
 	}
-	value |= m_currentPosition[index++] & 127;
-
-	if (m_currentPosition + index >= m_nextTrack)
-		throw std::runtime_error("Could not parse variable length quantity");
-
-	m_currentPosition += index;
-	return value;
 }
 
 void MidiFileReader::processHeaderChunk()
@@ -26,12 +24,7 @@ void MidiFileReader::processHeaderChunk()
 	if (!checkTag("MThd"))
 		throw std::runtime_error("Midi Header Chunk Tag 'MTrk' not found");
 
-	const uint32_t length = _byteswap_ulong(extract<uint32_t>());
-	if (length < 6)
-		throw std::runtime_error("Midi Header length is invalid (must be at least six)");
-
-	m_nextTrack = m_currentPosition + length;
-
+	enterSection(_byteswap_ulong(extract<uint32_t>()));
 	m_header.format = _byteswap_ushort(extract<uint16_t>());
 	m_header.numTracks = _byteswap_ushort(extract<uint16_t>());
 	m_header.tickRate = _byteswap_ushort(extract<uint16_t>());
@@ -52,43 +45,43 @@ bool MidiFileReader::startTrack()
 	if (m_trackCount == m_header.numTracks)
 		return false;
 
-	m_currentPosition = m_nextTrack;
+	if (m_event.type != MidiEventType::Reset_Or_Meta)
+		exitSection();
+	exitSection();
 	m_trackCount++;
 
 	if (!checkTag("MTrk"))
 		throw std::runtime_error("Midi Track Tag 'MTrk' not found for Track " + std::to_string(m_trackCount));
 
-	const uint32_t trackLength = _byteswap_ulong(extract<uint32_t>());
-	m_nextTrack = m_currentPosition + trackLength;
-
-	if (m_nextTrack > m_file.end())
-		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + "'s length extends past End of File");
+	enterSection(_byteswap_ulong(extract<uint32_t>()));
 
 	m_event.position = 0;
 	m_event.type = MidiEventType::Reset_Or_Meta;
 
-	const char* const ev = m_next = m_currentPosition;
-	if (!parseEvent() || m_event.type != MidiEventType::Text_TrackName)
+	const char* const start = m_currentPosition;
+	if (!tryParseEvent() || m_event.type != MidiEventType::Text_TrackName)
 	{
-		m_next = ev;
-		m_event.position = 0;
+		exitSection();
 		m_event.type = MidiEventType::Reset_Or_Meta;
+		m_currentPosition = start;
+		m_event.position = 0;
 	}
 	return true;
 }
 
+uint32_t MidiFileReader::getEventOffset() const noexcept
+{
+	return 1 + (m_event.type == MidiEventType::Note_On ||
+				m_event.type == MidiEventType::Note_Off ||
+				m_event.type == MidiEventType::Control_Change ||
+				m_event.type == MidiEventType::Key_Pressure ||
+				m_event.type == MidiEventType::Pitch_Wheel);
+}
+
 bool MidiFileReader::tryParseEvent()
 {
-	static constexpr auto getOffset = [](MidiEventType type)
-	{
-		return 1 + (type == MidiEventType::Note_On ||
-				    type == MidiEventType::Note_Off ||
-				    type == MidiEventType::Control_Change ||
-				    type == MidiEventType::Key_Pressure ||
-				    type == MidiEventType::Pitch_Wheel);
-	};
-
-	m_currentPosition = m_next;
+	if (m_event.type != MidiEventType::Reset_Or_Meta)
+		exitSection();
 
 	m_event.position += readVLQ();
 	unsigned char tmp = *m_currentPosition;
@@ -97,75 +90,73 @@ bool MidiFileReader::tryParseEvent()
 	{
 		if (m_event.type < MidiEventType::Note_Off || m_event.type >= MidiEventType::SysEx)
 			throw std::runtime_error("Invalid running event");
-		m_next = m_currentPosition + getOffset(m_event.type);
+		enterSection(getEventOffset());
 	}
 	else
 	{
-		m_currentPosition++;
+		move(1);
 		if (type < MidiEventType::SysEx)
 		{
 			m_event.channel = tmp & 15;
-			type = static_cast<MidiEventType>(tmp & 240);
-			m_next = m_currentPosition + getOffset(type);
+			m_event.type = static_cast<MidiEventType>(tmp & 240);
+			enterSection(getEventOffset());
 		}
 		else
 		{
 			switch (type)
 			{
 			case MidiEventType::Reset_Or_Meta:
-				type = static_cast<MidiEventType>(*m_currentPosition++);
-				if (type == MidiEventType::End_Of_Track)
-					return false;
+				type = static_cast<MidiEventType>(extract<unsigned char>());
 				__fallthrough;
 			case MidiEventType::SysEx:
 			case MidiEventType::SysEx_End:
 			{
-				uint32_t length = readVLQ();
-				m_next = m_currentPosition + length;
+				enterSection(readVLQ());
 				break;
 			}
 			case MidiEventType::Song_Position:
-				m_next = m_currentPosition + 2;
+				enterSection(2);
 				break;
 			case MidiEventType::Song_Select:
-				m_next = m_currentPosition + 1;
+				enterSection(1);
 				break;
+			default:
+				enterSection(0);
 			}
+			m_event.type = type;
+
+			if (m_event.type == MidiEventType::End_Of_Track)
+				return false;
 		}
-
-		m_event.type = type;
 	}
-
-	if (m_next >= m_nextTrack)
-		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends improperly");
-
 	return true;
 }
 
-std::string_view MidiFileReader::extractTextOrSysEx() const noexcept
+std::string MidiFileReader::extractTextOrSysEx() noexcept
 {
-	return std::string_view(m_currentPosition, m_next);
+	std::string str(m_currentPosition, m_ends.back());
+	m_currentPosition = m_ends.back();
+	return str;
 }
 
-MidiNote MidiFileReader::extractMidiNote() const noexcept
+MidiNote MidiFileReader::extractMidiNote()
 {
-	return { (unsigned char)m_currentPosition[0], (unsigned char)m_currentPosition[1] };
+	return extract<MidiNote>();
 }
 
-ControlChange MidiFileReader::extractControlChange() const noexcept
+ControlChange MidiFileReader::extractControlChange()
 {
-	return { (unsigned char)m_currentPosition[0], (unsigned char)m_currentPosition[1] };
+	return extract<ControlChange>();
 }
 
-uint32_t MidiFileReader::extractMicrosPerQuarter() const noexcept
+uint32_t MidiFileReader::extractMicrosPerQuarter()
 {
-	return (m_currentPosition[0] << 16) | (m_currentPosition[1] << 8) | m_currentPosition[0];
+	unsigned char buf[3];
+	extract(buf);
+	return (buf[0] << 16) | (buf[1] << 8) | buf[0];
 }
 
-TimeSig MidiFileReader::extractTimeSig() const noexcept
+TimeSig MidiFileReader::extractTimeSig()
 {
-	return { (unsigned char)m_currentPosition[0],
-		     (unsigned char)m_currentPosition[1],
-		     (unsigned char)m_currentPosition[2],
-		     (unsigned char)m_currentPosition[3] };
+	return extract<TimeSig>();
 }

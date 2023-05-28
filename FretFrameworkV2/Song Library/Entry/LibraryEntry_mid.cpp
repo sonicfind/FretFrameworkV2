@@ -18,7 +18,7 @@ void LibraryEntry::scan_mid(const LoadedFile& file)
 		MidiEvent ev = reader.getEvent();
 		if (reader.getTrackNumber() > 1 && ev.type == MidiEventType::Text_TrackName)
 		{
-			const std::string_view name = reader.extractTextOrSysEx();
+			const std::string name = reader.extractTextOrSysEx();
 			if (name == "PART GUITAR" || name == "T1 GEMS")
 				Midi_Scanner_Instrument::Scan(m_scanTracks.lead_5, reader);
 			else if (name == "PART GUITAR GHL")

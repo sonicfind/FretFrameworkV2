@@ -41,7 +41,7 @@ void Song::load_mid(const std::filesystem::path& path)
 				MidiEvent midiEvent = reader.getEvent();
 				if (midiEvent.type <= MidiEventType::Text_EnumLimit)
 				{
-					std::string_view text = reader.extractTextOrSysEx();
+					std::string text = reader.extractTextOrSysEx();
 					if (!AddSection(m_events.sections, midiEvent.position, text))
 						m_events.globals.get_or_emplace_back(midiEvent.position).push_back(UnicodeString::strToU32(text));
 				}
@@ -128,7 +128,7 @@ void Song::load_mid(const std::filesystem::path& path)
 		}
 		else if (reader.getEvent().type == MidiEventType::Text_TrackName)
 		{
-			const std::string_view name = reader.extractTextOrSysEx();
+			const std::string name = reader.extractTextOrSysEx();
 			if (!readTrack(name))
 				std::cout << "Track " << name << " failed to load or was already loaded previously\n";
 		}

@@ -19,15 +19,16 @@ public:
 
 	[[nodiscard]] unsigned char getMultiplierNote() const noexcept { return m_multiplierNote; }
 
-	[[nodiscard]] std::string_view extractTextOrSysEx() const noexcept;
-	[[nodiscard]] MidiNote extractMidiNote() const noexcept;
-	[[nodiscard]] ControlChange extractControlChange() const noexcept;
+	[[nodiscard]] std::string extractTextOrSysEx() noexcept;
+	[[nodiscard]] MidiNote extractMidiNote();
+	[[nodiscard]] ControlChange extractControlChange();
 
-	[[nodiscard]] uint32_t extractMicrosPerQuarter() const noexcept;
-	[[nodiscard]] TimeSig extractTimeSig() const noexcept;
+	[[nodiscard]] uint32_t extractMicrosPerQuarter();
+	[[nodiscard]] TimeSig extractTimeSig();
 
 private:
 	void processHeaderChunk();
+	uint32_t getEventOffset() const noexcept;
 	[[nodiscard]] uint32_t readVLQ();
 
 private:
@@ -43,6 +44,4 @@ private:
 	MidiEvent m_event;
 
 	const unsigned char m_multiplierNote = 116;
-	const char* m_nextTrack;
-	const char* m_next;
 };
