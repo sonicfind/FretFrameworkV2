@@ -42,7 +42,7 @@ public:
 	{
 		T value;
 		if (!extract<T>(value))
-			throw std::runtime_error("Could not parse data");
+			throw std::runtime_error("Failed to parse data");
 		return value;
 	}
 
