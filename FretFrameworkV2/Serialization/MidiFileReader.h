@@ -11,13 +11,11 @@ public:
 	MidiFileReader(const LoadedFile& file);
 
 	[[nodiscard]] bool startTrack();
-	[[nodiscard]] std::optional<MidiEvent> parseEvent();
+	[[nodiscard]] bool tryParseEvent();
+	[[nodiscard]] MidiEvent getEvent() { return m_event; }
 
 	[[nodiscard]] uint16_t getTickRate() const noexcept { return m_header.tickRate; }
 	[[nodiscard]] uint16_t getTrackNumber() const noexcept { return m_trackCount; }
-	[[nodiscard]] uint64_t getPosition() const noexcept { return m_event.position; }
-	[[nodiscard]] MidiEventType getEventType() const noexcept { return m_event.type; }
-	[[nodiscard]] unsigned char getMidiChannel() const noexcept { return m_event.channel; }
 
 	[[nodiscard]] unsigned char getMultiplierNote() const noexcept { return m_multiplierNote; }
 

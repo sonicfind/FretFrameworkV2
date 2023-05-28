@@ -23,10 +23,11 @@ public:
 		if (m_track.hasNotes(INDEX))
 			return false;
 
-		while (auto midiEvent = reader.parseEvent())
+		while (reader.tryParseEvent())
 		{
-			m_position = midiEvent->position;
-			if (midiEvent->type == MidiEventType::Note_On)
+			MidiEvent midiEvent = reader.getEvent();
+			m_position = midiEvent.position;
+			if (midiEvent.type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
@@ -34,11 +35,11 @@ public:
 				else
 					parseNote<INDEX, false>(note);
 			}
-			else if (midiEvent->type == MidiEventType::Note_Off)
+			else if (midiEvent.type == MidiEventType::Note_Off)
 				parseNote<INDEX, false>(reader.extractMidiNote());
-			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
+			else if (midiEvent.type == MidiEventType::SysEx || midiEvent.type == MidiEventType::SysEx_End)
 				parseSysEx(reader.extractTextOrSysEx());
-			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
+			else if (midiEvent.type <= MidiEventType::Text_EnumLimit)
 				parseText<INDEX>(reader.extractTextOrSysEx());
 		}
 

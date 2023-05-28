@@ -176,22 +176,23 @@ namespace Midi_Loader_Instrument
 			return false;
 
 		Loader<T> loader(track, reader.getMultiplierNote());
-		while (const auto midiEvent = reader.parseEvent())
+		while (reader.tryParseEvent())
 		{
-			loader.setPosition(midiEvent->position);
-			if (midiEvent->type == MidiEventType::Note_On)
+			MidiEvent midiEvent = reader.getEvent();
+			loader.setPosition(midiEvent.position);
+			if (midiEvent.type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					loader.parseNote<true>(note, midiEvent->channel);
+					loader.parseNote<true>(note, midiEvent.channel);
 				else
-					loader.parseNote<false>(note, midiEvent->channel);
+					loader.parseNote<false>(note, midiEvent.channel);
 			}
-			else if (midiEvent->type == MidiEventType::Note_Off)
-				loader.parseNote<false>(reader.extractMidiNote(), midiEvent->channel);
-			else if (midiEvent->type == MidiEventType::SysEx || midiEvent->type == MidiEventType::SysEx_End)
+			else if (midiEvent.type == MidiEventType::Note_Off)
+				loader.parseNote<false>(reader.extractMidiNote(), midiEvent.channel);
+			else if (midiEvent.type == MidiEventType::SysEx || midiEvent.type == MidiEventType::SysEx_End)
 				loader.parseSysEx(reader.extractTextOrSysEx());
-			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
+			else if (midiEvent.type <= MidiEventType::Text_EnumLimit)
 				loader.parseText(reader.extractTextOrSysEx());
 		}
 

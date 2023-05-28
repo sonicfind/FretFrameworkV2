@@ -36,13 +36,14 @@ void Song::load_mid(const std::filesystem::path& path)
 			if (!m_events.globals.isEmpty() || !m_events.sections.isEmpty())
 				return false;
 
-			while (const auto midiEvent = reader.parseEvent())
+			while (reader.tryParseEvent())
 			{
-				if (midiEvent->type <= MidiEventType::Text_EnumLimit)
+				MidiEvent midiEvent = reader.getEvent();
+				if (midiEvent.type <= MidiEventType::Text_EnumLimit)
 				{
 					std::string_view text = reader.extractTextOrSysEx();
-					if (!AddSection(m_events.sections, midiEvent->position, text))
-						m_events.globals.get_or_emplace_back(midiEvent->position).push_back(UnicodeString::strToU32(text));
+					if (!AddSection(m_events.sections, midiEvent.position, text))
+						m_events.globals.get_or_emplace_back(midiEvent.position).push_back(UnicodeString::strToU32(text));
 				}
 			}
 		}
@@ -108,23 +109,24 @@ void Song::load_mid(const std::filesystem::path& path)
 	{
 		if (reader.getTrackNumber() == 1)
 		{
-			if (reader.getEventType() == MidiEventType::Text_TrackName)
+			if (reader.getEvent().type == MidiEventType::Text_TrackName)
 				m_midiSequenceName = UnicodeString::strToU32(reader.extractTextOrSysEx());
 
-			while (const auto midiEvent = reader.parseEvent())
+			while (reader.tryParseEvent())
 			{
-				switch (midiEvent->type)
+				MidiEvent midiEvent = reader.getEvent();
+				switch (midiEvent.type)
 				{
 				case MidiEventType::Tempo:
-					m_sync.tempoMarkers.get_or_emplace_back(midiEvent->position).first = reader.extractMicrosPerQuarter();
+					m_sync.tempoMarkers.get_or_emplace_back(midiEvent.position).first = reader.extractMicrosPerQuarter();
 					break;
 				case MidiEventType::Time_Sig:
-					m_sync.timeSigs.get_or_emplace_back(midiEvent->position) = reader.extractTimeSig();
+					m_sync.timeSigs.get_or_emplace_back(midiEvent.position) = reader.extractTimeSig();
 					break;
 				}
 			}
 		}
-		else if (reader.getEventType() == MidiEventType::Text_TrackName)
+		else if (reader.getEvent().type == MidiEventType::Text_TrackName)
 		{
 			const std::string_view name = reader.extractTextOrSysEx();
 			if (!readTrack(name))

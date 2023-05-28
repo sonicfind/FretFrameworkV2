@@ -16,13 +16,14 @@ namespace Midi_Scanner_Vocal
 			if (m_scan.hasSubTrack(INDEX))
 				return;
 
-			while (auto midiEvent = reader.parseEvent())
+			while (reader.tryParseEvent())
 			{
-				if (midiEvent->type == MidiEventType::Note_On || midiEvent->type == MidiEventType::Note_Off)
+				MidiEvent midiEvent = reader.getEvent();
+				if (midiEvent.type == MidiEventType::Note_On || midiEvent.type == MidiEventType::Note_Off)
 				{
-					m_position = midiEvent->position;
+					m_position = midiEvent.position;
 					MidiNote note = reader.extractMidiNote();
-					if (midiEvent->type == MidiEventType::Note_On && note.velocity > 0)
+					if (midiEvent.type == MidiEventType::Note_On && note.velocity > 0)
 						parseNote<INDEX, true>(note.value);
 					else if (parseNote<INDEX, false>(note.value))
 					{
@@ -30,7 +31,7 @@ namespace Midi_Scanner_Vocal
 							return;
 					}
 				}
-				else if (midiEvent->type <= MidiEventType::Text_EnumLimit && !m_scan.hasSubTrack(INDEX))
+				else if (midiEvent.type <= MidiEventType::Text_EnumLimit && !m_scan.hasSubTrack(INDEX))
 					parseText_midi(reader.extractTextOrSysEx());
 			}
 		}

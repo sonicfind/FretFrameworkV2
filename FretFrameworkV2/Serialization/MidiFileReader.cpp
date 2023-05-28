@@ -77,7 +77,7 @@ bool MidiFileReader::startTrack()
 	return true;
 }
 
-std::optional<MidiEvent> MidiFileReader::parseEvent()
+bool MidiFileReader::tryParseEvent()
 {
 	static constexpr auto getOffset = [](MidiEventType type)
 	{
@@ -115,7 +115,7 @@ std::optional<MidiEvent> MidiFileReader::parseEvent()
 			case MidiEventType::Reset_Or_Meta:
 				type = static_cast<MidiEventType>(*m_currentPosition++);
 				if (type == MidiEventType::End_Of_Track)
-					return {};
+					return false;
 				__fallthrough;
 			case MidiEventType::SysEx:
 			case MidiEventType::SysEx_End:
@@ -139,7 +139,7 @@ std::optional<MidiEvent> MidiFileReader::parseEvent()
 	if (m_next >= m_nextTrack)
 		throw std::runtime_error("Midi Track " + std::to_string(m_trackCount) + " ends improperly");
 
-	return m_event;
+	return true;
 }
 
 std::string_view MidiFileReader::extractTextOrSysEx() const noexcept

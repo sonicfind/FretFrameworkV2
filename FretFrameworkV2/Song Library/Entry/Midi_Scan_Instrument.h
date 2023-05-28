@@ -103,19 +103,20 @@ namespace Midi_Scanner_Instrument
 			return false;
 
 		Scanner<T> scanner(scan);
-		while (const auto midiEvent = reader.parseEvent())
+		while (reader.tryParseEvent())
 		{
-			if (midiEvent->type == MidiEventType::Note_On)
+			MidiEvent midiEvent = reader.getEvent();
+			if (midiEvent.type == MidiEventType::Note_On)
 			{
 				MidiNote note = reader.extractMidiNote();
 				if (note.velocity > 0)
-					scanner.parseNote<true>(note, midiEvent->channel);
+					scanner.parseNote<true>(note, midiEvent.channel);
 				else
-					scanner.parseNote<false>(note, midiEvent->channel);
+					scanner.parseNote<false>(note, midiEvent.channel);
 			}
-			else if (midiEvent->type == MidiEventType::Note_Off)
-				scanner.parseNote<false>(reader.extractMidiNote(), midiEvent->channel);
-			else if (midiEvent->type <= MidiEventType::Text_EnumLimit)
+			else if (midiEvent.type == MidiEventType::Note_Off)
+				scanner.parseNote<false>(reader.extractMidiNote(), midiEvent.channel);
+			else if (midiEvent.type <= MidiEventType::Text_EnumLimit)
 				scanner.parseText(reader.extractTextOrSysEx());
 
 			if (scan.isComplete())
