@@ -7,6 +7,8 @@ public:
 	BinaryFileReader(const std::filesystem::path& path);
 	BinaryFileReader(const LoadedFile& file);
 
+	void exitSection();
+
 	[[nodiscard]] bool checkTag(const char(&tag)[5]);
 	bool move(size_t amount);
 
@@ -43,6 +45,9 @@ public:
 			throw std::runtime_error("Could not parse data");
 		return value;
 	}
+
+protected:
+	void enterSection(uint64_t length);
 
 protected:
 	std::vector<const char*> m_ends;

@@ -8,17 +8,7 @@ std::string_view BufferedBinaryReader::extractString()
 
 void BufferedBinaryReader::enterSection()
 {
-	const uint64_t length = extractWebType();
-	const char* const end = m_currentPosition + length;
-	if (end > m_ends.back())
-		throw std::runtime_error("Invalid length for section");
-	m_ends.push_back(end);
-}
-
-void BufferedBinaryReader::exitSection()
-{
-	m_currentPosition = m_ends.back();
-	m_ends.pop_back();
+	BinaryFileReader::enterSection(extractWebType());
 }
 
 std::string_view BufferedBinaryReader::extractString(size_t length)

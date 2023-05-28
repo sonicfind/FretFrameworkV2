@@ -3,6 +3,20 @@
 BinaryFileReader::BinaryFileReader(const std::filesystem::path& path) : FileReader(path) { m_ends.push_back(m_file.end()); }
 BinaryFileReader::BinaryFileReader(const LoadedFile& file) : FileReader(file) { m_ends.push_back(m_file.end()); }
 
+void BinaryFileReader::enterSection(uint64_t length)
+{
+	const char* const end = m_currentPosition + length;
+	if (end > m_ends.back())
+		throw std::runtime_error("Invalid length for section");
+	m_ends.push_back(end);
+}
+
+void BinaryFileReader::exitSection()
+{
+	m_currentPosition = m_ends.back();
+	m_ends.pop_back();
+}
+
 [[nodiscard]] bool BinaryFileReader::checkTag(const char(&tag)[5])
 {
 	if (strncmp(m_currentPosition, tag, 4) != 0)

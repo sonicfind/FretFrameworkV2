@@ -7,7 +7,6 @@ public:
 	using BinaryFileReader::BinaryFileReader;
 	[[nodiscard]] std::string_view extractString();
 	void enterSection();
-	void exitSection();
 
 protected:
 	[[nodiscard]] std::string_view extractString(uint64_t length);
